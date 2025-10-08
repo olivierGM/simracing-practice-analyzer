@@ -1,0 +1,95 @@
+{
+  "laps": [
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 113420,
+      "splits": [
+        21255,
+        48787,
+        43377
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 147442,
+      "splits": [
+        73755,
+        36875,
+        36812
+      ]
+    }
+  ],
+  "penalties": [],
+  "post_race_penalties": [],
+  "sessionIndex": 0,
+  "raceWeekendIndex": 9,
+  "sessionResult": {
+    "bestSplits": [
+      2147483647,
+      2147483647,
+      2147483647
+    ],
+    "bestlap": 2147483647,
+    "isWetSession": 1,
+    "leaderBoardLines": [
+      {
+        "car": {
+          "carId": 1001,
+          "carModel": 8,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 2,
+          "drivers": [
+            {
+              "firstName": "Jonathan",
+              "lastName": "Hamel",
+              "playerId": "S76561198918021352",
+              "shortName": "REG"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 9,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Jonathan",
+          "lastName": "Hamel",
+          "playerId": "S76561198918021352",
+          "shortName": "REG"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 2147483647,
+          "bestSplits": [
+            2147483647,
+            2147483647,
+            2147483647
+          ],
+          "lapCount": 2,
+          "lastLap": 147442,
+          "lastSplitId": 0,
+          "lastSplits": [
+            73755,
+            36875,
+            36812
+          ],
+          "totalTime": 67782044
+        }
+      }
+    ],
+    "type": 0
+  },
+  "sessionType": "FP",
+  "trackName": "donington",
+  "serverName": "EGT Canada - Event 3",
+  "metaData": "championship-pre-practice",
+  "Date": "2025-09-24T12:37:26Z",
+  "SessionFile": "250924_123726_FP"
+}

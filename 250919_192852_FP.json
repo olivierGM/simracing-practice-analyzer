@@ -1,0 +1,139 @@
+{
+  "laps": [
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 107517,
+      "splits": [
+        22150,
+        49082,
+        36285
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 101755,
+      "splits": [
+        21677,
+        44522,
+        35555
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 98267,
+      "splits": [
+        21190,
+        40297,
+        36780
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 94310,
+      "splits": [
+        21620,
+        37152,
+        35537
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 97572,
+      "splits": [
+        21105,
+        40555,
+        35912
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 93362,
+      "splits": [
+        21242,
+        36857,
+        35262
+      ]
+    }
+  ],
+  "penalties": [],
+  "post_race_penalties": [],
+  "sessionIndex": 0,
+  "raceWeekendIndex": 11,
+  "sessionResult": {
+    "bestSplits": [
+      21242,
+      36857,
+      35262
+    ],
+    "bestlap": 93362,
+    "isWetSession": 1,
+    "leaderBoardLines": [
+      {
+        "car": {
+          "carId": 1001,
+          "carModel": 35,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 3,
+          "drivers": [
+            {
+              "firstName": "Pierre-Etienne",
+              "lastName": "Longuez",
+              "playerId": "S76561198068037093",
+              "shortName": "LON"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 720,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Pierre-Etienne",
+          "lastName": "Longuez",
+          "playerId": "S76561198068037093",
+          "shortName": "LON"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 93362,
+          "bestSplits": [
+            21242,
+            36857,
+            35262
+          ],
+          "lapCount": 6,
+          "lastLap": 93362,
+          "lastSplitId": 1,
+          "lastSplits": [
+            21242,
+            36857,
+            35262
+          ],
+          "totalTime": 89306616
+        }
+      }
+    ],
+    "type": 0
+  },
+  "sessionType": "FP",
+  "trackName": "donington",
+  "serverName": "EGT Canada - Event 3",
+  "metaData": "championship-pre-practice",
+  "Date": "2025-09-19T19:28:52Z",
+  "SessionFile": "250919_192852_FP"
+}

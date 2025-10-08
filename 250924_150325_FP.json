@@ -1,0 +1,106 @@
+{
+  "laps": [
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90155,
+      "splits": [
+        20565,
+        35400,
+        34190
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90110,
+      "splits": [
+        21022,
+        35055,
+        34032
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 89832,
+      "splits": [
+        20617,
+        35532,
+        33682
+      ]
+    }
+  ],
+  "penalties": [],
+  "post_race_penalties": [],
+  "sessionIndex": 0,
+  "raceWeekendIndex": 11,
+  "sessionResult": {
+    "bestSplits": [
+      20565,
+      35055,
+      34032
+    ],
+    "bestlap": 90110,
+    "isWetSession": 0,
+    "leaderBoardLines": [
+      {
+        "car": {
+          "carId": 1001,
+          "carModel": 35,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 2,
+          "drivers": [
+            {
+              "firstName": "Vincent",
+              "lastName": "Dubuc",
+              "playerId": "S76561199561288131",
+              "shortName": "VCD"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 58,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Vincent",
+          "lastName": "Dubuc",
+          "playerId": "S76561199561288131",
+          "shortName": "VCD"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 90110,
+          "bestSplits": [
+            20565,
+            35055,
+            34032
+          ],
+          "lapCount": 3,
+          "lastLap": 89832,
+          "lastSplitId": 2,
+          "lastSplits": [
+            20617,
+            35532,
+            33682
+          ],
+          "totalTime": 76534520
+        }
+      }
+    ],
+    "type": 0
+  },
+  "sessionType": "FP",
+  "trackName": "donington",
+  "serverName": "EGT Canada - Event 3",
+  "metaData": "championship-pre-practice",
+  "Date": "2025-09-24T15:03:25Z",
+  "SessionFile": "250924_150325_FP"
+}

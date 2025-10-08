@@ -1,0 +1,129 @@
+{
+  "timestamp": "2025-10-06T21:41:42.837Z",
+  "device": "Mobile (iPhone SE)",
+  "tests": [
+    {
+      "test": "Main Page Responsive",
+      "result": {
+        "containerWidth": 375,
+        "headerWidth": 355,
+        "driverStatsWidth": 343,
+        "viewportWidth": 375,
+        "hasHorizontalScroll": false
+      },
+      "hasIssues": false
+    },
+    {
+      "test": "Pilot Modal Responsive",
+      "result": {
+        "modalVisible": true,
+        "modalFullScreen": {
+          "width": 375,
+          "height": 667,
+          "viewportWidth": 375,
+          "viewportHeight": 667,
+          "isFullWidth": true,
+          "isFullHeight": true
+        },
+        "layout": {
+          "flexDirection": "column",
+          "gap": "5px",
+          "height": 547
+        },
+        "columns": {
+          "left": {
+            "width": 355,
+            "height": 516
+          },
+          "right": {
+            "width": 355,
+            "height": 200
+          }
+        },
+        "sections": {
+          "chart": {
+            "width": 355,
+            "height": 158,
+            "margin": "0px",
+            "padding": "0px"
+          },
+          "laps": {
+            "width": 355,
+            "height": 516,
+            "margin": "0px",
+            "padding": "16px"
+          }
+        },
+        "bodyScrollable": true,
+        "modalScrollable": true
+      },
+      "spacing": {
+        "chartBottom": 686,
+        "lapsTop": 733,
+        "gap": 47,
+        "chartHeight": 158,
+        "lapsHeight": 516
+      },
+      "hasIssues": true
+    }
+  ],
+  "issues": [
+    {
+      "test": "Pilot Modal Responsive",
+      "result": {
+        "modalVisible": true,
+        "modalFullScreen": {
+          "width": 375,
+          "height": 667,
+          "viewportWidth": 375,
+          "viewportHeight": 667,
+          "isFullWidth": true,
+          "isFullHeight": true
+        },
+        "layout": {
+          "flexDirection": "column",
+          "gap": "5px",
+          "height": 547
+        },
+        "columns": {
+          "left": {
+            "width": 355,
+            "height": 516
+          },
+          "right": {
+            "width": 355,
+            "height": 200
+          }
+        },
+        "sections": {
+          "chart": {
+            "width": 355,
+            "height": 158,
+            "margin": "0px",
+            "padding": "0px"
+          },
+          "laps": {
+            "width": 355,
+            "height": 516,
+            "margin": "0px",
+            "padding": "16px"
+          }
+        },
+        "bodyScrollable": true,
+        "modalScrollable": true
+      },
+      "spacing": {
+        "chartBottom": 686,
+        "lapsTop": 733,
+        "gap": 47,
+        "chartHeight": 158,
+        "lapsHeight": 516
+      },
+      "hasIssues": true
+    }
+  ],
+  "summary": {
+    "totalTests": 2,
+    "testsWithIssues": 1
+  }
+}

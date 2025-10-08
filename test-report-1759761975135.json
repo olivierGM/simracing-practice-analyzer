@@ -1,0 +1,141 @@
+{
+  "timestamp": "2025-10-06T14:46:15.135Z",
+  "totalTests": 10,
+  "passedTests": 10,
+  "failedTests": 0,
+  "successRate": "100.00%",
+  "tests": [
+    {
+      "name": "Chart.js chargé",
+      "status": "PASS",
+      "duration": 10,
+      "result": {
+        "status": "Chart.js disponible"
+      },
+      "timestamp": "2025-10-06T14:46:11.946Z"
+    },
+    {
+      "name": "ProgressionChart disponible",
+      "status": "PASS",
+      "duration": 2,
+      "result": {
+        "status": "ProgressionChart disponible"
+      },
+      "timestamp": "2025-10-06T14:46:11.948Z"
+    },
+    {
+      "name": "Données chargées",
+      "status": "PASS",
+      "duration": 3,
+      "result": {
+        "sessions": 15,
+        "drivers": 19
+      },
+      "timestamp": "2025-10-06T14:46:11.951Z"
+    },
+    {
+      "name": "Pilote disponible",
+      "status": "PASS",
+      "duration": 1,
+      "result": {
+        "driverKey": "Pierre-Etienne_Longuez_3",
+        "firstName": "Pierre-Etienne",
+        "lastName": "Longuez",
+        "cupCategory": 3
+      },
+      "timestamp": "2025-10-06T14:46:11.952Z"
+    },
+    {
+      "name": "getAllPilotLaps fonctionne",
+      "status": "PASS",
+      "duration": 2,
+      "result": {
+        "lapsFound": 12,
+        "firstLap": [
+          "laptime",
+          "carId",
+          "splits",
+          "driverIndex",
+          "isValidForBest",
+          "sessionDate",
+          "trackName",
+          "sessionType",
+          "isWetSession"
+        ]
+      },
+      "timestamp": "2025-10-06T14:46:11.955Z"
+    },
+    {
+      "name": "Modal pilote s'ouvre",
+      "status": "PASS",
+      "duration": 3061,
+      "result": {
+        "pilotKey": "Pierre-Etienne_Longuez_3",
+        "modalOpened": true
+      },
+      "timestamp": "2025-10-06T14:46:15.016Z"
+    },
+    {
+      "name": "Canvas du graphique existe",
+      "status": "PASS",
+      "duration": 2,
+      "result": {
+        "canvasExists": true
+      },
+      "timestamp": "2025-10-06T14:46:15.018Z"
+    },
+    {
+      "name": "Graphique initialisé",
+      "status": "PASS",
+      "duration": 2,
+      "result": {
+        "canvasVisible": true,
+        "chartExists": true,
+        "labels": 2,
+        "datasets": 3,
+        "datasetsInfo": [
+          {
+            "label": "Meilleur temps",
+            "dataLength": 2,
+            "borderColor": "#667eea"
+          },
+          {
+            "label": "Temps moyen",
+            "dataLength": 2,
+            "borderColor": "#f093fb"
+          },
+          {
+            "label": "Moyenne mobile (2 sessions)",
+            "dataLength": 2,
+            "borderColor": "#ffd93d"
+          }
+        ]
+      },
+      "timestamp": "2025-10-06T14:46:15.020Z"
+    },
+    {
+      "name": "Graphique interactif",
+      "status": "PASS",
+      "duration": 1,
+      "result": {
+        "allDatasetsHaveData": true,
+        "allDataValid": true,
+        "isInteractive": true
+      },
+      "timestamp": "2025-10-06T14:46:15.021Z"
+    },
+    {
+      "name": "Aucune erreur console",
+      "status": "PASS",
+      "duration": 0,
+      "result": {
+        "noErrors": true
+      },
+      "timestamp": "2025-10-06T14:46:15.021Z"
+    }
+  ],
+  "screenshots": [
+    "test-progression-chart-final-1759761975021.png"
+  ],
+  "consoleLogs": []
+}

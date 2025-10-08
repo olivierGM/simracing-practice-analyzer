@@ -1,0 +1,106 @@
+{
+  "laps": [
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 115175,
+      "splits": [
+        21862,
+        55125,
+        38187
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 100500,
+      "splits": [
+        23057,
+        41082,
+        36360
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 95797,
+      "splits": [
+        21850,
+        37432,
+        36515
+      ]
+    }
+  ],
+  "penalties": [],
+  "post_race_penalties": [],
+  "sessionIndex": 0,
+  "raceWeekendIndex": 18,
+  "sessionResult": {
+    "bestSplits": [
+      21850,
+      37432,
+      36515
+    ],
+    "bestlap": 95797,
+    "isWetSession": 1,
+    "leaderBoardLines": [
+      {
+        "car": {
+          "carId": 1001,
+          "carModel": 31,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 3,
+          "drivers": [
+            {
+              "firstName": "Cedric",
+              "lastName": "Couturier",
+              "playerId": "S76561199843399889",
+              "shortName": "CED"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 222,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Cedric",
+          "lastName": "Couturier",
+          "playerId": "S76561199843399889",
+          "shortName": "CED"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 95797,
+          "bestSplits": [
+            21850,
+            37432,
+            36515
+          ],
+          "lapCount": 3,
+          "lastLap": 95797,
+          "lastSplitId": 1,
+          "lastSplits": [
+            21850,
+            37432,
+            36515
+          ],
+          "totalTime": 173175096
+        }
+      }
+    ],
+    "type": 0
+  },
+  "sessionType": "FP",
+  "trackName": "donington",
+  "serverName": "EGT Canada - Event 3",
+  "metaData": "championship-pre-practice",
+  "Date": "2025-09-20T18:50:27Z",
+  "SessionFile": "250920_185027_FP"
+}

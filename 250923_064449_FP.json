@@ -1,0 +1,84 @@
+{
+  "laps": [
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 98367,
+      "splits": [
+        22805,
+        39055,
+        36507
+      ]
+    }
+  ],
+  "penalties": [],
+  "post_race_penalties": [],
+  "sessionIndex": 0,
+  "raceWeekendIndex": 36,
+  "sessionResult": {
+    "bestSplits": [
+      2147483647,
+      2147483647,
+      2147483647
+    ],
+    "bestlap": 2147483647,
+    "isWetSession": 1,
+    "leaderBoardLines": [
+      {
+        "car": {
+          "carId": 1001,
+          "carModel": 30,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 3,
+          "drivers": [
+            {
+              "firstName": "Marc-Andre",
+              "lastName": "Lebel ",
+              "playerId": "S76561199230634094",
+              "shortName": "BGR"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 819,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Marc-Andre",
+          "lastName": "Lebel ",
+          "playerId": "S76561199230634094",
+          "shortName": "BGR"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 2147483647,
+          "bestSplits": [
+            2147483647,
+            2147483647,
+            2147483647
+          ],
+          "lapCount": 1,
+          "lastLap": 98367,
+          "lastSplitId": 1,
+          "lastSplits": [
+            22805,
+            39055,
+            36507
+          ],
+          "totalTime": 389062870
+        }
+      }
+    ],
+    "type": 0
+  },
+  "sessionType": "FP",
+  "trackName": "donington",
+  "serverName": "EGT Canada - Event 3",
+  "metaData": "championship-pre-practice",
+  "Date": "2025-09-23T06:44:49Z",
+  "SessionFile": "250923_064449_FP"
+}

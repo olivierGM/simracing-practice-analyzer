@@ -1,0 +1,139 @@
+{
+  "laps": [
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 97307,
+      "splits": [
+        22070,
+        38312,
+        36925
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 96472,
+      "splits": [
+        21620,
+        37807,
+        37045
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 95905,
+      "splits": [
+        21542,
+        38000,
+        36362
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 94942,
+      "splits": [
+        21510,
+        37435,
+        35997
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 96025,
+      "splits": [
+        21912,
+        37617,
+        36495
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 95700,
+      "splits": [
+        21662,
+        37650,
+        36387
+      ]
+    }
+  ],
+  "penalties": [],
+  "post_race_penalties": [],
+  "sessionIndex": 0,
+  "raceWeekendIndex": 12,
+  "sessionResult": {
+    "bestSplits": [
+      21510,
+      37435,
+      35997
+    ],
+    "bestlap": 94942,
+    "isWetSession": 1,
+    "leaderBoardLines": [
+      {
+        "car": {
+          "carId": 1001,
+          "carModel": 33,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 3,
+          "drivers": [
+            {
+              "firstName": "Michel",
+              "lastName": "Melo",
+              "playerId": "S76561198033723403",
+              "shortName": "MEL"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 33,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Michel",
+          "lastName": "Melo",
+          "playerId": "S76561198033723403",
+          "shortName": "MEL"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 94942,
+          "bestSplits": [
+            21510,
+            37435,
+            35997
+          ],
+          "lapCount": 6,
+          "lastLap": 95700,
+          "lastSplitId": 1,
+          "lastSplits": [
+            21662,
+            37650,
+            36387
+          ],
+          "totalTime": 90603636
+        }
+      }
+    ],
+    "type": 0
+  },
+  "sessionType": "FP",
+  "trackName": "donington",
+  "serverName": "EGT Canada - Event 3",
+  "metaData": "championship-pre-practice",
+  "Date": "2025-09-19T19:51:49Z",
+  "SessionFile": "250919_195149_FP"
+}

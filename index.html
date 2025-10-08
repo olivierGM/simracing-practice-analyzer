@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyseur de Temps - Sim Racing</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js pour les graphiques de progression -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body class="compact">
+    <div class="container">
+        <header>
+            <div class="header-row">
+                <div class="header-titles">
+                    <h1>🏁 Analyseur de Temps - Sim Racing</h1>
+                    <p>Analysez les performances par classe et pilote</p>
+                </div>
+                <div class="header-actions">
+                    <!-- Bouton Toggle Mode Sombre/Clair -->
+                    <button id="themeToggle" class="theme-toggle-btn" title="Basculer le thème">
+                        🌙
+                    </button>
+                    <!-- Bouton Admin discret en haut à droite -->
+                    <button id="adminAccessBtn" class="admin-access-btn" title="Accès administrateur">
+                        ⚙️
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Zone Admin Complète (masquée par défaut) -->
+        <div id="adminSection" class="admin-section" style="display: none;">
+            <!-- Authentification admin -->
+            <div id="authSection" class="auth-section">
+                <div class="auth-form">
+                    <h3>🔐 Connexion Admin</h3>
+                    <p>Accès réservé aux administrateurs pour l'upload de fichiers JSON</p>
+                    <input type="password" id="adminPassword" placeholder="Mot de passe admin" />
+                    <button id="loginBtn" class="btn btn-primary">Se connecter</button>
+                    <button id="cancelAuthBtn" class="btn btn-secondary">Annuler</button>
+                    <div id="authStatus" class="auth-status"></div>
+                </div>
+            </div>
+
+            <!-- Section d'upload (admin seulement) -->
+            <div class="upload-section" id="uploadSection" style="display: none;">
+                <div class="upload-header" id="uploadHeader">
+                    <div class="upload-title">
+                        <span class="upload-icon">📁</span>
+                        <span class="upload-text">Upload de fichiers JSON (Admin)</span>
+                        <span class="file-count" id="fileCount"></span>
+                    </div>
+                    <button class="collapse-btn" id="collapseBtn" title="Réduire/Agrandir">
+                        <span class="collapse-icon">▼</span>
+                    </button>
+                </div>
+                <div class="upload-content" id="uploadContent">
+                    <div class="file-input-container">
+                        <input type="file" id="jsonFiles" multiple accept=".json" />
+                        <label for="jsonFiles" class="file-input-label">
+                            📁 Sélectionner les fichiers JSON
+                        </label>
+                    </div>
+                    <div class="file-list" id="fileList"></div>
+                    <div class="data-status" id="dataStatus" style="display: none;">
+                        <span class="status-indicator">💾</span>
+                        <span class="status-text">Données chargées depuis le cache</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contrôles admin (masqués jusqu'à authentification) -->
+            <div class="controls" id="adminControls" style="display: none;">
+                <div class="admin-header">
+                    <h3>🛠️ Zone Admin</h3>
+                    <p>Upload et gestion des fichiers de données</p>
+                </div>
+                <div class="admin-actions">
+                    <button id="analyzeBtn" class="btn btn-primary" disabled>
+                        🔍 Analyser les données
+                    </button>
+                    <button id="downloadBtn" class="btn btn-download">
+                        ⬇️ Télécharger depuis EGT
+                    </button>
+                    <button id="clearBtn" class="btn btn-secondary">
+                        🗑️ Effacer
+                    </button>
+                    <button id="logoutBtn" class="btn btn-secondary">
+                        🚪 Déconnexion
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <div class="view-controls">
+                <div class="control-group">
+                    <label class="toggle">
+                        <input type="checkbox" id="groupByClassToggle" />
+                        <span>Grouper par classe</span>
+                    </label>
+                </div>
+                <div class="control-group">
+                    <label for="dateFilter" class="control-label">Période:</label>
+                    <select id="dateFilter" class="date-filter">
+                        <option value="all">À tout moment</option>
+                        <option value="week">Dernière semaine</option>
+                        <option value="day">Dernière journée</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="sessionSelect" class="control-label">Piste:</label>
+                    <select id="sessionSelect" class="session-select">
+                        <option value="">Chargement...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results-content">
+                <div class="category-stats" id="categoryStats"></div>
+                <div class="driver-stats" id="driverStats"></div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Analyse en cours...</p>
+        </div>
+
+    </div>
+
+    <!-- Modal de détail du pilote (en dehors du container) -->
+    <div class="pilot-modal" id="pilotModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pilot-title">
+                    <h2 id="pilotName">Détails du pilote</h2>
+                    <div class="pilot-badges">
+                        <span id="pilotCategory" class="category-badge">-</span>
+                        <span id="pilotPosition" class="position-badge">-</span>
+                    </div>
+                </div>
+                <button class="close-modal" onclick="closePilotModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- Contenu généré dynamiquement -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de la modal pilote (chargé en premier) -->
+    <script src="pilot-modal.js"></script>
+    <!-- Gestionnaire de thèmes (chargé avant les autres scripts) -->
+    <script src="theme-manager.js"></script>
+    <!-- Analyseur de consistance -->
+    <script src="consistency-analyzer.js"></script>
+    <!-- Graphique de progression (chargé après Chart.js) -->
+    <script src="progression-chart.js"></script>
+    <!-- Firebase SDK -->
+    <script type="module" src="firebase-config.js"></script>
+    <!-- Script avec Firebase -->
+    <script type="module" src="script-public.js"></script>
+</body>
+</html>

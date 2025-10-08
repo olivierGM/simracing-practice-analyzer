@@ -1,0 +1,139 @@
+{
+  "laps": [
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 92182,
+      "splits": [
+        20425,
+        35075,
+        36682
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89672,
+      "splits": [
+        20405,
+        35137,
+        34130
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88237,
+      "splits": [
+        20367,
+        34600,
+        33270
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88255,
+      "splits": [
+        20247,
+        34607,
+        33400
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 88920,
+      "splits": [
+        20527,
+        34490,
+        33902
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88682,
+      "splits": [
+        20332,
+        34432,
+        33917
+      ]
+    }
+  ],
+  "penalties": [],
+  "post_race_penalties": [],
+  "sessionIndex": 0,
+  "raceWeekendIndex": 8,
+  "sessionResult": {
+    "bestSplits": [
+      20247,
+      34432,
+      33270
+    ],
+    "bestlap": 88237,
+    "isWetSession": 0,
+    "leaderBoardLines": [
+      {
+        "car": {
+          "carId": 1001,
+          "carModel": 20,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 0,
+          "drivers": [
+            {
+              "firstName": "Mederick",
+              "lastName": "Dumas",
+              "playerId": "S76561198334941585",
+              "shortName": "DUM"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 995,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Mederick",
+          "lastName": "Dumas",
+          "playerId": "S76561198334941585",
+          "shortName": "DUM"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 88237,
+          "bestSplits": [
+            20247,
+            34432,
+            33270
+          ],
+          "lapCount": 6,
+          "lastLap": 88682,
+          "lastSplitId": 2,
+          "lastSplits": [
+            20332,
+            34432,
+            33917
+          ],
+          "totalTime": 76413953
+        }
+      }
+    ],
+    "type": 0
+  },
+  "sessionType": "FP",
+  "trackName": "donington",
+  "serverName": "EGT Canada - Event 3",
+  "metaData": "championship-pre-practice",
+  "Date": "2025-09-19T15:54:01Z",
+  "SessionFile": "250919_155401_FP"
+}

@@ -1,0 +1,238 @@
+{
+  "laps": [
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 105440,
+      "splits": [
+        20667,
+        48990,
+        35782
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91200,
+      "splits": [
+        20625,
+        35820,
+        34755
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91850,
+      "splits": [
+        20715,
+        35997,
+        35137
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91970,
+      "splits": [
+        20752,
+        36445,
+        34772
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 92167,
+      "splits": [
+        20770,
+        36635,
+        34762
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 92465,
+      "splits": [
+        20597,
+        36617,
+        35250
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91032,
+      "splits": [
+        20857,
+        35675,
+        34500
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 94425,
+      "splits": [
+        22620,
+        36375,
+        35430
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91135,
+      "splits": [
+        20737,
+        35630,
+        34767
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91200,
+      "splits": [
+        20922,
+        35552,
+        34725
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90680,
+      "splits": [
+        20670,
+        35632,
+        34377
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91482,
+      "splits": [
+        20520,
+        36297,
+        34665
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 94250,
+      "splits": [
+        20745,
+        38582,
+        34922
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91340,
+      "splits": [
+        20612,
+        35912,
+        34815
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 96065,
+      "splits": [
+        20625,
+        35640,
+        39800
+      ]
+    }
+  ],
+  "penalties": [],
+  "post_race_penalties": [],
+  "sessionIndex": 0,
+  "raceWeekendIndex": 6,
+  "sessionResult": {
+    "bestSplits": [
+      20520,
+      35552,
+      34377
+    ],
+    "bestlap": 90680,
+    "isWetSession": 0,
+    "leaderBoardLines": [
+      {
+        "car": {
+          "carId": 1001,
+          "carModel": 8,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 2,
+          "drivers": [
+            {
+              "firstName": "Jonathan",
+              "lastName": "Hamel",
+              "playerId": "S76561198918021352",
+              "shortName": "REG"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 9,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Jonathan",
+          "lastName": "Hamel",
+          "playerId": "S76561198918021352",
+          "shortName": "REG"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 90680,
+          "bestSplits": [
+            20520,
+            35552,
+            34377
+          ],
+          "lapCount": 15,
+          "lastLap": 96065,
+          "lastSplitId": 0,
+          "lastSplits": [
+            20625,
+            35640,
+            39800
+          ],
+          "totalTime": 64002004
+        }
+      }
+    ],
+    "type": 0
+  },
+  "sessionType": "FP",
+  "trackName": "donington",
+  "serverName": "EGT Canada - Event 3",
+  "metaData": "championship-pre-practice",
+  "Date": "2025-09-24T11:34:52Z",
+  "SessionFile": "250924_113452_FP"
+}

@@ -1,0 +1,1788 @@
+{
+  "laps": [
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 101817,
+      "splits": [
+        22185,
+        41505,
+        38127
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 96952,
+      "splits": [
+        20967,
+        36292,
+        39692
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 93727,
+      "splits": [
+        20917,
+        36795,
+        36015
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 93937,
+      "splits": [
+        20792,
+        36472,
+        36672
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 92020,
+      "splits": [
+        21022,
+        36052,
+        34945
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91760,
+      "splits": [
+        20540,
+        36195,
+        35025
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91205,
+      "splits": [
+        20745,
+        35572,
+        34887
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 105222,
+      "splits": [
+        21147,
+        42967,
+        41107
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91797,
+      "splits": [
+        20822,
+        35867,
+        35107
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 92205,
+      "splits": [
+        20690,
+        36570,
+        34945
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 98900,
+      "splits": [
+        22772,
+        36910,
+        39217
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 93955,
+      "splits": [
+        22332,
+        36405,
+        35217
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 95637,
+      "splits": [
+        21490,
+        36782,
+        37365
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 100087,
+      "splits": [
+        20682,
+        41112,
+        38292
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 92087,
+      "splits": [
+        20752,
+        36017,
+        35317
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 92400,
+      "splits": [
+        20627,
+        36957,
+        34815
+      ]
+    },
+    {
+      "carId": 1003,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 96130,
+      "splits": [
+        24305,
+        37105,
+        34720
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 93245,
+      "splits": [
+        21397,
+        36602,
+        35245
+      ]
+    },
+    {
+      "carId": 1003,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 91682,
+      "splits": [
+        20902,
+        36320,
+        34460
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 93550,
+      "splits": [
+        21107,
+        37327,
+        35115
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91997,
+      "splits": [
+        20832,
+        36227,
+        34937
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 109530,
+      "splits": [
+        20562,
+        52587,
+        36380
+      ]
+    },
+    {
+      "carId": 1003,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91147,
+      "splits": [
+        20885,
+        35860,
+        34402
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91407,
+      "splits": [
+        20575,
+        35877,
+        34955
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91432,
+      "splits": [
+        20680,
+        35832,
+        34920
+      ]
+    },
+    {
+      "carId": 1003,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 92547,
+      "splits": [
+        22842,
+        35677,
+        34027
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 97340,
+      "splits": [
+        21140,
+        41285,
+        34915
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 91237,
+      "splits": [
+        20530,
+        35977,
+        34730
+      ]
+    },
+    {
+      "carId": 1003,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90960,
+      "splits": [
+        21192,
+        35540,
+        34227
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91347,
+      "splits": [
+        21220,
+        35250,
+        34877
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90730,
+      "splits": [
+        20577,
+        35560,
+        34592
+      ]
+    },
+    {
+      "carId": 1003,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91175,
+      "splits": [
+        21030,
+        35747,
+        34397
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90380,
+      "splits": [
+        20572,
+        35167,
+        34640
+      ]
+    },
+    {
+      "carId": 1003,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90600,
+      "splits": [
+        20960,
+        35417,
+        34222
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91005,
+      "splits": [
+        20865,
+        35395,
+        34745
+      ]
+    },
+    {
+      "carId": 1003,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90360,
+      "splits": [
+        20867,
+        35100,
+        34392
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 91965,
+      "splits": [
+        20862,
+        36207,
+        34895
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 93145,
+      "splits": [
+        20755,
+        35220,
+        37170
+      ]
+    },
+    {
+      "carId": 1003,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 90812,
+      "splits": [
+        20835,
+        35657,
+        34320
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 92125,
+      "splits": [
+        21150,
+        36272,
+        34702
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89745,
+      "splits": [
+        20795,
+        35010,
+        33940
+      ]
+    },
+    {
+      "carId": 1003,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90457,
+      "splits": [
+        20655,
+        35505,
+        34297
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90812,
+      "splits": [
+        20702,
+        35782,
+        34327
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90777,
+      "splits": [
+        20630,
+        35377,
+        34770
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89430,
+      "splits": [
+        20842,
+        34717,
+        33870
+      ]
+    },
+    {
+      "carId": 1003,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 89807,
+      "splits": [
+        20660,
+        34937,
+        34210
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90707,
+      "splits": [
+        20620,
+        35395,
+        34692
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 91130,
+      "splits": [
+        20685,
+        35225,
+        35220
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89315,
+      "splits": [
+        20490,
+        34620,
+        34205
+      ]
+    },
+    {
+      "carId": 1003,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89797,
+      "splits": [
+        20557,
+        34930,
+        34310
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90900,
+      "splits": [
+        21472,
+        35150,
+        34277
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 89392,
+      "splits": [
+        20602,
+        34362,
+        34427
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90897,
+      "splits": [
+        20520,
+        34947,
+        35430
+      ]
+    },
+    {
+      "carId": 1001,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 94300,
+      "splits": [
+        20630,
+        39167,
+        34502
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91105,
+      "splits": [
+        21192,
+        35730,
+        34182
+      ]
+    },
+    {
+      "carId": 1002,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90492,
+      "splits": [
+        20775,
+        35245,
+        34472
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 89175,
+      "splits": [
+        20625,
+        34725,
+        33825
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 89292,
+      "splits": [
+        20465,
+        35135,
+        33692
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90955,
+      "splits": [
+        20910,
+        35270,
+        34775
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 89677,
+      "splits": [
+        20682,
+        34900,
+        34095
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91155,
+      "splits": [
+        20890,
+        35742,
+        34522
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 88935,
+      "splits": [
+        20455,
+        34720,
+        33760
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89885,
+      "splits": [
+        20577,
+        34650,
+        34657
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88945,
+      "splits": [
+        20512,
+        34317,
+        34115
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89955,
+      "splits": [
+        20540,
+        35570,
+        33845
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90140,
+      "splits": [
+        21207,
+        34682,
+        34250
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 89700,
+      "splits": [
+        20592,
+        35352,
+        33755
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 90785,
+      "splits": [
+        20377,
+        36855,
+        33552
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 90790,
+      "splits": [
+        20322,
+        35245,
+        35222
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88850,
+      "splits": [
+        20355,
+        34777,
+        33717
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88975,
+      "splits": [
+        20802,
+        34537,
+        33635
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88510,
+      "splits": [
+        20272,
+        34575,
+        33662
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90620,
+      "splits": [
+        20870,
+        35077,
+        34672
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88685,
+      "splits": [
+        20555,
+        34440,
+        33690
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89467,
+      "splits": [
+        20590,
+        35270,
+        33607
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 92570,
+      "splits": [
+        20892,
+        35152,
+        36525
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 88492,
+      "splits": [
+        20550,
+        34570,
+        33372
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88570,
+      "splits": [
+        20340,
+        34637,
+        33592
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90157,
+      "splits": [
+        20745,
+        35142,
+        34270
+      ]
+    },
+    {
+      "carId": 1007,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 91292,
+      "splits": [
+        20782,
+        35837,
+        34672
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 90127,
+      "splits": [
+        20527,
+        36262,
+        33337
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89207,
+      "splits": [
+        20352,
+        35357,
+        33497
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91602,
+      "splits": [
+        20800,
+        35100,
+        35702
+      ]
+    },
+    {
+      "carId": 1007,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91300,
+      "splits": [
+        21085,
+        35727,
+        34487
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 88895,
+      "splits": [
+        20475,
+        34817,
+        33602
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90885,
+      "splits": [
+        20700,
+        35352,
+        34832
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 88725,
+      "splits": [
+        20410,
+        34185,
+        34130
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 92132,
+      "splits": [
+        22335,
+        35222,
+        34575
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 88610,
+      "splits": [
+        20537,
+        34637,
+        33435
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88342,
+      "splits": [
+        20470,
+        34585,
+        33287
+      ]
+    },
+    {
+      "carId": 1007,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 90377,
+      "splits": [
+        20837,
+        35420,
+        34120
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88027,
+      "splits": [
+        20395,
+        34382,
+        33250
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 88877,
+      "splits": [
+        20350,
+        34745,
+        33782
+      ]
+    },
+    {
+      "carId": 1007,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 92010,
+      "splits": [
+        21297,
+        35687,
+        35025
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 87937,
+      "splits": [
+        20437,
+        34400,
+        33100
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88775,
+      "splits": [
+        20505,
+        34402,
+        33867
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 91147,
+      "splits": [
+        20507,
+        35847,
+        34792
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88702,
+      "splits": [
+        20520,
+        34730,
+        33452
+      ]
+    },
+    {
+      "carId": 1007,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 106230,
+      "splits": [
+        20757,
+        50412,
+        35060
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 89530,
+      "splits": [
+        20480,
+        35647,
+        33402
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 91262,
+      "splits": [
+        20682,
+        35735,
+        34845
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88550,
+      "splits": [
+        20450,
+        34610,
+        33490
+      ]
+    },
+    {
+      "carId": 1007,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 90162,
+      "splits": [
+        20710,
+        35310,
+        34142
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 88447,
+      "splits": [
+        20265,
+        34757,
+        33425
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90712,
+      "splits": [
+        20997,
+        35507,
+        34207
+      ]
+    },
+    {
+      "carId": 1007,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90485,
+      "splits": [
+        20657,
+        35462,
+        34365
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91212,
+      "splits": [
+        20642,
+        34965,
+        35605
+      ]
+    },
+    {
+      "carId": 1005,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90562,
+      "splits": [
+        20767,
+        34977,
+        34817
+      ]
+    },
+    {
+      "carId": 1007,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89767,
+      "splits": [
+        20770,
+        34990,
+        34007
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 89285,
+      "splits": [
+        20377,
+        35210,
+        33697
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89695,
+      "splits": [
+        21172,
+        34920,
+        33602
+      ]
+    },
+    {
+      "carId": 1007,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 89982,
+      "splits": [
+        20595,
+        35212,
+        34175
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89207,
+      "splits": [
+        20475,
+        34665,
+        34067
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 90297,
+      "splits": [
+        21512,
+        35217,
+        33567
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89715,
+      "splits": [
+        20650,
+        35087,
+        33977
+      ]
+    },
+    {
+      "carId": 1007,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 93610,
+      "splits": [
+        21190,
+        35602,
+        36817
+      ]
+    },
+    {
+      "carId": 1007,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 93037,
+      "splits": [
+        22210,
+        35435,
+        35392
+      ]
+    },
+    {
+      "carId": 1007,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 91075,
+      "splits": [
+        21272,
+        35605,
+        34197
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88112,
+      "splits": [
+        20327,
+        34352,
+        33432
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 88622,
+      "splits": [
+        20480,
+        34762,
+        33380
+      ]
+    },
+    {
+      "carId": 1007,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 95280,
+      "splits": [
+        20815,
+        37170,
+        37295
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 89225,
+      "splits": [
+        21295,
+        34522,
+        33407
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88737,
+      "splits": [
+        20997,
+        34510,
+        33230
+      ]
+    },
+    {
+      "carId": 1008,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 88277,
+      "splits": [
+        20477,
+        34450,
+        33350
+      ]
+    },
+    {
+      "carId": 1006,
+      "driverIndex": 0,
+      "isValidForBest": false,
+      "laptime": 88307,
+      "splits": [
+        20405,
+        34270,
+        33632
+      ]
+    },
+    {
+      "carId": 1004,
+      "driverIndex": 0,
+      "isValidForBest": true,
+      "laptime": 87697,
+      "splits": [
+        20340,
+        34097,
+        33260
+      ]
+    }
+  ],
+  "penalties": [],
+  "post_race_penalties": [],
+  "sessionIndex": 0,
+  "raceWeekendIndex": 24,
+  "sessionResult": {
+    "bestSplits": [
+      20272,
+      34097,
+      33100
+    ],
+    "bestlap": 87697,
+    "isWetSession": 1,
+    "leaderBoardLines": [
+      {
+        "car": {
+          "carId": 1004,
+          "carModel": 25,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 0,
+          "drivers": [
+            {
+              "firstName": "Johnny",
+              "lastName": "Guérin",
+              "playerId": "S76561198093727806",
+              "shortName": "GUE"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 31,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Johnny",
+          "lastName": "Guérin",
+          "playerId": "S76561198093727806",
+          "shortName": "GUE"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 87697,
+          "bestSplits": [
+            20340,
+            34097,
+            33100
+          ],
+          "lapCount": 28,
+          "lastLap": 87697,
+          "lastSplitId": 0,
+          "lastSplits": [
+            20340,
+            34097,
+            33260
+          ],
+          "totalTime": 7273924
+        }
+      },
+      {
+        "car": {
+          "carId": 1006,
+          "carModel": 25,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 0,
+          "drivers": [
+            {
+              "firstName": "Kevin",
+              "lastName": "Godin",
+              "playerId": "S76561198408970841",
+              "shortName": "GOD"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 65,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Kevin",
+          "lastName": "Godin",
+          "playerId": "S76561198408970841",
+          "shortName": "GOD"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 88112,
+          "bestSplits": [
+            20272,
+            34352,
+            33407
+          ],
+          "lapCount": 19,
+          "lastLap": 88307,
+          "lastSplitId": 0,
+          "lastSplits": [
+            20405,
+            34270,
+            33632
+          ],
+          "totalTime": 7273737
+        }
+      },
+      {
+        "car": {
+          "carId": 1008,
+          "carModel": 35,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 0,
+          "drivers": [
+            {
+              "firstName": "Francois",
+              "lastName": "Richard",
+              "playerId": "S76561199108282725",
+              "shortName": "RIC"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 87,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Francois",
+          "lastName": "Richard",
+          "playerId": "S76561199108282725",
+          "shortName": "RIC"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 88277,
+          "bestSplits": [
+            20477,
+            34450,
+            33350
+          ],
+          "lapCount": 1,
+          "lastLap": 88277,
+          "lastSplitId": 0,
+          "lastSplits": [
+            20477,
+            34450,
+            33350
+          ],
+          "totalTime": 7248455
+        }
+      },
+      {
+        "car": {
+          "carId": 1007,
+          "carModel": 31,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 3,
+          "drivers": [
+            {
+              "firstName": "Cedric",
+              "lastName": "Couturier",
+              "playerId": "S76561199843399889",
+              "shortName": "CED"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 222,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Cedric",
+          "lastName": "Couturier",
+          "playerId": "S76561199843399889",
+          "shortName": "CED"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 89767,
+          "bestSplits": [
+            20657,
+            34990,
+            34007
+          ],
+          "lapCount": 13,
+          "lastLap": 95280,
+          "lastSplitId": 1,
+          "lastSplits": [
+            20815,
+            37170,
+            37295
+          ],
+          "totalTime": 7133503
+        }
+      },
+      {
+        "car": {
+          "carId": 1003,
+          "carModel": 32,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 3,
+          "drivers": [
+            {
+              "firstName": "Mathieu",
+              "lastName": "Cote",
+              "playerId": "S76561198856087454",
+              "shortName": "COT"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 28,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Mathieu",
+          "lastName": "Cote",
+          "playerId": "S76561198856087454",
+          "shortName": "COT"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 89797,
+          "bestSplits": [
+            20557,
+            34930,
+            34222
+          ],
+          "lapCount": 12,
+          "lastLap": 89797,
+          "lastSplitId": 2,
+          "lastSplits": [
+            20557,
+            34930,
+            34310
+          ],
+          "totalTime": 4533803
+        }
+      },
+      {
+        "car": {
+          "carId": 1005,
+          "carModel": 34,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 2,
+          "drivers": [
+            {
+              "firstName": "Serge",
+              "lastName": "Fortin",
+              "playerId": "S76561198434884564",
+              "shortName": "SFO"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 541,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Serge",
+          "lastName": "Fortin",
+          "playerId": "S76561198434884564",
+          "shortName": "SFO"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 89885,
+          "bestSplits": [
+            20577,
+            34650,
+            34207
+          ],
+          "lapCount": 14,
+          "lastLap": 90562,
+          "lastSplitId": 0,
+          "lastSplits": [
+            20767,
+            34977,
+            34817
+          ],
+          "totalTime": 6625758
+        }
+      },
+      {
+        "car": {
+          "carId": 1001,
+          "carModel": 8,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 2,
+          "drivers": [
+            {
+              "firstName": "Jonathan",
+              "lastName": "Hamel",
+              "playerId": "S76561198918021352",
+              "shortName": "REG"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 9,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Jonathan",
+          "lastName": "Hamel",
+          "playerId": "S76561198918021352",
+          "shortName": "REG"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 90380,
+          "bestSplits": [
+            20520,
+            34947,
+            34277
+          ],
+          "lapCount": 22,
+          "lastLap": 94300,
+          "lastSplitId": 0,
+          "lastSplits": [
+            20630,
+            39167,
+            34502
+          ],
+          "totalTime": 4674598
+        }
+      },
+      {
+        "car": {
+          "carId": 1002,
+          "carModel": 32,
+          "carGroup": "GT3",
+          "carGuid": -1,
+          "teamGuid": -1,
+          "cupCategory": 3,
+          "drivers": [
+            {
+              "firstName": "Jean-Francois",
+              "lastName": "Tremblay",
+              "playerId": "S76561197977250506",
+              "shortName": "JFT"
+            }
+          ],
+          "nationality": 0,
+          "raceNumber": 30,
+          "teamName": ""
+        },
+        "currentDriver": {
+          "firstName": "Jean-Francois",
+          "lastName": "Tremblay",
+          "playerId": "S76561197977250506",
+          "shortName": "JFT"
+        },
+        "currentDriverIndex": 0,
+        "driverTotalTimes": [],
+        "missingMandatoryPitstop": -1,
+        "timing": {
+          "bestLap": 90492,
+          "bestSplits": [
+            20575,
+            35245,
+            34182
+          ],
+          "lapCount": 17,
+          "lastLap": 90492,
+          "lastSplitId": 1,
+          "lastSplits": [
+            20775,
+            35245,
+            34472
+          ],
+          "totalTime": 4811213
+        }
+      }
+    ],
+    "type": 0
+  },
+  "sessionType": "FP",
+  "trackName": "donington",
+  "serverName": "EGT Canada - Event 3",
+  "metaData": "championship-pre-practice",
+  "Date": "2025-09-21T17:38:47Z",
+  "SessionFile": "250921_173847_FP"
+}
