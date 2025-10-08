@@ -1,0 +1,343 @@
+/* DRIVER TABLE COMPONENT - Styles CSS */
+/* Styles spécifiques au composant driver-table */
+
+.driver-table-component {
+    width: 100%;
+    background: var(--bg-primary);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Contrôles du tableau */
+.table-controls {
+    background: var(--bg-secondary);
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.filters-row {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-group label {
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.filter-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+}
+
+.filter-select {
+    padding: 6px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    min-width: 150px;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+}
+
+/* Statistiques par catégorie */
+.category-stats {
+    background: var(--bg-secondary);
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.category-stats h3 {
+    margin: 0 0 12px 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.stat-item {
+    background: var(--bg-primary);
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 4px solid var(--primary);
+}
+
+.stat-item h4 {
+    margin: 0 0 4px 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-item .stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+/* Conteneur du tableau */
+.table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.driver-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-primary);
+}
+
+/* En-tête du tableau */
+.table-header {
+    background: var(--primary);
+    color: white;
+}
+
+.table-header th {
+    padding: 12px 8px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+.table-header th:hover {
+    background: var(--primary-dark);
+}
+
+.table-header th.sortable::after {
+    content: '↕';
+    position: absolute;
+    right: 4px;
+    opacity: 0.5;
+    font-size: 0.8rem;
+}
+
+.table-header th.sort-asc::after {
+    content: '↑';
+    opacity: 1;
+}
+
+.table-header th.sort-desc::after {
+    content: '↓';
+    opacity: 1;
+}
+
+/* Corps du tableau */
+.table-body {
+    background: var(--bg-primary);
+}
+
+.table-body tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+.table-body tr:hover {
+    background: var(--bg-hover);
+    cursor: pointer;
+}
+
+.table-body tr:nth-child(even) {
+    background: var(--bg-secondary);
+}
+
+.table-body tr:nth-child(even):hover {
+    background: var(--bg-hover);
+}
+
+.table-body td {
+    padding: 10px 8px;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    vertical-align: middle;
+}
+
+/* Colonnes spécifiques */
+.driver-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.category-badge {
+    background: var(--primary);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.time-cell {
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+}
+
+.percentage-cell {
+    font-weight: 500;
+}
+
+.percentage-cell.high {
+    color: #10b981;
+}
+
+.percentage-cell.medium {
+    color: #f59e0b;
+}
+
+.percentage-cell.low {
+    color: #ef4444;
+}
+
+/* Informations du tableau */
+.table-info {
+    background: var(--bg-secondary);
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .filters-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .filter-group {
+        justify-content: space-between;
+    }
+    
+    .filter-select {
+        min-width: 120px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .table-controls {
+        padding: 12px;
+    }
+    
+    .filters-row {
+        gap: 8px;
+    }
+    
+    .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+    }
+    
+    .filter-group label {
+        font-size: 0.8rem;
+    }
+    
+    .filter-select {
+        min-width: 100px;
+        font-size: 0.8rem;
+    }
+    
+    .table-header th {
+        padding: 8px 4px;
+        font-size: 0.8rem;
+    }
+    
+    .table-body td {
+        padding: 8px 4px;
+        font-size: 0.8rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .stat-item {
+        padding: 8px;
+    }
+    
+    .stat-item h4 {
+        font-size: 0.8rem;
+    }
+    
+    .stat-item .stat-value {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .driver-table-component {
+        border-radius: 4px;
+    }
+    
+    .table-controls,
+    .category-stats,
+    .table-info {
+        padding: 8px;
+    }
+    
+    .filters-row {
+        gap: 6px;
+    }
+    
+    .filter-group label {
+        font-size: 0.75rem;
+    }
+    
+    .filter-select {
+        min-width: 80px;
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+    
+    .table-header th {
+        padding: 6px 2px;
+        font-size: 0.75rem;
+    }
+    
+    .table-body td {
+        padding: 6px 2px;
+        font-size: 0.75rem;
+    }
+    
+    .driver-name {
+        font-size: 0.8rem;
+    }
+    
+    .category-badge {
+        font-size: 0.7rem;
+        padding: 1px 4px;
+    }
+}

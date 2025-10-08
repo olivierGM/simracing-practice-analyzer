@@ -1,0 +1,261 @@
+/* SEGMENT COMPARATOR COMPONENT - Styles CSS */
+/* Styles spécifiques au composant segment-comparator */
+
+.segment-comparator-component {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    border-left: 4px solid #f59e0b;
+    transition: background 0.3s ease;
+}
+
+/* En-tête du comparateur */
+.segment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.segment-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.segment-comparator-component h3 {
+    color: var(--text-primary);
+    font-size: 1.0rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.segment-focus-hint {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* Grille des comparaisons */
+.segment-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.segment-section {
+    background: var(--bg-primary);
+    border-radius: 6px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.segment-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.segment-section h4 {
+    margin: 0 0 8px 0;
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.segment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    font-size: 0.75rem;
+}
+
+.segment-row:last-child {
+    margin-bottom: 0;
+}
+
+.segment-name {
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 20px;
+}
+
+.segment-time {
+    color: var(--text-primary);
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+}
+
+.segment-gap {
+    font-weight: 600;
+    font-size: 0.7rem;
+}
+
+.segment-gap.positive {
+    color: #10b981;
+}
+
+.segment-gap.negative {
+    color: #ef4444;
+}
+
+.segment-color {
+    font-size: 1rem;
+    margin-left: 4px;
+}
+
+/* Section d'informations sur les segments */
+.segment-info-section {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.segment-info-section h4 {
+    margin: 0 0 8px 0;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.segment-info-item {
+    margin-bottom: 4px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .segment-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .segment-section {
+        padding: 10px;
+    }
+    
+    .segment-section h4 {
+        font-size: 0.75rem;
+    }
+    
+    .segment-row {
+        font-size: 0.7rem;
+    }
+    
+    .segment-time {
+        font-size: 0.65rem;
+    }
+    
+    .segment-gap {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .segment-comparator-component {
+        padding: 12px;
+    }
+    
+    .segment-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .segment-title-row {
+        justify-content: center;
+    }
+    
+    .segment-focus-hint {
+        text-align: center;
+        font-size: 0.8rem;
+    }
+    
+    .segment-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    
+    .segment-section {
+        padding: 8px;
+    }
+    
+    .segment-section h4 {
+        font-size: 0.7rem;
+        text-align: center;
+    }
+    
+    .segment-row {
+        font-size: 0.65rem;
+        justify-content: space-between;
+    }
+    
+    .segment-name {
+        min-width: 15px;
+    }
+    
+    .segment-time {
+        font-size: 0.6rem;
+    }
+    
+    .segment-gap {
+        font-size: 0.6rem;
+    }
+    
+    .segment-color {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .segment-comparator-component {
+        padding: 8px;
+    }
+    
+    .segment-header {
+        gap: 6px;
+    }
+    
+    .segment-comparator-component h3 {
+        font-size: 0.9rem;
+    }
+    
+    .segment-focus-hint {
+        font-size: 0.75rem;
+    }
+    
+    .segment-grid {
+        gap: 4px;
+    }
+    
+    .segment-section {
+        padding: 6px;
+    }
+    
+    .segment-section h4 {
+        font-size: 0.65rem;
+        margin-bottom: 6px;
+    }
+    
+    .segment-row {
+        margin-bottom: 2px;
+        font-size: 0.6rem;
+    }
+    
+    .segment-time {
+        font-size: 0.55rem;
+    }
+    
+    .segment-gap {
+        font-size: 0.55rem;
+    }
+    
+    .segment-color {
+        font-size: 0.7rem;
+    }
+}
