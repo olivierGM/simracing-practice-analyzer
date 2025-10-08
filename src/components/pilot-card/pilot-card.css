@@ -1,0 +1,294 @@
+/* PILOT CARD COMPONENT - Styles CSS */
+/* Styles spécifiques au composant pilot-card */
+
+.pilot-card {
+    width: 100%;
+    height: 100vh;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* Header du pilote */
+.pilot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: var(--bg-secondary);
+    border-bottom: 2px solid var(--primary);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.pilot-info h2 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.8rem;
+}
+
+.pilot-category {
+    background: var(--primary);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Grille des statistiques */
+.pilot-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 20px;
+}
+
+.stat-card {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    border-left: 4px solid var(--primary);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-card .stat-value {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+/* Section graphique */
+.progression-section {
+    padding: 20px;
+    background: var(--bg-primary);
+}
+
+.progression-chart-container {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Section des tours */
+.laps-section {
+    padding: 20px;
+    background: var(--bg-primary);
+}
+
+.laps-section h3 {
+    margin: 0 0 16px 0;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+}
+
+.laps-list {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.laps-header {
+    display: grid;
+    grid-template-columns: 50px 100px 75px 75px 75px 80px 50px 50px;
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+    padding: 12px;
+    gap: 8px;
+    align-items: center;
+}
+
+.lap-item {
+    display: grid;
+    grid-template-columns: 50px 100px 75px 75px 75px 80px 50px 50px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-color);
+    gap: 8px;
+    align-items: center;
+    transition: background 0.2s ease;
+}
+
+.lap-item:hover {
+    background: var(--bg-hover);
+}
+
+.lap-item:last-child {
+    border-bottom: none;
+}
+
+/* Comparateur de segments */
+.segment-comparator-section {
+    padding: 20px;
+    background: var(--bg-primary);
+}
+
+.segment-comparator {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    border-left: 4px solid #f59e0b;
+    transition: background 0.3s ease;
+}
+
+.segment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.segment-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.segment-comparator h3 {
+    color: var(--text-primary);
+    font-size: 1.0rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.segment-focus-hint {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.segment-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.segment-section {
+    background: var(--bg-primary);
+    border-radius: 6px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.segment-section h4 {
+    margin: 0 0 8px 0;
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.segment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    font-size: 0.75rem;
+}
+
+.segment-name {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.segment-time {
+    color: var(--text-primary);
+}
+
+.segment-gap {
+    font-weight: 600;
+}
+
+.segment-gap.positive {
+    color: #10b981;
+}
+
+.segment-gap.negative {
+    color: #ef4444;
+}
+
+.segment-color {
+    font-size: 1.2rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .pilot-header {
+        padding: 16px;
+    }
+    
+    .pilot-info h2 {
+        font-size: 1.5rem;
+    }
+    
+    .pilot-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+        padding: 16px;
+    }
+    
+    .progression-section,
+    .laps-section,
+    .segment-comparator-section {
+        padding: 16px;
+    }
+    
+    .segment-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .laps-list {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+    }
+    
+    .laps-header,
+    .lap-item {
+        min-width: 559px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pilot-header {
+        padding: 12px;
+    }
+    
+    .pilot-info h2 {
+        font-size: 1.3rem;
+    }
+    
+    .pilot-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 12px;
+    }
+    
+    .progression-section,
+    .laps-section,
+    .segment-comparator-section {
+        padding: 12px;
+    }
+}
