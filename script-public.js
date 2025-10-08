@@ -18,6 +18,17 @@ let authSection, adminPassword, loginBtn, logoutBtn, adminControls, authStatus, 
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', async function() {
+    // Initialiser le composant pilot-card
+    console.log('🚀 Initialisation du composant pilot-card...');
+    try {
+        const { initPilotCardComponent } = await import('./src/shared/pilot-card-integration.js');
+        await initPilotCardComponent();
+        console.log('✅ Composant pilot-card initialisé');
+    } catch (error) {
+        console.error('❌ Erreur lors de l\'initialisation du composant pilot-card:', error);
+        // Le système de fallback sera chargé automatiquement
+    }
+    
     // Éléments DOM
     fileInput = document.getElementById('jsonFiles');
     fileList = document.getElementById('fileList');

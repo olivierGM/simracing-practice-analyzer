@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analyseur de Temps - Sim Racing</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Styles du composant pilot-card -->
+    <link rel="stylesheet" href="src/components/pilot-card/pilot-card.css">
     <!-- Chart.js pour les graphiques de progression -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
 </head>
@@ -131,32 +133,18 @@
     </div>
 
     <!-- Modal de détail du pilote (en dehors du container) -->
-    <div class="pilot-modal" id="pilotModal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="pilot-title">
-                    <h2 id="pilotName">Détails du pilote</h2>
-                    <div class="pilot-badges">
-                        <span id="pilotCategory" class="category-badge">-</span>
-                        <span id="pilotPosition" class="position-badge">-</span>
-                    </div>
-                </div>
-                <button class="close-modal" onclick="closePilotModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <!-- Contenu généré dynamiquement -->
-            </div>
-        </div>
+    <div class="pilot-modal modal" id="pilotModal" style="display: none;">
+        <!-- Le contenu sera généré par le composant pilot-card -->
     </div>
 
-    <!-- Script de la modal pilote (chargé en premier) -->
-    <script src="pilot-modal.js"></script>
     <!-- Gestionnaire de thèmes (chargé avant les autres scripts) -->
     <script src="theme-manager.js"></script>
     <!-- Analyseur de consistance -->
     <script src="consistency-analyzer.js"></script>
     <!-- Graphique de progression (chargé après Chart.js) -->
     <script src="progression-chart.js"></script>
+    <!-- Intégration du composant pilot-card -->
+    <script src="pilot-card-integration.js"></script>
     <!-- Firebase SDK -->
     <script type="module" src="firebase-config.js"></script>
     <!-- Script avec Firebase -->
