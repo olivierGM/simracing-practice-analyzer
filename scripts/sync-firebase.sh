@@ -12,6 +12,10 @@ cp *.css deploy/
 cp *.js deploy/
 cp *.json deploy/
 
+# Copier les assets
+echo "📁 Copie des assets vers deploy/..."
+cp -r assets/ deploy/
+
 # Aller dans le dossier deploy
 cd deploy
 
