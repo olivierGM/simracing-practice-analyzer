@@ -185,12 +185,12 @@
 }
 
 .category-badge {
-    background: var(--primary);
-    color: white;
+    /* Les styles de couleur sont définis par les classes spécifiques (category-pro, category-amateur, etc.) */
     padding: 2px 6px;
     border-radius: 10px;
     font-size: 0.8rem;
     font-weight: 500;
+    text-transform: uppercase;
 }
 
 .time-cell {

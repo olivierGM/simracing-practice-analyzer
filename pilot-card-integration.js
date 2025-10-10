@@ -62,6 +62,79 @@ const PILOT_CARD_CONFIG = {
 let pilotCardInitialized = false;
 
 /**
+ * Afficher la popup d'information sur la consistance
+ */
+window.showConsistencyInfo = function(event) {
+    event.stopPropagation();
+    
+    const popup = document.createElement('div');
+    popup.className = 'consistency-info-popup';
+    popup.innerHTML = `
+        <div class="popup-content">
+            <div class="popup-header">
+                <h4>📊 Analyse de Consistance</h4>
+                <button class="popup-close" onclick="closeConsistencyInfo()">×</button>
+            </div>
+            <div class="popup-body">
+                <div class="info-section">
+                    <h5>🎯 Score de Consistance (0-100%)</h5>
+                    <p>Plus le score est élevé, plus le pilote est consistant dans ses temps de tour.</p>
+                    <ul>
+                        <li><span class="score-excellent">🏆 80-100%</span> : Excellent (très consistant)</li>
+                        <li><span class="score-good">⭐ 60-79%</span> : Bon (assez consistant)</li>
+                        <li><span class="score-average">📊 40-59%</span> : Moyen (variable)</li>
+                        <li><span class="score-poor">⚠️ 0-39%</span> : Faible (peu consistant)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(popup);
+    
+    setTimeout(() => popup.classList.add('show'), 10);
+};
+
+window.closeConsistencyInfo = function() {
+    const popup = document.querySelector('.consistency-info-popup');
+    if (popup) {
+        popup.classList.remove('show');
+        setTimeout(() => popup.remove(), 300);
+    }
+};
+
+window.showVariabilityInfo = function(event) {
+    event.stopPropagation();
+    
+    const popup = document.createElement('div');
+    popup.className = 'consistency-info-popup';
+    popup.innerHTML = `
+        <div class="popup-content">
+            <div class="popup-header">
+                <h4>📈 Variabilité des Temps</h4>
+                <button class="popup-close" onclick="closeConsistencyInfo()">×</button>
+            </div>
+            <div class="popup-body">
+                <div class="info-section">
+                    <h5>📏 Coefficient de Variation (CV)</h5>
+                    <p>Mesure la variabilité relative des temps. Plus le CV est bas, plus le pilote est consistant.</p>
+                    <ul>
+                        <li><strong>CV < 2%</strong> : Très consistant</li>
+                        <li><strong>CV 2-5%</strong> : Consistant</li>
+                        <li><strong>CV 5-10%</strong> : Variable</li>
+                        <li><strong>CV > 10%</strong> : Très variable</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(popup);
+    
+    setTimeout(() => popup.classList.add('show'), 10);
+};
+
+/**
  * Initialiser le composant pilot-card
  */
 function initPilotCard() {
@@ -186,6 +259,20 @@ function calculatePilotStats(driver, firstName, lastName, cupCategory, byDriver)
     // Calculer les statistiques de segments du pilote
     const pilotSegmentStats = calculatePilotSegmentStats(driver);
     
+    // Calculer la consistance et la variabilité
+    let consistencyScore = 0;
+    let consistencyIcon = '';
+    let variability = 0;
+    
+    const validTimes = driver.lapTimes ? driver.lapTimes.filter(lap => lap.isValid || lap.isValidForBest).map(lap => lap.laptime || lap.time || 0).filter(t => t > 0) : [];
+    
+    if (validTimes.length > 0 && window.consistencyAnalyzer) {
+        const consistencyStats = window.consistencyAnalyzer.calculateConsistency(validTimes);
+        consistencyScore = consistencyStats.score;
+        consistencyIcon = window.consistencyAnalyzer.getConsistencyIcon(consistencyStats.score);
+        variability = consistencyStats.coefficient; // Le coefficient de variation est la variabilité
+    }
+    
     return {
         totalLaps,
         validLaps,
@@ -196,10 +283,13 @@ function calculatePilotStats(driver, firstName, lastName, cupCategory, byDriver)
         // Ajouter les statistiques nécessaires pour les cartes
         bestValidTime: driver.bestValidTime || 0,
         averageValidTime: driver.averageValidTime || 0,
-        bestWetTime: driver.bestWetTime || 0,
-        averageWetTime: driver.averageWetTime || 0,
+        bestWetTime: bestWetTime,
+        averageWetTime: averageWetTime,
         potentialBestTime: potentialBestTime,
-        pilotSegmentStats: pilotSegmentStats
+        pilotSegmentStats: pilotSegmentStats,
+        consistencyScore: consistencyScore,
+        consistencyIcon: consistencyIcon,
+        variability: variability
     };
 }
 
@@ -282,14 +372,10 @@ function getCategoryName(categoryNumber) {
     const num = parseInt(categoryNumber);
     
     const categoryMap = {
-        0: 'Pro',
-        1: 'Amateur', 
-        2: 'Silver',
-        3: 'Bronze'
+        0: 'PRO',
+        2: 'AMATEUR',
+        3: 'SILVER'
     };
-    
-    // Debug pour voir ce qui se passe
-    console.log(`🔍 getCategoryName debug: input="${categoryNumber}", parsed=${num}, isNaN=${isNaN(num)}, result="${categoryMap[num]}"`);
     
     // Vérifier si la conversion a réussi et si la valeur existe
     if (!isNaN(num) && categoryMap[num] !== undefined) {
@@ -297,6 +383,22 @@ function getCategoryName(categoryNumber) {
     }
     
     return `Catégorie ${categoryNumber}`;
+}
+
+function getCategoryClass(categoryNumber) {
+    const num = parseInt(categoryNumber);
+    
+    const categoryClassMap = {
+        0: 'category-pro',
+        2: 'category-amateur',
+        3: 'category-silver'
+    };
+    
+    if (!isNaN(num) && categoryClassMap[num] !== undefined) {
+        return categoryClassMap[num];
+    }
+    
+    return 'category-default';
 }
 
 function generatePilotModalContent(firstName, lastName, cupCategory, stats, globalSegmentStats, trackName, driver) {
@@ -321,7 +423,7 @@ function generatePilotModalContent(firstName, lastName, cupCategory, stats, glob
                 <div class="pilot-info">
                     <h2 class="pilot-name">${firstName} ${lastName}</h2>
                     <div class="pilot-details">
-                        <span class="pilot-category">${getCategoryName(cupCategory)}</span>
+                        <span class="category-badge ${getCategoryClass(parseInt(cupCategory))}">${getCategoryName(parseInt(cupCategory))}</span>
                         <span class="pilot-position">#${stats.categoryPosition}/${stats.categoryDrivers}</span>
                     </div>
                 </div>
@@ -329,7 +431,7 @@ function generatePilotModalContent(firstName, lastName, cupCategory, stats, glob
             </div>
 
             <!-- Statistiques principales -->
-            <div class="pilot-stats-grid">
+            <div class="pilot-info-section">
                 ${generateStatsCards(stats)}
             </div>
 
@@ -340,9 +442,9 @@ function generatePilotModalContent(firstName, lastName, cupCategory, stats, glob
 
             <!-- Section laps et graphique côte à côte -->
             <div class="laps-chart-container">
-                <!-- Liste des tours -->
+                <!-- Section détail des tours -->
                 <div class="laps-section">
-                    <h3>📊 Détails des Tours</h3>
+                    <h3>🏁 Détail des Tours (${stats.totalLaps || 0} tours)</h3>
                     <div class="laps-list">
                         ${generateLapsList(driver)}
                     </div>
@@ -350,13 +452,14 @@ function generatePilotModalContent(firstName, lastName, cupCategory, stats, glob
 
                 <!-- Section graphique de progression -->
                 <div class="progression-section">
+                    <h3>📈 Évolution des Temps de Tour</h3>
                     <div class="progression-chart-container" id="progressionChartContainer">
                         <canvas id="progressionChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
-    `;
+        `;
     
     console.log('📝 Contenu généré, longueur:', modalContent.length);
     console.log('📝 Aperçu du contenu:', modalContent.substring(0, 200) + '...');
@@ -383,33 +486,44 @@ function generatePilotModalContent(firstName, lastName, cupCategory, stats, glob
 }
 
 /**
- * Générer les cartes de statistiques
+ * Générer les statistiques du pilote (style ancien - horizontal)
  */
 function generateStatsCards(stats) {
     return `
-        <div class="stat-card">
-            <div class="stat-title">🏆 Meilleur Tour</div>
-            <div class="stat-value">${formatTime(stats.bestValidTime)}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-title">📊 Moyenne Valide</div>
-            <div class="stat-value">${formatTime(stats.averageValidTime)}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-title">💧 Meilleur Wet</div>
-            <div class="stat-value">${formatTime(stats.bestWetTime)}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-title">📈 Moyenne Wet</div>
-            <div class="stat-value">${formatTime(stats.averageWetTime)}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-title">🎯 Tour Potentiel</div>
-            <div class="stat-value">${formatTime(stats.potentialBestTime)}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-title">⚡ Écart au Leader</div>
-            <div class="stat-value">${stats.gapToLeader ? formatTime(stats.gapToLeader) : 'N/A'}</div>
+        <h3>📊 Informations du Pilote</h3>
+        <div class="pilot-info-grid">
+            <div class="pilot-info-item">
+                <span class="pilot-info-label">Total tours:</span>
+                <span class="pilot-info-value">${stats.totalLaps || 0}</span>
+            </div>
+            <div class="pilot-info-item">
+                <span class="pilot-info-label">Tours valides:</span>
+                <span class="pilot-info-value">${stats.validLaps || 0}</span>
+            </div>
+            <div class="pilot-info-item">
+                <span class="pilot-info-label">Tours wet:</span>
+                <span class="pilot-info-value">${stats.wetLaps || 0}</span>
+            </div>
+            <div class="pilot-info-item">
+                <span class="pilot-info-label">Meilleur temps:</span>
+                <span class="pilot-info-value">${formatTime(stats.bestValidTime || 0)}</span>
+            </div>
+            <div class="pilot-info-item">
+                <span class="pilot-info-label">Moyenne:</span>
+                <span class="pilot-info-value">${formatTime(stats.averageValidTime || 0)}</span>
+            </div>
+            <div class="pilot-info-item">
+                <span class="pilot-info-label">Écart au leader:</span>
+                <span class="pilot-info-value">${stats.gapToLeader ? formatTime(stats.gapToLeader) : '--:--.---'}</span>
+            </div>
+            <div class="pilot-info-item">
+                <span class="pilot-info-label">Consistance <span class="info-icon" onclick="showConsistencyInfo(event)">ℹ️</span></span>
+                <span class="pilot-info-value">${stats.consistencyIcon || ''} ${stats.consistencyScore !== undefined ? stats.consistencyScore.toFixed(2) + '%' : 'N/A'}</span>
+            </div>
+            <div class="pilot-info-item">
+                <span class="pilot-info-label">Variabilité <span class="info-icon" onclick="showVariabilityInfo(event)">ℹ️</span></span>
+                <span class="pilot-info-value">📏 ${stats.variability !== undefined ? stats.variability.toFixed(2) + '%' : 'N/A'}</span>
+            </div>
         </div>
     `;
 }
@@ -444,8 +558,10 @@ function generateLapsList(driver) {
  */
 function generateLapItem(lap, index) {
     const lapTime = lap.laptime || lap.time || 0;
-    const isValid = lap.isValidForBest !== false;
-    const isWet = lap.isWetSession || lap.sessionWet || false;
+    // Utiliser lap.isValid directement, qui est un booléen
+    const isValid = lap.isValid === true;
+    // Vérifier plusieurs propriétés pour wet
+    const isWet = lap.isWet === true || lap.isWetSession === true || lap.sessionWet === true;
     
     const isValidClass = isValid ? 'valid' : 'invalid';
     const isWetClass = isWet ? 'wet' : 'dry';

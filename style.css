@@ -1359,6 +1359,13 @@ body.compact .sort-arrow { font-size: 0.7rem; }
 }
 
 .category-amateur {
+    background: linear-gradient(45deg, #ff8c00, #ffa500);
+    color: white;
+    border: 1px solid #ff8c00;
+    box-shadow: 0 2px 4px rgba(255, 140, 0, 0.3);
+}
+
+.category-bronze {
     background: linear-gradient(45deg, #cd7f32, #b8860b);
     color: white;
     border: 1px solid #cd7f32;
@@ -1709,7 +1716,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     /* Garder le format tableau sur mobile avec scroll horizontal */
     .laps-header {
         display: grid !important;
-        grid-template-columns: 50px 100px 75px 75px 75px 80px 50px 50px;
+        grid-template-columns: 50px 100px 75px 75px 75px 80px 40px 40px;
         gap: 4px;
         padding: 6px 8px;
         font-size: 0.7rem;
@@ -1720,7 +1727,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     
     .lap-item {
         display: grid !important;
-        grid-template-columns: 50px 100px 75px 75px 75px 80px 50px 50px;
+        grid-template-columns: 50px 100px 75px 75px 75px 80px 40px 40px;
         gap: 4px;
         padding: 6px 8px;
         font-size: 0.75rem;
@@ -1762,12 +1769,13 @@ body.compact .sort-arrow { font-size: 0.7rem; }
 
 /* Styles pour la nouvelle modal pilote */
 .pilot-info-section {
-    background: var(--bg-secondary);
+    background: #ffffff;
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 20px;
     border-left: 4px solid var(--accent-color);
     transition: background 0.3s ease;
+    flex-shrink: 0;
 }
 
 .pilot-info-grid {
@@ -1944,7 +1952,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
 }
 
 .laps-section {
-    background: var(--bg-secondary);
+    background: #ffffff;
     border-radius: 8px;
     padding: 16px;
     border-left: 4px solid var(--accent-color);
@@ -2002,13 +2010,13 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     border: 1px solid var(--border-color);
     border-top: none;
     border-radius: 0 0 6px 6px;
-    background: var(--bg-card);
+    background: #ffffff;
     transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .lap-item {
     display: grid;
-    grid-template-columns: 50px 120px 80px 80px 80px 90px 50px 50px;
+    grid-template-columns: 50px 120px 80px 80px 80px 90px 40px 40px;
     gap: 8px;
     padding: 8px 12px;
     border-bottom: 1px solid var(--border-color);
@@ -2335,14 +2343,14 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     }
     
     .laps-header {
-        grid-template-columns: 50px 100px 75px 75px 75px 80px 50px 50px;
+        grid-template-columns: 50px 100px 75px 75px 75px 80px 40px 40px;
         gap: 4px;
         padding: 6px 8px;
         font-size: 0.7rem;
     }
     
     .lap-item {
-        grid-template-columns: 50px 100px 75px 75px 75px 80px 50px 50px;
+        grid-template-columns: 50px 100px 75px 75px 75px 80px 40px 40px;
         gap: 4px;
         padding: 6px 8px;
         font-size: 0.8rem;

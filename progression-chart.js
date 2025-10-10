@@ -41,9 +41,18 @@ class ProgressionChart {
                         callbacks: {
                             label: function(context) {
                                 const timeInMs = context.parsed.y;
-                                const formattedTime = this.formatTime(timeInMs);
+                                // Formatage au format mm:ss.SSS
+                                if (!timeInMs || timeInMs === 0) {
+                                    return `${context.dataset.label}: 00:00.000`;
+                                }
+                                
+                                const minutes = Math.floor(timeInMs / 60000);
+                                const seconds = Math.floor((timeInMs % 60000) / 1000);
+                                const milliseconds = Math.floor(timeInMs % 1000);
+                                
+                                const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
                                 return `${context.dataset.label}: ${formattedTime}`;
-                            }.bind(this)
+                            }
                         }
                     },
                 },
@@ -65,19 +74,18 @@ class ProgressionChart {
                         reverse: true,
                         ticks: {
                             callback: function(value) {
-                                const formatted = this.formatTime(value);
-                                console.log(`Y-axis tick callback: ${value} -> ${formatted}`);
-                                return formatted;
-                            }.bind(this),
-                            stepSize: 5000,
+                                // Formatage au format mm:ss.SSS
+                                if (!value || value === 0) return '00:00.000';
+                                
+                                const minutes = Math.floor(value / 60000);
+                                const seconds = Math.floor((value % 60000) / 1000);
+                                const milliseconds = Math.floor(value % 1000);
+                                
+                                return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
+                            },
+                            stepSize: 1000,
                             maxTicksLimit: 8
                         },
-                        // Utiliser la nouvelle API de Chart.js 4.x
-                        afterBuildTicks: function(axis) {
-                            axis.ticks.forEach(tick => {
-                                tick.label = this.formatTime(tick.value);
-                            });
-                        }.bind(this),
                         type: 'linear',
                         beginAtZero: false
                     }
@@ -327,25 +335,24 @@ class ProgressionChart {
     }
 
     mergeConfig(defaultConfig, customConfig) {
-        const merged = JSON.parse(JSON.stringify(defaultConfig));
-        
-        if (customConfig.data) {
-            merged.data = customConfig.data;
-        }
-        
-        if (customConfig.options) {
-            merged.options = {
-                ...merged.options,
-                ...customConfig.options
-            };
-            
-            if (customConfig.options.plugins) {
-                merged.options.plugins = {
-                    ...merged.options.plugins,
-                    ...customConfig.options.plugins
-                };
+        // Ne pas utiliser JSON.parse/stringify car ça supprime les fonctions (callbacks)
+        // Utiliser un deep merge manuel
+        const merged = {
+            type: defaultConfig.type,
+            data: customConfig.data || defaultConfig.data,
+            options: {
+                ...defaultConfig.options,
+                ...(customConfig.options || {}),
+                plugins: {
+                    ...defaultConfig.options.plugins,
+                    ...(customConfig.options?.plugins || {})
+                },
+                scales: {
+                    ...defaultConfig.options.scales,
+                    ...(customConfig.options?.scales || {})
+                }
             }
-        }
+        };
         
         return merged;
     }

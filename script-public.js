@@ -936,9 +936,9 @@ function calculateConsistency(lapTimes, bestTime, averageTime) {
 
 function getCategoryName(category) {
     switch (category) {
-        case 0: return 'Pro';
-        case 2: return 'Amateur';
-        case 3: return 'Silver';
+        case 0: return 'PRO';
+        case 2: return 'AMATEUR';
+        case 3: return 'SILVER';
         default: return `Catégorie ${category}`;
     }
 }

@@ -136,9 +136,9 @@ function generateSegmentComparatorWithComponent(pilotStats, globalStats, cupCate
         s3: pilotStats.average.s3 - classStats.avgS3
     };
 
-    // Trouver le segment le plus problématique
-    const worstSegment = Object.keys(avgPilotVsAvgGlobal).reduce((a, b) => 
-        avgPilotVsAvgGlobal[a] > avgPilotVsAvgGlobal[b] ? a : b
+    // Trouver le segment le plus problématique (basé sur "Meilleur Pilote vs Meilleur Global")
+    const worstSegment = Object.keys(bestPilotVsBestGlobal).reduce((a, b) => 
+        bestPilotVsBestGlobal[a] > bestPilotVsBestGlobal[b] ? a : b
     );
 
     const infoButton = `<span class="info-icon" onclick="showSegmentInfo(event, '${trackName}')">ℹ️</span>`;
@@ -151,7 +151,7 @@ function generateSegmentComparatorWithComponent(pilotStats, globalStats, cupCate
                     <h3>🏁 Comparateur de Segments${infoButton}</h3>
                 </div>
                 <div class="segment-focus-hint">
-                    💡 Focus sur <strong>${worstSegment.toUpperCase()}</strong> pour +${formatSegmentTime(avgPilotVsAvgGlobal[worstSegment])}s de gain
+                    💡 Focus sur <strong>${worstSegment.toUpperCase()}</strong> pour +${formatSegmentTime(bestPilotVsBestGlobal[worstSegment])}s de gain
                 </div>
             </div>
 
@@ -181,11 +181,6 @@ function generateSegmentComparatorWithComponent(pilotStats, globalStats, cupCate
                     { s1: classStats.avgS1, s2: classStats.avgS2, s3: classStats.avgS3 },
                     avgPilotVsAvgClass
                 )}
-            </div>
-
-            <!-- Informations sur les segments -->
-            <div class="segment-info-section">
-                ${generateSegmentInfo(trackName)}
             </div>
         </div>
     `;

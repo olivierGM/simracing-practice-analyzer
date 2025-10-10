@@ -31,8 +31,8 @@ html.modal-open {
     overflow: hidden !important;
 }
 
-/* Empêcher le scroll sur tous les éléments parents */
-body.modal-open * {
+/* Empêcher le scroll sur tous les éléments parents, sauf ceux qui doivent scroller */
+body.modal-open *:not(.laps-list):not(.pilot-card) {
     overflow: hidden !important;
 }
 
@@ -59,8 +59,8 @@ body.modal-open * {
 
 .pilot-card {
     width: 100%;
-    height: 100vh;
-    background: var(--bg-primary);
+    max-height: 100vh;
+    background: #ffffff !important;
     color: var(--text-primary);
     display: flex;
     flex-direction: column;
@@ -178,24 +178,32 @@ body.modal-open * {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     padding: 20px;
-    background: var(--bg-primary);
+    background: #ffffff;
+    flex-shrink: 0;
 }
 
 /* Section graphique */
 .progression-section {
-    background: var(--bg-primary);
+    background: #ffffff;
 }
 
 .progression-chart-container {
-    background: var(--bg-secondary);
+    background: #ffffff;
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
+    min-height: 400px;
+    height: 400px;
+}
+
+.progression-chart-container canvas {
+    min-height: 350px !important;
+    height: 350px !important;
 }
 
 /* Section des tours */
 .laps-section {
-    background: var(--bg-primary);
+    background: #ffffff;
 }
 
 .laps-section h3 {
@@ -205,16 +213,19 @@ body.modal-open * {
 }
 
 .laps-list {
-    background: var(--bg-secondary);
+    background: #ffffff;
     border-radius: 8px;
-    overflow: hidden;
+    max-height: 400px;
+    overflow-x: hidden;
+    overflow-y: scroll !important;
+    border: 1px solid var(--border-color);
 }
 
 .laps-header {
     display: grid;
-    grid-template-columns: 50px 100px 75px 75px 75px 80px 50px 50px;
-    background: var(--primary);
-    color: white;
+    grid-template-columns: 50px 100px 75px 75px 75px 80px 40px 40px;
+    background: #6366f1 !important;
+    color: white !important;
     font-weight: 600;
     padding: 12px;
     gap: 8px;
@@ -223,7 +234,7 @@ body.modal-open * {
 
 .lap-item {
     display: grid;
-    grid-template-columns: 50px 100px 75px 75px 75px 80px 50px 50px;
+    grid-template-columns: 50px 100px 75px 75px 75px 80px 40px 40px;
     padding: 8px 12px;
     border-bottom: 1px solid var(--border-color);
     gap: 8px;
@@ -266,11 +277,12 @@ body.modal-open * {
 /* Comparateur de segments */
 .segment-comparator-section {
     padding: 20px;
-    background: var(--bg-primary);
+    background: #ffffff;
+    flex-shrink: 0;
 }
 
 .segment-comparator {
-    background: var(--bg-secondary);
+    background: #ffffff;
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 20px;
@@ -313,7 +325,7 @@ body.modal-open * {
 }
 
 .segment-section {
-    background: var(--bg-primary);
+    background: #ffffff;
     border-radius: 6px;
     padding: 12px;
     border: 1px solid var(--border-color);
@@ -521,6 +533,7 @@ body.modal-open * {
     
     .laps-list {
         overflow-x: auto;
+        overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         border-radius: 8px;
     }
