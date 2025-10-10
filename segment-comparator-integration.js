@@ -144,7 +144,7 @@ function generateSegmentComparatorWithComponent(pilotStats, globalStats, cupCate
     const infoButton = `<span class="info-icon" onclick="showSegmentInfo(event, '${trackName}')">ℹ️</span>`;
 
     return `
-        <div class="segment-comparator-component">
+        <div class="segment-comparator">
             <!-- En-tête du comparateur -->
             <div class="segment-header">
                 <div class="segment-title-row">

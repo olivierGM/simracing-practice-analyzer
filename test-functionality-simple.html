@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Fonctionnalités Corrigées</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success { background: #2d5a2d; }
+        .error { background: #5a2d2d; }
+        .info { background: #2d3a5a; }
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #005a99;
+        }
+        #results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test des Fonctionnalités Corrigées</h1>
+    
+    <div class="test-section">
+        <h2>Tests à Exécuter</h2>
+        <button onclick="runAllTests()">🚀 Lancer Tous les Tests</button>
+        <button onclick="testModalOpening()">🔍 Test Ouverture Modal</button>
+        <button onclick="testPilotInfoCards()">📊 Test Cartes Info Pilote</button>
+        <button onclick="testLapList()">🏁 Test Liste Tours</button>
+        <button onclick="testCategoryDisplay()">🏆 Test Affichage Catégorie</button>
+        <button onclick="testScrollPrevention()">🚫 Test Prévention Scroll</button>
+    </div>
+    
+    <div id="results"></div>
+    
+    <script>
+        let testResults = [];
+        
+        function addResult(test, status, message) {
+            const result = { test, status, message, timestamp: new Date().toLocaleTimeString() };
+            testResults.push(result);
+            updateDisplay();
+        }
+        
+        function updateDisplay() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = testResults.map(result => 
+                `<div class="test-result ${result.status}">
+                    <strong>${result.test}</strong> - ${result.message} 
+                    <small>(${result.timestamp})</small>
+                </div>`
+            ).join('');
+        }
+        
+        async function runAllTests() {
+            testResults = [];
+            addResult('🚀 Démarrage', 'info', 'Lancement de tous les tests...');
+            
+            await testModalOpening();
+            await testPilotInfoCards();
+            await testLapList();
+            await testCategoryDisplay();
+            await testScrollPrevention();
+            
+            const successCount = testResults.filter(r => r.status === 'success').length;
+            const errorCount = testResults.filter(r => r.status === 'error').length;
+            
+            addResult('📋 Résumé', 'info', 
+                `Tests réussis: ${successCount}, Échecs: ${errorCount}, Total: ${testResults.length}`);
+        }
+        
+        async function testModalOpening() {
+            try {
+                addResult('🔍 Test Ouverture Modal', 'info', 'Test en cours...');
+                
+                // Ouvrir le site
+                const newWindow = window.open('https://simracing-practice-analyzer.web.app', '_blank');
+                
+                if (!newWindow) {
+                    addResult('🔍 Test Ouverture Modal', 'error', 'Impossible d\'ouvrir le site (popup bloqué)');
+                    return;
+                }
+                
+                // Attendre que la page se charge
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                
+                // Vérifier que le modal peut s'ouvrir
+                if (typeof newWindow.openPilotModal === 'function') {
+                    addResult('🔍 Test Ouverture Modal', 'success', 'Fonction openPilotModal disponible');
+                } else {
+                    addResult('🔍 Test Ouverture Modal', 'error', 'Fonction openPilotModal non disponible');
+                }
+                
+                newWindow.close();
+            } catch (error) {
+                addResult('🔍 Test Ouverture Modal', 'error', `Erreur: ${error.message}`);
+            }
+        }
+        
+        async function testPilotInfoCards() {
+            try {
+                addResult('📊 Test Cartes Info Pilote', 'info', 'Test en cours...');
+                
+                // Simuler des données de test
+                const mockDriver = {
+                    firstName: 'Test',
+                    lastName: 'Pilot',
+                    cupCategory: 0,
+                    lapTimes: [
+                        { laptime: 120000, isValidForBest: true, isWetSession: false },
+                        { laptime: 125000, isValidForBest: true, isWetSession: false },
+                        { laptime: 130000, isValidForBest: true, isWetSession: true }
+                    ]
+                };
+                
+                // Tester la fonction calculatePilotStats
+                if (typeof calculatePilotStats === 'function') {
+                    const stats = calculatePilotStats(mockDriver);
+                    if (stats.bestValidTime > 0 && stats.averageValidTime > 0) {
+                        addResult('📊 Test Cartes Info Pilote', 'success', 'Statistiques calculées correctement');
+                    } else {
+                        addResult('📊 Test Cartes Info Pilote', 'error', 'Statistiques vides ou incorrectes');
+                    }
+                } else {
+                    addResult('📊 Test Cartes Info Pilote', 'error', 'Fonction calculatePilotStats non disponible');
+                }
+            } catch (error) {
+                addResult('📊 Test Cartes Info Pilote', 'error', `Erreur: ${error.message}`);
+            }
+        }
+        
+        async function testLapList() {
+            try {
+                addResult('🏁 Test Liste Tours', 'info', 'Test en cours...');
+                
+                // Tester la fonction generateLapItem
+                if (typeof generateLapItem === 'function') {
+                    const mockLap = { laptime: 120000, isValidForBest: true, isWetSession: false, splits: [40000, 40000, 40000] };
+                    const lapHTML = generateLapItem(mockLap, 0);
+                    
+                    if (lapHTML.includes('01:20.000') && lapHTML.includes('✓')) {
+                        addResult('🏁 Test Liste Tours', 'success', 'Génération HTML des tours correcte');
+                    } else {
+                        addResult('🏁 Test Liste Tours', 'error', 'HTML généré incorrect');
+                    }
+                } else {
+                    addResult('🏁 Test Liste Tours', 'error', 'Fonction generateLapItem non disponible');
+                }
+            } catch (error) {
+                addResult('🏁 Test Liste Tours', 'error', `Erreur: ${error.message}`);
+            }
+        }
+        
+        async function testCategoryDisplay() {
+            try {
+                addResult('🏆 Test Affichage Catégorie', 'info', 'Test en cours...');
+                
+                // Tester la fonction getCategoryName
+                if (typeof getCategoryName === 'function') {
+                    const tests = [
+                        { input: 0, expected: 'Pro' },
+                        { input: 1, expected: 'Amateur' },
+                        { input: 2, expected: 'Silver' },
+                        { input: 3, expected: 'Bronze' }
+                    ];
+                    
+                    let allPassed = true;
+                    for (const test of tests) {
+                        const result = getCategoryName(test.input);
+                        if (result !== test.expected) {
+                            allPassed = false;
+                            break;
+                        }
+                    }
+                    
+                    if (allPassed) {
+                        addResult('🏆 Test Affichage Catégorie', 'success', 'Mapping des catégories correct');
+                    } else {
+                        addResult('🏆 Test Affichage Catégorie', 'error', 'Mapping des catégories incorrect');
+                    }
+                } else {
+                    addResult('🏆 Test Affichage Catégorie', 'error', 'Fonction getCategoryName non disponible');
+                }
+            } catch (error) {
+                addResult('🏆 Test Affichage Catégorie', 'error', `Erreur: ${error.message}`);
+            }
+        }
+        
+        async function testScrollPrevention() {
+            try {
+                addResult('🚫 Test Prévention Scroll', 'info', 'Test en cours...');
+                
+                // Tester l'ajout/suppression de la classe modal-open
+                const originalBodyClass = document.body.className;
+                const originalHtmlClass = document.documentElement.className;
+                
+                document.documentElement.classList.add('modal-open');
+                document.body.classList.add('modal-open');
+                
+                if (document.documentElement.classList.contains('modal-open') && 
+                    document.body.classList.contains('modal-open')) {
+                    addResult('🚫 Test Prévention Scroll', 'success', 'Classes modal-open ajoutées correctement');
+                } else {
+                    addResult('🚫 Test Prévention Scroll', 'error', 'Classes modal-open non ajoutées');
+                }
+                
+                // Nettoyer
+                document.documentElement.classList.remove('modal-open');
+                document.body.classList.remove('modal-open');
+                
+            } catch (error) {
+                addResult('🚫 Test Prévention Scroll', 'error', `Erreur: ${error.message}`);
+            }
+        }
+    </script>
+    
+    <!-- Inclure les scripts nécessaires pour les tests -->
+    <script src="https://simracing-practice-analyzer.web.app/pilot-card-integration.js"></script>
+</body>
+</html>

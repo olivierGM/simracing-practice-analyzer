@@ -1,6 +1,10 @@
 // Version publique avec visualisation pour tous et upload admin seulement
 let sessionData = [];
 let processedData = {};
+
+// Exposer les variables globalement pour les composants
+window.sessionData = sessionData;
+window.processedData = processedData;
 let groupByClass = false;
 let selectedSession = '';
 let selectedDateFilter = 'all'; // 'all', 'week', 'day'
@@ -250,8 +254,15 @@ async function loadDataFromStorage() {
                 processedData = { overall: {}, byCategory: {}, byDriver: {} };
             }
             
+            // Mettre à jour les variables globales
+            window.sessionData = sessionData;
+            window.processedData = processedData;
+            
             console.log(`📊 ${sessionData.length} sessions chargées depuis Firestore`);
             updateDataStatus('☁️ Firestore (temps réel)');
+            
+            // Afficher les résultats après le chargement des données
+            displayResults();
         } catch (error) {
             console.error('Erreur Firebase:', error);
             // En cas d'erreur Firebase, afficher un message d'erreur au lieu d'utiliser localStorage
@@ -345,6 +356,10 @@ async function analyzeData() {
         
         // Traiter les données
         processedData = processSessionData(sessionData);
+        
+        // Mettre à jour les variables globales
+        window.sessionData = sessionData;
+        window.processedData = processedData;
         
         // Sauvegarder
         await saveDataToStorage();
@@ -500,6 +515,10 @@ function displayResults() {
     if (!isAdmin) {
         hideAdminSections();
     }
+    
+    // Mettre à jour les variables globales
+    window.sessionData = sessionData;
+    window.processedData = processedData;
     
     if (sessionData.length === 0) {
         showNoDataMessage();
@@ -1233,21 +1252,8 @@ function updateSessionSelect() {
 
 // Fonctions de modal supprimées - Maintenant dans pilot-modal.js
 
-// Fallback pour s'assurer que les fonctions de modal sont disponibles
-if (typeof window.openPilotModal === 'undefined') {
-    console.warn('⚠️ openPilotModal non trouvée, ajout d\'un fallback');
-    window.openPilotModal = function(pilotId) {
-        console.error('❌ Modal pilote non disponible. Pilot ID:', pilotId);
-        alert('Modal pilote non disponible. Vérifiez que pilot-modal.js est chargé.');
-    };
-}
-
-if (typeof window.closePilotModal === 'undefined') {
-    console.warn('⚠️ closePilotModal non trouvée, ajout d\'un fallback');
-    window.closePilotModal = function() {
-        console.log('Fermeture modal pilote (fallback)');
-    };
-}
+// Les fonctions de modal seront initialisées par les composants
+console.log('🔄 Attente de l\'initialisation des composants...');
 
 // Variables pour le tri
 let currentSortColumn = -1;
