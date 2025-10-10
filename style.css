@@ -1716,7 +1716,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     /* Garder le format tableau sur mobile avec scroll horizontal */
     .laps-header {
         display: grid !important;
-        grid-template-columns: 50px 100px 75px 75px 75px 40px 40px;
+        grid-template-columns: 40px 90px 70px 70px 70px 40px 40px;
         gap: 4px;
         padding: 6px 8px;
         font-size: 0.7rem;
@@ -1727,7 +1727,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     
     .lap-item {
         display: grid !important;
-        grid-template-columns: 50px 100px 75px 75px 75px 40px 40px;
+        grid-template-columns: 40px 90px 70px 70px 70px 40px 40px;
         gap: 4px;
         padding: 6px 8px;
         font-size: 0.75rem;
@@ -1968,7 +1968,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
 
 .laps-header {
     display: grid;
-    grid-template-columns: 50px 120px 80px 80px 80px 40px 40px;
+    grid-template-columns: 40px 90px 70px 70px 70px 40px 40px;
     gap: 8px;
     padding: 8px 12px;
     background: #f8f9fa;
@@ -2016,7 +2016,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
 
 .lap-item {
     display: grid;
-    grid-template-columns: 50px 120px 80px 80px 80px 40px 40px;
+    grid-template-columns: 40px 90px 70px 70px 70px 40px 40px;
     gap: 8px;
     padding: 8px 12px;
     border-bottom: 1px solid var(--border-color);
@@ -2343,14 +2343,14 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     }
     
     .laps-header {
-        grid-template-columns: 50px 100px 75px 75px 75px 40px 40px;
+        grid-template-columns: 40px 90px 70px 70px 70px 40px 40px;
         gap: 4px;
         padding: 6px 8px;
         font-size: 0.7rem;
     }
     
     .lap-item {
-        grid-template-columns: 50px 100px 75px 75px 75px 40px 40px;
+        grid-template-columns: 40px 90px 70px 70px 70px 40px 40px;
         gap: 4px;
         padding: 6px 8px;
         font-size: 0.8rem;

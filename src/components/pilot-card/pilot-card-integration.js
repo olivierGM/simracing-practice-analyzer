@@ -536,6 +536,9 @@ function generateLapsList(driver) {
         return '<p class="no-data">Aucun tour disponible</p>';
     }
 
+    // Calculer les meilleurs temps
+    const bestTimes = calculateBestLapTimes(driver.lapTimes);
+
     const lapsHeader = `
         <div class="laps-header">
             <span>Tour</span>
@@ -548,15 +551,42 @@ function generateLapsList(driver) {
         </div>
     `;
 
-    const lapsItems = driver.lapTimes.map((lap, index) => generateLapItem(lap, index)).join('');
+    const lapsItems = driver.lapTimes.map((lap, index) => generateLapItem(lap, index, bestTimes)).join('');
     
     return lapsHeader + lapsItems;
 }
 
 /**
+ * Calculer les meilleurs temps pour highlighting
+ */
+function calculateBestLapTimes(lapTimes) {
+    let bestS1 = Infinity;
+    let bestS2 = Infinity;
+    let bestS3 = Infinity;
+    let bestTotal = Infinity;
+    
+    lapTimes.forEach(lap => {
+        const splits = lap.splits || [];
+        const lapTime = lap.laptime || lap.time || 0;
+        
+        if (splits[0] && splits[0] < bestS1) bestS1 = splits[0];
+        if (splits[1] && splits[1] < bestS2) bestS2 = splits[1];
+        if (splits[2] && splits[2] < bestS3) bestS3 = splits[2];
+        if (lapTime > 0 && lapTime < bestTotal) bestTotal = lapTime;
+    });
+    
+    return {
+        s1: bestS1 !== Infinity ? bestS1 : 0,
+        s2: bestS2 !== Infinity ? bestS2 : 0,
+        s3: bestS3 !== Infinity ? bestS3 : 0,
+        total: bestTotal !== Infinity ? bestTotal : 0
+    };
+}
+
+/**
  * Générer un élément de tour
  */
-function generateLapItem(lap, index) {
+function generateLapItem(lap, index, bestTimes = null) {
     const lapTime = lap.laptime || lap.time || 0;
     // Utiliser lap.isValid directement, qui est un booléen
     const isValid = lap.isValid === true;
@@ -566,13 +596,20 @@ function generateLapItem(lap, index) {
     const isValidClass = isValid ? 'valid' : 'invalid';
     const isWetClass = isWet ? 'wet' : 'dry';
     
+    // Déterminer si c'est un meilleur temps
+    const splits = lap.splits || [];
+    const isBestTotal = bestTimes && lapTime > 0 && lapTime === bestTimes.total;
+    const isBestS1 = bestTimes && splits[0] && splits[0] === bestTimes.s1;
+    const isBestS2 = bestTimes && splits[1] && splits[1] === bestTimes.s2;
+    const isBestS3 = bestTimes && splits[2] && splits[2] === bestTimes.s3;
+    
     return `
         <div class="lap-item ${isValidClass} ${isWetClass}">
             <span>${index + 1}</span>
-            <span>${lapTime > 0 ? formatTime(lapTime) : '--:--.---'}</span>
-            <span>${lap.splits && lap.splits[0] ? formatTime(lap.splits[0]) : '--'}</span>
-            <span>${lap.splits && lap.splits[1] ? formatTime(lap.splits[1]) : '--'}</span>
-            <span>${lap.splits && lap.splits[2] ? formatTime(lap.splits[2]) : '--'}</span>
+            <span class="${isBestTotal ? 'best-time' : ''}">${lapTime > 0 ? formatTime(lapTime) : '--:--.---'}</span>
+            <span class="${isBestS1 ? 'best-time' : ''}">${splits[0] ? formatTime(splits[0]) : '--'}</span>
+            <span class="${isBestS2 ? 'best-time' : ''}">${splits[1] ? formatTime(splits[1]) : '--'}</span>
+            <span class="${isBestS3 ? 'best-time' : ''}">${splits[2] ? formatTime(splits[2]) : '--'}</span>
             <span>${isValid ? '✓' : '✗'}</span>
             <span>${isWet ? '💧' : '☀️'}</span>
         </div>
