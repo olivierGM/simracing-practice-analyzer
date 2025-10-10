@@ -72,13 +72,14 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
 .pilot-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     padding: 20px;
-    background: var(--bg-secondary);
+    background: #ffffff;
     border-bottom: 2px solid var(--primary);
     position: sticky;
     top: 0;
     z-index: 100;
+    min-height: 110px;
 }
 
 .pilot-info {
