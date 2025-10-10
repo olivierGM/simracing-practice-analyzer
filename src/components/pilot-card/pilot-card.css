@@ -286,7 +286,7 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
     background: #ffffff;
     border-radius: 8px;
     padding: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     border-left: 4px solid #f59e0b;
     transition: background 0.3s ease;
 }
