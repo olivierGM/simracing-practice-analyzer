@@ -20,6 +20,7 @@ const ADMIN_PASSWORD = "admin123";
 let fileInput, fileList, analyzeBtn, clearBtn, downloadBtn, resultsSection, loading, categoryStats, driverStats, groupByClassToggle, dataStatus, uploadSection, uploadHeader, uploadContent, fileCount, collapseBtn, sessionSelect, dateFilter, pilotModal, closeModal;
 let authSection, adminPassword, loginBtn, logoutBtn, adminControls, authStatus, adminAccessBtn, adminSection, cancelAuthBtn, publicSection;
 let adminLayout, adminLoading, analysisResults, resultsStatus, resultsContent;
+let initialLoading;
 
 // Initialisation
 // L'initialisation se fait maintenant dans initializeApp() à la fin du fichier
@@ -127,8 +128,10 @@ function checkAdminStatus() {
 
 // Charger les données depuis Firebase (visible pour tous)
 async function loadDataFromStorage() {
-    // Afficher le loading initial
-    showInitialLoading(true);
+    // Afficher le loading initial (seulement si initialLoading est défini)
+    if (initialLoading) {
+        showInitialLoading(true);
+    }
     
     // S'assurer que les sections admin restent cachées si pas authentifié
     if (!isAdmin) {
@@ -154,13 +157,15 @@ async function loadDataFromStorage() {
                 console.log('🔄 Traitement des données depuis Firestore...');
                 processedData = processSessionData(sessionData);
                 
+                // Temporairement désactivé car cause des erreurs
                 // Essayer de sauvegarder les données traitées avec la nouvelle méthode
-                try {
-                    await saveProcessedDataToFirestore(processedData);
-                } catch (saveError) {
-                    console.warn('⚠️ Impossible de sauvegarder les données traitées:', saveError.message);
-                    // Ce n'est pas critique car on retraite toujours depuis les sessions brutes
-                }
+                // try {
+                //     await saveProcessedDataToFirestore(processedData);
+                //     console.log('✅ Données traitées sauvegardées avec succès');
+                // } catch (saveError) {
+                //     console.warn('⚠️ Impossible de sauvegarder les données traitées:', saveError.message);
+                //     // Ce n'est pas critique car on retraite toujours depuis les sessions brutes
+                // }
             } else {
                 processedData = { overall: {}, byCategory: {}, byDriver: {} };
             }
@@ -197,8 +202,10 @@ async function loadDataFromStorage() {
     
     if (sessionData.length > 0) {
         updateSessionSelect(); // Définir selectedSession d'abord
-        displayResults(); // Puis afficher les résultats filtrés
     }
+    
+    // Toujours afficher les résultats (même si vides) pour rendre la section visible
+    displayResults();
     
     // Masquer le loading initial
     showInitialLoading(false);
@@ -738,6 +745,11 @@ function displayResults() {
     window.sessionData = sessionData;
     window.processedData = processedData;
     
+    // Toujours rendre la section visible
+    if (resultsSection) {
+        resultsSection.style.display = 'block';
+    }
+    
     if (sessionData.length === 0) {
         showNoDataMessage();
         return;
@@ -745,9 +757,6 @@ function displayResults() {
     
     displayOverallStats();
     displayDriverStats();
-    if (resultsSection) {
-        resultsSection.style.display = 'block';
-    }
 }
 
 // Afficher les statistiques globales
@@ -1780,8 +1789,10 @@ async function initializeApp() {
         console.log('✅ Application initialisée avec succès');
     } catch (error) {
         console.error('❌ Erreur lors de l\'initialisation:', error);
-        // Masquer le loading en cas d'erreur
-        showInitialLoading(false);
+        // Masquer le loading en cas d'erreur (seulement si initialLoading est défini)
+        if (initialLoading) {
+            showInitialLoading(false);
+        }
     }
 }
 
