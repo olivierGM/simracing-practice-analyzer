@@ -648,6 +648,24 @@ function formatSessionDate(sessionDate) {
             return `${day}/${month}/${year} ${hour}:${minute}:${second}`;
         }
         
+        // Format avec suffixe: "251010_182318_FP" ou "251010_182318"
+        if (sessionDate.match(/^\d{6}_\d{6}(_[A-Z]+)?$/)) {
+            const parts = sessionDate.split('_');
+            const datePart = parts[0];
+            const timePart = parts[1];
+            
+            // Gérer le format YYMMDD (année sur 2 chiffres)
+            const year = '20' + datePart.substring(0, 2); // Supposer 20XX
+            const month = datePart.substring(2, 4);
+            const day = datePart.substring(4, 6);
+            const hour = timePart.substring(0, 2);
+            const minute = timePart.substring(2, 4);
+            const second = timePart.substring(4, 6);
+            
+            // Format compact: DD/MM/YY HH:MM
+            return `${day}/${month}/${year.substring(2)} ${hour}:${minute}`;
+        }
+        
         // Format ISO ou autre
         const date = new Date(sessionDate);
         if (!isNaN(date.getTime())) {

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Format Date</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .test-section { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        .date-test { margin: 10px 0; padding: 10px; background: white; border-radius: 4px; }
+        .original { font-weight: bold; color: #666; }
+        .formatted { color: #2196F3; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Format Date Compact</h1>
+    
+    <div class="test-section">
+        <h3>📅 Test du nouveau formatage compact</h3>
+        <button onclick="testDateFormats()">Tester les formats</button>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function formatSessionDate(sessionDate) {
+            if (!sessionDate) return '--';
+            
+            // Si c'est déjà un format lisible, le retourner tel quel
+            if (sessionDate.includes('/') || sessionDate.includes('-')) {
+                return sessionDate;
+            }
+            
+            // Essayer de parser différents formats de date
+            try {
+                // Format de fichier typique: "20240115_143022"
+                if (sessionDate.match(/^\d{8}_\d{6}$/)) {
+                    const datePart = sessionDate.substring(0, 8);
+                    const timePart = sessionDate.substring(9, 15);
+                    const year = datePart.substring(0, 4);
+                    const month = datePart.substring(4, 6);
+                    const day = datePart.substring(6, 8);
+                    const hour = timePart.substring(0, 2);
+                    const minute = timePart.substring(2, 4);
+                    const second = timePart.substring(4, 6);
+                    return `${day}/${month}/${year} ${hour}:${minute}:${second}`;
+                }
+                
+                // Format avec suffixe: "251010_182318_FP" ou "251010_182318"
+                if (sessionDate.match(/^\d{6}_\d{6}(_[A-Z]+)?$/)) {
+                    const parts = sessionDate.split('_');
+                    const datePart = parts[0];
+                    const timePart = parts[1];
+                    
+                    // Gérer le format YYMMDD (année sur 2 chiffres)
+                    const year = '20' + datePart.substring(0, 2); // Supposer 20XX
+                    const month = datePart.substring(2, 4);
+                    const day = datePart.substring(4, 6);
+                    const hour = timePart.substring(0, 2);
+                    const minute = timePart.substring(2, 4);
+                    const second = timePart.substring(4, 6);
+                    
+                    // Format compact: DD/MM/YY HH:MM
+                    return `${day}/${month}/${year.substring(2)} ${hour}:${minute}`;
+                }
+                
+                // Format ISO ou autre
+                const date = new Date(sessionDate);
+                if (!isNaN(date.getTime())) {
+                    return date.toLocaleDateString('fr-FR') + ' ' + date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                }
+                
+                // Retourner tel quel si aucun format reconnu
+                return sessionDate;
+            } catch (error) {
+                console.warn('Erreur lors du formatage de la date:', sessionDate, error);
+                return sessionDate;
+            }
+        }
+        
+        function testDateFormats() {
+            const testDates = [
+                '251010_182318_FP',      // Format réel avec suffixe
+                '251010_182318',         // Format sans suffixe
+                '20240115_143022',       // Format avec année complète
+                '20240115_143022_FP',    // Format avec année complète et suffixe
+                '15/01/2024 14:30:22',   // Format déjà lisible
+                '2024-01-15T14:30:22Z',  // Format ISO
+                'invalid-date'           // Format invalide
+            ];
+            
+            const results = document.getElementById('results');
+            let html = '<h4>📋 Résultats du formatage:</h4>';
+            
+            testDates.forEach(date => {
+                const formatted = formatSessionDate(date);
+                html += `
+                    <div class="date-test">
+                        <div class="original">Original: ${date}</div>
+                        <div class="formatted">Formaté: ${formatted}</div>
+                    </div>
+                `;
+            });
+            
+            results.innerHTML = html;
+            
+            // Test spécifique du format mentionné
+            const specificTest = formatSessionDate('251010_182318_FP');
+            console.log(`Format spécifique "251010_182318_FP" → "${specificTest}"`);
+        }
+        
+        // Initialisation
+        console.log('🚀 Test de formatage de date initialisé');
+        testDateFormats();
+    </script>
+</body>
+</html>
