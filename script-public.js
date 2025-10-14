@@ -63,6 +63,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     analysisResults = document.getElementById('analysisResults');
     resultsStatus = document.getElementById('resultsStatus');
     resultsContent = document.getElementById('resultsContent');
+    
+    // Éléments de loading
+    initialLoading = document.getElementById('initialLoading');
 
     // Initialiser Firebase
     try {
@@ -235,6 +238,9 @@ function checkAdminStatus() {
 
 // Charger les données depuis Firebase (visible pour tous)
 async function loadDataFromStorage() {
+    // Afficher le loading initial
+    showInitialLoading(true);
+    
     // S'assurer que les sections admin restent cachées si pas authentifié
     if (!isAdmin) {
         hideAdminSections();
@@ -302,6 +308,9 @@ async function loadDataFromStorage() {
         updateSessionSelect(); // Définir selectedSession d'abord
         displayResults(); // Puis afficher les résultats filtrés
     }
+    
+    // Masquer le loading initial
+    showInitialLoading(false);
 }
 
 // Fonction supprimée - on utilise maintenant uniquement Firestore pour éviter les incohérences
@@ -361,6 +370,13 @@ function updateAnalysisResults(status, content) {
 function showAdminLoading(show) {
     if (adminLoading) {
         adminLoading.style.display = show ? 'block' : 'none';
+    }
+}
+
+// Afficher/masquer le loading initial
+function showInitialLoading(show) {
+    if (initialLoading) {
+        initialLoading.style.display = show ? 'flex' : 'none';
     }
 }
 

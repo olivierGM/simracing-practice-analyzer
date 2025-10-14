@@ -37,12 +37,30 @@ class ProgressionChart {
                         display: false
                     },
                     tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: '#6366f1',
+                        borderWidth: 2,
+                        cornerRadius: 8,
+                        displayColors: true,
                         callbacks: {
+                            title: function(context) {
+                                const dataIndex = context[0].dataIndex;
+                                const originalData = context[0].chart.data.originalData;
+                                if (originalData && originalData[dataIndex]) {
+                                    const sessionDate = originalData[dataIndex].sessionDate || '';
+                                    return `📅 ${sessionDate || `Session ${dataIndex + 1}`}`;
+                                }
+                                return `📅 Session ${dataIndex + 1}`;
+                            },
                             label: function(context) {
                                 const timeInMs = context.parsed.y;
+                                const datasetLabel = context.dataset.label;
+                                
                                 // Formatage au format mm:ss.SSS
                                 if (!timeInMs || timeInMs === 0) {
-                                    return `${context.dataset.label}: 00:00.000`;
+                                    return `${datasetLabel}: 00:00.000`;
                                 }
                                 
                                 const minutes = Math.floor(timeInMs / 60000);
@@ -50,7 +68,53 @@ class ProgressionChart {
                                 const milliseconds = Math.floor(timeInMs % 1000);
                                 
                                 const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
-                                return `${context.dataset.label}: ${formattedTime}`;
+                                
+                                // Ajouter des informations contextuelles selon le type de données
+                                let extraInfo = '';
+                                if (datasetLabel.includes('Meilleurs')) {
+                                    extraInfo = ' 🏆';
+                                } else if (datasetLabel.includes('Moyens')) {
+                                    extraInfo = ' 📊';
+                                } else if (datasetLabel.includes('Sec')) {
+                                    extraInfo = ' ☀️';
+                                } else if (datasetLabel.includes('Wet')) {
+                                    extraInfo = ' 🌧️';
+                                }
+                                
+                                return `${datasetLabel}${extraInfo}: ${formattedTime}`;
+                            },
+                            afterBody: function(context) {
+                                const dataIndex = context[0].dataIndex;
+                                const originalData = context[0].chart.data.originalData;
+                                
+                                if (originalData && originalData[dataIndex]) {
+                                    const sessionData = originalData[dataIndex];
+                                    const info = [];
+                                    
+                                    if (sessionData.trackName) {
+                                        info.push(`🏁 Piste: ${sessionData.trackName}`);
+                                    }
+                                    
+                                    if (sessionData.sessionType) {
+                                        info.push(`🏃 Type: ${sessionData.sessionType}`);
+                                    }
+                                    
+                                    if (sessionData.totalLaps !== undefined) {
+                                        info.push(`📊 Tours: ${sessionData.totalLaps}`);
+                                    }
+                                    
+                                    if (sessionData.validLaps !== undefined) {
+                                        info.push(`✅ Valides: ${sessionData.validLaps}`);
+                                    }
+                                    
+                                    if (sessionData.wetLaps !== undefined && sessionData.wetLaps > 0) {
+                                        info.push(`🌧️ Wet: ${sessionData.wetLaps}`);
+                                    }
+                                    
+                                    return info;
+                                }
+                                
+                                return [];
                             }
                         }
                     },
@@ -363,6 +427,7 @@ class ProgressionChart {
 
         return {
             labels: labels,
+            originalData: this.filteredData, // Ajouter les données originales pour les tooltips
             datasets: [
                 {
                     label: '🏆 Meilleurs Temps',
