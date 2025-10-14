@@ -22,118 +22,7 @@ let authSection, adminPassword, loginBtn, logoutBtn, adminControls, authStatus, 
 let adminLayout, adminLoading, analysisResults, resultsStatus, resultsContent;
 
 // Initialisation
-document.addEventListener('DOMContentLoaded', async function() {
-    // Éléments DOM
-    fileInput = document.getElementById('jsonFiles');
-    fileList = document.getElementById('fileList');
-    analyzeBtn = document.getElementById('analyzeBtn');
-    clearBtn = document.getElementById('clearBtn');
-    downloadBtn = document.getElementById('downloadBtn');
-    resultsSection = document.getElementById('resultsSection');
-    loading = document.getElementById('loading');
-    categoryStats = document.getElementById('categoryStats');
-    driverStats = document.getElementById('driverStats');
-    groupByClassToggle = document.getElementById('groupByClassToggle');
-    dataStatus = document.getElementById('dataStatus');
-    uploadSection = document.getElementById('uploadSection');
-    uploadHeader = document.getElementById('uploadHeader');
-    uploadContent = document.getElementById('uploadContent');
-    fileCount = document.getElementById('fileCount');
-    collapseBtn = document.getElementById('collapseBtn');
-    sessionSelect = document.getElementById('sessionSelect');
-    dateFilter = document.getElementById('dateFilter');
-    pilotModal = document.getElementById('pilotModal');
-    closeModal = document.getElementById('closeModal');
-    
-    // Éléments d'authentification
-    authSection = document.getElementById('authSection');
-    adminPassword = document.getElementById('adminPassword');
-    loginBtn = document.getElementById('loginBtn');
-    logoutBtn = document.getElementById('logoutBtn');
-    adminControls = document.getElementById('adminControls');
-    authStatus = document.getElementById('authStatus');
-    adminAccessBtn = document.getElementById('adminAccessBtn');
-    adminSection = document.getElementById('adminSection');
-    cancelAuthBtn = document.getElementById('cancelAuthBtn');
-    publicSection = document.querySelector('.public-section');
-    
-    // Nouveaux éléments admin
-    adminLayout = document.getElementById('adminLayout');
-    adminLoading = document.getElementById('adminLoading');
-    analysisResults = document.getElementById('analysisResults');
-    resultsStatus = document.getElementById('resultsStatus');
-    resultsContent = document.getElementById('resultsContent');
-    
-    // Éléments de loading
-    initialLoading = document.getElementById('initialLoading');
-
-    // Initialiser Firebase
-    try {
-        const { db: firebaseDb } = await import('./firebase-config.js');
-        db = firebaseDb;
-        console.log('✅ Firebase initialisé');
-    } catch (error) {
-        console.log('⚠️ Firebase non disponible, utilisation de localStorage');
-    }
-
-    // Event listeners
-    if (fileInput) fileInput.addEventListener('change', handleFileSelection);
-    if (analyzeBtn) analyzeBtn.addEventListener('click', analyzeData);
-    if (clearBtn) clearBtn.addEventListener('click', clearAll);
-    if (downloadBtn) downloadBtn.addEventListener('click', downloadFromEGT);
-    if (groupByClassToggle) groupByClassToggle.addEventListener('change', toggleGroupByClass);
-    if (dateFilter) dateFilter.addEventListener('change', handleDateFilterChange);
-    if (sessionSelect) sessionSelect.addEventListener('change', handleSessionChange);
-    if (collapseBtn) collapseBtn.addEventListener('click', toggleUploadSection);
-    if (closeModal) closeModal.addEventListener('click', closePilotModal);
-    
-    // Authentification
-    if (loginBtn) loginBtn.addEventListener('click', handleLogin);
-    if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
-    if (adminAccessBtn) adminAccessBtn.addEventListener('click', showAdminAuth);
-    if (cancelAuthBtn) cancelAuthBtn.addEventListener('click', hideAdminAuth);
-    if (adminPassword) adminPassword.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            handleLogin();
-        }
-    });
-
-    // Fermer la modal en cliquant à l'extérieur
-    if (pilotModal) pilotModal.addEventListener('click', function(e) {
-        if (e.target === pilotModal) {
-            closePilotModal();
-        }
-    });
-
-    // Masquer les sections admin par défaut
-    hideAdminSections();
-    
-    // Charger les données au démarrage (pour que tout le monde puisse voir)
-    loadDataFromStorage();
-    
-    // Vérifier si on est déjà admin
-    checkAdminStatus();
-    
-    // Initialiser l'état de la checkbox "Grouper par classe"
-    if (groupByClassToggle) {
-        groupByClassToggle.checked = groupByClass;
-    }
-    
-    // Vérification finale pour s'assurer que les sections admin sont cachées
-    setTimeout(() => {
-        if (!isAdmin) {
-            hideAdminSections();
-        }
-    }, 100);
-    
-    // Vérification supplémentaire après un délai plus long
-    setTimeout(() => {
-        if (!isAdmin) {
-            hideAdminSections();
-            console.log('🔒 Vérification finale : sections admin masquées');
-        }
-    }, 500);
-});
+// L'initialisation se fait maintenant dans initializeApp() à la fin du fichier
 
 // Masquer toutes les sections admin
 function hideAdminSections() {
@@ -292,6 +181,7 @@ async function loadDataFromStorage() {
             processedData = { overall: {}, byCategory: {}, byDriver: {} };
             showNoDataMessage();
             updateDataStatus('❌ Erreur de connexion Firestore');
+            showInitialLoading(false); // Masquer le loading en cas d'erreur
             return;
         }
     } else {
@@ -301,6 +191,7 @@ async function loadDataFromStorage() {
         processedData = { overall: {}, byCategory: {}, byDriver: {} };
         showNoDataMessage();
         updateDataStatus('❌ Firebase non configuré');
+        showInitialLoading(false); // Masquer le loading si Firebase non disponible
         return;
     }
     
@@ -1782,4 +1673,118 @@ function calculateGlobalSegmentStats(data) {
     console.log('Statistiques globales des segments calculées:', segmentStats);
     return segmentStats;
 }
+
+// Fonction d'initialisation principale
+async function initializeApp() {
+    console.log('🚀 Initialisation de l\'application...');
+    
+    try {
+        // Éléments de loading (déclarés en premier pour éviter les erreurs)
+        initialLoading = document.getElementById('initialLoading');
+        
+        // Initialiser les éléments DOM
+        fileInput = document.getElementById('fileInput');
+        fileList = document.getElementById('fileList');
+        analyzeBtn = document.getElementById('analyzeBtn');
+        clearBtn = document.getElementById('clearBtn');
+        downloadBtn = document.getElementById('downloadBtn');
+        resultsSection = document.getElementById('resultsSection');
+        loading = document.getElementById('loading');
+        categoryStats = document.getElementById('categoryStats');
+        driverStats = document.getElementById('driverStats');
+        groupByClassToggle = document.getElementById('groupByClassToggle');
+        dataStatus = document.getElementById('dataStatus');
+        uploadSection = document.getElementById('uploadSection');
+        uploadHeader = document.getElementById('uploadHeader');
+        uploadContent = document.getElementById('uploadContent');
+        fileCount = document.getElementById('fileCount');
+        collapseBtn = document.getElementById('collapseBtn');
+        sessionSelect = document.getElementById('sessionSelect');
+        dateFilter = document.getElementById('dateFilter');
+        pilotModal = document.getElementById('pilotModal');
+        closeModal = document.getElementById('closeModal');
+        
+        // Éléments d'authentification
+        authSection = document.getElementById('authSection');
+        adminPassword = document.getElementById('adminPassword');
+        loginBtn = document.getElementById('loginBtn');
+        logoutBtn = document.getElementById('logoutBtn');
+        adminControls = document.getElementById('adminControls');
+        authStatus = document.getElementById('authStatus');
+        adminAccessBtn = document.getElementById('adminAccessBtn');
+        adminSection = document.getElementById('adminSection');
+        cancelAuthBtn = document.getElementById('cancelAuthBtn');
+        publicSection = document.querySelector('.public-section');
+        
+        // Nouveaux éléments admin
+        adminLayout = document.getElementById('adminLayout');
+        adminLoading = document.getElementById('adminLoading');
+        analysisResults = document.getElementById('analysisResults');
+        resultsStatus = document.getElementById('resultsStatus');
+        resultsContent = document.getElementById('resultsContent');
+        
+        // Éléments de loading (déjà déclaré au début de la fonction)
+
+        // Initialiser Firebase
+        try {
+            const { db: firebaseDb } = await import('./firebase-config.js');
+            db = firebaseDb;
+            console.log('✅ Firebase initialisé');
+        } catch (error) {
+            console.log('⚠️ Firebase non disponible, utilisation de localStorage');
+        }
+
+        // Event listeners
+        if (fileInput) fileInput.addEventListener('change', handleFileSelection);
+        if (analyzeBtn) analyzeBtn.addEventListener('click', analyzeData);
+        if (clearBtn) clearBtn.addEventListener('click', clearAll);
+        if (downloadBtn) downloadBtn.addEventListener('click', downloadFromEGT);
+        if (groupByClassToggle) groupByClassToggle.addEventListener('change', toggleGroupByClass);
+        if (dateFilter) dateFilter.addEventListener('change', handleDateFilterChange);
+        if (sessionSelect) sessionSelect.addEventListener('change', handleSessionChange);
+        if (collapseBtn) collapseBtn.addEventListener('click', toggleUploadSection);
+        if (closeModal) closeModal.addEventListener('click', closePilotModal);
+        
+        // Authentification
+        if (loginBtn) loginBtn.addEventListener('click', handleLogin);
+        if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+        if (adminAccessBtn) adminAccessBtn.addEventListener('click', showAdminAuth);
+        if (cancelAuthBtn) cancelAuthBtn.addEventListener('click', hideAdminAuth);
+        if (adminPassword) adminPassword.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+
+        // Fermer la modal en cliquant à l'extérieur
+        if (pilotModal) pilotModal.addEventListener('click', function(e) {
+            if (e.target === pilotModal) {
+                closePilotModal();
+            }
+        });
+
+        // Masquer les sections admin par défaut
+        hideAdminSections();
+        
+        // Vérifier si on est déjà admin
+        checkAdminStatus();
+        
+        // Initialiser l'état de la checkbox "Grouper par classe"
+        if (groupByClassToggle) {
+            groupByClassToggle.checked = groupByClass;
+        }
+        
+        // Charger les données au démarrage (pour que tout le monde puisse voir)
+        await loadDataFromStorage();
+        
+        console.log('✅ Application initialisée avec succès');
+    } catch (error) {
+        console.error('❌ Erreur lors de l\'initialisation:', error);
+        // Masquer le loading en cas d'erreur
+        showInitialLoading(false);
+    }
+}
+
+// Initialiser l'application au chargement du module
+initializeApp();
 
