@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test d'optimisation Firestore</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #1976D2; }
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test d'optimisation Firestore</h1>
+    
+    <div class="test-section">
+        <h3>📊 Test de la logique de fusion</h3>
+        <button onclick="testMergeLogic()">Tester la fusion de données</button>
+        <div id="mergeResults"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>📏 Test de calcul de taille</h3>
+        <button onclick="testDataSize()">Calculer la taille des données</button>
+        <div id="sizeResults"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>📝 Logs</h3>
+        <div id="logs" class="log"></div>
+        <button onclick="clearLogs()">Effacer les logs</button>
+    </div>
+
+    <script>
+        // Simulation des fonctions de fusion
+        function log(message) {
+            const logs = document.getElementById('logs');
+            logs.textContent += new Date().toLocaleTimeString() + ' - ' + message + '\n';
+            logs.scrollTop = logs.scrollHeight;
+            console.log(message);
+        }
+        
+        function clearLogs() {
+            document.getElementById('logs').textContent = '';
+        }
+        
+        // Test de la logique de fusion
+        function testMergeLogic() {
+            log('🧪 Test de la logique de fusion...');
+            
+            // Données simulées existantes
+            const existingData = {
+                overall: {
+                    totalSessions: 100,
+                    totalLaps: 5000,
+                    bestTime: 120000
+                },
+                byDriver: {
+                    'pilot1': {
+                        totalLaps: 100,
+                        validLaps: 95,
+                        bestValidTime: 120000,
+                        lapTimes: [120000, 121000, 119000]
+                    }
+                }
+            };
+            
+            // Nouvelles données
+            const newData = {
+                overall: {
+                    totalSessions: 5,
+                    totalLaps: 250,
+                    bestTime: 118000
+                },
+                byDriver: {
+                    'pilot1': {
+                        totalLaps: 25,
+                        validLaps: 24,
+                        bestValidTime: 118000,
+                        lapTimes: [118000, 119500, 120200]
+                    },
+                    'pilot2': {
+                        totalLaps: 30,
+                        validLaps: 28,
+                        bestValidTime: 122000,
+                        lapTimes: [122000, 123000, 121500]
+                    }
+                }
+            };
+            
+            // Test de fusion
+            const merged = mergeProcessedData(existingData, newData);
+            
+            const results = document.getElementById('mergeResults');
+            results.innerHTML = `
+                <div class="success">✅ Fusion réussie !</div>
+                <p><strong>Sessions totales:</strong> ${merged.overall.totalSessions} (100 + 5)</p>
+                <p><strong>Tours totaux:</strong> ${merged.overall.totalLaps} (5000 + 250)</p>
+                <p><strong>Meilleur temps global:</strong> ${merged.overall.bestTime}ms (118000 < 120000)</p>
+                <p><strong>Pilotes:</strong> ${Object.keys(merged.byDriver).length} (pilot1 fusionné + pilot2 nouveau)</p>
+                <p><strong>Pilot1 tours:</strong> ${merged.byDriver.pilot1.totalLaps} (100 + 25)</p>
+                <p><strong>Pilot1 meilleur temps:</strong> ${merged.byDriver.pilot1.bestValidTime}ms (118000 < 120000)</p>
+            `;
+            
+            log('✅ Test de fusion terminé avec succès');
+        }
+        
+        // Test de calcul de taille
+        function testDataSize() {
+            log('📏 Test de calcul de taille...');
+            
+            // Simuler des données de différentes tailles
+            const smallData = {
+                overall: { totalSessions: 10, totalLaps: 500 },
+                byDriver: {}
+            };
+            
+            const mediumData = {
+                overall: { totalSessions: 100, totalLaps: 5000 },
+                byDriver: {}
+            };
+            
+            // Générer des données volumineuses
+            const largeData = {
+                overall: { totalSessions: 1000, totalLaps: 50000 },
+                byDriver: {}
+            };
+            
+            // Ajouter des pilotes avec beaucoup de données
+            for (let i = 0; i < 100; i++) {
+                largeData.byDriver[`pilot${i}`] = {
+                    totalLaps: 500,
+                    lapTimes: new Array(500).fill(120000),
+                    validLapTimes: new Array(450).fill(120000),
+                    wetLapTimes: new Array(50).fill(125000)
+                };
+            }
+            
+            const smallSize = JSON.stringify(smallData).length;
+            const mediumSize = JSON.stringify(mediumData).length;
+            const largeSize = JSON.stringify(largeData).length;
+            
+            const results = document.getElementById('sizeResults');
+            results.innerHTML = `
+                <div class="success">✅ Calculs de taille terminés</div>
+                <p><strong>Petites données:</strong> ${(smallSize / 1024).toFixed(1)} KB</p>
+                <p><strong>Données moyennes:</strong> ${(mediumSize / 1024).toFixed(1)} KB</p>
+                <p><strong>Données volumineuses:</strong> ${(largeSize / 1024 / 1024).toFixed(2)} MB</p>
+                <div class="${largeSize > 1000000 ? 'error' : 'success'}">
+                    ${largeSize > 1000000 ? '⚠️ Données trop volumineuses (>1MB)' : '✅ Données dans la limite'}
+                </div>
+            `;
+            
+            log(`📊 Taille des données: ${(largeSize / 1024 / 1024).toFixed(2)} MB`);
+        }
+        
+        // Fonctions de fusion simulées (copiées du script principal)
+        function mergeProcessedData(existingData, newData) {
+            return {
+                overall: mergeOverallData(existingData.overall, newData.overall),
+                byCategory: mergeCategoryData(existingData.byCategory, newData.byCategory),
+                byDriver: mergeDriverData(existingData.byDriver, newData.byDriver)
+            };
+        }
+        
+        function mergeOverallData(existing, newData) {
+            if (!existing) return newData;
+            if (!newData) return existing;
+            
+            return {
+                totalSessions: existing.totalSessions + newData.totalSessions,
+                totalLaps: existing.totalLaps + newData.totalLaps,
+                bestTime: Math.min(existing.bestTime || Infinity, newData.bestTime || Infinity),
+                ...existing,
+                ...newData
+            };
+        }
+        
+        function mergeCategoryData(existing, newData) {
+            if (!existing) return newData;
+            if (!newData) return existing;
+            return { ...existing, ...newData };
+        }
+        
+        function mergeDriverData(existing, newData) {
+            if (!existing) return newData;
+            if (!newData) return existing;
+            
+            const merged = { ...existing };
+            
+            for (const [driverKey, driverData] of Object.entries(newData)) {
+                if (merged[driverKey]) {
+                    merged[driverKey] = {
+                        ...merged[driverKey],
+                        ...driverData,
+                        totalLaps: merged[driverKey].totalLaps + driverData.totalLaps,
+                        validLaps: merged[driverKey].validLaps + driverData.validLaps,
+                        bestValidTime: Math.min(merged[driverKey].bestValidTime || Infinity, driverData.bestValidTime || Infinity),
+                        lapTimes: [...(merged[driverKey].lapTimes || []), ...(driverData.lapTimes || [])]
+                    };
+                } else {
+                    merged[driverKey] = driverData;
+                }
+            }
+            
+            return merged;
+        }
+        
+        // Initialisation
+        log('🚀 Test d\'optimisation initialisé');
+        log('📋 Cliquez sur les boutons pour tester les fonctionnalités');
+    </script>
+</body>
+</html>

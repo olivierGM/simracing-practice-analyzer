@@ -258,6 +258,14 @@ async function loadDataFromStorage() {
             if (sessionData.length > 0) {
                 console.log('🔄 Traitement des données depuis Firestore...');
                 processedData = processSessionData(sessionData);
+                
+                // Essayer de sauvegarder les données traitées avec la nouvelle méthode
+                try {
+                    await saveProcessedDataToFirestore(processedData);
+                } catch (saveError) {
+                    console.warn('⚠️ Impossible de sauvegarder les données traitées:', saveError.message);
+                    // Ce n'est pas critique car on retraite toujours depuis les sessions brutes
+                }
             } else {
                 processedData = { overall: {}, byCategory: {}, byDriver: {} };
             }
@@ -384,11 +392,12 @@ async function analyzeData() {
         sessionsSnapshot.forEach(doc => {
             sessionData.push(doc.data());
         });
-        processedData = { overall: {}, byCategory: {}, byDriver: {} };
         
         let newSessionsCount = 0;
         let duplicateSessionsCount = 0;
         
+        // Traiter seulement les nouveaux fichiers
+        const newSessions = [];
         for (const file of files) {
             const text = await file.text();
             const data = JSON.parse(text);
@@ -398,7 +407,8 @@ async function analyzeData() {
             const exists = sessionData.some(session => generateSessionId(session) === sessionId);
             
             if (!exists) {
-                sessionData.push(data);
+                newSessions.push(data);
+                sessionData.push(data); // Ajouter à la liste complète
                 newSessionsCount++;
                 console.log(`✅ Nouvelle session: ${sessionId}`);
             } else {
@@ -407,8 +417,27 @@ async function analyzeData() {
             }
         }
         
-        // Traiter les données
-        processedData = processSessionData(sessionData);
+        // Si il y a de nouvelles sessions, traiter seulement celles-ci et fusionner
+        if (newSessions.length > 0) {
+            console.log(`🔄 Traitement de ${newSessions.length} nouvelles sessions...`);
+            const newProcessedData = processSessionData(newSessions);
+            
+            // Charger les données traitées existantes
+            const existingProcessedData = await loadProcessedDataFromFirestore();
+            
+            if (existingProcessedData) {
+                // Fusionner les nouvelles données avec les existantes
+                processedData = mergeProcessedData(existingProcessedData, newProcessedData);
+            } else {
+                // Si pas de données existantes, traiter tout
+                console.log('🔄 Aucune donnée existante, traitement complet...');
+                processedData = processSessionData(sessionData);
+            }
+        } else {
+            console.log('📊 Aucune nouvelle session, utilisation des données existantes');
+            // Charger les données traitées existantes
+            processedData = await loadProcessedDataFromFirestore() || processSessionData(sessionData);
+        }
         
         // Mettre à jour les variables globales
         window.sessionData = sessionData;
@@ -457,6 +486,188 @@ async function analyzeData() {
     }
 }
 
+// Sauvegarder les données traitées par sections
+async function saveProcessedDataToFirestore(processedData) {
+    const { setDoc, doc } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+    
+    // Sauvegarder chaque section séparément
+    const sections = {
+        overall: processedData.overall,
+        byCategory: processedData.byCategory,
+        byDriver: processedData.byDriver
+    };
+    
+    for (const [sectionName, sectionData] of Object.entries(sections)) {
+        const docRef = doc(db, 'processedData', sectionName);
+        await setDoc(docRef, sectionData);
+        console.log(`📊 Section ${sectionName} sauvegardée`);
+    }
+    
+    // Sauvegarder les métadonnées
+    const metadata = {
+        lastUpdate: new Date().toISOString(),
+        totalSessions: Object.keys(processedData.byDriver || {}).length,
+        sections: Object.keys(sections)
+    };
+    await setDoc(doc(db, 'processedData', 'metadata'), metadata);
+    console.log('📊 Métadonnées sauvegardées');
+}
+
+// Sauvegarder seulement les données essentielles (fallback)
+async function saveEssentialDataToFirestore(processedData) {
+    const { setDoc, doc } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+    
+    // Créer une version allégée des données
+    const essentialData = {
+        overall: {
+            totalSessions: processedData.overall?.totalSessions || 0,
+            totalLaps: processedData.overall?.totalLaps || 0,
+            bestTime: processedData.overall?.bestTime || 0
+        },
+        summary: {
+            categories: Object.keys(processedData.byCategory || {}),
+            totalDrivers: Object.keys(processedData.byDriver || {}).length,
+            lastUpdate: new Date().toISOString()
+        }
+    };
+    
+    await setDoc(doc(db, 'processedData', 'essential'), essentialData);
+    console.log('📊 Données essentielles sauvegardées (fallback)');
+}
+
+// Fusionner les données traitées existantes avec les nouvelles
+function mergeProcessedData(existingData, newData) {
+    console.log('🔄 Fusion des données traitées...');
+    
+    const merged = {
+        overall: mergeOverallData(existingData.overall, newData.overall),
+        byCategory: mergeCategoryData(existingData.byCategory, newData.byCategory),
+        byDriver: mergeDriverData(existingData.byDriver, newData.byDriver)
+    };
+    
+    console.log('✅ Données fusionnées avec succès');
+    return merged;
+}
+
+// Fusionner les données globales
+function mergeOverallData(existing, newData) {
+    if (!existing) return newData;
+    if (!newData) return existing;
+    
+    return {
+        totalSessions: existing.totalSessions + newData.totalSessions,
+        totalLaps: existing.totalLaps + newData.totalLaps,
+        bestTime: Math.min(existing.bestTime || Infinity, newData.bestTime || Infinity),
+        // Ajouter d'autres champs selon vos besoins
+        ...existing,
+        ...newData,
+        totalSessions: existing.totalSessions + newData.totalSessions,
+        totalLaps: existing.totalLaps + newData.totalLaps
+    };
+}
+
+// Fusionner les données par catégorie
+function mergeCategoryData(existing, newData) {
+    if (!existing) return newData;
+    if (!newData) return existing;
+    
+    const merged = { ...existing };
+    
+    for (const [category, data] of Object.entries(newData)) {
+        if (merged[category]) {
+            // Fusionner les données existantes avec les nouvelles
+            merged[category] = {
+                ...merged[category],
+                ...data,
+                totalSessions: merged[category].totalSessions + data.totalSessions,
+                totalLaps: merged[category].totalLaps + data.totalLaps,
+                bestTime: Math.min(merged[category].bestTime || Infinity, data.bestTime || Infinity)
+            };
+        } else {
+            merged[category] = data;
+        }
+    }
+    
+    return merged;
+}
+
+// Fusionner les données par pilote
+function mergeDriverData(existing, newData) {
+    if (!existing) return newData;
+    if (!newData) return existing;
+    
+    const merged = { ...existing };
+    
+    for (const [driverKey, driverData] of Object.entries(newData)) {
+        if (merged[driverKey]) {
+            // Fusionner les données du pilote existant avec les nouvelles
+            merged[driverKey] = {
+                ...merged[driverKey],
+                ...driverData,
+                totalLaps: merged[driverKey].totalLaps + driverData.totalLaps,
+                validLaps: merged[driverKey].validLaps + driverData.validLaps,
+                wetLaps: merged[driverKey].wetLaps + driverData.wetLaps,
+                // Fusionner les lapTimes
+                lapTimes: [...(merged[driverKey].lapTimes || []), ...(driverData.lapTimes || [])],
+                validLapTimes: [...(merged[driverKey].validLapTimes || []), ...(driverData.validLapTimes || [])],
+                wetLapTimes: [...(merged[driverKey].wetLapTimes || []), ...(driverData.wetLapTimes || [])],
+                // Recalculer les meilleurs temps
+                bestValidTime: Math.min(merged[driverKey].bestValidTime || Infinity, driverData.bestValidTime || Infinity),
+                bestWetTime: Math.min(merged[driverKey].bestWetTime || Infinity, driverData.bestWetTime || Infinity),
+                // Recalculer les moyennes
+                averageValidTime: calculateAverageTime([...(merged[driverKey].validLapTimes || []), ...(driverData.validLapTimes || [])]),
+                averageWetTime: calculateAverageTime([...(merged[driverKey].wetLapTimes || []), ...(driverData.wetLapTimes || [])])
+            };
+        } else {
+            merged[driverKey] = driverData;
+        }
+    }
+    
+    return merged;
+}
+
+// Fonction utilitaire pour calculer la moyenne des temps
+function calculateAverageTime(times) {
+    if (times.length === 0) return 0;
+    const validTimes = times.filter(t => t > 0);
+    if (validTimes.length === 0) return 0;
+    return validTimes.reduce((sum, time) => sum + time, 0) / validTimes.length;
+}
+
+// Charger les données traitées depuis Firestore
+async function loadProcessedDataFromFirestore() {
+    const { getDoc, doc } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+    
+    try {
+        // Essayer de charger les données complètes
+        const overallDoc = await getDoc(doc(db, 'processedData', 'overall'));
+        const byCategoryDoc = await getDoc(doc(db, 'processedData', 'byCategory'));
+        const byDriverDoc = await getDoc(doc(db, 'processedData', 'byDriver'));
+        
+        if (overallDoc.exists() && byCategoryDoc.exists() && byDriverDoc.exists()) {
+            processedData = {
+                overall: overallDoc.data(),
+                byCategory: byCategoryDoc.data(),
+                byDriver: byDriverDoc.data()
+            };
+            console.log('📊 Données complètes chargées depuis Firestore');
+            return true;
+        }
+        
+        // Fallback: charger les données essentielles
+        const essentialDoc = await getDoc(doc(db, 'processedData', 'essential'));
+        if (essentialDoc.exists()) {
+            console.log('📊 Données essentielles chargées depuis Firestore (fallback)');
+            return true;
+        }
+        
+        return false;
+    } catch (error) {
+        console.error('Erreur lors du chargement des données traitées:', error);
+        return false;
+    }
+}
+
 // Sauvegarder les données
 async function saveDataToStorage() {
     if (db) {
@@ -471,8 +682,27 @@ async function saveDataToStorage() {
                 await setDoc(doc(sessionsCollection, sessionId), session);
             }
             
-            // Sauvegarder les données traitées
-            await setDoc(doc(db, 'processedData', 'current'), processedData);
+            // Débugger la taille des données avant sauvegarde
+            const dataSize = JSON.stringify(processedData).length;
+            console.log(`📊 Taille des données traitées: ${(dataSize / 1024 / 1024).toFixed(2)} MB`);
+            console.log(`📊 Nombre de sessions: ${sessionData.length}`);
+            console.log(`📊 Nombre de pilotes: ${Object.keys(processedData.byDriver || {}).length}`);
+            
+            // Sauvegarder les données traitées par sections pour éviter la limite de 1MB
+            if (dataSize > 1000000) { // Si plus de ~1MB
+                console.log('⚠️ Données trop volumineuses, utilisation du mode par sections');
+                try {
+                    await saveProcessedDataToFirestore(processedData);
+                } catch (saveError) {
+                    console.error('Erreur lors de la sauvegarde par sections:', saveError);
+                    // Fallback: essayer de sauvegarder seulement les métadonnées essentielles
+                    await saveEssentialDataToFirestore(processedData);
+                }
+            } else {
+                // Si les données sont petites, utiliser l'ancienne méthode
+                console.log('✅ Données de taille acceptable, sauvegarde normale');
+                await setDoc(doc(db, 'processedData', 'current'), processedData);
+            }
             
             console.log('📊 Données sauvegardées sur Firestore');
             updateDataStatus('☁️ Firestore (temps réel)');
@@ -513,7 +743,17 @@ async function clearAll() {
             }
             
             // Supprimer les données traitées
-            await deleteDoc(doc(db, 'processedData', 'current'));
+            // Supprimer tous les documents de données traitées
+            const documentsToDelete = ['current', 'overall', 'byCategory', 'byDriver', 'metadata', 'essential'];
+            
+            for (const docName of documentsToDelete) {
+                try {
+                    await deleteDoc(doc(db, 'processedData', docName));
+                } catch (error) {
+                    // Ignorer les erreurs si le document n'existe pas
+                    console.log(`📄 Document ${docName} non trouvé (normal)`);
+                }
+            }
             
             console.log('🗑️ Données Firebase effacées');
         }
