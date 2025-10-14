@@ -171,14 +171,51 @@ function parseEGTDate(dateText) {
 }
 
 /**
+ * Normalise une date pour qu'elle soit cohérente
+ * @param {string} dateString - Date à normaliser
+ * @returns {string} Date normalisée
+ */
+function normalizeDate(dateString) {
+    if (!dateString) return new Date().toISOString();
+    
+    try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            return new Date().toISOString();
+        }
+        
+        // Normaliser : enlever les millisecondes et garder seulement les secondes
+        return date.toISOString().replace(/\.\d{3}Z$/, 'Z');
+    } catch (error) {
+        console.error(`Erreur lors de la normalisation de la date ${dateString}:`, error.message);
+        return new Date().toISOString();
+    }
+}
+
+/**
+ * Normalise un nom de piste pour qu'il soit cohérent
+ * @param {string} trackName - Nom de la piste à normaliser
+ * @returns {string} Nom de piste normalisé
+ */
+function normalizeTrackName(trackName) {
+    if (!trackName) return 'unknown';
+    
+    // Convertir en minuscules et remplacer les espaces par des underscores
+    return trackName.toLowerCase()
+        .replace(/\s+/g, '_')
+        .replace(/[^a-z0-9_]/g, '');
+}
+
+/**
  * Génère un ID unique pour une session (même logique que le frontend)
+ * Utilise la normalisation pour assurer la cohérence entre EGT et JSON
  * @param {Object} session - Objet session avec trackName et Date
  * @returns {string} ID unique de la session
  */
 function generateSessionId(session) {
-    const trackName = session.trackName || 'Unknown';
-    const date = session.Date || new Date().toISOString();
-    return `${trackName}_${date}`;
+    const normalizedTrackName = normalizeTrackName(session.trackName);
+    const normalizedDate = normalizeDate(session.Date);
+    return `${normalizedTrackName}_${normalizedDate}`;
 }
 
 /**
