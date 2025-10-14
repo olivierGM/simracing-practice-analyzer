@@ -596,6 +596,7 @@ function displayDriverStats() {
 
 function displayDriverStatsAll(byDriver) {
     let html = '<div class="driver-table-container"><table class="driver-table"><thead><tr>';
+    html += '<th>Pos</th>'; // Colonne de position
     html += '<th onclick="sortTable(0, \'text\')" class="sortable">Pilote <span class="sort-indicator">↕</span></th>';
     html += '<th onclick="sortTable(1, \'text\')" class="sortable">Classe <span class="sort-indicator">↕</span></th>';
     html += '<th onclick="sortTable(2, \'number\')" class="sortable">Tours <span class="sort-indicator">↕</span></th>';
@@ -629,9 +630,11 @@ function displayDriverStatsAll(byDriver) {
         return timeA - timeB;
     });
     
-    sortedDrivers.forEach(driver => {
+    sortedDrivers.forEach((driver, index) => {
+        const position = index + 1; // Position commence à 1
         const categoryClass = getCategoryClass(parseInt(driver.cupCategory));
         html += `<tr onclick="openPilotModal('${driver.firstName}_${driver.lastName}_${driver.cupCategory}')">`;
+        html += `<td>${position}</td>`; // Colonne de position
         html += `<td>${driver.firstName} ${driver.lastName}</td>`;
         html += `<td><span class="category-badge ${categoryClass}">${getCategoryName(parseInt(driver.cupCategory))}</span></td>`;
         html += `<td data-value="${driver.totalLaps || 0}">${driver.totalLaps || 0}</td>`;
@@ -729,6 +732,7 @@ function displayDriverStatsByClass(byDriver) {
         html += `<div class="category-section">`;
         html += `<h3 class="category-title"><span class="category-badge ${categoryClass}">${categoryName}</span></h3>`;
         html += `<table class="driver-table"><thead><tr>`;
+        html += '<th>Pos</th>'; // Colonne de position
         html += '<th onclick="sortTable(0, \'text\')" class="sortable">Pilote <span class="sort-indicator">↕</span></th>';
         html += '<th onclick="sortTable(1, \'number\')" class="sortable">Tours <span class="sort-indicator">↕</span></th>';
         html += '<th onclick="sortTable(2, \'number\')" class="sortable">Tours Valides <span class="sort-indicator">↕</span></th>';
@@ -743,8 +747,10 @@ function displayDriverStatsByClass(byDriver) {
         html += '<th onclick="sortTable(11, \'percentage\')" class="sortable">Cons. total <span class="sort-indicator">↕</span></th>';
         html += '</tr></thead><tbody>';
         
-        drivers.forEach(driver => {
+        drivers.forEach((driver, index) => {
+            const position = index + 1; // Position dans la catégorie
             html += `<tr onclick="openPilotModal('${driver.firstName}_${driver.lastName}_${driver.cupCategory}')">`;
+            html += `<td>${position}</td>`; // Colonne de position
             html += `<td>${driver.firstName} ${driver.lastName}</td>`;
             html += `<td data-value="${driver.totalLaps || 0}">${driver.totalLaps || 0}</td>`;
             html += `<td data-value="${driver.validLaps || 0}">${driver.validLaps || 0}</td>`;
