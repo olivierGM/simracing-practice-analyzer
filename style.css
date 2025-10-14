@@ -1584,23 +1584,22 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     box-shadow: 0 2px 4px rgba(149, 165, 166, 0.3);
 }
 
-/* Sections de catégories */
+/* Sections de catégories - Groupement discret */
 .category-section {
-    margin-bottom: 30px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    width: 100%;
 }
 
-.category-section:last-child {
-    margin-bottom: 0;
-}
-
-/* Mode sombre pour les sections de catégories */
+/* Mode sombre pour les sections de catégories - Reste transparent */
 [data-theme="dark"] .category-section {
-    background: var(--bg-card);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    background: transparent;
+    box-shadow: none;
+    border: none;
 }
 
 .category-title {
