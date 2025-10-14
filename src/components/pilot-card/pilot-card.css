@@ -297,6 +297,90 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
     border-left: 3px solid #f59e0b;
 }
 
+/* ===== THÈME DARK ===== */
+[data-theme="dark"] #pilotModal.pilot-modal .pilot-card {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .pilot-header {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .pilot-info-section {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .segment-comparator-section {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .segment-comparator {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .laps-chart-container {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .laps-section {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .laps-list {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .laps-header {
+    background: #4a5568 !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .lap-item {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .lap-item:hover {
+    background: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .progression-section {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .progression-chart-container {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+/* États des tours en mode dark */
+[data-theme="dark"] .lap-item.valid {
+    background: rgba(16, 185, 129, 0.2) !important;
+}
+
+[data-theme="dark"] .lap-item.invalid {
+    background: rgba(239, 68, 68, 0.2) !important;
+}
+
+[data-theme="dark"] .lap-item.wet {
+    border-left: 3px solid #60a5fa !important;
+}
+
+[data-theme="dark"] .lap-item.dry {
+    border-left: 3px solid #fbbf24 !important;
+}
+
 /* Comparateur de segments */
 .segment-comparator-section {
     padding: 20px;

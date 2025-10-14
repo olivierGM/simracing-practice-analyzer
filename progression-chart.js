@@ -293,41 +293,99 @@ class ProgressionChart {
         }
 
         const labels = this.filteredData.map(item => this.formatSessionDate(item.sessionDate));
-        const bestTimes = this.filteredData.map(item => item.bestTime);
-        const averageTimes = this.filteredData.map(item => item.averageTime);
         
-        const windowSize = Math.min(this.filteredData.length, 5);
-        const movingAverages = this.calculateMovingAverage(bestTimes, windowSize);
+        // Séparer les données par type de tour
+        const dryValidTimes = this.filteredData.map(item => {
+            const dryValidLaps = item.lapTimes.filter(lapTime => {
+                const lapIndex = item.lapTimes.indexOf(lapTime);
+                const originalLap = this.data.find((originalLap, idx) => {
+                    const sessionIndex = Math.floor(idx / 10);
+                    return sessionIndex === item.groupIndex;
+                });
+                return !item.isWet && (item.isValid || originalLap?.isValid);
+            });
+            return dryValidLaps.length > 0 ? Math.min(...dryValidLaps) : null;
+        });
+        
+        const dryInvalidTimes = this.filteredData.map(item => {
+            const dryInvalidLaps = item.lapTimes.filter(lapTime => {
+                const lapIndex = item.lapTimes.indexOf(lapTime);
+                const originalLap = this.data.find((originalLap, idx) => {
+                    const sessionIndex = Math.floor(idx / 10);
+                    return sessionIndex === item.groupIndex;
+                });
+                return !item.isWet && !(item.isValid || originalLap?.isValid);
+            });
+            return dryInvalidLaps.length > 0 ? Math.min(...dryInvalidLaps) : null;
+        });
+        
+        const wetValidTimes = this.filteredData.map(item => {
+            const wetValidLaps = item.lapTimes.filter(lapTime => {
+                const lapIndex = item.lapTimes.indexOf(lapTime);
+                const originalLap = this.data.find((originalLap, idx) => {
+                    const sessionIndex = Math.floor(idx / 10);
+                    return sessionIndex === item.groupIndex;
+                });
+                return item.isWet && (item.isValid || originalLap?.isValid);
+            });
+            return wetValidLaps.length > 0 ? Math.min(...wetValidLaps) : null;
+        });
+        
+        const wetInvalidTimes = this.filteredData.map(item => {
+            const wetInvalidLaps = item.lapTimes.filter(lapTime => {
+                const lapIndex = item.lapTimes.indexOf(lapTime);
+                const originalLap = this.data.find((originalLap, idx) => {
+                    const sessionIndex = Math.floor(idx / 10);
+                    return sessionIndex === item.groupIndex;
+                });
+                return item.isWet && !(item.isValid || originalLap?.isValid);
+            });
+            return wetInvalidLaps.length > 0 ? Math.min(...wetInvalidLaps) : null;
+        });
 
         return {
             labels: labels,
             datasets: [
                 {
-                    label: 'Meilleur temps',
-                    data: bestTimes,
-                    borderColor: '#667eea',
-                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    label: '🌞 Tours Sec (Valides)',
+                    data: dryValidTimes,
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
                     borderWidth: 2,
                     fill: false,
-                    tension: 0.1
+                    tension: 0.1,
+                    pointRadius: 4
                 },
                 {
-                    label: 'Temps moyen',
-                    data: averageTimes,
-                    borderColor: '#f093fb',
-                    backgroundColor: 'rgba(240, 147, 251, 0.1)',
+                    label: '🌞 Tours Sec (Non Valides)',
+                    data: dryInvalidTimes,
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
                     borderWidth: 2,
                     fill: false,
-                    tension: 0.1
+                    tension: 0.1,
+                    pointRadius: 3,
+                    borderDash: [5, 5]
                 },
                 {
-                    label: `Moyenne mobile (${windowSize} sessions)`,
-                    data: movingAverages,
-                    borderColor: '#ffd93d',
-                    backgroundColor: 'rgba(255, 217, 61, 0.1)',
+                    label: '🌧️ Tours Wet (Valides)',
+                    data: wetValidTimes,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     borderWidth: 2,
                     fill: false,
-                    tension: 0.3,
+                    tension: 0.1,
+                    pointRadius: 4
+                },
+                {
+                    label: '🌧️ Tours Wet (Non Valides)',
+                    data: wetInvalidTimes,
+                    borderColor: '#8b5cf6',
+                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.1,
+                    pointRadius: 3,
                     borderDash: [5, 5]
                 }
             ]
