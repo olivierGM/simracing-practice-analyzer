@@ -217,6 +217,7 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
     background: #ffffff;
     border-radius: 8px;
     max-height: 400px;
+    width: 525px;
     overflow-x: hidden;
     overflow-y: scroll !important;
     border: 1px solid var(--border-color);
@@ -224,7 +225,7 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
 
 .laps-header {
     display: grid;
-    grid-template-columns: 40px 90px 70px 70px 70px 40px 40px;
+    grid-template-columns: 45px 120px 90px 90px 90px 45px 45px;
     background: #6366f1 !important;
     color: white !important;
     font-weight: 600;
@@ -235,7 +236,7 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
 
 .lap-item {
     display: grid;
-    grid-template-columns: 40px 90px 70px 70px 70px 40px 40px;
+    grid-template-columns: 45px 120px 90px 90px 90px 45px 45px;
     padding: 8px 12px;
     border-bottom: 1px solid var(--border-color);
     gap: 8px;
