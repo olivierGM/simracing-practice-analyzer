@@ -1716,7 +1716,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     /* Garder le format tableau sur mobile avec scroll horizontal */
     .laps-header {
         display: grid !important;
-        grid-template-columns: 45px 100px 90px 90px 90px 45px 45px;
+        grid-template-columns: 45px 80px 80px 80px 80px 45px 45px;
         gap: 4px;
         padding: 6px 8px;
         font-size: 0.7rem;
@@ -1727,7 +1727,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     
     .lap-item {
         display: grid !important;
-        grid-template-columns: 45px 100px 90px 90px 90px 45px 45px;
+        grid-template-columns: 45px 80px 80px 80px 80px 45px 45px;
         gap: 4px;
         padding: 6px 8px;
         font-size: 0.75rem;

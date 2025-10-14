@@ -225,7 +225,7 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
 
 .laps-header {
     display: grid;
-    grid-template-columns: 45px 120px 90px 90px 90px 45px 45px;
+    grid-template-columns: 45px 80px 80px 80px 80px 45px 45px;
     background: #6366f1 !important;
     color: white !important;
     font-weight: 600;
@@ -236,7 +236,7 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
 
 .lap-item {
     display: grid;
-    grid-template-columns: 45px 120px 90px 90px 90px 45px 45px;
+    grid-template-columns: 45px 80px 80px 80px 80px 45px 45px;
     padding: 8px 12px;
     border-bottom: 1px solid var(--border-color);
     gap: 8px;
