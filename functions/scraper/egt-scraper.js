@@ -4,8 +4,6 @@
 
 const https = require('https');
 const http = require('http');
-const cheerio = require('cheerio');
-const moment = require('moment');
 
 /**
  * Fonction utilitaire pour faire des requêtes HTTP simples
@@ -45,6 +43,86 @@ function fetchWithRetry(url) {
 }
 
 /**
+ * Parse le HTML pour extraire les sessions (sans dépendances externes)
+ * @param {string} html - Contenu HTML de la page EGT
+ * @returns {Array} Liste des sessions
+ */
+function parseSessionsFromHtml(html) {
+    const sessions = [];
+    
+    // Chercher les lignes de table avec row-link
+    const rowMatches = html.match(/<tr[^>]*class="[^"]*row-link[^"]*"[^>]*>[\s\S]*?<\/tr>/gi);
+    
+    if (!rowMatches) {
+        console.log('⚠️ Aucune ligne row-link trouvée');
+        return sessions;
+    }
+    
+    rowMatches.forEach((row, index) => {
+        try {
+            // Extraire le contenu des cellules TD
+            const tdMatches = row.match(/<td[^>]*>([\s\S]*?)<\/td>/g);
+            
+            if (tdMatches && tdMatches.length >= 4) {
+                // Extraire le texte de chaque cellule
+                const cells = tdMatches.map(td => {
+                    return td.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+                });
+                
+                const dateText = cells[0];
+                const sessionType = cells[1];
+                const trackName = cells[2];
+                
+                // Chercher le lien de téléchargement
+                const downloadMatches = [
+                    row.match(/href="([^"]*download[^"]*\.json)"/),
+                    row.match(/href='([^']*download[^']*\.json)'/),
+                    row.match(/href=([^\s>]*download[^\s>]*\.json)/)
+                ];
+                
+                let downloadUrl = null;
+                for (const match of downloadMatches) {
+                    if (match && match[1]) {
+                        downloadUrl = match[1].startsWith('http') 
+                            ? match[1] 
+                            : `http://51.161.118.36:8773${match[1]}`;
+                        break;
+                    }
+                }
+                
+                if (downloadUrl && dateText && trackName && sessionType) {
+                    // Parser la date
+                    const parsedDate = parseEGTDate(dateText);
+                    
+                    // Générer l'ID de session (même logique que le frontend)
+                    const sessionId = generateSessionId({
+                        trackName: trackName,
+                        Date: parsedDate
+                    });
+                    
+                    const session = {
+                        id: sessionId,
+                        date: parsedDate,
+                        dateText: dateText,
+                        sessionType: sessionType,
+                        trackName: trackName,
+                        downloadUrl: downloadUrl,
+                        scrapedAt: new Date().toISOString()
+                    };
+                    
+                    sessions.push(session);
+                    console.log(`✅ Session trouvée: ${sessionId} (${dateText})`);
+                }
+            }
+        } catch (error) {
+            console.error(`❌ Erreur lors du parsing de la ligne ${index}:`, error.message);
+        }
+    });
+    
+    return sessions;
+}
+
+/**
  * Scrape la page EGT pour extraire les informations des sessions
  * @returns {Promise<Array>} Liste des sessions disponibles
  */
@@ -58,60 +136,8 @@ async function scrapeEGTPage() {
         // Récupérer le contenu HTML de la page
         const response = await fetchWithRetry(egtUrl);
         
-        // Parser le HTML avec Cheerio
-        const $ = cheerio.load(response);
-        const sessions = [];
-        
-        // Trouver toutes les lignes de la table (row-link)
-        $('tr.row-link').each((index, element) => {
-            try {
-                const $row = $(element);
-                const cells = $row.find('td');
-                
-                if (cells.length >= 4) {
-                    // Extraire les informations de chaque colonne
-                    const dateText = $(cells[0]).text().trim();
-                    const sessionType = $(cells[1]).text().trim();
-                    const trackName = $(cells[2]).text().trim();
-                    const entrants = $(cells[3]).text().trim();
-                    
-                    // Extraire le lien de téléchargement (dernière colonne)
-                    const downloadLink = $(cells[cells.length - 1]).find('a').attr('href');
-                    
-                    if (downloadLink && dateText && trackName && sessionType) {
-                        // Parser la date
-                        const parsedDate = parseEGTDate(dateText);
-                        
-                        // Construire l'URL complète du téléchargement
-                        const fullDownloadUrl = downloadLink.startsWith('http') 
-                            ? downloadLink 
-                            : `http://51.161.118.36:8773${downloadLink}`;
-                        
-                        // Générer l'ID de session (même logique que le frontend)
-                        const sessionId = generateSessionId({
-                            trackName: trackName,
-                            Date: parsedDate
-                        });
-                        
-                        const session = {
-                            id: sessionId,
-                            date: parsedDate,
-                            dateText: dateText,
-                            sessionType: sessionType,
-                            trackName: trackName,
-                            entrants: entrants,
-                            downloadUrl: fullDownloadUrl,
-                            scrapedAt: new Date().toISOString()
-                        };
-                        
-                        sessions.push(session);
-                        console.log(`✅ Session trouvée: ${sessionId} (${dateText})`);
-                    }
-                }
-            } catch (error) {
-                console.error(`❌ Erreur lors du parsing de la ligne ${index}:`, error.message);
-            }
-        });
+        // Parser le HTML avec regex (plus simple, pas de dépendances externes)
+        const sessions = parseSessionsFromHtml(response);
         
         console.log(`🎯 Total de ${sessions.length} sessions trouvées`);
         return sessions;
@@ -129,17 +155,10 @@ async function scrapeEGTPage() {
  */
 function parseEGTDate(dateText) {
     try {
-        // Parser la date EGT avec moment.js
-        const parsed = moment.utc(dateText, 'ddd, DD MMM YYYY HH:mm:ss [UTC]');
-        
-        if (parsed.isValid()) {
-            return parsed.toISOString();
-        } else {
-            // Fallback: essayer d'autres formats
-            const fallbackParsed = moment.utc(dateText);
-            if (fallbackParsed.isValid()) {
-                return fallbackParsed.toISOString();
-            }
+        // Parser la date EGT avec une approche simple (sans moment.js)
+        const date = new Date(dateText);
+        if (!isNaN(date.getTime())) {
+            return date.toISOString();
         }
         
         console.warn(`⚠️ Impossible de parser la date: ${dateText}`);
