@@ -234,6 +234,27 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
     align-items: center;
 }
 
+.laps-header .sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.laps-header .sortable:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.laps-header .sort-indicator {
+    font-size: 0.7rem;
+    margin-left: 4px;
+    opacity: 0.8;
+}
+
 .lap-item {
     display: grid;
     grid-template-columns: 35px 80px 80px 80px 80px 45px 45px;

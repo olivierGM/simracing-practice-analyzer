@@ -541,19 +541,33 @@ function generateLapsList(driver) {
 
     const lapsHeader = `
         <div class="laps-header">
-            <span>Tour</span>
-            <span>Total</span>
-            <span>S1</span>
-            <span>S2</span>
-            <span>S3</span>
-            <span>Valide</span>
-            <span>Wet</span>
+            <span class="sortable" onclick="sortLapsTable('lapNumber', this)">
+                Tour <span class="sort-indicator">↕️</span>
+            </span>
+            <span class="sortable" onclick="sortLapsTable('total', this)">
+                Total <span class="sort-indicator">↕️</span>
+            </span>
+            <span class="sortable" onclick="sortLapsTable('split1', this)">
+                S1 <span class="sort-indicator">↕️</span>
+            </span>
+            <span class="sortable" onclick="sortLapsTable('split2', this)">
+                S2 <span class="sort-indicator">↕️</span>
+            </span>
+            <span class="sortable" onclick="sortLapsTable('split3', this)">
+                S3 <span class="sort-indicator">↕️</span>
+            </span>
+            <span class="sortable" onclick="sortLapsTable('valid', this)">
+                Valide <span class="sort-indicator">↕️</span>
+            </span>
+            <span class="sortable" onclick="sortLapsTable('wet', this)">
+                Wet <span class="sort-indicator">↕️</span>
+            </span>
         </div>
     `;
 
     const lapsItems = driver.lapTimes.map((lap, index) => generateLapItem(lap, index, bestTimes)).join('');
     
-    return lapsHeader + lapsItems;
+    return lapsHeader + `<div class="laps-list" id="lapsList">${lapsItems}</div>`;
 }
 
 /**
@@ -604,7 +618,14 @@ function generateLapItem(lap, index, bestTimes = null) {
     const isBestS3 = bestTimes && splits[2] && splits[2] === bestTimes.s3;
     
     return `
-        <div class="lap-item ${isValidClass} ${isWetClass}">
+        <div class="lap-item ${isValidClass} ${isWetClass}" 
+             data-lap-number="${index + 1}"
+             data-total-time="${lapTime}"
+             data-split1-time="${splits[0] || 0}"
+             data-split2-time="${splits[1] || 0}"
+             data-split3-time="${splits[2] || 0}"
+             data-is-valid="${isValid}"
+             data-is-wet="${isWet}">
             <span>${index + 1}</span>
             <span class="${isBestTotal ? 'best-time' : ''}">${lapTime > 0 ? formatTime(lapTime) : '--:--.---'}</span>
             <span class="${isBestS1 ? 'best-time' : ''}">${splits[0] ? formatTime(splits[0]) : '--'}</span>
@@ -1078,6 +1099,80 @@ function initializeProgressionChart(firstName, lastName, driver) {
     } catch (error) {
         console.error('❌ Erreur lors de l\'initialisation du graphique:', error);
     }
+}
+
+/**
+ * Trier le tableau des laps
+ */
+window.sortLapsTable = function(column, headerElement) {
+    const lapsList = document.getElementById('lapsList');
+    if (!lapsList) return;
+    
+    const lapItems = Array.from(lapsList.children);
+    if (lapItems.length === 0) return;
+    
+    // Déterminer l'ordre de tri
+    const currentSort = headerElement.getAttribute('data-sort') || 'none';
+    const newSort = currentSort === 'asc' ? 'desc' : 'asc';
+    
+    // Réinitialiser tous les indicateurs de tri
+    document.querySelectorAll('.laps-header .sort-indicator').forEach(indicator => {
+        indicator.textContent = '↕️';
+    });
+    
+    // Mettre à jour l'indicateur de la colonne courante
+    const indicator = headerElement.querySelector('.sort-indicator');
+    indicator.textContent = newSort === 'asc' ? '↑' : '↓';
+    headerElement.setAttribute('data-sort', newSort);
+    
+    // Trier les éléments
+    lapItems.sort((a, b) => {
+        let aValue, bValue;
+        
+        switch (column) {
+            case 'lapNumber':
+                aValue = parseInt(a.dataset.lapNumber);
+                bValue = parseInt(b.dataset.lapNumber);
+                break;
+            case 'total':
+                aValue = parseFloat(a.dataset.totalTime) || Infinity;
+                bValue = parseFloat(b.dataset.totalTime) || Infinity;
+                break;
+            case 'split1':
+                aValue = parseFloat(a.dataset.split1Time) || Infinity;
+                bValue = parseFloat(b.dataset.split1Time) || Infinity;
+                break;
+            case 'split2':
+                aValue = parseFloat(a.dataset.split2Time) || Infinity;
+                bValue = parseFloat(b.dataset.split2Time) || Infinity;
+                break;
+            case 'split3':
+                aValue = parseFloat(a.dataset.split3Time) || Infinity;
+                bValue = parseFloat(b.dataset.split3Time) || Infinity;
+                break;
+            case 'valid':
+                aValue = a.dataset.isValid === 'true' ? 1 : 0;
+                bValue = b.dataset.isValid === 'true' ? 1 : 0;
+                break;
+            case 'wet':
+                aValue = a.dataset.isWet === 'true' ? 1 : 0;
+                bValue = b.dataset.isWet === 'true' ? 1 : 0;
+                break;
+            default:
+                return 0;
+        }
+        
+        if (newSort === 'asc') {
+            return aValue - bValue;
+        } else {
+            return bValue - aValue;
+        }
+    });
+    
+    // Réorganiser les éléments dans le DOM
+    lapItems.forEach(item => lapsList.appendChild(item));
+    
+    console.log(`✅ Tri des tours par ${column} (${newSort})`);
 }
 
 // Initialiser le composant quand le DOM est prêt
