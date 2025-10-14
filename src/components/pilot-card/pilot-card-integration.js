@@ -1036,6 +1036,15 @@ function initializeProgressionChart(firstName, lastName, driver) {
     }
     
     try {
+        // Debug des données
+        console.log('🔍 Debug initializeProgressionChart:', {
+            firstName,
+            lastName,
+            driverKeys: Object.keys(driver),
+            lapTimesLength: driver.lapTimes ? driver.lapTimes.length : 'undefined',
+            lapTimesSample: driver.lapTimes ? driver.lapTimes.slice(0, 2) : 'no data'
+        });
+        
         // Utiliser ProgressionChart si disponible
         if (typeof ProgressionChart !== 'undefined') {
             const progressionChart = new ProgressionChart();

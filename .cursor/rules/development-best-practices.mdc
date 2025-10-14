@@ -1,19 +1,32 @@
 ---
-description: Quand tu crées ou modifies une fonctionnalité
+description: Applique cette règle SEULEMENT quand tu crées, modifies ou corriges du code
 alwaysApply: false
 ---
 
+# ⚠️ IMPORTANT: Cette règle s'applique UNIQUEMENT pour :
+- Créer une nouvelle fonctionnalité
+- Modifier du code existant  
+- Corriger des bugs
+- Refactoriser du code
+
+# ❌ NE PAS appliquer pour :
+- Questions d'explication
+- Demandes d'information
+- Analyses de code sans modification
+- Discussions générales
+
 # Code propre et découpé.  
-   - Écris des fonctions claires et testables.  
-   - Vérifie que la fonctionnalité marche avant toute autre chose.
-   - Écris des test unitaires pour s'assurer que ca fonctionne.
+- Écris des fonctions claires et testables.  
+- Vérifie que la fonctionnalité marche avant toute autre chose.
+- Écris des test unitaires pour s'assurer que ca fonctionne.
 
 # Tests  
-   - Exécute les tests unitaires.  
-   - Lance les tests end-to-end Playwright (ou propose-les s’ils n’existent pas).  
-   - Tous les tests doivent passer avant commit.
+- Exécute les tests unitaires.  
+- Lance les tests end-to-end Playwright (ou propose-les s'ils n'existent pas). 
+- Valide avec playwright que la fonctionnalité fonctionne.
+- Tous les tests doivent passer avant commit.
 
 # Commit  
-   - Un commit par fonctionnalité terminée.  
-   - Message clair.  
-   - Ne commit **jamais** de code non testé.
+- Un commit par fonctionnalité terminée.  
+- Message clair.  
+- Ne commit **jamais** de code non testé.

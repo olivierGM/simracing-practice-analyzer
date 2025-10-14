@@ -123,7 +123,16 @@ class ProgressionChart {
             
             this.chart = new Chart(this.ctx, finalConfig);
             
+            // Attacher l'instance au canvas pour debug
+            this.canvas.chart = this.chart;
+            
             console.log('✅ Graphique de progression initialisé avec succès');
+            console.log('🔍 Debug chart:', {
+                chartExists: !!this.chart,
+                canvasChart: !!this.canvas.chart,
+                datasetsCount: this.chart.data.datasets.length,
+                dataPoints: this.chart.data.datasets.map(ds => ds.data.length)
+            });
             
         } catch (error) {
             console.error('❌ Erreur lors de l\'initialisation du graphique:', error);
@@ -294,61 +303,70 @@ class ProgressionChart {
 
         const labels = this.filteredData.map(item => this.formatSessionDate(item.sessionDate));
         
-        // Séparer les données par type de tour
-        const dryValidTimes = this.filteredData.map(item => {
-            const dryValidLaps = item.lapTimes.filter(lapTime => {
-                const lapIndex = item.lapTimes.indexOf(lapTime);
-                const originalLap = this.data.find((originalLap, idx) => {
-                    const sessionIndex = Math.floor(idx / 10);
-                    return sessionIndex === item.groupIndex;
-                });
-                return !item.isWet && (item.isValid || originalLap?.isValid);
-            });
-            return dryValidLaps.length > 0 ? Math.min(...dryValidLaps) : null;
+        // 1. Évolution des meilleurs temps du pilote (tous types confondus)
+        const bestTimes = this.filteredData.map(item => {
+            return item.bestTime || null;
         });
         
-        const dryInvalidTimes = this.filteredData.map(item => {
-            const dryInvalidLaps = item.lapTimes.filter(lapTime => {
-                const lapIndex = item.lapTimes.indexOf(lapTime);
-                const originalLap = this.data.find((originalLap, idx) => {
-                    const sessionIndex = Math.floor(idx / 10);
-                    return sessionIndex === item.groupIndex;
-                });
-                return !item.isWet && !(item.isValid || originalLap?.isValid);
-            });
-            return dryInvalidLaps.length > 0 ? Math.min(...dryInvalidLaps) : null;
+        // 2. Évolution des temps moyens dans l'ensemble du pilote (tous types confondus)
+        const averageTimes = this.filteredData.map(item => {
+            return item.averageTime || null;
         });
         
-        const wetValidTimes = this.filteredData.map(item => {
-            const wetValidLaps = item.lapTimes.filter(lapTime => {
+        // 3. Évolution des temps sec du pilote (valides ET non valides combinés)
+        const dryTimes = this.filteredData.map(item => {
+            const dryLaps = item.lapTimes.filter(lapTime => {
                 const lapIndex = item.lapTimes.indexOf(lapTime);
                 const originalLap = this.data.find((originalLap, idx) => {
                     const sessionIndex = Math.floor(idx / 10);
                     return sessionIndex === item.groupIndex;
                 });
-                return item.isWet && (item.isValid || originalLap?.isValid);
+                return !item.isWet; // Tous les tours sec, valides et non valides
             });
-            return wetValidLaps.length > 0 ? Math.min(...wetValidLaps) : null;
+            return dryLaps.length > 0 ? Math.min(...dryLaps) : null;
         });
         
-        const wetInvalidTimes = this.filteredData.map(item => {
-            const wetInvalidLaps = item.lapTimes.filter(lapTime => {
+        // 4. Évolution des temps wet du pilote (valides ET non valides combinés)
+        const wetTimes = this.filteredData.map(item => {
+            const wetLaps = item.lapTimes.filter(lapTime => {
                 const lapIndex = item.lapTimes.indexOf(lapTime);
                 const originalLap = this.data.find((originalLap, idx) => {
                     const sessionIndex = Math.floor(idx / 10);
                     return sessionIndex === item.groupIndex;
                 });
-                return item.isWet && !(item.isValid || originalLap?.isValid);
+                return item.isWet; // Tous les tours wet, valides et non valides
             });
-            return wetInvalidLaps.length > 0 ? Math.min(...wetInvalidLaps) : null;
+            return wetLaps.length > 0 ? Math.min(...wetLaps) : null;
         });
 
         return {
             labels: labels,
             datasets: [
                 {
-                    label: '🌞 Tours Sec (Valides)',
-                    data: dryValidTimes,
+                    label: '🏆 Meilleurs Temps',
+                    data: bestTimes,
+                    borderColor: '#ef4444',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    borderWidth: 3,
+                    fill: false,
+                    tension: 0.1,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                },
+                {
+                    label: '📊 Temps Moyens',
+                    data: averageTimes,
+                    borderColor: '#6b7280',
+                    backgroundColor: 'rgba(107, 114, 128, 0.1)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.1,
+                    pointRadius: 4,
+                    borderDash: [2, 2]
+                },
+                {
+                    label: '🌞 Tours Sec',
+                    data: dryTimes,
                     borderColor: '#10b981',
                     backgroundColor: 'rgba(16, 185, 129, 0.1)',
                     borderWidth: 2,
@@ -357,36 +375,14 @@ class ProgressionChart {
                     pointRadius: 4
                 },
                 {
-                    label: '🌞 Tours Sec (Non Valides)',
-                    data: dryInvalidTimes,
-                    borderColor: '#f59e0b',
-                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.1,
-                    pointRadius: 3,
-                    borderDash: [5, 5]
-                },
-                {
-                    label: '🌧️ Tours Wet (Valides)',
-                    data: wetValidTimes,
+                    label: '🌧️ Tours Wet',
+                    data: wetTimes,
                     borderColor: '#3b82f6',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     borderWidth: 2,
                     fill: false,
                     tension: 0.1,
                     pointRadius: 4
-                },
-                {
-                    label: '🌧️ Tours Wet (Non Valides)',
-                    data: wetInvalidTimes,
-                    borderColor: '#8b5cf6',
-                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.1,
-                    pointRadius: 3,
-                    borderDash: [5, 5]
                 }
             ]
         };
