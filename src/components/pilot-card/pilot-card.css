@@ -183,6 +183,38 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
     min-height: 500px;
 }
 
+/* Légende personnalisée pour le graphique */
+.chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    margin-bottom: 15px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.legend-label {
+    font-weight: 500;
+}
+
 /* Section graphique */
 .progression-section {
     flex: 1;
@@ -195,13 +227,13 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-    min-height: 450px;
-    height: 450px;
+    min-height: 500px;
+    height: 500px;
 }
 
 .progression-chart-container canvas {
-    min-height: 400px !important;
-    height: 400px !important;
+    min-height: 450px !important;
+    height: 450px !important;
 }
 
 /* Section des tours */

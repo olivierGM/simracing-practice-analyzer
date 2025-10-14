@@ -454,6 +454,24 @@ function generatePilotModalContent(firstName, lastName, cupCategory, stats, glob
                 <div class="progression-section">
                     <h3>📈 Évolution des Temps de Tour</h3>
                     <div class="progression-chart-container" id="progressionChartContainer">
+                        <div class="chart-legend" id="chartLegend">
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: #ef4444;"></span>
+                                <span class="legend-label">🏆 Meilleurs Temps</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: #6b7280;"></span>
+                                <span class="legend-label">📊 Temps Moyens</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: #10b981;"></span>
+                                <span class="legend-label">🌞 Tours Sec</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: #3b82f6;"></span>
+                                <span class="legend-label">🌧️ Tours Wet</span>
+                            </div>
+                        </div>
                         <canvas id="progressionChart"></canvas>
                     </div>
                 </div>
@@ -507,6 +525,10 @@ function generateStatsCards(stats) {
             <div class="pilot-info-item">
                 <span class="pilot-info-label">Meilleur temps:</span>
                 <span class="pilot-info-value">${formatTime(stats.bestValidTime || 0)}</span>
+            </div>
+            <div class="pilot-info-item">
+                <span class="pilot-info-label">Temps potentiel:</span>
+                <span class="pilot-info-value">${formatTime(stats.potentialBestTime || 0)}</span>
             </div>
             <div class="pilot-info-item">
                 <span class="pilot-info-label">Moyenne:</span>

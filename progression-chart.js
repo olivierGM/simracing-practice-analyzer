@@ -34,8 +34,7 @@ class ProgressionChart {
                         }
                     },
                     legend: {
-                        display: true,
-                        position: 'top'
+                        display: false
                     },
                     tooltip: {
                         callbacks: {
@@ -63,7 +62,13 @@ class ProgressionChart {
                             text: 'Sessions'
                         },
                         ticks: {
-                            maxTicksLimit: 10
+                            maxTicksLimit: 10,
+                            maxRotation: 45,
+                            minRotation: 0,
+                            padding: 10
+                        },
+                        grid: {
+                            display: true
                         }
                     },
                     y: {
@@ -303,9 +308,13 @@ class ProgressionChart {
 
         const labels = this.filteredData.map(item => this.formatSessionDate(item.sessionDate));
         
-        // 1. Évolution des meilleurs temps du pilote (tous types confondus)
+        // 1. Évolution des meilleurs temps du pilote (meilleur temps cumulatif par date)
+        let cumulativeBestTime = null;
         const bestTimes = this.filteredData.map(item => {
-            return item.bestTime || null;
+            if (item.bestTime && (cumulativeBestTime === null || item.bestTime < cumulativeBestTime)) {
+                cumulativeBestTime = item.bestTime;
+            }
+            return cumulativeBestTime;
         });
         
         // 2. Évolution des temps moyens dans l'ensemble du pilote (tous types confondus)
@@ -314,29 +323,42 @@ class ProgressionChart {
         });
         
         // 3. Évolution des temps sec du pilote (valides ET non valides combinés)
-        const dryTimes = this.filteredData.map(item => {
-            const dryLaps = item.lapTimes.filter(lapTime => {
-                const lapIndex = item.lapTimes.indexOf(lapTime);
-                const originalLap = this.data.find((originalLap, idx) => {
-                    const sessionIndex = Math.floor(idx / 10);
-                    return sessionIndex === item.groupIndex;
-                });
-                return !item.isWet; // Tous les tours sec, valides et non valides
+        const dryTimes = this.filteredData.map((item, sessionIndex) => {
+            // Trouver les tours sec dans les données originales pour cette session
+            const sessionStartIndex = sessionIndex * 10;
+            const sessionEndIndex = Math.min(sessionStartIndex + 10, this.data.length);
+            const sessionLaps = this.data.slice(sessionStartIndex, sessionEndIndex);
+            
+            const dryLaps = sessionLaps.filter(lap => {
+                const isWet = lap.isWet === true || lap.isWetSession === true || lap.sessionWet === true;
+                // Si isWet est undefined/null, considérer comme sec par défaut
+                return !isWet && (lap.laptime || lap.time);
             });
-            return dryLaps.length > 0 ? Math.min(...dryLaps) : null;
+            
+            if (dryLaps.length > 0) {
+                const dryTimes = dryLaps.map(lap => lap.laptime || lap.time || 0).filter(time => time > 0);
+                return dryTimes.length > 0 ? Math.min(...dryTimes) : null;
+            }
+            return null;
         });
         
         // 4. Évolution des temps wet du pilote (valides ET non valides combinés)
-        const wetTimes = this.filteredData.map(item => {
-            const wetLaps = item.lapTimes.filter(lapTime => {
-                const lapIndex = item.lapTimes.indexOf(lapTime);
-                const originalLap = this.data.find((originalLap, idx) => {
-                    const sessionIndex = Math.floor(idx / 10);
-                    return sessionIndex === item.groupIndex;
-                });
-                return item.isWet; // Tous les tours wet, valides et non valides
+        const wetTimes = this.filteredData.map((item, sessionIndex) => {
+            // Trouver les tours wet dans les données originales pour cette session
+            const sessionStartIndex = sessionIndex * 10;
+            const sessionEndIndex = Math.min(sessionStartIndex + 10, this.data.length);
+            const sessionLaps = this.data.slice(sessionStartIndex, sessionEndIndex);
+            
+            const wetLaps = sessionLaps.filter(lap => {
+                const isWet = lap.isWet === true || lap.isWetSession === true || lap.sessionWet === true;
+                return isWet && (lap.laptime || lap.time);
             });
-            return wetLaps.length > 0 ? Math.min(...wetLaps) : null;
+            
+            if (wetLaps.length > 0) {
+                const wetTimes = wetLaps.map(lap => lap.laptime || lap.time || 0).filter(time => time > 0);
+                return wetTimes.length > 0 ? Math.min(...wetTimes) : null;
+            }
+            return null;
         });
 
         return {
