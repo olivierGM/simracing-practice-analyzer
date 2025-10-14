@@ -196,6 +196,12 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
     margin-bottom: 15px;
 }
 
+/* Mode sombre pour la légende du graphique */
+[data-theme="dark"] .chart-legend {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+}
+
 .legend-item {
     display: flex;
     align-items: center;

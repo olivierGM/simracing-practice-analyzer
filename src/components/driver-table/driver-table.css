@@ -341,3 +341,25 @@
         padding: 1px 4px;
     }
 }
+
+/* Style pour les en-têtes de catégorie (groupement par classe) */
+.category-header {
+    background: var(--bg-secondary);
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.category-header td {
+    padding: 16px 12px;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Mode sombre pour les en-têtes de catégorie */
+[data-theme="dark"] .category-header {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-bottom-color: var(--border-color);
+}
