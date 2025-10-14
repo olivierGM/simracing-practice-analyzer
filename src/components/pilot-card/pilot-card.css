@@ -175,16 +175,18 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
 
 /* Container laps et graphique côte à côte */
 .laps-chart-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
     gap: 20px;
     padding: 20px;
     background: #ffffff;
     flex-shrink: 0;
+    min-height: 500px;
 }
 
 /* Section graphique */
 .progression-section {
+    flex: 1;
+    min-width: 300px;
     background: #ffffff;
 }
 
@@ -193,17 +195,19 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-    min-height: 400px;
-    height: 400px;
+    min-height: 450px;
+    height: 450px;
 }
 
 .progression-chart-container canvas {
-    min-height: 350px !important;
-    height: 350px !important;
+    min-height: 400px !important;
+    height: 400px !important;
 }
 
 /* Section des tours */
 .laps-section {
+    flex: 0 0 525px;
+    max-width: 525px;
     background: #ffffff;
 }
 
@@ -225,12 +229,13 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
 
 .laps-header {
     display: grid;
-    grid-template-columns: 35px 80px 80px 80px 80px 45px 45px;
+    grid-template-columns: 45px 80px 80px 80px 80px 45px 45px;
     background: #6366f1 !important;
     color: white !important;
     font-weight: 600;
-    padding: 12px;
-    gap: 8px;
+    font-size: 0.75rem;
+    padding: 8px;
+    gap: 6px;
     align-items: center;
 }
 
@@ -238,7 +243,7 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
     cursor: pointer;
     user-select: none;
     transition: background-color 0.2s ease;
-    padding: 4px 8px;
+    padding: 2px 4px;
     border-radius: 4px;
     display: flex;
     align-items: center;
@@ -257,11 +262,12 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
 
 .lap-item {
     display: grid;
-    grid-template-columns: 35px 80px 80px 80px 80px 45px 45px;
-    padding: 8px 12px;
+    grid-template-columns: 45px 80px 80px 80px 80px 45px 45px;
+    padding: 6px 8px;
     border-bottom: 1px solid var(--border-color);
-    gap: 8px;
+    gap: 6px;
     align-items: center;
+    font-size: 0.8rem;
     transition: background 0.2s ease;
 }
 
@@ -320,6 +326,20 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
 
 [data-theme="dark"] .segment-comparator {
     background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .segment-comparator .segment-section {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .segment-comparator .segment-section h4 {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .segment-comparator .segment-row {
     color: var(--text-primary) !important;
 }
 
@@ -402,8 +422,9 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-wrap: nowrap;
+    gap: 12px;
+    min-height: 40px;
 }
 
 .segment-title-row {
@@ -436,6 +457,7 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
     border-radius: 6px;
     padding: 12px;
     border: 1px solid var(--border-color);
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .segment-section h4 {
@@ -631,11 +653,31 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
         gap: 8px;
     }
     
+    /* Forcer le wrap du header seulement sur très petits écrans */
+    .segment-header {
+        flex-wrap: wrap;
+        min-height: auto;
+    }
+    
+    .segment-focus-hint {
+        font-size: 0.8rem;
+    }
+    
     /* Layout mobile: laps et chart empilés */
     .laps-chart-container {
-        grid-template-columns: 1fr;
+        flex-direction: column;
         gap: 16px;
         padding: 16px;
+    }
+    
+    .laps-section {
+        flex: none;
+        max-width: none;
+    }
+    
+    .progression-section {
+        flex: none;
+        min-width: auto;
     }
     
     .laps-list {

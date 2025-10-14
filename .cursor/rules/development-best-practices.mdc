@@ -1,3 +1,19 @@
 ---
-alwaysApply: true
+description: Quand tu crées ou modifies une fonctionnalité
+alwaysApply: false
 ---
+
+# Code propre et découpé.  
+   - Écris des fonctions claires et testables.  
+   - Vérifie que la fonctionnalité marche avant toute autre chose.
+   - Écris des test unitaires pour s'assurer que ca fonctionne.
+
+# Tests  
+   - Exécute les tests unitaires.  
+   - Lance les tests end-to-end Playwright (ou propose-les s’ils n’existent pas).  
+   - Tous les tests doivent passer avant commit.
+
+# Commit  
+   - Un commit par fonctionnalité terminée.  
+   - Message clair.  
+   - Ne commit **jamais** de code non testé.
