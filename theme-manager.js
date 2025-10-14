@@ -5,7 +5,7 @@
 
 class ThemeManager {
     constructor() {
-        this.currentTheme = this.getStoredTheme() || 'light';
+        this.currentTheme = this.getStoredTheme() || this.getSystemPreference();
         this.themeToggle = null;
         this.init();
     }
@@ -33,6 +33,39 @@ class ThemeManager {
         if (this.themeToggle) {
             this.themeToggle.addEventListener('click', () => this.toggleTheme());
             this.updateToggleIcon();
+        }
+
+        // Écouter les changements de préférence système
+        this.setupSystemPreferenceListener();
+    }
+
+    /**
+     * Configure l'écouteur pour les changements de préférence système
+     */
+    setupSystemPreferenceListener() {
+        try {
+            if (window.matchMedia) {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                
+                // Fonction de callback pour les changements
+                const handleSystemThemeChange = (e) => {
+                    // Ne changer que si l'utilisateur n'a pas de préférence stockée
+                    if (!this.getStoredTheme()) {
+                        const newTheme = e.matches ? 'dark' : 'light';
+                        console.log(`🔄 Préférence système changée vers: ${newTheme}`);
+                        this.currentTheme = newTheme;
+                        this.applyTheme(newTheme);
+                        this.updateToggleIcon();
+                    }
+                };
+
+                // Écouter les changements
+                mediaQuery.addEventListener('change', handleSystemThemeChange);
+                
+                console.log('👂 Écoute des changements de préférence système activée');
+            }
+        } catch (error) {
+            console.warn('Impossible de configurer l\'écoute des préférences système:', error);
         }
     }
 
@@ -77,6 +110,26 @@ class ThemeManager {
         } catch (error) {
             console.warn('Impossible de récupérer le thème depuis localStorage:', error);
             return null;
+        }
+    }
+
+    /**
+     * Détecte la préférence de thème du système d'exploitation
+     * @returns {string} 'light' ou 'dark'
+     */
+    getSystemPreference() {
+        try {
+            // Vérifier si le navigateur supporte prefers-color-scheme
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                console.log('🌙 Préférence système détectée: mode sombre');
+                return 'dark';
+            } else {
+                console.log('☀️ Préférence système détectée: mode clair');
+                return 'light';
+            }
+        } catch (error) {
+            console.warn('Impossible de détecter la préférence système:', error);
+            return 'light'; // Fallback par défaut
         }
     }
 
