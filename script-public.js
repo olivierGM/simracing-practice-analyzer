@@ -19,6 +19,7 @@ const ADMIN_PASSWORD = "admin123";
 // Éléments DOM
 let fileInput, fileList, analyzeBtn, clearBtn, downloadBtn, resultsSection, loading, categoryStats, driverStats, groupByClassToggle, dataStatus, uploadSection, uploadHeader, uploadContent, fileCount, collapseBtn, sessionSelect, dateFilter, pilotModal, closeModal;
 let authSection, adminPassword, loginBtn, logoutBtn, adminControls, authStatus, adminAccessBtn, adminSection, cancelAuthBtn, publicSection;
+let adminLayout, adminLoading, analysisResults, resultsStatus, resultsContent;
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', async function() {
@@ -55,6 +56,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     adminSection = document.getElementById('adminSection');
     cancelAuthBtn = document.getElementById('cancelAuthBtn');
     publicSection = document.querySelector('.public-section');
+    
+    // Nouveaux éléments admin
+    adminLayout = document.getElementById('adminLayout');
+    adminLoading = document.getElementById('adminLoading');
+    analysisResults = document.getElementById('analysisResults');
+    resultsStatus = document.getElementById('resultsStatus');
+    resultsContent = document.getElementById('resultsContent');
 
     // Initialiser Firebase
     try {
@@ -128,8 +136,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 function hideAdminSections() {
     if (adminSection) adminSection.style.display = 'none';
     if (authSection) authSection.style.display = 'none';
-    if (adminControls) adminControls.style.display = 'none';
-    if (uploadSection) uploadSection.style.display = 'none';
+    if (adminLayout) adminLayout.style.display = 'none';
     isAdmin = false;
     console.log('🔒 Sections admin masquées');
 }
@@ -138,9 +145,8 @@ function hideAdminSections() {
 function showAdminAuth() {
     if (adminSection) adminSection.style.display = 'block';
     if (authSection) authSection.style.display = 'block';
-    // S'assurer que les autres sections admin restent cachées
-    if (adminControls) adminControls.style.display = 'none';
-    if (uploadSection) uploadSection.style.display = 'none';
+    // S'assurer que le layout admin reste caché
+    if (adminLayout) adminLayout.style.display = 'none';
 }
 
 function hideAdminAuth() {
@@ -165,10 +171,12 @@ function handleLogin() {
         localStorage.setItem('adminLoginTime', Date.now().toString());
         
         if (authSection) authSection.style.display = 'none';
-        if (adminControls) adminControls.style.display = 'block';
-        if (uploadSection) uploadSection.style.display = 'block';
+        if (adminLayout) adminLayout.style.display = 'flex';
         if (authStatus) authStatus.innerHTML = '<div class="auth-status success">✅ Connecté en tant qu\'admin</div>';
         if (adminPassword) adminPassword.value = '';
+        
+        // Initialiser le panneau de résultats
+        updateAnalysisResults('En attente...', 'Aucune analyse effectuée');
         
         // Charger les données depuis le localStorage
         loadDataFromStorage();
@@ -291,34 +299,79 @@ async function loadDataFromStorage() {
 // Fonction supprimée - on utilise maintenant uniquement Firestore pour éviter les incohérences
 
 // Gestion des fichiers
-function handleFileSelection() {
+async function handleFileSelection() {
     if (!isAdmin) {
         alert('Seuls les administrateurs peuvent sélectionner des fichiers. Connectez-vous d\'abord.');
         return;
     }
     
     const files = Array.from(fileInput.files);
-    displayLoadedFiles();
     
     if (files.length > 0) {
-        analyzeBtn.disabled = false;
+        // Afficher le nombre de fichiers sélectionnés
+        if (fileCount) {
+            fileCount.textContent = `${files.length} fichier(s) sélectionné(s)`;
+            fileCount.style.fontWeight = 'bold';
+            fileCount.style.color = '#FF9800';
+        }
+        
+        // Démarrer automatiquement l'analyse
+        console.log('🚀 Démarrage automatique de l\'analyse...');
+        await analyzeData();
+    } else {
+        // Réinitialiser l'affichage si aucun fichier
+        if (fileCount) {
+            fileCount.textContent = '';
+        }
+        if (analyzeBtn) {
+            analyzeBtn.disabled = true;
+        }
+    }
+}
+
+// Mettre à jour le panneau de résultats d'analyse
+function updateAnalysisResults(status, content) {
+    if (resultsStatus) {
+        resultsStatus.textContent = status;
+        resultsStatus.className = 'results-status';
+        
+        if (status.includes('En cours')) {
+            resultsStatus.classList.add('processing');
+        } else if (status.includes('Succès') || status.includes('Terminé')) {
+            resultsStatus.classList.add('success');
+        } else if (status.includes('Erreur') || status.includes('Échec')) {
+            resultsStatus.classList.add('error');
+        }
+    }
+    
+    if (resultsContent) {
+        resultsContent.innerHTML = content;
+    }
+}
+
+// Afficher/masquer le loading admin
+function showAdminLoading(show) {
+    if (adminLoading) {
+        adminLoading.style.display = show ? 'block' : 'none';
     }
 }
 
 // Analyser les données
 async function analyzeData() {
     if (!isAdmin) {
-        alert('Seuls les administrateurs peuvent analyser des fichiers. Connectez-vous d\'abord.');
+        updateAnalysisResults('Erreur', 'Seuls les administrateurs peuvent analyser des fichiers. Connectez-vous d\'abord.');
         return;
     }
     
     const files = Array.from(fileInput.files);
     if (files.length === 0) {
-        alert('Veuillez sélectionner des fichiers JSON');
+        updateAnalysisResults('Erreur', 'Veuillez sélectionner des fichiers JSON');
         return;
     }
     
-    showLoading(true);
+    // Mettre à jour le statut et afficher le loading
+    updateAnalysisResults('En cours...', 'Analyse des fichiers en cours...');
+    showAdminLoading(true);
     
     try {
         console.log('Début de l\'analyse de', files.length, 'fichiers');
@@ -370,15 +423,37 @@ async function analyzeData() {
         // Après un upload, sélectionner la piste la plus récente
         updateSessionSelect();
         
-        // Afficher le résumé
-        const message = `Analyse terminée !\n\nNouvelles sessions: ${newSessionsCount}\nDoublons ignorés: ${duplicateSessionsCount}\nTotal sessions: ${sessionData.length}`;
-        alert(message);
+        // Afficher le résumé dans le panneau de résultats
+        const summaryContent = `
+            <div class="analysis-summary">
+                <h4>✅ Analyse terminée avec succès !</h4>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Nouvelles sessions:</span>
+                        <span class="stat-value success">${newSessionsCount}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Doublons ignorés:</span>
+                        <span class="stat-value warning">${duplicateSessionsCount}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total sessions:</span>
+                        <span class="stat-value info">${sessionData.length}</span>
+                    </div>
+                </div>
+                <div class="summary-actions">
+                    <p>Les données ont été analysées et sauvegardées. Vous pouvez maintenant consulter les résultats dans la section principale.</p>
+                </div>
+            </div>
+        `;
+        updateAnalysisResults('Succès', summaryContent);
         
     } catch (error) {
         console.error('Erreur lors de l\'analyse des données:', error);
-        alert('Erreur lors de l\'analyse des données: ' + error.message);
+        updateAnalysisResults('Erreur', `Erreur lors de l'analyse des données: ${error.message}`);
     } finally {
         showLoading(false);
+        showAdminLoading(false);
     }
 }
 
@@ -486,26 +561,22 @@ function displayLoadedFiles() {
         return; // Ne pas afficher les fichiers si pas admin
     }
     
-    // Double vérification : s'assurer que les sections admin sont visibles
-    if (adminControls) adminControls.style.display = 'block';
-    if (uploadSection) uploadSection.style.display = 'block';
+    // S'assurer que le layout admin est visible
+    if (adminLayout) adminLayout.style.display = 'flex';
     
-    if (sessionData.length === 0) return;
-    
-    fileList.innerHTML = '';
-    sessionData.forEach((session, index) => {
-        const sessionId = generateSessionId(session);
-        const fileItem = document.createElement('div');
-        fileItem.className = 'file-item';
-        fileItem.innerHTML = `
-            <span class="file-name">${sessionId}</span>
-            <span class="file-info">${session.laps ? session.laps.length : 0} tours</span>
-        `;
-        fileList.appendChild(fileItem);
-    });
-    
+    // Afficher seulement le nombre de fichiers au lieu de la liste complète
     if (fileCount) {
-        fileCount.textContent = `${sessionData.length} fichier(s)`;
+        const totalFiles = sessionData.length;
+        const totalLaps = sessionData.reduce((sum, session) => sum + (session.laps ? session.laps.length : 0), 0);
+        fileCount.textContent = `${totalFiles} fichier(s) • ${totalLaps} tours`;
+        fileCount.style.fontWeight = 'bold';
+        fileCount.style.color = '#4CAF50';
+    }
+    
+    // Masquer la liste détaillée des fichiers
+    if (fileList) {
+        fileList.innerHTML = '';
+        fileList.style.display = 'none';
     }
 }
 

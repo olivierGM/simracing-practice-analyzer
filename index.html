@@ -47,52 +47,70 @@
                 </div>
             </div>
 
-            <!-- Section d'upload (admin seulement) -->
-            <div class="upload-section" id="uploadSection" style="display: none;">
-                <div class="upload-header" id="uploadHeader">
-                    <div class="upload-title">
-                        <span class="upload-icon">📁</span>
-                        <span class="upload-text">Upload de fichiers JSON (Admin)</span>
-                        <span class="file-count" id="fileCount"></span>
+            <!-- Layout en deux colonnes pour l'admin -->
+            <div class="admin-layout" id="adminLayout" style="display: none;">
+                <!-- Colonne gauche : Upload et contrôles -->
+                <div class="admin-left-column">
+                    <!-- Section d'upload (admin seulement) -->
+                    <div class="upload-section" id="uploadSection" style="display: none;">
+                        <div class="upload-header" id="uploadHeader">
+                            <div class="upload-title">
+                                <span class="upload-icon">📁</span>
+                                <span class="upload-text">Upload de fichiers JSON</span>
+                                <span class="file-count" id="fileCount"></span>
+                            </div>
+                        </div>
+                        <div class="upload-content" id="uploadContent">
+                            <div class="file-input-container">
+                                <input type="file" id="jsonFiles" multiple accept=".json" />
+                                <label for="jsonFiles" class="file-input-label">
+                                    📁 Sélectionner les fichiers JSON
+                                </label>
+                            </div>
+                            <div class="file-list" id="fileList"></div>
+                            <div class="data-status" id="dataStatus" style="display: none;">
+                                <span class="status-indicator">💾</span>
+                                <span class="status-text">Données chargées depuis le cache</span>
+                            </div>
+                        </div>
                     </div>
-                    <button class="collapse-btn" id="collapseBtn" title="Réduire/Agrandir">
-                        <span class="collapse-icon">▼</span>
-                    </button>
-                </div>
-                <div class="upload-content" id="uploadContent">
-                    <div class="file-input-container">
-                        <input type="file" id="jsonFiles" multiple accept=".json" />
-                        <label for="jsonFiles" class="file-input-label">
-                            📁 Sélectionner les fichiers JSON
-                        </label>
-                    </div>
-                    <div class="file-list" id="fileList"></div>
-                    <div class="data-status" id="dataStatus" style="display: none;">
-                        <span class="status-indicator">💾</span>
-                        <span class="status-text">Données chargées depuis le cache</span>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Contrôles admin (masqués jusqu'à authentification) -->
-            <div class="controls" id="adminControls" style="display: none;">
-                <div class="admin-header">
-                    <h3>🛠️ Zone Admin</h3>
-                    <p>Upload et gestion des fichiers de données</p>
+                    <!-- Contrôles admin -->
+                    <div class="controls" id="adminControls" style="display: none;">
+                        <div class="admin-header">
+                            <h3>🛠️ Contrôles Admin</h3>
+                        </div>
+                        <div class="admin-actions">
+                            <button id="downloadBtn" class="btn btn-download">
+                                ⬇️ Télécharger depuis EGT
+                            </button>
+                            <button id="clearBtn" class="btn btn-secondary">
+                                🗑️ Effacer
+                            </button>
+                            <button id="logoutBtn" class="btn btn-secondary">
+                                🚪 Déconnexion
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Zone de loading pour l'admin -->
+                    <div class="admin-loading" id="adminLoading" style="display: none;">
+                        <div class="admin-spinner"></div>
+                        <p>Analyse en cours...</p>
+                    </div>
                 </div>
-                <div class="admin-actions">
-                    <button id="analyzeBtn" class="btn btn-primary" disabled>
-                        🔍 Analyser les données
-                    </button>
-                    <button id="downloadBtn" class="btn btn-download">
-                        ⬇️ Télécharger depuis EGT
-                    </button>
-                    <button id="clearBtn" class="btn btn-secondary">
-                        🗑️ Effacer
-                    </button>
-                    <button id="logoutBtn" class="btn btn-secondary">
-                        🚪 Déconnexion
-                    </button>
+
+                <!-- Colonne droite : Résultats d'analyse -->
+                <div class="admin-right-column">
+                    <div class="analysis-results" id="analysisResults">
+                        <div class="results-header">
+                            <h3>📊 Résultats d'Analyse</h3>
+                            <span class="results-status" id="resultsStatus">En attente...</span>
+                        </div>
+                        <div class="results-content" id="resultsContent">
+                            <p class="no-results">Aucune analyse effectuée</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
