@@ -666,7 +666,7 @@ function formatSessionDate(sessionDate) {
  * Générer un élément de tour
  */
 function generateLapItem(lap, index, bestTimes = null) {
-    const lapTime = lap.laptime || lap.time || 0;
+    const lapTime = lap.time || lap.laptime || 0;
     // Utiliser lap.isValid directement, qui est un booléen
     const isValid = lap.isValid === true;
     // Vérifier plusieurs propriétés pour wet

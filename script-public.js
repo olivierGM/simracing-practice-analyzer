@@ -1343,7 +1343,8 @@ function processSessionData(sessions) {
                         time: lap.laptime,
                         isValid: lap.isValidForBest,
                         isWet: isWet,
-                        splits: lap.splits || [] // Ajouter les segments
+                        splits: lap.splits || [], // Ajouter les segments
+                        sessionDate: sessionFileName // Ajouter la date de session
                     });
                     
                     // Mettre à jour les statistiques
