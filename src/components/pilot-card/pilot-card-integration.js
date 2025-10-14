@@ -566,6 +566,9 @@ function generateLapsList(driver) {
             <span class="sortable" onclick="sortLapsTable('lapNumber', this)">
                 Tour <span class="sort-indicator">↕️</span>
             </span>
+            <span class="sortable" onclick="sortLapsTable('date', this)">
+                Date <span class="sort-indicator">↕️</span>
+            </span>
             <span class="sortable" onclick="sortLapsTable('total', this)">
                 Total <span class="sort-indicator">↕️</span>
             </span>
@@ -620,6 +623,46 @@ function calculateBestLapTimes(lapTimes) {
 }
 
 /**
+ * Formater la date de session pour l'affichage
+ */
+function formatSessionDate(sessionDate) {
+    if (!sessionDate) return '--';
+    
+    // Si c'est déjà un format lisible, le retourner tel quel
+    if (sessionDate.includes('/') || sessionDate.includes('-')) {
+        return sessionDate;
+    }
+    
+    // Essayer de parser différents formats de date
+    try {
+        // Format de fichier typique: "20240115_143022"
+        if (sessionDate.match(/^\d{8}_\d{6}$/)) {
+            const datePart = sessionDate.substring(0, 8);
+            const timePart = sessionDate.substring(9, 15);
+            const year = datePart.substring(0, 4);
+            const month = datePart.substring(4, 6);
+            const day = datePart.substring(6, 8);
+            const hour = timePart.substring(0, 2);
+            const minute = timePart.substring(2, 4);
+            const second = timePart.substring(4, 6);
+            return `${day}/${month}/${year} ${hour}:${minute}:${second}`;
+        }
+        
+        // Format ISO ou autre
+        const date = new Date(sessionDate);
+        if (!isNaN(date.getTime())) {
+            return date.toLocaleDateString('fr-FR') + ' ' + date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        // Retourner tel quel si aucun format reconnu
+        return sessionDate;
+    } catch (error) {
+        console.warn('Erreur lors du formatage de la date:', sessionDate, error);
+        return sessionDate;
+    }
+}
+
+/**
  * Générer un élément de tour
  */
 function generateLapItem(lap, index, bestTimes = null) {
@@ -639,9 +682,14 @@ function generateLapItem(lap, index, bestTimes = null) {
     const isBestS2 = bestTimes && splits[1] && splits[1] === bestTimes.s2;
     const isBestS3 = bestTimes && splits[2] && splits[2] === bestTimes.s3;
     
+    // Formater la date de session
+    const sessionDate = lap.sessionDate || '';
+    const formattedDate = sessionDate ? formatSessionDate(sessionDate) : '--';
+    
     return `
         <div class="lap-item ${isValidClass} ${isWetClass}" 
              data-lap-number="${index + 1}"
+             data-date="${sessionDate}"
              data-total-time="${lapTime}"
              data-split1-time="${splits[0] || 0}"
              data-split2-time="${splits[1] || 0}"
@@ -649,6 +697,7 @@ function generateLapItem(lap, index, bestTimes = null) {
              data-is-valid="${isValid}"
              data-is-wet="${isWet}">
             <span>${index + 1}</span>
+            <span>${formattedDate}</span>
             <span class="${isBestTotal ? 'best-time' : ''}">${lapTime > 0 ? formatTime(lapTime) : '--:--.---'}</span>
             <span class="${isBestS1 ? 'best-time' : ''}">${splits[0] ? formatTime(splits[0]) : '--'}</span>
             <span class="${isBestS2 ? 'best-time' : ''}">${splits[1] ? formatTime(splits[1]) : '--'}</span>
@@ -1165,6 +1214,15 @@ window.sortLapsTable = function(column, headerElement) {
                 aValue = parseInt(a.dataset.lapNumber);
                 bValue = parseInt(b.dataset.lapNumber);
                 break;
+            case 'date':
+                aValue = a.dataset.date || '';
+                bValue = b.dataset.date || '';
+                // Tri alphabétique pour les dates
+                if (newSort === 'asc') {
+                    return aValue.localeCompare(bValue);
+                } else {
+                    return bValue.localeCompare(aValue);
+                }
             case 'total':
                 aValue = parseFloat(a.dataset.totalTime) || Infinity;
                 bValue = parseFloat(b.dataset.totalTime) || Infinity;

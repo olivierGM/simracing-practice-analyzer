@@ -238,8 +238,8 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
 
 /* Section des tours */
 .laps-section {
-    flex: 0 0 525px;
-    max-width: 525px;
+    flex: 0 0 605px;
+    max-width: 605px;
     background: #ffffff;
 }
 
@@ -253,7 +253,7 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
     background: #ffffff;
     border-radius: 8px;
     max-height: 400px;
-    width: 525px;
+    width: 605px;
     overflow-x: hidden;
     overflow-y: scroll !important;
     border: 1px solid var(--border-color);
@@ -261,7 +261,7 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
 
 .laps-header {
     display: grid;
-    grid-template-columns: 45px 80px 80px 80px 80px 45px 45px;
+    grid-template-columns: 45px 100px 80px 80px 80px 80px 45px 45px;
     background: #6366f1 !important;
     color: white !important;
     font-weight: 600;
@@ -294,7 +294,7 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
 
 .lap-item {
     display: grid;
-    grid-template-columns: 45px 80px 80px 80px 80px 45px 45px;
+    grid-template-columns: 45px 100px 80px 80px 80px 80px 45px 45px;
     padding: 6px 8px;
     border-bottom: 1px solid var(--border-color);
     gap: 6px;

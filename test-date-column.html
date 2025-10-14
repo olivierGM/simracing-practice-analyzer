@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Colonne Date</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .test-section { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        .laps-header {
+            display: grid;
+            grid-template-columns: 45px 100px 80px 80px 80px 80px 45px 45px;
+            background: #6366f1;
+            color: white;
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 8px;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .lap-item {
+            display: grid;
+            grid-template-columns: 45px 100px 80px 80px 80px 80px 45px 45px;
+            padding: 6px 8px;
+            border-bottom: 1px solid #ddd;
+            gap: 6px;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+        .sortable { cursor: pointer; }
+        .sort-indicator { font-size: 0.7rem; margin-left: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Colonne Date</h1>
+    
+    <div class="test-section">
+        <h3>📊 Test de la colonne Date</h3>
+        <button onclick="testDateColumn()">Tester la colonne Date</button>
+        <div id="results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>📋 Prévisualisation de la liste des tours</h3>
+        <div id="lapsPreview"></div>
+    </div>
+
+    <script>
+        function testDateColumn() {
+            const results = document.getElementById('results');
+            
+            // Test de formatage des dates
+            const testDates = [
+                '20240115_143022',
+                '20240228_091530',
+                '20240310_162045',
+                '15/01/2024 14:30:22',
+                'invalid-date'
+            ];
+            
+            let html = '<h4>📅 Test de formatage des dates:</h4>';
+            
+            testDates.forEach(date => {
+                const formatted = formatSessionDate(date);
+                html += `<div>• <strong>${date}</strong> → <span class="success">${formatted}</span></div>`;
+            });
+            
+            results.innerHTML = html;
+            
+            // Générer la prévisualisation
+            generateLapsPreview();
+        }
+        
+        function generateLapsPreview() {
+            const preview = document.getElementById('lapsPreview');
+            
+            const mockLaps = [
+                { sessionDate: '20240115_143022', laptime: 120500, splits: [30000, 40000, 50500], isValid: true, isWet: false },
+                { sessionDate: '20240116_091530', laptime: 119800, splits: [29500, 39500, 50800], isValid: true, isWet: false },
+                { sessionDate: '20240117_162045', laptime: 121200, splits: [31000, 41000, 49200], isValid: false, isWet: true },
+                { sessionDate: '15/01/2024 14:30:22', laptime: 120100, splits: [29800, 40200, 50100], isValid: true, isWet: false }
+            ];
+            
+            const header = `
+                <div class="laps-header">
+                    <span class="sortable">Tour <span class="sort-indicator">↕️</span></span>
+                    <span class="sortable">Date <span class="sort-indicator">↕️</span></span>
+                    <span class="sortable">Total <span class="sort-indicator">↕️</span></span>
+                    <span class="sortable">S1 <span class="sort-indicator">↕️</span></span>
+                    <span class="sortable">S2 <span class="sort-indicator">↕️</span></span>
+                    <span class="sortable">S3 <span class="sort-indicator">↕️</span></span>
+                    <span class="sortable">Valide <span class="sort-indicator">↕️</span></span>
+                    <span class="sortable">Wet <span class="sort-indicator">↕️</span></span>
+                </div>
+            `;
+            
+            const items = mockLaps.map((lap, index) => `
+                <div class="lap-item">
+                    <span>${index + 1}</span>
+                    <span>${formatSessionDate(lap.sessionDate)}</span>
+                    <span>${formatTime(lap.laptime)}</span>
+                    <span>${formatTime(lap.splits[0])}</span>
+                    <span>${formatTime(lap.splits[1])}</span>
+                    <span>${formatTime(lap.splits[2])}</span>
+                    <span>${lap.isValid ? '✓' : '✗'}</span>
+                    <span>${lap.isWet ? '💧' : '☀️'}</span>
+                </div>
+            `).join('');
+            
+            preview.innerHTML = header + items;
+        }
+        
+        // Fonctions de formatage (copiées du code principal)
+        function formatSessionDate(sessionDate) {
+            if (!sessionDate) return '--';
+            
+            if (sessionDate.includes('/') || sessionDate.includes('-')) {
+                return sessionDate;
+            }
+            
+            try {
+                if (sessionDate.match(/^\d{8}_\d{6}$/)) {
+                    const datePart = sessionDate.substring(0, 8);
+                    const timePart = sessionDate.substring(9, 15);
+                    const year = datePart.substring(0, 4);
+                    const month = datePart.substring(4, 6);
+                    const day = datePart.substring(6, 8);
+                    const hour = timePart.substring(0, 2);
+                    const minute = timePart.substring(2, 4);
+                    const second = timePart.substring(4, 6);
+                    return `${day}/${month}/${year} ${hour}:${minute}:${second}`;
+                }
+                
+                const date = new Date(sessionDate);
+                if (!isNaN(date.getTime())) {
+                    return date.toLocaleDateString('fr-FR') + ' ' + date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                }
+                
+                return sessionDate;
+            } catch (error) {
+                return sessionDate;
+            }
+        }
+        
+        function formatTime(milliseconds) {
+            if (!milliseconds || milliseconds === 0) return '--:--.---';
+            
+            const totalSeconds = Math.floor(milliseconds / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            const ms = milliseconds % 1000;
+            
+            return `${minutes}:${seconds.toString().padStart(2, '0')}.${ms.toString().padStart(3, '0')}`;
+        }
+        
+        // Initialisation
+        console.log('🚀 Test de la colonne Date initialisé');
+        testDateColumn();
+    </script>
+</body>
+</html>
