@@ -5,7 +5,7 @@
 
 class ThemeManager {
     constructor() {
-        this.currentTheme = this.getStoredTheme() || this.getSystemPreference();
+        this.currentTheme = this.getStoredTheme() || 'system';
         this.themeToggle = null;
         this.init();
     }
@@ -49,12 +49,11 @@ class ThemeManager {
                 
                 // Fonction de callback pour les changements
                 const handleSystemThemeChange = (e) => {
-                    // Ne changer que si l'utilisateur n'a pas de préférence stockée
-                    if (!this.getStoredTheme()) {
-                        const newTheme = e.matches ? 'dark' : 'light';
-                        console.log(`🔄 Préférence système changée vers: ${newTheme}`);
-                        this.currentTheme = newTheme;
-                        this.applyTheme(newTheme);
+                    // Ne changer que si l'utilisateur suit le système
+                    if (this.currentTheme === 'system') {
+                        const newSystemTheme = e.matches ? 'dark' : 'light';
+                        console.log(`🔄 Préférence système changée vers: ${newSystemTheme}`);
+                        this.applyTheme('system'); // Réappliquer pour mettre à jour l'effectif
                         this.updateToggleIcon();
                     }
                 };
@@ -70,12 +69,15 @@ class ThemeManager {
     }
 
     /**
-     * Bascule entre les thèmes sombre et clair
+     * Bascule entre les thèmes (cycle: system -> light -> dark -> system)
      */
     toggleTheme() {
-        this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+        const themeCycle = ['system', 'light', 'dark'];
+        const currentIndex = themeCycle.indexOf(this.currentTheme);
+        const nextIndex = (currentIndex + 1) % themeCycle.length;
+        
+        this.currentTheme = themeCycle[nextIndex];
         this.applyTheme(this.currentTheme);
-        this.storeTheme(this.currentTheme);
         this.updateToggleIcon();
         
         console.log(`🎨 Thème changé vers: ${this.currentTheme}`);
@@ -83,11 +85,18 @@ class ThemeManager {
 
     /**
      * Applique le thème spécifié
-     * @param {string} theme - 'light' ou 'dark'
+     * @param {string} theme - 'light', 'dark', ou 'system'
      */
     applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
         this.currentTheme = theme;
+        
+        // Si 'system', utiliser la préférence système
+        const actualTheme = theme === 'system' ? this.getSystemPreference() : theme;
+        
+        document.documentElement.setAttribute('data-theme', actualTheme);
+        this.storeTheme(theme); // Stocker la préférence (peut être 'system')
+        
+        console.log(`🎨 Thème appliqué: ${theme} (effectif: ${actualTheme})`);
     }
 
     /**
@@ -95,8 +104,25 @@ class ThemeManager {
      */
     updateToggleIcon() {
         if (this.themeToggle) {
-            this.themeToggle.textContent = this.currentTheme === 'light' ? '🌙' : '☀️';
-            this.themeToggle.title = this.currentTheme === 'light' ? 'Activer le mode sombre' : 'Activer le mode clair';
+            let icon, title;
+            
+            switch (this.currentTheme) {
+                case 'system':
+                    icon = '🖥️';
+                    title = 'Actuellement: Suit le système • Cliquer pour: Mode clair';
+                    break;
+                case 'light':
+                    icon = '☀️';
+                    title = 'Actuellement: Mode clair • Cliquer pour: Mode sombre';
+                    break;
+                case 'dark':
+                    icon = '🌙';
+                    title = 'Actuellement: Mode sombre • Cliquer pour: Suivre le système';
+                    break;
+            }
+            
+            this.themeToggle.textContent = icon;
+            this.themeToggle.title = title;
         }
     }
 
