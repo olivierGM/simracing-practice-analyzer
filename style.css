@@ -1704,52 +1704,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
         padding: 10px 0;
     }
     
-    /* Table des tours responsive sur mobile */
-    /* Container pour la liste des tours avec scroll horizontal */
-    .laps-list {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border-radius: 8px;
-    }
-    
-    /* Garder le format tableau sur mobile avec scroll horizontal */
-    .laps-header {
-        display: grid !important;
-        grid-template-columns: 45px 80px 80px 80px 80px 45px 45px;
-        gap: 4px;
-        padding: 6px 8px;
-        font-size: 0.7rem;
-        min-width: 559px;
-        background: var(--bg-card);
-        border-bottom: 2px solid var(--border-color);
-    }
-    
-    .lap-item {
-        display: grid !important;
-        grid-template-columns: 45px 80px 80px 80px 80px 45px 45px;
-        gap: 4px;
-        padding: 6px 8px;
-        font-size: 0.75rem;
-        min-width: 559px;
-        border-bottom: 1px solid var(--border-color);
-        align-items: center;
-    }
-    
-    .lap-item:hover {
-        background: var(--bg-hover);
-    }
-    
-    /* Assurer que les temps restent lisibles */
-    .lap-item .lap-time {
-        font-weight: 600;
-        color: var(--text-primary);
-    }
-    
-    .lap-item .lap-splits {
-        font-size: 0.65rem;
-        color: var(--text-secondary);
-    }
+    /* Classes du pilot-card déplacées vers src/components/pilot-card/pilot-card.css */
     
     /* Réduire les marges et paddings sur mobile */
     .modal-body {
@@ -1966,74 +1921,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     font-weight: 600;
 }
 
-.laps-header {
-    display: grid;
-    grid-template-columns: 45px 120px 90px 90px 90px 45px 45px;
-    gap: 8px;
-    padding: 8px 12px;
-    background: #f8f9fa;
-    border-bottom: 2px solid #dee2e6;
-    font-weight: 600;
-    font-size: 0.8rem;
-    color: #495057;
-    border-radius: 6px 6px 0 0;
-}
-
-.laps-header .sortable {
-    cursor: pointer;
-    user-select: none;
-    transition: background-color 0.2s ease;
-    padding: 4px 8px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.laps-header .sortable:hover {
-    background-color: #e9ecef;
-}
-
-.laps-header .sort-indicator {
-    font-size: 0.7rem;
-    margin-left: 4px;
-    opacity: 0.7;
-}
-
-.lap-header-item {
-    text-align: center;
-}
-
-.laps-list {
-    max-height: 400px;
-    width: 525px;
-    overflow-y: auto;
-    border: 1px solid var(--border-color);
-    border-top: none;
-    border-radius: 0 0 6px 6px;
-    background: #ffffff;
-    transition: background 0.3s ease, border-color 0.3s ease;
-}
-
-.lap-item {
-    display: grid;
-    grid-template-columns: 45px 120px 90px 90px 90px 45px 45px;
-    gap: 8px;
-    padding: 8px 12px;
-    border-bottom: 1px solid var(--border-color);
-    align-items: center;
-    transition: background-color 0.2s ease;
-    font-size: 0.9rem;
-    color: var(--text-primary);
-}
-
-.lap-item:hover {
-    background-color: var(--bg-secondary);
-}
-
-.lap-item:last-child {
-    border-bottom: none;
-}
+/* Classes du pilot-card déplacées vers src/components/pilot-card/pilot-card.css */
 
 .lap-number {
     font-weight: 600;
@@ -2343,19 +2231,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
         grid-template-columns: 1fr;
     }
     
-    .laps-header {
-        grid-template-columns: 45px 100px 90px 90px 90px 45px 45px;
-        gap: 4px;
-        padding: 6px 8px;
-        font-size: 0.7rem;
-    }
-    
-    .lap-item {
-        grid-template-columns: 45px 100px 90px 90px 90px 45px 45px;
-        gap: 4px;
-        padding: 6px 8px;
-        font-size: 0.8rem;
-    }
+    /* Classes du pilot-card déplacées vers src/components/pilot-card/pilot-card.css */
     
     .lap-splits {
         flex-direction: column;
