@@ -20,7 +20,7 @@ window.isAdmin = isAdmin;
 const ADMIN_PASSWORD = "admin123";
 
 // Éléments DOM
-let fileInput, fileList, resultsSection, loading, categoryStats, driverStats, groupByClassToggle, dataStatus, collapseBtn, sessionSelect, dateFilter, pilotModal, closeModal;
+let fileInput, fileList, resultsSection, loading, categoryStats, driverStats, groupByClassToggle, collapseBtn, sessionSelect, dateFilter, pilotModal, closeModal;
 let authSection, adminPassword, loginBtn, logoutBtn, egtDashboard, authStatus, adminAccessBtn, adminSection, cancelAuthBtn, publicSection;
 let adminLayout, adminLoading;
 let initialLoading, lastUpdateIndicator, updateDate;
@@ -141,7 +141,8 @@ function checkAdminStatus() {
             isAdmin = true;
             window.isAdmin = true; // Mettre à jour la référence globale
             if (authSection) authSection.style.display = 'none';
-            if (uploadSection) uploadSection.style.display = 'block';
+            if (egtDashboard) egtDashboard.style.display = 'block';
+            if (adminLayout) adminLayout.style.display = 'flex';
             console.log('🔐 Reconnexion admin automatique');
         } else {
             // Session expirée, nettoyer
@@ -253,42 +254,20 @@ async function handleFileSelection() {
     const files = Array.from(fileInput.files);
     
     if (files.length > 0) {
-        // Afficher le nombre de fichiers sélectionnés
-        if (fileCount) {
-            fileCount.textContent = `${files.length} fichier(s) sélectionné(s)`;
-            fileCount.style.fontWeight = 'bold';
-            fileCount.style.color = '#FF9800';
-        }
+        // Afficher le nombre de fichiers sélectionnés (fonctionnalité supprimée)
         
         // Démarrer automatiquement l'analyse
         console.log('🚀 Démarrage automatique de l\'analyse...');
         await analyzeData();
     } else {
-        // Réinitialiser l'affichage si aucun fichier
-        if (fileCount) {
-            fileCount.textContent = '';
-        }
+        // Réinitialiser l'affichage si aucun fichier (fonctionnalité supprimée)
     }
 }
 
-// Mettre à jour le panneau de résultats d'analyse
+// Mettre à jour le panneau de résultats d'analyse (fonctionnalité supprimée)
 function updateAnalysisResults(status, content) {
-    if (resultsStatus) {
-        resultsStatus.textContent = status;
-        resultsStatus.className = 'results-status';
-        
-        if (status.includes('En cours')) {
-            resultsStatus.classList.add('processing');
-        } else if (status.includes('Succès') || status.includes('Terminé')) {
-            resultsStatus.classList.add('success');
-        } else if (status.includes('Erreur') || status.includes('Échec')) {
-            resultsStatus.classList.add('error');
-        }
-    }
-    
-    if (resultsContent) {
-        resultsContent.innerHTML = content;
-    }
+    // Fonction supprimée - les résultats d'analyse ne sont plus affichés
+    console.log('📊 Résultats d\'analyse:', status, content);
 }
 
 // Afficher/masquer le loading admin
@@ -804,14 +783,8 @@ function displayLoadedFiles() {
     // S'assurer que le layout admin est visible
     if (adminLayout) adminLayout.style.display = 'flex';
     
-    // Afficher seulement le nombre de fichiers au lieu de la liste complète
-    if (fileCount) {
-        const totalFiles = sessionData.length;
-        const totalLaps = sessionData.reduce((sum, session) => sum + (session.laps ? session.laps.length : 0), 0);
-        fileCount.textContent = `${totalFiles} fichier(s) • ${totalLaps} tours`;
-        fileCount.style.fontWeight = 'bold';
-        fileCount.style.color = '#4CAF50';
-    }
+    // Affichage du nombre de fichiers (fonctionnalité supprimée)
+    console.log(`📁 ${sessionData.length} fichier(s) • ${sessionData.reduce((sum, session) => sum + (session.laps ? session.laps.length : 0), 0)} tours`);
     
     // Masquer la liste détaillée des fichiers
     if (fileList) {
@@ -1464,14 +1437,7 @@ function showLoading(show) {
 
 // Basculer la section d'upload
 function toggleUploadSection() {
-    if (uploadContent && collapseBtn) {
-        const isCollapsed = uploadContent.style.display === 'none';
-        uploadContent.style.display = isCollapsed ? 'block' : 'none';
-        const icon = collapseBtn.querySelector('.collapse-icon');
-        if (icon) {
-            icon.textContent = isCollapsed ? '▼' : '▲';
-        }
-    }
+    // Fonctionnalité de collapse supprimée (upload section supprimée)
 }
 
 // Gérer le changement de session
@@ -1785,11 +1751,7 @@ async function initializeApp() {
         categoryStats = document.getElementById('categoryStats');
         driverStats = document.getElementById('driverStats');
         groupByClassToggle = document.getElementById('groupByClassToggle');
-        dataStatus = document.getElementById('dataStatus');
-        uploadSection = document.getElementById('uploadSection');
-        uploadHeader = document.getElementById('uploadHeader');
-        uploadContent = document.getElementById('uploadContent');
-        fileCount = document.getElementById('fileCount');
+        // Éléments supprimés (upload section et résultats d'analyse)
         collapseBtn = document.getElementById('collapseBtn');
         sessionSelect = document.getElementById('sessionSelect');
         dateFilter = document.getElementById('dateFilter');
