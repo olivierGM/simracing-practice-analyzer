@@ -701,19 +701,58 @@ function updateLastUpdateIndicator() {
             }).filter(date => date && !isNaN(date.getTime()));
             
             if (dates.length > 0) {
-                // Trouver la date la plus récente
+                // Trouver la date la plus récente et analyser la session correspondante
                 const mostRecentDate = new Date(Math.max(...dates.map(d => d.getTime())));
+                const mostRecentSession = sessionData.find(session => {
+                    const sessionDate = parseSessionDate(session.fileName);
+                    return sessionDate && Math.abs(sessionDate.getTime() - mostRecentDate.getTime()) < 60000; // < 1min de différence
+                });
+                
+                // Calculer la durée de session basée sur les données réelles
+                let sessionDurationMinutes = 90; // Durée par défaut (1h30)
+                
+                if (mostRecentSession && mostRecentSession.sessions && mostRecentSession.sessions.length > 0) {
+                    // Analyser la session la plus récente pour déterminer sa durée
+                    const latestSessionData = mostRecentSession.sessions[mostRecentSession.sessions.length - 1];
+                    
+                    if (latestSessionData.sessionResult && latestSessionData.sessionResult.leaderBoardLines) {
+                        // Trouver le pilote avec le plus de tours et le plus long temps total
+                        let maxTotalTime = 0;
+                        let maxLapCount = 0;
+                        
+                        latestSessionData.sessionResult.leaderBoardLines.forEach(pilot => {
+                            if (pilot.timing) {
+                                maxTotalTime = Math.max(maxTotalTime, pilot.timing.totalTime || 0);
+                                maxLapCount = Math.max(maxLapCount, pilot.timing.lapCount || 0);
+                            }
+                        });
+                        
+                        // Estimer la durée : temps total + 20% de marge pour les pauses, etc.
+                        if (maxTotalTime > 0) {
+                            sessionDurationMinutes = Math.min(90, Math.max(30, Math.ceil((maxTotalTime / 1000) / 60 * 1.2)));
+                        }
+                    }
+                }
+                
+                // Calculer la fin de session basée sur la durée estimée
+                const sessionEndDate = new Date(mostRecentDate.getTime() + (sessionDurationMinutes * 60 * 1000));
+                
+                // Utiliser la fin de session si elle est plus récente que maintenant
+                const now = new Date();
+                const actualLastUpdate = sessionEndDate > now ? mostRecentDate : sessionEndDate;
                 
                 // Formater la date de manière compacte
-                const formattedDate = formatUpdateDate(mostRecentDate);
+                const formattedDate = formatUpdateDate(actualLastUpdate);
                 
                 updateDate.textContent = formattedDate;
-                updateDate.title = `Dernière mise à jour: ${mostRecentDate.toLocaleString('fr-FR')}`;
+                updateDate.title = `Dernière mise à jour: ${actualLastUpdate.toLocaleString('fr-FR')} (session ${sessionDurationMinutes}min: ${mostRecentDate.toLocaleString('fr-FR')} - ${sessionEndDate.toLocaleString('fr-FR')})`;
                 
                 console.log('📅 Indicateur de mise à jour mis à jour:', formattedDate);
-                console.log('📊 Debug - Date la plus récente trouvée:', mostRecentDate.toLocaleString('fr-FR'));
+                console.log('📊 Debug - Début de session:', mostRecentDate.toLocaleString('fr-FR'));
+                console.log('📊 Debug - Durée estimée de session:', sessionDurationMinutes + 'min');
+                console.log('📊 Debug - Fin estimée de session:', sessionEndDate.toLocaleString('fr-FR'));
+                console.log('📊 Debug - Date utilisée:', actualLastUpdate.toLocaleString('fr-FR'));
                 console.log('📊 Debug - Nombre de sessions:', sessionData.length);
-                console.log('📊 Debug - Dates extraites:', dates.map(d => d.toLocaleString('fr-FR')));
             } else {
                 updateDate.textContent = 'Aucune donnée';
             }
