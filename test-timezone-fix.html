@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Timezone Fix</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-case { margin: 15px 0; padding: 15px; border: 1px solid #ddd; }
+        .success { background: #e8f5e8; }
+        .error { background: #ffebee; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test de la correction timezone</h1>
+    <div id="test-results"></div>
+    
+    <script>
+        // Fonction de parsing corrigée (copiée du code)
+        function parseSessionDateCorrected(fileName) {
+            const dateStr = fileName.substring(0, 6);
+            const timeStr = fileName.substring(7, 13);
+            
+            if (dateStr && timeStr) {
+                const year = "20" + dateStr.substring(0, 2);
+                const month = dateStr.substring(2, 4);
+                const day = dateStr.substring(4, 6);
+                const hour = timeStr.substring(0, 2);
+                const minute = timeStr.substring(2, 4);
+                const second = timeStr.substring(4, 6);
+                
+                const hourNum = parseInt(hour);
+                const minuteNum = parseInt(minute);
+                const secondNum = parseInt(second);
+                
+                // Créer la date en UTC en soustrayant 2h30 des heures EAST
+                const utcHour = hourNum - 2;
+                const utcMinute = minuteNum - 30;
+                
+                let finalHour = utcHour;
+                let finalMinute = utcMinute;
+                let dayOffset = 0;
+                
+                if (finalMinute < 0) {
+                    finalMinute += 60;
+                    finalHour -= 1;
+                }
+                if (finalHour < 0) {
+                    finalHour += 24;
+                    dayOffset = -1;
+                }
+                
+                return new Date(Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day) + dayOffset, finalHour, finalMinute, secondNum));
+            }
+            return null;
+        }
+        
+        // Tests
+        function runTests() {
+            const resultsDiv = document.getElementById('test-results');
+            let html = '';
+            
+            // Test 1: Session à 12:31 EAST
+            const fileName1 = "251015_123100_FP"; // 25 Oct 15, 12:31:00 EAST
+            const date1 = parseSessionDateCorrected(fileName1);
+            const expected1 = "10:01:00 UTC"; // 12:31 - 2h30 = 10:01
+            const actual1 = date1.toISOString().substring(11, 19) + " UTC";
+            
+            html += `
+                <div class="test-case ${actual1.includes('10:01') ? 'success' : 'error'}">
+                    <h3>Test 1: 12:31 EAST → UTC</h3>
+                    <p><strong>Fichier:</strong> ${fileName1}</p>
+                    <p><strong>Attendu:</strong> ${expected1}</p>
+                    <p><strong>Résultat:</strong> ${actual1}</p>
+                    <p><strong>Statut:</strong> ${actual1.includes('10:01') ? '✅ PASS' : '❌ FAIL'}</p>
+                </div>
+            `;
+            
+            // Test 2: Session à 01:15 EAST (dépassement jour précédent)
+            const fileName2 = "251015_011500_FP"; // 25 Oct 15, 01:15:00 EAST
+            const date2 = parseSessionDateCorrected(fileName2);
+            const expected2 = "22:45:00 UTC"; // 01:15 - 2h30 = 22:45 jour précédent
+            const actual2 = date2.toISOString().substring(11, 19) + " UTC";
+            
+            html += `
+                <div class="test-case ${actual2.includes('22:45') ? 'success' : 'error'}">
+                    <h3>Test 2: 01:15 EAST → UTC (dépassement jour)</h3>
+                    <p><strong>Fichier:</strong> ${fileName2}</p>
+                    <p><strong>Attendu:</strong> ${expected2}</p>
+                    <p><strong>Résultat:</strong> ${actual2}</p>
+                    <p><strong>Statut:</strong> ${actual2.includes('22:45') ? '✅ PASS' : '❌ FAIL'}</p>
+                </div>
+            `;
+            
+            // Test 3: Calcul de différence avec maintenant
+            const now = new Date();
+            const diffMs = now.getTime() - date1.getTime();
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            
+            html += `
+                <div class="test-case">
+                    <h3>Test 3: Calcul de différence</h3>
+                    <p><strong>Session (UTC):</strong> ${date1.toISOString()}</p>
+                    <p><strong>Maintenant:</strong> ${now.toISOString()}</p>
+                    <p><strong>Différence:</strong> ${diffHours}h${diffMinutes}min</p>
+                    <p><strong>Problème:</strong> ${diffHours > 5 ? '❌ Encore trop élevé' : '✅ OK'}</p>
+                </div>
+            `;
+            
+            resultsDiv.innerHTML = html;
+            
+            console.log('🧪 Tests terminés');
+            console.log('📊 Session 12:31 EAST →', date1.toISOString());
+            console.log('📊 Différence avec maintenant:', diffHours + 'h' + diffMinutes + 'min');
+        }
+        
+        // Auto-run
+        window.addEventListener('load', runTests);
+    </script>
+</body>
+</html>
