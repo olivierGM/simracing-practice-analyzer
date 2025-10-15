@@ -678,7 +678,8 @@ function updateLastUpdateIndicator() {
                         const minute = timeStr.substring(2, 4);
                         const second = timeStr.substring(4, 6);
                         
-                        date = new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
+                        // Créer la date en heure locale (pas UTC)
+                        date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(minute), parseInt(second));
                     }
                 }
                 
@@ -701,6 +702,9 @@ function updateLastUpdateIndicator() {
                 updateDate.title = `Dernière mise à jour: ${mostRecentDate.toLocaleString('fr-FR')}`;
                 
                 console.log('📅 Indicateur de mise à jour mis à jour:', formattedDate);
+                console.log('📊 Debug - Date la plus récente trouvée:', mostRecentDate.toLocaleString('fr-FR'));
+                console.log('📊 Debug - Nombre de sessions:', sessionData.length);
+                console.log('📊 Debug - Dates extraites:', dates.map(d => d.toLocaleString('fr-FR')));
             } else {
                 updateDate.textContent = 'Aucune donnée';
             }
@@ -725,6 +729,13 @@ function formatUpdateDate(date) {
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    
+    // Debug pour comprendre le problème
+    console.log('🕐 Debug formatUpdateDate:');
+    console.log('  Date session:', date.toLocaleString('fr-FR'));
+    console.log('  Maintenant:', now.toLocaleString('fr-FR'));
+    console.log('  Différence ms:', diffMs);
+    console.log('  Différence heures:', diffHours);
     
     if (diffMinutes < 1) {
         return 'À l\'instant';
