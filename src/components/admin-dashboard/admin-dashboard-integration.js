@@ -222,22 +222,30 @@ class AdminDashboard {
         
         // Dernier run
         const lastRun = logs[0];
-        const lastRunTime = lastRun?.timestamp ? 
-            this.formatFirestoreTimestamp(lastRun.timestamp).toLocaleDateString('fr-FR') : 'N/A';
+        const lastRunDate = lastRun?.timestamp ? 
+            this.formatFirestoreTimestamp(lastRun.timestamp) : null;
+        const lastRunTime = lastRunDate ? lastRunDate.toLocaleDateString('fr-FR') : 'N/A';
+        const lastRunTimeDetail = lastRunDate ? lastRunDate.toLocaleTimeString('fr-FR') : 'N/A';
         
         // Prochain run (estimation - toutes les heures)
-        const nextRunTime = new Date(Date.now() + 60 * 60 * 1000).toLocaleDateString('fr-FR');
+        const nextRunDate = new Date(Date.now() + 60 * 60 * 1000);
+        const nextRunTime = nextRunDate.toLocaleDateString('fr-FR');
+        const nextRunTimeDetail = nextRunDate.toLocaleTimeString('fr-FR');
         
         // Mettre à jour l'affichage
         const totalSessionsEl = document.getElementById('totalSessions');
         const successRateEl = document.getElementById('successRate');
         const lastRunTimeEl = document.getElementById('lastRunTime');
         const nextRunTimeEl = document.getElementById('nextRunTime');
+        const lastRunTimeDetailEl = document.getElementById('lastRunTimeDetail');
+        const nextRunTimeDetailEl = document.getElementById('nextRunTimeDetail');
         
         if (totalSessionsEl) totalSessionsEl.textContent = totalSessions;
         if (successRateEl) successRateEl.textContent = `${successRate}%`;
         if (lastRunTimeEl) lastRunTimeEl.textContent = lastRunTime;
         if (nextRunTimeEl) nextRunTimeEl.textContent = nextRunTime;
+        if (lastRunTimeDetailEl) lastRunTimeDetailEl.textContent = lastRunTimeDetail;
+        if (nextRunTimeDetailEl) nextRunTimeDetailEl.textContent = nextRunTimeDetail;
     }
 
     /**

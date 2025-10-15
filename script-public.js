@@ -20,10 +20,11 @@ window.isAdmin = isAdmin;
 const ADMIN_PASSWORD = "admin123";
 
 // Éléments DOM
-let fileInput, fileList, resultsSection, loading, categoryStats, driverStats, groupByClassToggle, dataStatus, uploadSection, uploadHeader, uploadContent, fileCount, collapseBtn, sessionSelect, dateFilter, pilotModal, closeModal;
+let fileInput, fileList, resultsSection, loading, categoryStats, driverStats, groupByClassToggle, dataStatus, collapseBtn, sessionSelect, dateFilter, pilotModal, closeModal;
 let authSection, adminPassword, loginBtn, logoutBtn, egtDashboard, authStatus, adminAccessBtn, adminSection, cancelAuthBtn, publicSection;
-let adminLayout, adminLoading, analysisResults, resultsStatus, resultsContent;
+let adminLayout, adminLoading;
 let initialLoading, lastUpdateIndicator, updateDate;
+let dashboardHeader, dashboardContent, collapseIcon;
 
 // Initialisation
 // L'initialisation se fait maintenant dans initializeApp() à la fin du fichier
@@ -50,8 +51,6 @@ function showAdminAuth() {
 function hideAdminAuth() {
     if (adminSection) adminSection.style.display = 'none';
     if (authSection) authSection.style.display = 'none';
-    // S'assurer que toutes les sections admin sont masquées
-    if (uploadSection) uploadSection.style.display = 'none';
     isAdmin = false;
     console.log('🔒 Authentification annulée : toutes les sections admin masquées');
 }
@@ -73,8 +72,7 @@ function handleLogin() {
         if (authStatus) authStatus.innerHTML = '<div class="auth-status success">✅ Connecté en tant qu\'admin</div>';
         if (adminPassword) adminPassword.value = '';
         
-        // Initialiser le panneau de résultats
-        updateAnalysisResults('En attente...', 'Aucune analyse effectuée');
+        // Initialiser le dashboard admin
         
         // Charger les données depuis le localStorage
         loadDataFromStorage();
@@ -105,6 +103,23 @@ function handleLogout() {
     
     // Les données restent visibles pour tous
     loadDataFromStorage();
+}
+
+// Fonction pour toggle le dashboard collapsible
+function toggleDashboard() {
+    if (dashboardContent && collapseIcon) {
+        const isCollapsed = dashboardContent.classList.contains('collapsed');
+        
+        if (isCollapsed) {
+            dashboardContent.classList.remove('collapsed');
+            collapseIcon.classList.remove('collapsed');
+            collapseIcon.textContent = '▼';
+        } else {
+            dashboardContent.classList.add('collapsed');
+            collapseIcon.classList.add('collapsed');
+            collapseIcon.textContent = '▶';
+        }
+    }
 }
 
 // Vérifier le statut admin au démarrage
@@ -1783,6 +1798,9 @@ async function initializeApp() {
         
         // Éléments du dashboard EGT
         egtDashboard = document.getElementById('egtDashboard');
+        dashboardHeader = document.getElementById('dashboardHeader');
+        dashboardContent = document.getElementById('dashboardContent');
+        collapseIcon = document.getElementById('collapseIcon');
         
         // Éléments de l'indicateur de mise à jour
         lastUpdateIndicator = document.getElementById('lastUpdateIndicator');
@@ -1802,9 +1820,6 @@ async function initializeApp() {
         // Nouveaux éléments admin
         adminLayout = document.getElementById('adminLayout');
         adminLoading = document.getElementById('adminLoading');
-        analysisResults = document.getElementById('analysisResults');
-        resultsStatus = document.getElementById('resultsStatus');
-        resultsContent = document.getElementById('resultsContent');
         
         // Éléments de loading (déjà déclaré au début de la fonction)
 
@@ -1832,6 +1847,9 @@ async function initializeApp() {
         if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
         if (adminAccessBtn) adminAccessBtn.addEventListener('click', showAdminAuth);
         if (cancelAuthBtn) cancelAuthBtn.addEventListener('click', hideAdminAuth);
+        
+        // Event listener pour le dashboard collapsible
+        if (dashboardHeader) dashboardHeader.addEventListener('click', toggleDashboard);
         if (adminPassword) adminPassword.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 handleLogin();

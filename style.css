@@ -602,21 +602,78 @@ header {
     box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
 }
 
-/* Layout en deux colonnes pour l'admin */
+/* Layout admin - pleine largeur */
 .admin-layout {
-    display: flex;
-    gap: 30px;
     margin-top: 20px;
 }
 
-.admin-left-column {
-    flex: 1;
-    min-width: 300px;
+.admin-full-width {
+    width: 100%;
+    max-width: 100%;
 }
 
-.admin-right-column {
-    flex: 1;
-    min-width: 300px;
+/* Dashboard EGT Collapsible */
+.egt-dashboard {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 0;
+    margin-top: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.dashboard-header.collapsible-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    transition: all 0.3s ease;
+}
+
+.dashboard-header.collapsible-header:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.header-content h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.3rem;
+}
+
+.header-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.collapse-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+    user-select: none;
+}
+
+.collapse-icon.collapsed {
+    transform: rotate(-90deg);
+}
+
+.dashboard-content {
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.dashboard-content.collapsed {
+    display: none;
+}
+
+/* Styles pour les heures détaillées */
+.stat-time {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 4px;
+    font-weight: normal;
 }
 
 /* Panneau de résultats d'analyse */
@@ -2196,10 +2253,6 @@ body.compact .sort-arrow { font-size: 0.7rem; }
         font-size: 0.7rem;
         padding: 3px 6px;
     }
-}
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-    transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .pilot-info-label {

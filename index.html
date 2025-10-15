@@ -55,38 +55,21 @@
 
             <!-- Layout en deux colonnes pour l'admin -->
             <div class="admin-layout" id="adminLayout" style="display: none;">
-                <!-- Colonne gauche : Upload et contrôles -->
-                <div class="admin-left-column">
-                    <!-- Section d'upload (admin seulement) -->
-                    <div class="upload-section" id="uploadSection" style="display: none;">
-                        <div class="upload-header" id="uploadHeader">
-                            <div class="upload-title">
-                                <span class="upload-icon">📁</span>
-                                <span class="upload-text">Upload de fichiers JSON</span>
-                                <span class="file-count" id="fileCount"></span>
-                            </div>
-                        </div>
-                        <div class="upload-content" id="uploadContent">
-                            <div class="file-input-container">
-                                <input type="file" id="jsonFiles" multiple accept=".json" />
-                                <label for="jsonFiles" class="file-input-label">
-                                    📁 Sélectionner les fichiers JSON
-                                </label>
-                            </div>
-                            <div class="file-list" id="fileList"></div>
-                            <div class="data-status" id="dataStatus" style="display: none;">
-                                <span class="status-indicator">💾</span>
-                                <span class="status-text">Données chargées depuis le cache</span>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Dashboard EGT Auto Scraper (pleine largeur) -->
+                <div class="admin-full-width">
 
                     <!-- Dashboard EGT Auto Scraper -->
                     <div class="egt-dashboard" id="egtDashboard" style="display: none;">
-                        <div class="dashboard-header">
-                            <h3>🤖 EGT Auto Scraper Dashboard</h3>
-                            <p>Monitoring du système de scraping automatique</p>
+                        <div class="dashboard-header collapsible-header" id="dashboardHeader">
+                            <div class="header-content">
+                                <h3>🤖 EGT Auto Scraper Dashboard</h3>
+                                <p>Monitoring du système de scraping automatique</p>
+                            </div>
+                            <div class="collapse-icon" id="collapseIcon">▼</div>
                         </div>
+                        
+                        <!-- Contenu collapsible -->
+                        <div class="dashboard-content" id="dashboardContent">
                         
                         <!-- Contrôles manuels -->
                         <div class="manual-controls">
@@ -136,6 +119,7 @@
                                     <div class="stat-content">
                                         <div class="stat-number" id="lastRunTime">-</div>
                                         <div class="stat-label">Dernier Run</div>
+                                        <div class="stat-time" id="lastRunTimeDetail">-</div>
                                     </div>
                                 </div>
                                 <div class="stat-card">
@@ -143,6 +127,7 @@
                                     <div class="stat-content">
                                         <div class="stat-number" id="nextRunTime">-</div>
                                         <div class="stat-label">Prochain Run</div>
+                                        <div class="stat-time" id="nextRunTimeDetail">-</div>
                                     </div>
                                 </div>
                             </div>
@@ -162,25 +147,14 @@
                                 🚪 Déconnexion
                             </button>
                         </div>
+                        
+                        </div> <!-- Fin du contenu collapsible -->
                     </div>
 
                     <!-- Zone de loading pour l'admin -->
                     <div class="admin-loading" id="adminLoading" style="display: none;">
                         <div class="admin-spinner"></div>
                         <p>Analyse en cours...</p>
-                    </div>
-                </div>
-
-                <!-- Colonne droite : Résultats d'analyse -->
-                <div class="admin-right-column">
-                    <div class="analysis-results" id="analysisResults">
-                        <div class="results-header">
-                            <h3>📊 Résultats d'Analyse</h3>
-                            <span class="results-status" id="resultsStatus">En attente...</span>
-                        </div>
-                        <div class="results-content" id="resultsContent">
-                            <p class="no-results">Aucune analyse effectuée</p>
-                        </div>
                     </div>
                 </div>
             </div>
