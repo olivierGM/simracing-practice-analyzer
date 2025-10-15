@@ -770,10 +770,9 @@ function updateLastUpdateIndicator() {
  * @returns {string} Date formatée
  */
 function formatUpdateDate(date) {
-    // La date de session est en UTC, nous devons la convertir en heure locale pour la comparaison
+    // Comparer directement les timestamps - JavaScript gère automatiquement les timezones
     const now = new Date(); // Heure locale actuelle
-    const sessionLocal = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)); // Convertir UTC vers locale
-    const diffMs = now.getTime() - sessionLocal.getTime();
+    const diffMs = now.getTime() - date.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor(diffMs / (1000 * 60));
@@ -781,8 +780,7 @@ function formatUpdateDate(date) {
     // Debug pour comprendre le problème
     console.log('🕐 Debug formatUpdateDate:');
     console.log('  Date session (UTC):', date.toISOString());
-    console.log('  Date session (locale):', sessionLocal.toLocaleString('fr-FR'));
-    console.log('  Maintenant (locale):', now.toLocaleString('fr-FR'));
+    console.log('  Maintenant (locale):', now.toISOString());
     console.log('  Différence ms:', diffMs);
     console.log('  Différence heures:', diffHours);
     
