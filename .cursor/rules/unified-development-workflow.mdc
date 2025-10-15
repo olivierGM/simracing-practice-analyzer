@@ -1,0 +1,106 @@
+---
+description: Règle unifiée pour le développement et le déploiement - Applique cette règle SEULEMENT quand tu crées, modifies ou corriges du code
+alwaysApply: false
+---
+
+# 🎯 Workflow Unifié - Développement & Déploiement
+
+## ⚠️ IMPORTANT: Cette règle s'applique UNIQUEMENT pour :
+- Créer une nouvelle fonctionnalité
+- Modifier du code existant  
+- Corriger des bugs
+- Refactoriser du code
+
+## ❌ NE PAS appliquer pour :
+- Questions d'explication
+- Demandes d'information
+- Analyses de code sans modification
+- Discussions générales
+
+---
+
+## 🔧 **DÉVELOPPEMENT (Code Quality)**
+
+### Code propre et découpé
+- Écris des fonctions claires et testables
+- Vérifie que la fonctionnalité marche avant toute autre chose
+- Écris des tests unitaires pour s'assurer que ça fonctionne
+
+### Tests techniques
+- Exécute les tests unitaires
+- Lance les tests end-to-end Playwright (ou propose-les s'ils n'existent pas)
+- Valide avec Playwright que la fonctionnalité fonctionne et qu'il n'y ait pas d'erreur console
+- Tous les tests doivent passer avant commit
+
+---
+
+## 🚀 **DÉPLOIEMENT (Process Quality)**
+
+### 1. **Validation Systématique** ⚡
+**Avant chaque commit, TOUJOURS :**
+- "As-tu testé le cycle complet dev → prod ?"
+- "Les modifications fonctionnent-elles en local ?"
+- "Aucun fichier critique manquant ?"
+
+### 2. **Granularité Automatique** 🔄
+**Si > 3 fichiers modifiés :**
+- Diviser en micro-commits
+- Valider chaque micro-étape
+- Commit message explicite sur le scope
+
+### 3. **Communication d'Impact** 🚨
+**Avant modification, communiquer :**
+- "Cette modification CSS peut affecter le dark mode"
+- "Ce changement peut impacter le déploiement"
+- "Cette logique peut affecter le tri global"
+
+## 🚨 **SIGNALEMENT D'ALERTE AUTOMATIQUE**
+
+Si modification de :
+- **CSS/Thèmes** → "⚠️ Peut affecter l'affichage global"
+- **Déploiement** → "⚠️ Peut impacter la production"
+- **Logique de tri** → "⚠️ Peut affecter l'ordre des listes"
+
+---
+
+## 📝 **COMMIT UNIFIÉ**
+
+### Règles communes :
+- **Un commit par fonctionnalité terminée**
+- **Message clair avec validation**
+- **Ne commit JAMAIS de code non testé**
+- **Si >3 fichiers : diviser en micro-commits**
+
+### Template de commit :
+```
+type: Description courte
+
+Validation:
+- Testé localement
+- Tests Playwright passés
+- Cycle dev→prod validé
+
+Impact:
+- Composants affectés
+- Risques identifiés
+```
+
+---
+
+## 📊 **MÉTRIQUES DE SUCCÈS**
+
+- **0 bug de synchronisation** en production
+- **Max 1 revert** par feature
+- **100% des tests** passent avant commit
+- **Communication proactive** des risques
+
+## 🎯 **WORKFLOW COMPLET**
+
+**Pour chaque modification :**
+1. **🔍 Analyser l'impact** (30 sec)
+2. **⚠️ Communiquer les risques** (1 phrase)
+3. **🧪 Tests techniques** (unitaires + Playwright)
+4. **✅ Validation end-to-end** (dev→prod)
+5. **📝 Commit avec granularité** (micro si nécessaire)
+
+**Résultat attendu :** Code de qualité + Déploiement fiable = -70% de bugs, +100% de confiance
