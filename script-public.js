@@ -77,7 +77,7 @@ function handleLogin() {
         // Charger les données depuis le localStorage
         loadDataFromStorage();
         
-        // Mettre à jour l'indicateur de mise à jour
+        // Mettre à jour l'indicateur de dernière session
         updateLastUpdateIndicator();
         
         // Initialiser le dashboard admin
@@ -638,7 +638,7 @@ async function saveDataToStorage() {
 // Fonction supprimée - on utilise maintenant uniquement Firestore
 
 
-// ===== INDICATEUR DE MISE À JOUR =====
+// ===== INDICATEUR DE DERNIÈRE SESSION =====
 
 /**
  * Calcule et affiche la date de mise à jour la plus récente
@@ -760,9 +760,9 @@ function updateLastUpdateIndicator() {
                 const formattedDate = formatUpdateDate(actualLastUpdate);
                 
                 updateDate.textContent = formattedDate;
-                updateDate.title = `Dernière mise à jour: ${actualLastUpdate.toLocaleString('fr-FR')} (session ${sessionDurationMinutes}min: ${mostRecentDate.toLocaleString('fr-FR')} - ${sessionEndDate.toLocaleString('fr-FR')})`;
+                updateDate.title = `Dernière session: ${actualLastUpdate.toLocaleString('fr-FR')} (session ${sessionDurationMinutes}min: ${mostRecentDate.toLocaleString('fr-FR')} - ${sessionEndDate.toLocaleString('fr-FR')})`;
                 
-                console.log('📅 Indicateur de mise à jour mis à jour:', formattedDate);
+                console.log('📅 Indicateur de dernière session mis à jour:', formattedDate);
                 console.log('📊 Debug - Début de session:', mostRecentDate.toLocaleString('fr-FR'));
                 console.log('📊 Debug - Durée estimée de session:', sessionDurationMinutes + 'min');
                 console.log('📊 Debug - Fin estimée de session:', sessionEndDate.toLocaleString('fr-FR'));
@@ -776,7 +776,7 @@ function updateLastUpdateIndicator() {
         }
         
     } catch (error) {
-        console.error('❌ Erreur lors de la mise à jour de l\'indicateur:', error);
+        console.error('❌ Erreur lors de la mise à jour de l\'indicateur de dernière session:', error);
         updateDate.textContent = 'Erreur';
     }
 }
@@ -1832,7 +1832,7 @@ async function initializeApp() {
         dashboardContent = document.getElementById('dashboardContent');
         collapseIcon = document.getElementById('collapseIcon');
         
-        // Éléments de l'indicateur de mise à jour
+        // Éléments de l'indicateur de dernière session
         lastUpdateIndicator = document.getElementById('lastUpdateIndicator');
         updateDate = document.getElementById('updateDate');
         
@@ -1907,7 +1907,7 @@ async function initializeApp() {
         // Charger les données au démarrage (pour que tout le monde puisse voir)
         await loadDataFromStorage();
         
-        // Mettre à jour l'indicateur de mise à jour
+        // Mettre à jour l'indicateur de dernière session
         updateLastUpdateIndicator();
         
         // Initialiser le dashboard admin si admin
