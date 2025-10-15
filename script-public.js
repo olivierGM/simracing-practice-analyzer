@@ -732,12 +732,12 @@ function updateLastUpdateIndicator() {
                     }
                 }
                 
-                // Calculer la fin de session basée sur la durée estimée
+                // Calculer la fin de session basée sur la durée estimée (pour info seulement)
                 const sessionEndDate = new Date(mostRecentDate.getTime() + (sessionDurationMinutes * 60 * 1000));
                 
-                // Utiliser la fin de session si elle est plus récente que maintenant
-                const now = new Date();
-                const actualLastUpdate = sessionEndDate > now ? mostRecentDate : sessionEndDate;
+                // Toujours utiliser le début de session pour l'indicateur
+                // La logique précédente était incorrecte car elle utilisait parfois la fin
+                const actualLastUpdate = mostRecentDate;
                 
                 // Formater la date de manière compacte
                 const formattedDate = formatUpdateDate(actualLastUpdate);
