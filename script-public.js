@@ -659,6 +659,7 @@ function updateLastUpdateIndicator() {
                     const firstLap = session.lapTimes[0];
                     if (firstLap.sessionDate) {
                         date = new Date(firstLap.sessionDate);
+                        console.log('📅 Format 1 - sessionDate de lapTimes:', firstLap.sessionDate, '→', date.toISOString());
                     }
                 }
                 
