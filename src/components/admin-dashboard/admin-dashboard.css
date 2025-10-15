@@ -1,0 +1,258 @@
+/* ===== ADMIN DASHBOARD COMPONENT ===== */
+
+.egt-dashboard {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px 0;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: none; /* Enlever toute limitation de largeur */
+}
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.dashboard-header h3 {
+    margin: 0 0 8px 0;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.dashboard-header p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.manual-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.manual-controls .btn {
+    min-width: 180px;
+    padding: 12px 20px;
+    font-weight: 600;
+}
+
+.last-run-status {
+    margin-bottom: 24px;
+}
+
+.status-card {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.status-card h4 {
+    margin: 0 0 12px 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.status-content {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.status-content.success {
+    color: var(--success-color);
+}
+
+.status-content.error {
+    color: var(--error-color);
+}
+
+.performance-chart {
+    margin-bottom: 24px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    width: 100%;
+}
+
+.performance-chart canvas {
+    width: 100% !important;
+    height: 300px !important; /* Augmenter la hauteur du graphique */
+}
+
+.performance-chart h4 {
+    margin: 0 0 16px 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.global-stats {
+    margin-bottom: 24px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.stat-card {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.stat-icon {
+    font-size: 1.8rem;
+    opacity: 0.8;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.logs-section {
+    margin-bottom: 24px;
+}
+
+.logs-section h4 {
+    margin: 0 0 16px 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.logs-container {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.log-entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+.log-status {
+    font-size: 1.2rem;
+    min-width: 24px;
+}
+
+.log-details {
+    flex: 1;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.log-time {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    min-width: 120px;
+    text-align: right;
+}
+
+.log-entry.success .log-status {
+    color: var(--success-color);
+}
+
+.log-entry.error .log-status {
+    color: var(--error-color);
+}
+
+.log-entry.warning .log-status {
+    color: var(--warning-color);
+}
+
+.admin-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Mode sombre pour le dashboard */
+[data-theme="dark"] .egt-dashboard {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .status-card,
+[data-theme="dark"] .performance-chart,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .logs-container {
+    background: var(--bg-primary);
+    border-color: var(--border-color);
+}
+
+/* Responsive pour le dashboard */
+@media (max-width: 768px) {
+    .egt-dashboard {
+        padding: 16px;
+        margin: 16px 0;
+    }
+    
+    .manual-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .manual-controls .btn {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .log-entry {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .log-time {
+        text-align: left;
+        min-width: auto;
+    }
+}

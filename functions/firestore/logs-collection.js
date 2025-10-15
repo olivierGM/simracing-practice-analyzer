@@ -12,7 +12,7 @@ const admin = require('firebase-admin');
 async function createScrapingLog(runData) {
     try {
         const logEntry = {
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        timestamp: new Date(), // Utiliser Date.now() au lieu de serverTimestamp() pour éviter les doublons
         runId: generateRunId(),
         status: runData.status || 'started', // started, completed, failed
         trigger: runData.trigger || 'scheduled', // scheduled, manual
@@ -75,7 +75,7 @@ async function updateScrapingLog(logId, updateData) {
             .doc(logId)
             .update({
                 ...updateData,
-                lastUpdated: admin.firestore.FieldValue.serverTimestamp()
+                lastUpdated: new Date() // Utiliser Date.now() au lieu de serverTimestamp()
             });
         
         console.log(`📝 Log ${logId} mis à jour`);

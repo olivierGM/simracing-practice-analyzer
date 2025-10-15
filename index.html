@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="src/components/pilot-card/pilot-card.css">
     <link rel="stylesheet" href="src/components/driver-table/driver-table.css">
     <link rel="stylesheet" href="src/components/segment-comparator/segment-comparator.css">
+    <link rel="stylesheet" href="src/components/admin-dashboard/admin-dashboard.css">
     <!-- Chart.js pour les graphiques de progression -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
 </head>
@@ -21,6 +22,11 @@
                     <p>Analysez les performances par classe et pilote</p>
                 </div>
                 <div class="header-actions">
+                    <!-- Indicateur de mise à jour -->
+                    <div class="last-update-indicator" id="lastUpdateIndicator">
+                        <span class="update-label">Mise à jour :</span>
+                        <span class="update-date" id="updateDate">-</span>
+                    </div>
                     <!-- Bouton Toggle Mode Sombre/Clair -->
                     <button id="themeToggle" class="theme-toggle-btn" title="Basculer le thème">
                         🌙
@@ -75,18 +81,83 @@
                         </div>
                     </div>
 
-                    <!-- Contrôles admin -->
-                    <div class="controls" id="adminControls" style="display: none;">
-                        <div class="admin-header">
-                            <h3>🛠️ Contrôles Admin</h3>
+                    <!-- Dashboard EGT Auto Scraper -->
+                    <div class="egt-dashboard" id="egtDashboard" style="display: none;">
+                        <div class="dashboard-header">
+                            <h3>🤖 EGT Auto Scraper Dashboard</h3>
+                            <p>Monitoring du système de scraping automatique</p>
                         </div>
+                        
+                        <!-- Contrôles manuels -->
+                        <div class="manual-controls">
+                            <button id="triggerManualScraping" class="btn btn-primary">
+                                🚀 Lancer Scraping Manuel
+                            </button>
+                            <button id="refreshLogs" class="btn btn-secondary">
+                                🔄 Actualiser Logs
+                            </button>
+                        </div>
+                        
+                        <!-- Résultats du dernier run -->
+                        <div class="last-run-status" id="lastRunStatus">
+                            <div class="status-card">
+                                <h4>📊 Dernier Run</h4>
+                                <div class="status-content" id="lastRunContent">
+                                    <p>Chargement...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Graphique des performances -->
+                        <div class="performance-chart">
+                            <h4>📈 Performances (7 derniers jours)</h4>
+                            <canvas id="performanceChart" width="400" height="200"></canvas>
+                        </div>
+                        
+                        <!-- Statistiques globales -->
+                        <div class="global-stats" id="globalStats">
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-icon">📁</div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="totalSessions">-</div>
+                                        <div class="stat-label">Sessions Total</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">✅</div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="successRate">-</div>
+                                        <div class="stat-label">Taux de Succès</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">⏰</div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="lastRunTime">-</div>
+                                        <div class="stat-label">Dernier Run</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">🔄</div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="nextRunTime">-</div>
+                                        <div class="stat-label">Prochain Run</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Logs détaillés -->
+                        <div class="logs-section">
+                            <h4>📋 Logs des Exécutions</h4>
+                            <div class="logs-container" id="logsContainer">
+                                <p>Chargement des logs...</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions admin -->
                         <div class="admin-actions">
-                            <button id="downloadBtn" class="btn btn-download">
-                                ⬇️ Télécharger depuis EGT
-                            </button>
-                            <button id="clearBtn" class="btn btn-secondary">
-                                🗑️ Effacer
-                            </button>
                             <button id="logoutBtn" class="btn btn-secondary">
                                 🚪 Déconnexion
                             </button>
@@ -176,6 +247,7 @@
     <!-- Intégration des composants (chargés après les données) -->
     <script src="src/components/pilot-card/pilot-card-integration.js"></script>
     <script src="src/components/driver-table/driver-table-integration.js"></script>
+    <script src="src/components/admin-dashboard/admin-dashboard-integration.js"></script>
     <script src="src/components/segment-comparator/segment-comparator-integration.js"></script>
 </body>
 </html>

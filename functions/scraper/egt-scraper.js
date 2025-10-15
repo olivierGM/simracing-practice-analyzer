@@ -225,14 +225,40 @@ function generateSessionId(session) {
  * @returns {Array} Sessions nouvelles à télécharger
  */
 function filterNewSessions(scrapedSessions, existingSessions) {
-    const existingIds = existingSessions.map(session => generateSessionId(session));
+    // Créer un Set des IDs existants pour une recherche plus rapide
+    const existingIds = new Set();
+    
+    existingSessions.forEach(session => {
+        // Essayer différentes façons d'obtenir l'ID de session
+        let sessionId = null;
+        
+        // 1. ID depuis les métadonnées de scraping
+        if (session._scrapedMetadata && session._scrapedMetadata.originalSessionId) {
+            sessionId = session._scrapedMetadata.originalSessionId;
+        }
+        // 2. ID généré à partir des données de la session
+        else if (session.trackName && session.Date) {
+            sessionId = generateSessionId({ trackName: session.trackName, Date: session.Date });
+        }
+        // 3. ID depuis le nom de fichier
+        else if (session.fileName) {
+            sessionId = session.fileName.replace('.json', '');
+        }
+        
+        if (sessionId) {
+            existingIds.add(sessionId);
+        }
+    });
+    
+    console.log(`📊 ${existingIds.size} sessions existantes trouvées en base`);
     
     const newSessions = scrapedSessions.filter(session => {
-        const isNew = !existingIds.includes(session.id);
-        if (!isNew) {
-            console.log(`⚠️ Session déjà existante ignorée: ${session.id}`);
+        const sessionId = session.id;
+        if (existingIds.has(sessionId)) {
+            console.log(`⚠️ Session déjà existante ignorée: ${sessionId}`);
+            return false;
         }
-        return isNew;
+        return true;
     });
     
     console.log(`🆕 ${newSessions.length} nouvelles sessions à télécharger sur ${scrapedSessions.length} trouvées`);

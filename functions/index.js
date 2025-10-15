@@ -152,6 +152,17 @@ exports.scrapeEGTHourly = functions.pubsub
  * Fonction Firebase pour déclenchement manuel (HTTP)
  */
 exports.scrapeEGTManual = functions.https.onRequest(async (req, res) => {
+    // Ajouter les headers CORS
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    // Gérer les requêtes OPTIONS (preflight)
+    if (req.method === 'OPTIONS') {
+        res.status(204).send('');
+        return;
+    }
+    
     // Vérifier la méthode HTTP
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Méthode non autorisée. Utilisez POST.' });
@@ -188,6 +199,17 @@ exports.scrapeEGTManual = functions.https.onRequest(async (req, res) => {
  * Fonction Firebase pour récupérer les logs récents
  */
 exports.getScrapingLogs = functions.https.onRequest(async (req, res) => {
+    // Ajouter les headers CORS
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    // Gérer les requêtes OPTIONS (preflight)
+    if (req.method === 'OPTIONS') {
+        res.status(204).send('');
+        return;
+    }
+    
     try {
         const { getRecentLogs } = require('./firestore/logs-collection');
         const limit = parseInt(req.query.limit) || 50;

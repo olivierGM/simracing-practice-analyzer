@@ -11,16 +11,19 @@ let selectedDateFilter = 'all'; // 'all', 'week', 'day'
 let isAdmin = false;
 let db = null; // Firebase Firestore database
 
+// Rendre isAdmin accessible globalement pour les composants
+window.isAdmin = isAdmin;
+
 // Variables DOM déclarées plus bas dans le code
 
 // Mot de passe admin simple
 const ADMIN_PASSWORD = "admin123";
 
 // Éléments DOM
-let fileInput, fileList, analyzeBtn, clearBtn, downloadBtn, resultsSection, loading, categoryStats, driverStats, groupByClassToggle, dataStatus, uploadSection, uploadHeader, uploadContent, fileCount, collapseBtn, sessionSelect, dateFilter, pilotModal, closeModal;
-let authSection, adminPassword, loginBtn, logoutBtn, adminControls, authStatus, adminAccessBtn, adminSection, cancelAuthBtn, publicSection;
+let fileInput, fileList, resultsSection, loading, categoryStats, driverStats, groupByClassToggle, dataStatus, uploadSection, uploadHeader, uploadContent, fileCount, collapseBtn, sessionSelect, dateFilter, pilotModal, closeModal;
+let authSection, adminPassword, loginBtn, logoutBtn, egtDashboard, authStatus, adminAccessBtn, adminSection, cancelAuthBtn, publicSection;
 let adminLayout, adminLoading, analysisResults, resultsStatus, resultsContent;
-let initialLoading;
+let initialLoading, lastUpdateIndicator, updateDate;
 
 // Initialisation
 // L'initialisation se fait maintenant dans initializeApp() à la fin du fichier
@@ -30,6 +33,7 @@ function hideAdminSections() {
     if (adminSection) adminSection.style.display = 'none';
     if (authSection) authSection.style.display = 'none';
     if (adminLayout) adminLayout.style.display = 'none';
+    if (egtDashboard) egtDashboard.style.display = 'none';
     isAdmin = false;
     console.log('🔒 Sections admin masquées');
 }
@@ -38,6 +42,7 @@ function hideAdminSections() {
 function showAdminAuth() {
     if (adminSection) adminSection.style.display = 'block';
     if (authSection) authSection.style.display = 'block';
+    if (egtDashboard) egtDashboard.style.display = 'block';
     // S'assurer que le layout admin reste caché
     if (adminLayout) adminLayout.style.display = 'none';
 }
@@ -46,7 +51,6 @@ function hideAdminAuth() {
     if (adminSection) adminSection.style.display = 'none';
     if (authSection) authSection.style.display = 'none';
     // S'assurer que toutes les sections admin sont masquées
-    if (adminControls) adminControls.style.display = 'none';
     if (uploadSection) uploadSection.style.display = 'none';
     isAdmin = false;
     console.log('🔒 Authentification annulée : toutes les sections admin masquées');
@@ -58,6 +62,7 @@ function handleLogin() {
     
     if (password === ADMIN_PASSWORD) {
         isAdmin = true;
+        window.isAdmin = true; // Mettre à jour la référence globale
         
         // Sauvegarder le statut admin dans localStorage
         localStorage.setItem('isAdmin', 'true');
@@ -73,6 +78,15 @@ function handleLogin() {
         
         // Charger les données depuis le localStorage
         loadDataFromStorage();
+        
+        // Mettre à jour l'indicateur de mise à jour
+        updateLastUpdateIndicator();
+        
+        // Initialiser le dashboard admin
+        initializeAdminDashboard();
+        if (adminDashboard) {
+            adminDashboard.initialize();
+        }
     } else {
         if (authStatus) authStatus.innerHTML = '<div class="auth-status error">❌ Mot de passe incorrect</div>';
     }
@@ -80,6 +94,7 @@ function handleLogin() {
 
 function handleLogout() {
     isAdmin = false;
+    window.isAdmin = false; // Mettre à jour la référence globale
     
     // Nettoyer le localStorage
     localStorage.removeItem('isAdmin');
@@ -109,8 +124,8 @@ function checkAdminStatus() {
         if (sessionAge < maxAge) {
             // Session encore valide, connecter automatiquement
             isAdmin = true;
+            window.isAdmin = true; // Mettre à jour la référence globale
             if (authSection) authSection.style.display = 'none';
-            if (adminControls) adminControls.style.display = 'block';
             if (uploadSection) uploadSection.style.display = 'block';
             console.log('🔐 Reconnexion admin automatique');
         } else {
@@ -238,9 +253,6 @@ async function handleFileSelection() {
         if (fileCount) {
             fileCount.textContent = '';
         }
-        if (analyzeBtn) {
-            analyzeBtn.disabled = true;
-        }
     }
 }
 
@@ -345,7 +357,7 @@ async function analyzeData() {
             } else {
                 // Si pas de données existantes, traiter tout
                 console.log('🔄 Aucune donnée existante, traitement complet...');
-                processedData = processSessionData(sessionData);
+        processedData = processSessionData(sessionData);
             }
         } else {
             console.log('📊 Aucune nouvelle session, utilisation des données existantes');
@@ -615,7 +627,7 @@ async function saveDataToStorage() {
             } else {
                 // Si les données sont petites, utiliser l'ancienne méthode
                 console.log('✅ Données de taille acceptable, sauvegarde normale');
-                await setDoc(doc(db, 'processedData', 'current'), processedData);
+            await setDoc(doc(db, 'processedData', 'current'), processedData);
             }
             
             console.log('📊 Données sauvegardées sur Firestore');
@@ -631,71 +643,130 @@ async function saveDataToStorage() {
 
 // Fonction supprimée - on utilise maintenant uniquement Firestore
 
-// Effacer toutes les données
-async function clearAll() {
-    if (!isAdmin) {
-        alert('Seuls les administrateurs peuvent effacer les données. Connectez-vous d\'abord.');
-        return;
-    }
-    
-    if (!confirm('Êtes-vous sûr de vouloir effacer toutes les données ?')) {
-        return;
-    }
+
+// ===== INDICATEUR DE MISE À JOUR =====
+
+/**
+ * Calcule et affiche la date de mise à jour la plus récente
+ */
+function updateLastUpdateIndicator() {
+    if (!updateDate) return;
     
     try {
-        sessionData = [];
-        processedData = { overall: {}, byCategory: {}, byDriver: {} };
-        
-        if (db) {
-            // Effacer Firebase
-            const { collection, getDocs, doc, deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
-            
-            // Supprimer toutes les sessions
-            const sessionsSnapshot = await getDocs(collection(db, 'sessions'));
-            for (const docSnapshot of sessionsSnapshot.docs) {
-                await deleteDoc(docSnapshot.ref);
-            }
-            
-            // Supprimer les données traitées
-            // Supprimer tous les documents de données traitées
-            const documentsToDelete = ['current', 'overall', 'byCategory', 'byDriver', 'metadata', 'essential'];
-            
-            for (const docName of documentsToDelete) {
-                try {
-                    await deleteDoc(doc(db, 'processedData', docName));
-                } catch (error) {
-                    // Ignorer les erreurs si le document n'existe pas
-                    console.log(`📄 Document ${docName} non trouvé (normal)`);
+        // Trouver la date la plus récente dans sessionData
+        if (sessionData && sessionData.length > 0) {
+            // Extraire les dates des sessions
+            const dates = sessionData.map(session => {
+                // Essayer différents formats de date
+                let date = null;
+                
+                // Format 1: sessionDate dans les lapTimes
+                if (session.lapTimes && session.lapTimes.length > 0) {
+                    const firstLap = session.lapTimes[0];
+                    if (firstLap.sessionDate) {
+                        date = new Date(firstLap.sessionDate);
+                    }
                 }
-            }
+                
+                // Format 2: Date dans le nom de fichier
+                if (!date && session.fileName) {
+                    // Extraire la date du nom de fichier (format: YYMMDD_HHMMSS_suffix.json)
+                    const dateMatch = session.fileName.match(/(\d{6})_(\d{6})_/);
+                    if (dateMatch) {
+                        const dateStr = dateMatch[1]; // YYMMDD
+                        const timeStr = dateMatch[2]; // HHMMSS
+                        
+                        // Convertir en date (ajouter 20 pour les années 2000)
+                        const year = '20' + dateStr.substring(0, 2);
+                        const month = dateStr.substring(2, 4);
+                        const day = dateStr.substring(4, 6);
+                        const hour = timeStr.substring(0, 2);
+                        const minute = timeStr.substring(2, 4);
+                        const second = timeStr.substring(4, 6);
+                        
+                        date = new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
+                    }
+                }
+                
+                // Format 3: Date par défaut si rien d'autre
+                if (!date) {
+                    date = new Date();
+                }
+                
+                return date;
+            }).filter(date => date && !isNaN(date.getTime()));
             
-            console.log('🗑️ Données Firebase effacées');
+            if (dates.length > 0) {
+                // Trouver la date la plus récente
+                const mostRecentDate = new Date(Math.max(...dates.map(d => d.getTime())));
+                
+                // Formater la date de manière compacte
+                const formattedDate = formatUpdateDate(mostRecentDate);
+                
+                updateDate.textContent = formattedDate;
+                updateDate.title = `Dernière mise à jour: ${mostRecentDate.toLocaleString('fr-FR')}`;
+                
+                console.log('📅 Indicateur de mise à jour mis à jour:', formattedDate);
+            } else {
+                updateDate.textContent = 'Aucune donnée';
+            }
+        } else {
+            updateDate.textContent = 'Aucune donnée';
         }
         
-        // localStorage n'est plus utilisé pour les données (seulement pour le statut admin)
-        
-        // Réinitialiser l'interface
-        if (resultsSection) resultsSection.style.display = 'none';
-        if (fileList) fileList.innerHTML = '';
-        if (fileInput) fileInput.value = '';
-        if (analyzeBtn) analyzeBtn.disabled = true;
-        
-        alert('Toutes les données ont été effacées');
-        
     } catch (error) {
-        console.error('Erreur lors de l\'effacement des données:', error);
-        alert('Erreur lors de l\'effacement: ' + error.message);
+        console.error('❌ Erreur lors de la mise à jour de l\'indicateur:', error);
+        updateDate.textContent = 'Erreur';
     }
 }
 
-// Télécharger depuis EGT
-function downloadFromEGT() {
-    if (!isAdmin) {
-        alert('Seuls les administrateurs peuvent télécharger depuis EGT. Connectez-vous d\'abord.');
-        return;
-    }
+/**
+ * Formate une date de manière compacte pour l'affichage
+ * @param {Date} date - Date à formater
+ * @returns {string} Date formatée
+ */
+function formatUpdateDate(date) {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
     
-    alert('Fonctionnalité de téléchargement EGT à implémenter');
+    if (diffMinutes < 1) {
+        return 'À l\'instant';
+    } else if (diffMinutes < 60) {
+        return `Il y a ${diffMinutes}min`;
+    } else if (diffHours < 24) {
+        return `Il y a ${diffHours}h`;
+    } else if (diffDays === 1) {
+        return 'Hier';
+    } else if (diffDays < 7) {
+        return `Il y a ${diffDays}j`;
+    } else {
+        // Pour les dates plus anciennes, afficher la date complète
+        return date.toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit'
+        });
+    }
+}
+
+// ===== ADMIN DASHBOARD INTEGRATION =====
+
+// Instance globale du dashboard admin
+let adminDashboard = null;
+
+/**
+ * Initialise le dashboard admin
+ */
+function initializeAdminDashboard() {
+    if (typeof window.initializeAdminDashboard === 'function') {
+        adminDashboard = window.initializeAdminDashboard();
+        console.log('✅ Admin Dashboard initialisé depuis le composant');
+    } else {
+        console.warn('⚠️ Composant Admin Dashboard non chargé');
+    }
 }
 
 // Basculer le groupement par classe
@@ -729,7 +800,7 @@ function displayLoadedFiles() {
     
     // Masquer la liste détaillée des fichiers
     if (fileList) {
-        fileList.innerHTML = '';
+    fileList.innerHTML = '';
         fileList.style.display = 'none';
     }
 }
@@ -824,19 +895,19 @@ function displayDriverStats() {
 function displayDriverStatsAll(byDriver) {
     let html = '<div class="driver-table-container"><table class="driver-table"><thead><tr>';
     html += '<th>Pos</th>'; // Colonne de position
-    html += '<th onclick="sortTable(0, \'text\')" class="sortable">Pilote <span class="sort-indicator">↕</span></th>';
-    html += '<th onclick="sortTable(1, \'text\')" class="sortable">Classe <span class="sort-indicator">↕</span></th>';
-    html += '<th onclick="sortTable(2, \'number\')" class="sortable">Tours <span class="sort-indicator">↕</span></th>';
-    html += '<th onclick="sortTable(3, \'number\')" class="sortable">Tours Valides <span class="sort-indicator">↕</span></th>';
-    html += '<th onclick="sortTable(4, \'time\')" class="sortable">Meilleur valide <span class="sort-indicator">↕</span></th>';
-    html += '<th onclick="sortTable(5, \'time\')" class="sortable">Moyenne valide <span class="sort-indicator">↕</span></th>';
-    html += '<th onclick="sortTable(6, \'percentage\')" class="sortable">Cons. valide <span class="sort-indicator">↕</span></th>';
-    html += '<th onclick="sortTable(7, \'time\')" class="sortable">Meilleur wet <span class="sort-indicator">↕</span></th>';
-    html += '<th onclick="sortTable(8, \'time\')" class="sortable">Moyenne wet <span class="sort-indicator">↕</span></th>';
-    html += '<th onclick="sortTable(9, \'percentage\')" class="sortable">Cons. wet <span class="sort-indicator">↕</span></th>';
-    html += '<th onclick="sortTable(10, \'time\')" class="sortable">Meilleur total <span class="sort-indicator">↕</span></th>';
-    html += '<th onclick="sortTable(11, \'time\')" class="sortable">Moyenne total <span class="sort-indicator">↕</span></th>';
-    html += '<th onclick="sortTable(12, \'percentage\')" class="sortable">Cons. total <span class="sort-indicator">↕</span></th>';
+    html += '<th onclick="sortTable(1, \'text\')" class="sortable">Pilote <span class="sort-indicator">↕</span></th>';
+    html += '<th onclick="sortTable(2, \'text\')" class="sortable">Classe <span class="sort-indicator">↕</span></th>';
+    html += '<th onclick="sortTable(3, \'number\')" class="sortable">Tours <span class="sort-indicator">↕</span></th>';
+    html += '<th onclick="sortTable(4, \'number\')" class="sortable">Tours Valides <span class="sort-indicator">↕</span></th>';
+    html += '<th onclick="sortTable(5, \'time\')" class="sortable">Meilleur valide <span class="sort-indicator">↕</span></th>';
+    html += '<th onclick="sortTable(6, \'time\')" class="sortable">Moyenne valide <span class="sort-indicator">↕</span></th>';
+    html += '<th onclick="sortTable(7, \'percentage\')" class="sortable">Const. valide <span class="sort-indicator">↕</span></th>';
+    html += '<th onclick="sortTable(8, \'percentage\')" class="sortable">Meilleur wet <span class="sort-indicator">↕</span></th>';
+    html += '<th onclick="sortTable(9, \'time\')" class="sortable">Moyenne wet <span class="sort-indicator">↕</span></th>';
+    html += '<th onclick="sortTable(10, \'percentage\')" class="sortable">Const. wet <span class="sort-indicator">↕</span></th>';
+    html += '<th onclick="sortTable(11, \'percentage\')" class="sortable">Meilleur total <span class="sort-indicator">↕</span></th>';
+    html += '<th onclick="sortTable(12, \'time\')" class="sortable">Moyenne total <span class="sort-indicator">↕</span></th>';
+    html += '<th onclick="sortTable(13, \'percentage\')" class="sortable">Const. total <span class="sort-indicator">↕</span></th>';
     html += '</tr></thead><tbody>';
     
     // Trier les pilotes par meilleur temps valide (les temps à 0 en dernier)
@@ -960,18 +1031,18 @@ function displayDriverStatsByClass(byDriver) {
         html += `<h3 class="category-title"><span class="category-badge ${categoryClass}">${categoryName}</span></h3>`;
         html += `<table class="driver-table"><thead><tr>`;
         html += '<th>Pos</th>'; // Colonne de position
-        html += '<th onclick="sortTable(0, \'text\')" class="sortable">Pilote <span class="sort-indicator">↕</span></th>';
-        html += '<th onclick="sortTable(1, \'number\')" class="sortable">Tours <span class="sort-indicator">↕</span></th>';
-        html += '<th onclick="sortTable(2, \'number\')" class="sortable">Tours Valides <span class="sort-indicator">↕</span></th>';
-        html += '<th onclick="sortTable(3, \'time\')" class="sortable">Meilleur valide <span class="sort-indicator">↕</span></th>';
-        html += '<th onclick="sortTable(4, \'time\')" class="sortable">Moyenne valide <span class="sort-indicator">↕</span></th>';
-        html += '<th onclick="sortTable(5, \'percentage\')" class="sortable">Cons. valide <span class="sort-indicator">↕</span></th>';
-        html += '<th onclick="sortTable(6, \'time\')" class="sortable">Meilleur wet <span class="sort-indicator">↕</span></th>';
-        html += '<th onclick="sortTable(7, \'time\')" class="sortable">Moyenne wet <span class="sort-indicator">↕</span></th>';
-        html += '<th onclick="sortTable(8, \'percentage\')" class="sortable">Cons. wet <span class="sort-indicator">↕</span></th>';
-        html += '<th onclick="sortTable(9, \'time\')" class="sortable">Meilleur total <span class="sort-indicator">↕</span></th>';
-        html += '<th onclick="sortTable(10, \'time\')" class="sortable">Moyenne total <span class="sort-indicator">↕</span></th>';
-        html += '<th onclick="sortTable(11, \'percentage\')" class="sortable">Cons. total <span class="sort-indicator">↕</span></th>';
+        html += '<th onclick="sortTable(1, \'text\')" class="sortable">Pilote <span class="sort-indicator">↕</span></th>';
+        html += '<th onclick="sortTable(2, \'number\')" class="sortable">Tours <span class="sort-indicator">↕</span></th>';
+        html += '<th onclick="sortTable(3, \'number\')" class="sortable">Tours Valides <span class="sort-indicator">↕</span></th>';
+        html += '<th onclick="sortTable(4, \'time\')" class="sortable">Meilleur valide <span class="sort-indicator">↕</span></th>';
+        html += '<th onclick="sortTable(5, \'time\')" class="sortable">Moyenne valide <span class="sort-indicator">↕</span></th>';
+        html += '<th onclick="sortTable(6, \'percentage\')" class="sortable">Const. valide <span class="sort-indicator">↕</span></th>';
+        html += '<th onclick="sortTable(7, \'percentage\')" class="sortable">Meilleur wet <span class="sort-indicator">↕</span></th>';
+        html += '<th onclick="sortTable(8, \'time\')" class="sortable">Moyenne wet <span class="sort-indicator">↕</span></th>';
+        html += '<th onclick="sortTable(9, \'percentage\')" class="sortable">Const. wet <span class="sort-indicator">↕</span></th>';
+        html += '<th onclick="sortTable(10, \'percentage\')" class="sortable">Meilleur total <span class="sort-indicator">↕</span></th>';
+        html += '<th onclick="sortTable(11, \'time\')" class="sortable">Moyenne total <span class="sort-indicator">↕</span></th>';
+        html += '<th onclick="sortTable(12, \'percentage\')" class="sortable">Const. total <span class="sort-indicator">↕</span></th>';
         html += '</tr></thead><tbody>';
         
         drivers.forEach((driver, index) => {
@@ -1694,9 +1765,6 @@ async function initializeApp() {
         // Initialiser les éléments DOM
         fileInput = document.getElementById('fileInput');
         fileList = document.getElementById('fileList');
-        analyzeBtn = document.getElementById('analyzeBtn');
-        clearBtn = document.getElementById('clearBtn');
-        downloadBtn = document.getElementById('downloadBtn');
         resultsSection = document.getElementById('resultsSection');
         loading = document.getElementById('loading');
         categoryStats = document.getElementById('categoryStats');
@@ -1713,12 +1781,18 @@ async function initializeApp() {
         pilotModal = document.getElementById('pilotModal');
         closeModal = document.getElementById('closeModal');
         
+        // Éléments du dashboard EGT
+        egtDashboard = document.getElementById('egtDashboard');
+        
+        // Éléments de l'indicateur de mise à jour
+        lastUpdateIndicator = document.getElementById('lastUpdateIndicator');
+        updateDate = document.getElementById('updateDate');
+        
         // Éléments d'authentification
         authSection = document.getElementById('authSection');
         adminPassword = document.getElementById('adminPassword');
         loginBtn = document.getElementById('loginBtn');
         logoutBtn = document.getElementById('logoutBtn');
-        adminControls = document.getElementById('adminControls');
         authStatus = document.getElementById('authStatus');
         adminAccessBtn = document.getElementById('adminAccessBtn');
         adminSection = document.getElementById('adminSection');
@@ -1745,14 +1819,13 @@ async function initializeApp() {
 
         // Event listeners
         if (fileInput) fileInput.addEventListener('change', handleFileSelection);
-        if (analyzeBtn) analyzeBtn.addEventListener('click', analyzeData);
-        if (clearBtn) clearBtn.addEventListener('click', clearAll);
-        if (downloadBtn) downloadBtn.addEventListener('click', downloadFromEGT);
         if (groupByClassToggle) groupByClassToggle.addEventListener('change', toggleGroupByClass);
         if (dateFilter) dateFilter.addEventListener('change', handleDateFilterChange);
         if (sessionSelect) sessionSelect.addEventListener('change', handleSessionChange);
         if (collapseBtn) collapseBtn.addEventListener('click', toggleUploadSection);
         if (closeModal) closeModal.addEventListener('click', closePilotModal);
+        
+        // Event listeners EGT Dashboard sont maintenant gérés par le composant admin-dashboard
         
         // Authentification
         if (loginBtn) loginBtn.addEventListener('click', handleLogin);
@@ -1785,6 +1858,17 @@ async function initializeApp() {
         
         // Charger les données au démarrage (pour que tout le monde puisse voir)
         await loadDataFromStorage();
+        
+        // Mettre à jour l'indicateur de mise à jour
+        updateLastUpdateIndicator();
+        
+        // Initialiser le dashboard admin si admin
+        if (isAdmin) {
+            initializeAdminDashboard();
+            if (adminDashboard) {
+                adminDashboard.initialize();
+            }
+        }
         
         console.log('✅ Application initialisée avec succès');
     } catch (error) {

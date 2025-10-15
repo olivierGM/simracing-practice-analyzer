@@ -22,9 +22,9 @@ alwaysApply: false
 
 # Tests  
 - Exécute les tests unitaires.  
-- Les test visuel tu doit les rouler toit même et ne pas avoir besoin d'une vraie personne
+- Les test visuel tu doit les rouler toit même et ne pas avoir besoin d'une vraie personne.
 - Lance les tests end-to-end Playwright (ou propose-les s'ils n'existent pas). 
-- Valide avec playwright que la fonctionnalité fonctionne.
+- Valide avec playwright que la fonctionnalité fonctionne et qu'il n'y ait pas d'erreur console.
 - Tous les tests doivent passer avant commit.
 
 # Commit  

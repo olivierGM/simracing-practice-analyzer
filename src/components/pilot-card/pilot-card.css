@@ -628,16 +628,18 @@ body.modal-open *:not(.laps-list):not(.pilot-card) {
 .popup-close {
     background: none;
     border: none;
-    color: white;
+    color: var(--text-primary);
     font-size: 1.5rem;
     cursor: pointer;
     padding: 4px;
     border-radius: 4px;
     transition: background 0.2s ease;
+    opacity: 0.8;
 }
 
 .popup-close:hover {
     background: rgba(255, 255, 255, 0.2);
+    opacity: 1;
 }
 
 .popup-body {

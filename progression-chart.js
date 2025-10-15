@@ -437,7 +437,7 @@ class ProgressionChart {
                     borderWidth: 3,
                     fill: false,
                     tension: 0.1,
-                    pointRadius: 5,
+                    pointRadius: 0,
                     pointHoverRadius: 7
                 },
                 {

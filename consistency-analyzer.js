@@ -1,5 +1,5 @@
 /**
- * Analyseur de Consistance pour Sim Racing Analyzer
+ * Analyseur de Constance pour Sim Racing Analyzer
  * Calcule le coefficient de variation et la régularité des pilotes
  */
 
@@ -17,7 +17,7 @@ class ConsistencyAnalyzer {
     /**
      * Calcule le coefficient de variation pour un pilote
      * @param {Array} lapTimes - Tableau des temps de tour en millisecondes
-     * @returns {Object} Statistiques de consistance
+     * @returns {Object} Statistiques de constance
      */
     calculateConsistency(lapTimes) {
         if (!lapTimes || lapTimes.length === 0) {
@@ -59,7 +59,7 @@ class ConsistencyAnalyzer {
         const max = Math.max(...validLaps);
         const range = max - min;
 
-        // Score de consistance (0-100, plus bas = plus consistant)
+        // Score de constance (0-100, plus bas = plus constant)
         // Plus le coefficient de variation est bas, plus le score est élevé
         const score = Math.max(0, 100 - (coefficient * 2));
 
@@ -166,14 +166,14 @@ class ConsistencyAnalyzer {
     }
 
     /**
-     * Obtient la classe CSS pour le score de consistance
-     * @param {number} score - Score de consistance (0-100)
+     * Obtient la classe CSS pour le score de constance
+     * @param {number} score - Score de constance (0-100)
      * @returns {string} Classe CSS
      */
     getScoreClass(score) {
-        if (score >= 80) return 'excellent';
-        if (score >= 60) return 'good';
-        if (score >= 40) return 'average';
+        if (score >= 95) return 'excellent';
+        if (score >= 90) return 'good';
+        if (score >= 80) return 'average';
         return 'poor';
     }
 
@@ -222,14 +222,14 @@ class ConsistencyAnalyzer {
     }
 
     /**
-     * Obtient l'icône de consistance selon le score
-     * @param {number} score - Score de consistance
+     * Obtient l'icône de constance selon le score
+     * @param {number} score - Score de constance
      * @returns {string} Icône
      */
     getConsistencyIcon(score) {
-        if (score >= 80) return '🏆';
-        if (score >= 60) return '⭐';
-        if (score >= 40) return '📊';
+        if (score >= 95) return '🏆';
+        if (score >= 90) return '⭐';
+        if (score >= 80) return '📊';
         return '⚠️';
     }
 }

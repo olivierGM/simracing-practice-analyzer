@@ -62,9 +62,9 @@ const PILOT_CARD_CONFIG = {
 let pilotCardInitialized = false;
 
 /**
- * Afficher la popup d'information sur la consistance
+ * Afficher la popup d'information sur la constance
  */
-window.showConsistencyInfo = function(event) {
+window.showConstanceInfo = function(event) {
     event.stopPropagation();
     
     const popup = document.createElement('div');
@@ -72,18 +72,18 @@ window.showConsistencyInfo = function(event) {
     popup.innerHTML = `
         <div class="popup-content">
             <div class="popup-header">
-                <h4>📊 Analyse de Consistance</h4>
-                <button class="popup-close" onclick="closeConsistencyInfo()">×</button>
+                <h4>📊 Analyse de Constance</h4>
+                <button class="popup-close" onclick="closeConstanceInfo()">×</button>
             </div>
             <div class="popup-body">
                 <div class="info-section">
-                    <h5>🎯 Score de Consistance (0-100%)</h5>
-                    <p>Plus le score est élevé, plus le pilote est consistant dans ses temps de tour.</p>
+                    <h5>🎯 Score de Constance (0-100%)</h5>
+                    <p>Plus le score est élevé, plus le pilote est constant dans ses temps de tour.</p>
                     <ul>
-                        <li><span class="score-excellent">🏆 80-100%</span> : Excellent (très consistant)</li>
-                        <li><span class="score-good">⭐ 60-79%</span> : Bon (assez consistant)</li>
-                        <li><span class="score-average">📊 40-59%</span> : Moyen (variable)</li>
-                        <li><span class="score-poor">⚠️ 0-39%</span> : Faible (peu consistant)</li>
+                        <li><span class="score-excellent">🏆 95-100%</span> : Excellent (très constant)</li>
+                        <li><span class="score-good">⭐ 90-94%</span> : Bon (constant)</li>
+                        <li><span class="score-average">📊 80-89%</span> : Moyen (assez constant)</li>
+                        <li><span class="score-poor">⚠️ 0-79%</span> : Faible (peu constant)</li>
                     </ul>
                 </div>
             </div>
@@ -95,7 +95,7 @@ window.showConsistencyInfo = function(event) {
     setTimeout(() => popup.classList.add('show'), 10);
 };
 
-window.closeConsistencyInfo = function() {
+window.closeConstanceInfo = function() {
     const popup = document.querySelector('.consistency-info-popup');
     if (popup) {
         popup.classList.remove('show');
@@ -103,36 +103,6 @@ window.closeConsistencyInfo = function() {
     }
 };
 
-window.showVariabilityInfo = function(event) {
-    event.stopPropagation();
-    
-    const popup = document.createElement('div');
-    popup.className = 'consistency-info-popup';
-    popup.innerHTML = `
-        <div class="popup-content">
-            <div class="popup-header">
-                <h4>📈 Variabilité des Temps</h4>
-                <button class="popup-close" onclick="closeConsistencyInfo()">×</button>
-            </div>
-            <div class="popup-body">
-                <div class="info-section">
-                    <h5>📏 Coefficient de Variation (CV)</h5>
-                    <p>Mesure la variabilité relative des temps. Plus le CV est bas, plus le pilote est consistant.</p>
-                    <ul>
-                        <li><strong>CV < 2%</strong> : Très consistant</li>
-                        <li><strong>CV 2-5%</strong> : Consistant</li>
-                        <li><strong>CV 5-10%</strong> : Variable</li>
-                        <li><strong>CV > 10%</strong> : Très variable</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(popup);
-    
-    setTimeout(() => popup.classList.add('show'), 10);
-};
 
 /**
  * Initialiser le composant pilot-card
@@ -445,8 +415,9 @@ function generatePilotModalContent(firstName, lastName, cupCategory, stats, glob
                 <!-- Section détail des tours -->
                 <div class="laps-section">
                     <h3>🏁 Détail des Tours (${stats.totalLaps || 0} tours)</h3>
-                    <div class="laps-list">
-                        ${generateLapsList(driver)}
+                    ${generateLapsHeader()}
+                    <div class="laps-list" id="lapsList">
+                        ${generateLapsItems(driver)}
                     </div>
                 </div>
 
@@ -539,29 +510,18 @@ function generateStatsCards(stats) {
                 <span class="pilot-info-value">${stats.gapToLeader ? formatTime(stats.gapToLeader) : '--:--.---'}</span>
             </div>
             <div class="pilot-info-item">
-                <span class="pilot-info-label">Consistance <span class="info-icon" onclick="showConsistencyInfo(event)">ℹ️</span></span>
+                <span class="pilot-info-label">Constance <span class="info-icon" onclick="showConstanceInfo(event)">ℹ️</span></span>
                 <span class="pilot-info-value">${stats.consistencyIcon || ''} ${stats.consistencyScore !== undefined ? stats.consistencyScore.toFixed(2) + '%' : 'N/A'}</span>
-            </div>
-            <div class="pilot-info-item">
-                <span class="pilot-info-label">Variabilité <span class="info-icon" onclick="showVariabilityInfo(event)">ℹ️</span></span>
-                <span class="pilot-info-value">📏 ${stats.variability !== undefined ? stats.variability.toFixed(2) + '%' : 'N/A'}</span>
             </div>
         </div>
     `;
 }
 
 /**
- * Générer la liste des tours
+ * Générer l'en-tête de la liste des tours
  */
-function generateLapsList(driver) {
-    if (!driver || !driver.lapTimes || driver.lapTimes.length === 0) {
-        return '<p class="no-data">Aucun tour disponible</p>';
-    }
-
-    // Calculer les meilleurs temps
-    const bestTimes = calculateBestLapTimes(driver.lapTimes);
-
-    const lapsHeader = `
+function generateLapsHeader() {
+    return `
         <div class="laps-header">
             <span class="sortable" onclick="sortLapsTable('lapNumber', this)">
                 Tour <span class="sort-indicator">↕️</span>
@@ -589,10 +549,20 @@ function generateLapsList(driver) {
             </span>
         </div>
     `;
+}
 
-    const lapsItems = driver.lapTimes.map((lap, index) => generateLapItem(lap, index, bestTimes)).join('');
-    
-    return lapsHeader + `<div class="laps-list" id="lapsList">${lapsItems}</div>`;
+/**
+ * Générer les éléments de la liste des tours
+ */
+function generateLapsItems(driver) {
+    if (!driver || !driver.lapTimes || driver.lapTimes.length === 0) {
+        return '<p class="no-data">Aucun tour disponible</p>';
+    }
+
+    // Calculer les meilleurs temps
+    const bestTimes = calculateBestLapTimes(driver.lapTimes);
+
+    return driver.lapTimes.map((lap, index) => generateLapItem(lap, index, bestTimes)).join('');
 }
 
 /**

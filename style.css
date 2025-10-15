@@ -291,6 +291,72 @@ header {
     gap: 12px;
 }
 
+/* Indicateur de mise à jour */
+.last-update-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.last-update-indicator:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.update-label {
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+.update-date {
+    font-weight: 600;
+    color: #4ade80; /* Vert pour la date */
+}
+
+/* Mode sombre pour l'indicateur */
+[data-theme="dark"] .last-update-indicator {
+    background: rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] .last-update-indicator:hover {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .update-date {
+    color: #22c55e; /* Vert plus clair en mode sombre */
+}
+
+/* Mode clair pour l'indicateur */
+[data-theme="light"] .last-update-indicator {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.2);
+    color: rgba(0, 0, 0, 0.8);
+}
+
+[data-theme="light"] .last-update-indicator:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="light"] .update-label {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="light"] .update-date {
+    color: #059669; /* Vert plus foncé en mode clair */
+}
+
 .header-actions .toggle {
     display: inline-flex;
     align-items: center;
@@ -1836,42 +1902,74 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     /* Colonnes spécifiques plus petites */
     .driver-table th:nth-child(1),
     .driver-table td:nth-child(1) {
-        min-width: 120px; /* Pilote */
+        min-width: 30px; /* Position */
+        max-width: 30px;
+        text-align: center;
     }
     
     .driver-table th:nth-child(2),
     .driver-table td:nth-child(2) {
-        min-width: 60px; /* Classe */
+        min-width: 100px; /* Pilote */
     }
     
     .driver-table th:nth-child(3),
     .driver-table td:nth-child(3) {
-        min-width: 50px; /* Tours */
+        min-width: 50px; /* Classe */
     }
     
     .driver-table th:nth-child(4),
     .driver-table td:nth-child(4) {
-        min-width: 60px; /* Tours Valides */
+        min-width: 50px; /* Tours */
     }
     
     .driver-table th:nth-child(5),
     .driver-table td:nth-child(5) {
-        min-width: 80px; /* Meilleur valide */
+        min-width: 60px; /* Tours Valides */
     }
     
     .driver-table th:nth-child(6),
     .driver-table td:nth-child(6) {
-        min-width: 80px; /* Moyenne valide */
+        min-width: 80px; /* Meilleur valide */
     }
     
     .driver-table th:nth-child(7),
     .driver-table td:nth-child(7) {
-        min-width: 60px; /* Gap */
+        min-width: 80px; /* Moyenne valide */
     }
     
     .driver-table th:nth-child(8),
     .driver-table td:nth-child(8) {
-        min-width: 60px; /* Écart */
+        min-width: 60px; /* Const. valide */
+    }
+    
+    .driver-table th:nth-child(9),
+    .driver-table td:nth-child(9) {
+        min-width: 60px; /* Meilleur wet */
+    }
+    
+    .driver-table th:nth-child(10),
+    .driver-table td:nth-child(10) {
+        min-width: 80px; /* Moyenne wet */
+    }
+    
+    .driver-table th:nth-child(11),
+    .driver-table td:nth-child(11) {
+        min-width: 60px; /* Const. wet */
+    }
+    
+    .driver-table th:nth-child(12),
+    .driver-table td:nth-child(12) {
+        min-width: 60px; /* Meilleur total */
+    }
+    
+    .driver-table th:nth-child(13),
+    .driver-table td:nth-child(13) {
+        min-width: 80px; /* Moyenne total */
+    }
+    
+    .driver-table th:nth-child(14),
+    .driver-table td:nth-child(14) {
+        min-width: 60px; /* Const. total */
     }
     
     /* Assurer le plein écran sur mobile */
@@ -2787,7 +2885,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     background: none;
     border: none;
     font-size: 24px;
-    color: var(--text-secondary);
+    color: var(--text-primary);
     cursor: pointer;
     padding: 0;
     width: 30px;
@@ -2797,11 +2895,13 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     justify-content: center;
     border-radius: 50%;
     transition: all 0.2s ease;
+    opacity: 0.7;
 }
 
 .popup-close:hover {
     background: var(--bg-secondary);
     color: var(--text-primary);
+    opacity: 1;
 }
 
 .popup-body {
@@ -3042,6 +3142,7 @@ body.compact .sort-arrow { font-size: 0.7rem; }
     color: var(--text-secondary);
     font-size: 0.75rem;
 }
+
 
 /* Responsive pour l'analyse de consistance */
 @media (max-width: 768px) {
