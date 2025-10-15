@@ -684,26 +684,9 @@ function updateLastUpdateIndicator() {
                         const minuteNum = parseInt(minute);
                         const secondNum = parseInt(second);
                         
-                        // Créer la date en UTC en soustrayant 2h30 des heures EAST
-                        // Exemple: 12:31 EAST → 10:01 UTC (12:31 - 2h30 = 10:01)
-                        const utcHour = hourNum - 2;
-                        const utcMinute = minuteNum - 30;
-                        
-                        // Gérer les dépassements (ex: 01:00 - 2h30 = 22:30 jour précédent)
-                        let finalHour = utcHour;
-                        let finalMinute = utcMinute;
-                        let dayOffset = 0;
-                        
-                        if (finalMinute < 0) {
-                            finalMinute += 60;
-                            finalHour -= 1;
-                        }
-                        if (finalHour < 0) {
-                            finalHour += 24;
-                            dayOffset = -1;
-                        }
-                        
-                        date = new Date(Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day) + dayOffset, finalHour, finalMinute, secondNum));
+                        // Les heures dans les noms de fichiers sont en UTC (comme le serveur)
+                        // Pas de conversion nécessaire - utiliser directement
+                        date = new Date(Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day), hourNum, minuteNum, secondNum));
                     }
                 }
                 

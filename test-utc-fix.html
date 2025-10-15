@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test UTC Fix</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-case { margin: 15px 0; padding: 15px; border: 1px solid #ddd; }
+        .success { background: #e8f5e8; }
+        .error { background: #ffebee; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test UTC Fix</h1>
+    <div id="test-results"></div>
+    
+    <script>
+        // Fonction de parsing corrigée (sans conversion EAST)
+        function parseSessionDateUTC(fileName) {
+            const dateStr = fileName.substring(0, 6);
+            const timeStr = fileName.substring(7, 13);
+            
+            if (dateStr && timeStr) {
+                const year = "20" + dateStr.substring(0, 2);
+                const month = dateStr.substring(2, 4);
+                const day = dateStr.substring(4, 6);
+                const hour = timeStr.substring(0, 2);
+                const minute = timeStr.substring(2, 4);
+                const second = timeStr.substring(4, 6);
+                
+                const hourNum = parseInt(hour);
+                const minuteNum = parseInt(minute);
+                const secondNum = parseInt(second);
+                
+                // Utiliser directement en UTC (pas de conversion)
+                return new Date(Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day), hourNum, minuteNum, secondNum));
+            }
+            return null;
+        }
+        
+        function runTest() {
+            const resultsDiv = document.getElementById('test-results');
+            
+            // Test avec le fichier de la session serveur
+            const fileName = "251015_151020_FP"; // 15:10:20 UTC
+            const parsedDate = parseSessionDateUTC(fileName);
+            const expectedDate = new Date('2025-10-15T15:10:20Z'); // Date serveur
+            const now = new Date();
+            
+            const diffMs = now.getTime() - parsedDate.getTime();
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            
+            resultsDiv.innerHTML = `
+                <div class="test-case ${diffHours < 5 ? 'success' : 'error'}">
+                    <h3>🧪 Test avec données réelles</h3>
+                    <p><strong>Fichier :</strong> ${fileName}</p>
+                    <p><strong>Date parsée :</strong> ${parsedDate.toISOString()}</p>
+                    <p><strong>Date attendue :</strong> ${expectedDate.toISOString()}</p>
+                    <p><strong>Correspondance :</strong> ${parsedDate.getTime() === expectedDate.getTime() ? '✅ PARFAIT' : '❌ INCORRECT'}</p>
+                    <p><strong>Maintenant :</strong> ${now.toISOString()}</p>
+                    <p><strong>Différence :</strong> ${diffHours}h</p>
+                    <p><strong>Résultat attendu :</strong> "Il y a ~${diffHours}h"</p>
+                    <p><strong>Statut :</strong> ${diffHours < 5 ? '✅ CORRECT' : '❌ ENCORE TROP ÉLEVÉ'}</p>
+                </div>
+            `;
+            
+            console.log('🧪 Test UTC Fix:');
+            console.log('📁 Fichier:', fileName);
+            console.log('📅 Date parsée:', parsedDate.toISOString());
+            console.log('📅 Date attendue:', expectedDate.toISOString());
+            console.log('⏰ Différence:', diffHours + 'h');
+        }
+        
+        window.addEventListener('load', runTest);
+    </script>
+</body>
+</html>
