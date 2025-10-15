@@ -1211,7 +1211,7 @@ function parseSessionDate(fileName) {
         const minute = parseInt(timeStr.substring(2, 4));
         const second = parseInt(timeStr.substring(4, 6));
         
-        return new Date(year, month, day, hour, minute, second);
+        return new Date(Date.UTC(year, month, day, hour, minute, second));
     }
     
     return null;
