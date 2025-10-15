@@ -678,17 +678,17 @@ function updateLastUpdateIndicator() {
                         const minute = timeStr.substring(2, 4);
                         const second = timeStr.substring(4, 6);
                         
-                        // Créer la date en UTC+2 (EET - Eastern European Time)
-                        // Les heures dans les noms de fichiers sont en heure locale EAST (UTC+2)
-                        // Nous devons soustraire 2h pour obtenir l'UTC équivalent
+                        // Créer la date en UTC+2h30 (EAST - Eastern Time)
+                        // Les heures dans les noms de fichiers sont en heure locale EAST (UTC+2h30)
+                        // Nous devons soustraire 2h30 pour obtenir l'UTC équivalent
                         const hourNum = parseInt(hour);
                         const minuteNum = parseInt(minute);
                         const secondNum = parseInt(second);
                         
                         // Créer d'abord en heure locale EAST, puis convertir en UTC
                         const localDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), hourNum, minuteNum, secondNum);
-                        // Convertir de EAST (UTC+2) vers UTC en soustrayant 2h
-                        date = new Date(localDate.getTime() - (2 * 60 * 60 * 1000));
+                        // Convertir de EAST (UTC+2h30) vers UTC en soustrayant 2h30
+                        date = new Date(localDate.getTime() - (2.5 * 60 * 60 * 1000));
                     }
                 }
                 
