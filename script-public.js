@@ -20,7 +20,7 @@ window.isAdmin = isAdmin;
 const ADMIN_PASSWORD = "admin123";
 
 // Éléments DOM
-let fileInput, fileList, resultsSection, loading, categoryStats, driverStats, groupByClassToggle, collapseBtn, sessionSelect, dateFilter, pilotModal, closeModal;
+let fileInput, resultsSection, loading, categoryStats, driverStats, groupByClassToggle, sessionSelect, dateFilter, pilotModal, closeModal;
 let authSection, adminPassword, loginBtn, logoutBtn, egtDashboard, authStatus, adminAccessBtn, adminSection, cancelAuthBtn, publicSection;
 let adminLayout, adminLoading;
 let initialLoading, lastUpdateIndicator, updateDate;
@@ -786,11 +786,7 @@ function displayLoadedFiles() {
     // Affichage du nombre de fichiers (fonctionnalité supprimée)
     console.log(`📁 ${sessionData.length} fichier(s) • ${sessionData.reduce((sum, session) => sum + (session.laps ? session.laps.length : 0), 0)} tours`);
     
-    // Masquer la liste détaillée des fichiers
-    if (fileList) {
-    fileList.innerHTML = '';
-        fileList.style.display = 'none';
-    }
+    // Masquer la liste détaillée des fichiers (fonctionnalité supprimée)
 }
 
 // Afficher les résultats
@@ -1419,13 +1415,8 @@ function showNoDataMessage() {
 
 // Mettre à jour le statut des données
 function updateDataStatus(status) {
-    if (dataStatus) {
-        dataStatus.style.display = 'block';
-        const statusText = dataStatus.querySelector('.status-text');
-        if (statusText) {
-            statusText.textContent = status;
-        }
-    }
+    // Fonctionnalité supprimée (dataStatus n'existe plus)
+    console.log('📊 Status des données:', status);
 }
 
 // Afficher/masquer le loading
@@ -1745,14 +1736,14 @@ async function initializeApp() {
         
         // Initialiser les éléments DOM
         fileInput = document.getElementById('fileInput');
-        fileList = document.getElementById('fileList');
+        // fileList supprimé (fonctionnalité upload manuel supprimée)
         resultsSection = document.getElementById('resultsSection');
         loading = document.getElementById('loading');
         categoryStats = document.getElementById('categoryStats');
         driverStats = document.getElementById('driverStats');
         groupByClassToggle = document.getElementById('groupByClassToggle');
         // Éléments supprimés (upload section et résultats d'analyse)
-        collapseBtn = document.getElementById('collapseBtn');
+        // collapseBtn supprimé (fonctionnalité upload manuel supprimée)
         sessionSelect = document.getElementById('sessionSelect');
         dateFilter = document.getElementById('dateFilter');
         pilotModal = document.getElementById('pilotModal');
@@ -1799,7 +1790,7 @@ async function initializeApp() {
         if (groupByClassToggle) groupByClassToggle.addEventListener('change', toggleGroupByClass);
         if (dateFilter) dateFilter.addEventListener('change', handleDateFilterChange);
         if (sessionSelect) sessionSelect.addEventListener('change', handleSessionChange);
-        if (collapseBtn) collapseBtn.addEventListener('click', toggleUploadSection);
+        // collapseBtn supprimé (fonctionnalité upload manuel supprimée)
         if (closeModal) closeModal.addEventListener('click', closePilotModal);
         
         // Event listeners EGT Dashboard sont maintenant gérés par le composant admin-dashboard
