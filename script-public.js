@@ -678,8 +678,8 @@ function updateLastUpdateIndicator() {
                         const minute = timeStr.substring(2, 4);
                         const second = timeStr.substring(4, 6);
                         
-                        // Créer la date en heure locale (pas UTC)
-                        date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(minute), parseInt(second));
+                        // Créer la date en UTC pour être cohérent avec Firestore
+                        date = new Date(Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(minute), parseInt(second)));
                     }
                 }
                 
@@ -724,16 +724,21 @@ function updateLastUpdateIndicator() {
  * @returns {string} Date formatée
  */
 function formatUpdateDate(date) {
+    // Normaliser la date de session en heure locale pour la comparaison
+    // Toutes les dates (Firestore UTC ou parsing fichier) sont maintenant en UTC
+    // Nous les convertissons en heure locale pour la comparaison avec "maintenant"
+    const sessionLocal = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
     const now = new Date();
-    const diffMs = now - date;
+    const diffMs = now - sessionLocal;
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor(diffMs / (1000 * 60));
     
     // Debug pour comprendre le problème
     console.log('🕐 Debug formatUpdateDate:');
-    console.log('  Date session:', date.toLocaleString('fr-FR'));
-    console.log('  Maintenant:', now.toLocaleString('fr-FR'));
+    console.log('  Date session (UTC):', date.toISOString());
+    console.log('  Date session (locale):', sessionLocal.toLocaleString('fr-FR'));
+    console.log('  Maintenant (locale):', now.toLocaleString('fr-FR'));
     console.log('  Différence ms:', diffMs);
     console.log('  Différence heures:', diffHours);
     
