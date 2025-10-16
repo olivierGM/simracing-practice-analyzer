@@ -686,10 +686,11 @@ function updateLastUpdateIndicator() {
                         const secondNum = parseInt(second);
                         
                         // Les heures dans les noms de fichiers sont en UTC (comme le serveur)
-                        // Mais la session réelle a eu lieu en EAST (UTC+2h30)
-                        // Nous devons ajouter 2h30 pour obtenir l'heure réelle de la session
+                        // Mais la session réelle a eu lieu en EAST avec un délai variable
+                        // D'après les exemples: Course 19:30 EAST vs Serveur 15:10 UTC = ~4h20 de différence
+                        // Nous devons ajouter 4h30 pour obtenir l'heure réelle approximative de la session
                         const utcDate = new Date(Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day), hourNum, minuteNum, secondNum));
-                        date = new Date(utcDate.getTime() + (2.5 * 60 * 60 * 1000)); // +2h30 pour EAST
+                        date = new Date(utcDate.getTime() + (4.5 * 60 * 60 * 1000)); // +4h30 pour approximation EAST
                     }
                 }
                 
