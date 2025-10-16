@@ -686,11 +686,10 @@ function updateLastUpdateIndicator() {
                         const secondNum = parseInt(second);
                         
                         // Les heures dans les noms de fichiers sont en UTC (comme le serveur)
-                        // Mais la session réelle a eu lieu en heure locale avec un offset
+                        // Mais la session réelle a eu lieu en heure locale avec un offset de +3h
                         // D'après les exemples: Qualifying 20:10 locale vs Serveur 17:23 UTC = ~2h47 ≈ 3h
-                        // Nous devons ajouter 3h pour obtenir l'heure réelle approximative de la session
-                        const utcDate = new Date(Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day), hourNum, minuteNum, secondNum));
-                        date = new Date(utcDate.getTime() + (3 * 60 * 60 * 1000)); // +3h pour heure locale
+                        // Nous créons directement en heure locale (pas UTC) pour que la comparaison fonctionne
+                        date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), hourNum + 3, minuteNum, secondNum);
                     }
                 }
                 
