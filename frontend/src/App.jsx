@@ -10,6 +10,7 @@ import { Header } from './components/layout/Header';
 import { LoadingSpinner } from './components/common/LoadingSpinner';
 import { FiltersBar } from './components/filters/FiltersBar';
 import { DriversTable } from './components/table/DriversTable';
+import { PilotModal } from './components/modal/PilotModal';
 import { useFirebaseData } from './hooks/useFirebaseData';
 import { useFilters } from './hooks/useFilters';
 import { useSorting } from './hooks/useSorting';
@@ -51,7 +52,11 @@ function App() {
   // Handler pour clic sur un pilote
   const handleDriverClick = (driver) => {
     setSelectedDriver(driver);
-    console.log('Modal pilote à implémenter:', driver);
+  };
+
+  // Handler pour fermer la modal
+  const handleCloseModal = () => {
+    setSelectedDriver(null);
   };
 
   if (loading) {
@@ -109,6 +114,15 @@ function App() {
           </div>
         </div>
       </main>
+
+      {/* Modal pilote */}
+      {selectedDriver && (
+        <PilotModal
+          driver={selectedDriver}
+          allDrivers={drivers}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 }

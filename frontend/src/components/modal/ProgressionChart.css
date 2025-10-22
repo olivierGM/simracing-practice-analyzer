@@ -1,0 +1,31 @@
+.progression-section {
+  background: var(--card-bg);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.chart-placeholder {
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  gap: 12px;
+}
+
+.chart-placeholder p {
+  margin: 0;
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+.placeholder-note {
+  font-size: 14px !important;
+  font-style: italic;
+  opacity: 0.7;
+}
+

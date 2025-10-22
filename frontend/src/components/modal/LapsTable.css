@@ -1,0 +1,78 @@
+.laps-section {
+  background: var(--card-bg);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.laps-table-container {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.laps-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.laps-table thead {
+  background: var(--primary-color);
+  color: white;
+}
+
+.laps-table th {
+  padding: 12px 10px;
+  text-align: left;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.laps-table th:hover {
+  background: var(--primary-hover);
+}
+
+.laps-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+.laps-table tbody tr:hover {
+  background: var(--hover-bg);
+}
+
+.laps-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.laps-table td {
+  padding: 10px;
+  color: var(--text-secondary);
+  font-family: 'Courier New', monospace;
+}
+
+.lap-number {
+  font-weight: 700;
+  color: var(--text-primary) !important;
+  text-align: center;
+}
+
+.total-time {
+  color: var(--primary-color) !important;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .laps-table {
+    font-size: 12px;
+  }
+  
+  .laps-table th,
+  .laps-table td {
+    padding: 8px 6px;
+  }
+}
+
