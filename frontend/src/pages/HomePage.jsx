@@ -34,7 +34,17 @@ export function HomePage({ drivers }) {
 
   // Navigation vers la fiche pilote
   const handleDriverClick = (driver) => {
-    navigate(`/pilote/${driver.id}`);
+    // Normaliser le nom du circuit pour l'URL (enlever espaces et caractères spéciaux)
+    const circuitSlug = driver.track
+      ? driver.track
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '') // Enlever accents
+          .replace(/[^a-z0-9]+/g, '-') // Remplacer espaces et caractères spéciaux par -
+          .replace(/^-+|-+$/g, '') // Enlever - au début/fin
+      : 'circuit';
+    
+    navigate(`/circuit/${circuitSlug}/pilote/${driver.id}`);
   };
 
   return (

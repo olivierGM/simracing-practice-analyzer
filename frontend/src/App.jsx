@@ -53,7 +53,7 @@ function App() {
         <main className="main-content">
           <Routes>
             <Route path="/" element={<HomePage drivers={drivers} />} />
-            <Route path="/pilote/:pilotId" element={<PilotePage drivers={drivers} />} />
+            <Route path="/circuit/:circuitId/pilote/:pilotId" element={<PilotePage drivers={drivers} />} />
           </Routes>
         </main>
       </div>
