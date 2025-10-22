@@ -9,16 +9,18 @@
 
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
+// Configuration Firebase - VRAIE config de prod
 const firebaseConfig = {
-  apiKey: "AIzaSyBOyMeW0kxC3d9pP5VsYr2czQfBJQYdjTs",
+  apiKey: "AIzaSyDufNena1-qBKkCLD0aXm3uBJnUr7VLBCE",
   authDomain: "simracing-practice-analyzer.firebaseapp.com",
   projectId: "simracing-practice-analyzer",
-  storageBucket: "simracing-practice-analyzer.appspot.com",
-  messagingSenderId: "377068056867",
-  appId: "1:377068056867:web:d7c2a3f4e5b6c7d8e9f0a1"
+  storageBucket: "simracing-practice-analyzer.firebasestorage.app",
+  messagingSenderId: "465814736031",
+  appId: "1:465814736031:web:b06b6e25a511c90d40a6aa",
+  measurementId: "G-K33TDY8WJE"
 };
 
 // Initialiser Firebase
@@ -28,25 +30,38 @@ export const db = getFirestore(app);
 export const storage = getStorage(app);
 
 /**
- * Récupère les résultats depuis Firebase Storage
+ * Récupère les sessions depuis Firestore (COMME EN PROD)
+ * 
+ * @returns {Promise<Array>} Données des sessions
+ */
+export async function fetchSessions() {
+  try {
+    console.log('🔄 Chargement des sessions depuis Firestore...');
+    
+    const sessionsSnapshot = await getDocs(collection(db, 'sessions'));
+    const sessions = [];
+    
+    sessionsSnapshot.forEach(doc => {
+      sessions.push(doc.data());
+    });
+    
+    console.log(`📊 ${sessions.length} sessions chargées depuis Firestore`);
+    
+    return sessions;
+  } catch (error) {
+    console.error('Error fetching sessions:', error);
+    throw error;
+  }
+}
+
+/**
+ * Récupère les résultats (pour compatibilité - retourne les sessions)
  * 
  * @returns {Promise<Object>} Données des résultats
  */
 export async function fetchResults() {
-  try {
-    const storageRef = ref(storage, 'results/latest/combined_results.json');
-    const url = await getDownloadURL(storageRef);
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching results:', error);
-    throw error;
-  }
+  const sessions = await fetchSessions();
+  return { sessions };
 }
 
 /**
@@ -63,10 +78,12 @@ export async function fetchMetadata() {
       return docSnap.data();
     }
     
-    throw new Error('No metadata found in Firestore');
+    // Pas critique si les metadata n'existent pas
+    console.warn('No metadata found in Firestore (non-critique)');
+    return null;
   } catch (error) {
     console.error('Error fetching metadata:', error);
-    throw error;
+    return null; // Ne pas throw, juste retourner null
   }
 }
 
