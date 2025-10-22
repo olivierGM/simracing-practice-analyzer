@@ -1,23 +1,41 @@
-.theme-toggle {
-  background: none;
-  border: 2px solid var(--border-color, #444);
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 20px;
+/**
+ * Styles du bouton toggle thème
+ * 
+ * Copie EXACTE des styles de prod (style.css lignes 62-88)
+ */
+
+/* Bouton Toggle Thème */
+.theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  margin-right: 10px;
 }
 
-.theme-toggle:hover {
-  background: var(--hover-bg, rgba(255, 255, 255, 0.1));
-  border-color: var(--primary-color, #4CAF50);
-  transform: scale(1.05);
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
 }
 
-.theme-toggle:active {
+.theme-toggle-btn:active {
   transform: scale(0.95);
 }
 
+/* Enlever les styles par défaut du bouton */
+.theme-toggle-btn {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+}

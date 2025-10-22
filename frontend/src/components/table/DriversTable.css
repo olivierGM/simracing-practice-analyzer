@@ -1,20 +1,227 @@
+/**
+ * Styles du tableau des pilotes
+ * 
+ * Copie EXACTE des styles de prod (style.css lignes 910-1299+)
+ */
+
+/* Container wrapper */
 .drivers-table-container {
   width: 100%;
   overflow-x: auto;
 }
 
+/* Filtres et contrôles */
+.view-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.control-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.date-filter,
+.session-select {
+  padding: 6px 10px;
+  border: 2px solid var(--accent-color);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 200px;
+}
+
+.date-filter {
+  min-width: 160px;
+}
+
+.date-filter:hover,
+.session-select:hover {
+  border-color: var(--accent-hover);
+}
+
+.date-filter:focus,
+.session-select:focus {
+  outline: none;
+  border-color: var(--accent-hover);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Toggle "Grouper par classe" */
+.view-controls .toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 2px solid #667eea;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #667eea;
+}
+
+.view-controls .toggle:hover {
+  background: rgba(102, 126, 234, 0.2);
+}
+
+.view-controls .toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #667eea;
+  cursor: pointer;
+}
+
+/* Table principale */
 .driver-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--card-bg);
-  border-radius: 12px;
+  margin-top: 10px;
+  background: var(--bg-card);
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.driver-table th,
+.driver-table td {
+  padding: 4px 6px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+/* Headers du tableau - gradient violet magnifique */
+.driver-table th {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-size: 0.7rem;
+  padding: 3px 6px;
+  position: relative;
+}
+
+.driver-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.driver-table th.sortable:hover {
+  background: linear-gradient(45deg, #5a6fd8, #6a4190);
+}
+
+.sort-arrow {
+  margin-left: 8px;
+  font-size: 0.9em;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+}
+
+/* Indicateurs de tri */
+.sort-indicator {
+  margin-left: 5px;
+  font-size: 0.8em;
+  color: #999;
+  transition: color 0.2s ease;
+  display: inline-block;
+  min-width: 12px;
+}
+
+/* Alternance de couleurs des lignes */
+.driver-table tbody tr:nth-child(even) {
+  background: var(--table-row-even);
+}
+
+.driver-table tbody tr:nth-child(odd) {
+  background: var(--table-row-odd);
+}
+
+.driver-table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.driver-table tbody tr:hover {
+  background-color: var(--table-hover) !important;
+}
+
+.driver-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Category headers - quand groupé par classe */
+.category-header {
+  background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
+  border-top: 2px solid #667eea;
+}
+
+[data-theme="dark"] .category-header {
+  background: linear-gradient(135deg, #2d3748 0%, #374151 100%);
+}
+
+.category-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #333;
+  padding: 6px 8px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+[data-theme="dark"] .category-title {
+  color: #ffffff;
+}
+
+.category-icon {
+  font-size: 1.1rem;
+}
+
+.category-count {
+  background: rgba(102, 126, 234, 0.2);
+  color: #667eea;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .category-count {
+  background: rgba(102, 126, 234, 0.3);
+  color: #a5b4fc;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .driver-table {
-    font-size: 14px;
+    font-size: 0.75rem;
+  }
+  
+  .driver-table th,
+  .driver-table td {
+    padding: 3px 4px;
   }
   
   /* Cacher certaines colonnes en mobile */
@@ -22,15 +229,47 @@
   .cell-date {
     display: none;
   }
+  
+  .view-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .control-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .date-filter,
+  .session-select {
+    min-width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
   .driver-table {
-    font-size: 12px;
+    font-size: 0.7rem;
   }
   
-  .cell-number {
+  .cell-number,
+  .cell-potential {
     display: none;
+  }
+  
+  .driver-table th,
+  .driver-table td {
+    padding: 2px 3px;
   }
 }
 
+/* Message "Aucun pilote" */
+.no-drivers {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.no-drivers p {
+  font-size: 1.1rem;
+  margin: 0;
+}

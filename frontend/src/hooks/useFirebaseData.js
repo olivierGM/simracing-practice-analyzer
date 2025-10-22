@@ -12,7 +12,7 @@ import { fetchResults, fetchMetadata } from '../services/firebase';
 import { mockDriversData, mockMetadata } from '../data/mockData';
 
 // Mode développement : utiliser mock data
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false; // ✅ Basculé vers vraies données Firebase
 
 export function useFirebaseData() {
   const [data, setData] = useState(null);

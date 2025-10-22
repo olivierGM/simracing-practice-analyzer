@@ -1,73 +1,76 @@
-.app-header {
-  background: var(--header-bg, rgba(0, 0, 0, 0.3));
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-color, #444);
-  padding: 16px 24px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+/**
+ * Styles du Header
+ * 
+ * Copie EXACTE des styles de prod (style.css lignes 264-373)
+ */
+
+header {
+  margin-bottom: 12px;
+  color: var(--text-primary);
 }
 
-.header-content {
-  max-width: 1400px;
-  margin: 0 auto;
+.header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: 12px;
 }
 
-.app-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text-primary, #fff);
-  margin: 0;
-  background: linear-gradient(135deg, #4CAF50, #81C784);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.header-titles h1 {
+  font-size: 1.5rem;
+  margin-bottom: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  color: #ffffff; /* Blanc sur gradient violet */
+}
+
+.header-titles p {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
-.login-btn {
-  background: var(--primary-color, #4CAF50);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 600;
+/* Bouton Admin discret en haut à droite */
+.admin-access-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-size: 16px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
-.login-btn:hover {
-  background: var(--primary-hover, #45a049);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+.admin-access-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
 }
 
-.login-btn:active {
-  transform: translateY(0);
+.admin-access-btn:active {
+  transform: scale(0.95);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .header-content {
+  .header-row {
     flex-direction: column;
-    gap: 12px;
+    align-items: flex-start;
   }
   
-  .app-title {
-    font-size: 20px;
+  .header-titles h1 {
+    font-size: 1.2rem;
   }
   
   .header-actions {
@@ -75,4 +78,3 @@
     justify-content: space-between;
   }
 }
-

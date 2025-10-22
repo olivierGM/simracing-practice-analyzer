@@ -1,84 +1,135 @@
 /**
  * Thèmes CSS - Dark / Light / Auto
  * 
- * Définit toutes les variables CSS pour les 3 modes de thème
+ * Variables CSS IDENTIQUES à la prod (style.css)
+ * Gradient violet magnifique + toutes les couleurs de prod
  */
 
-/* Thème Dark (par défaut) */
-html,
-html[data-theme="dark"] {
-  --app-bg: #1a1a1a;
-  --header-bg: rgba(0, 0, 0, 0.3);
-  --card-bg: rgba(255, 255, 255, 0.05);
-  --hover-bg: rgba(255, 255, 255, 0.1);
-  
-  --text-primary: #ffffff;
-  --text-secondary: #999999;
-  --text-tertiary: #666666;
-  
-  --primary-color: #4CAF50;
-  --primary-hover: #45a049;
-  --secondary-color: #81C784;
-  
-  --border-color: #444444;
-  --error-color: #f44336;
-  --warning-color: #ff9800;
-  --success-color: #4CAF50;
-  
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
-}
-
-/* Thème Light */
+/* Thème Light (par défaut - comme en prod) */
+:root,
 html[data-theme="light"] {
-  --app-bg: #f5f5f5;
-  --header-bg: rgba(255, 255, 255, 0.9);
-  --card-bg: #ffffff;
-  --hover-bg: rgba(0, 0, 0, 0.05);
+  /* Gradient violet magnifique de prod 🎨 */
+  --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-modal: #ffffff;
   
-  --text-primary: #1a1a1a;
+  /* Textes */
+  --text-primary: #333333;
   --text-secondary: #666666;
-  --text-tertiary: #999999;
+  --text-muted: #999999;
   
-  --primary-color: #4CAF50;
-  --primary-hover: #45a049;
-  --secondary-color: #66BB6A;
-  
+  /* Bordures et ombres */
   --border-color: #e0e0e0;
-  --error-color: #f44336;
-  --warning-color: #ff9800;
-  --success-color: #4CAF50;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.15);
+  
+  /* Couleurs d'accent */
+  --accent-color: #667eea;
+  --accent-hover: #5a6fd8;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  
+  /* Tableau */
+  --table-row-even: #f8f9ff;
+  --table-row-odd: #ffffff;
+  --table-hover: #e8f0ff;
+  
+  /* Alias pour compatibilité avec nos composants */
+  --app-bg: var(--bg-primary);
+  --primary-color: var(--accent-color);
+  --primary-hover: var(--accent-hover);
+  --card-bg: var(--bg-card);
+  --hover-bg: var(--table-hover);
+  --header-bg: rgba(255, 255, 255, 0.1);
+  --text-tertiary: var(--text-muted);
+  --secondary-color: #81C784;
   
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-/* Thème Auto - utilise les préférences système */
+/* Thème Dark */
+html[data-theme="dark"] {
+  /* Gradient sombre de prod 🌙 */
+  --bg-primary: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  --bg-secondary: #2d3748;
+  --bg-card: #1a202c;
+  --bg-modal: #2d3748;
+  
+  /* Textes */
+  --text-primary: #f7fafc;
+  --text-secondary: #e2e8f0;
+  --text-muted: #a0aec0;
+  
+  /* Bordures et ombres */
+  --border-color: #4a5568;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.4);
+  
+  /* Couleurs d'accent */
+  --accent-color: #667eea;
+  --accent-hover: #5a6fd8;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  
+  /* Tableau */
+  --table-row-even: #374151;
+  --table-row-odd: #2d3748;
+  --table-hover: #4a5568;
+  
+  /* Alias pour compatibilité */
+  --app-bg: var(--bg-primary);
+  --primary-color: var(--accent-color);
+  --primary-hover: var(--accent-hover);
+  --card-bg: var(--bg-card);
+  --hover-bg: var(--table-hover);
+  --header-bg: rgba(0, 0, 0, 0.3);
+  --text-tertiary: #666666;
+  --secondary-color: #81C784;
+  
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Thème Auto (suit les préférences système) */
 html[data-theme="auto"] {
   color-scheme: light dark;
 }
 
 @media (prefers-color-scheme: light) {
   html[data-theme="auto"] {
-    --app-bg: #f5f5f5;
-    --header-bg: rgba(255, 255, 255, 0.9);
-    --card-bg: #ffffff;
-    --hover-bg: rgba(0, 0, 0, 0.05);
-    
-    --text-primary: #1a1a1a;
+    --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-modal: #ffffff;
+    --text-primary: #333333;
     --text-secondary: #666666;
-    --text-tertiary: #999999;
-    
-    --primary-color: #4CAF50;
-    --primary-hover: #45a049;
-    --secondary-color: #66BB6A;
-    
+    --text-muted: #999999;
     --border-color: #e0e0e0;
-    --error-color: #f44336;
-    --warning-color: #ff9800;
-    --success-color: #4CAF50;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.15);
+    --accent-color: #667eea;
+    --accent-hover: #5a6fd8;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+    --table-row-even: #f8f9ff;
+    --table-row-odd: #ffffff;
+    --table-hover: #e8f0ff;
+    
+    --app-bg: var(--bg-primary);
+    --primary-color: var(--accent-color);
+    --primary-hover: var(--accent-hover);
+    --card-bg: var(--bg-card);
+    --hover-bg: var(--table-hover);
+    --header-bg: rgba(255, 255, 255, 0.1);
+    --text-tertiary: var(--text-muted);
+    --secondary-color: #81C784;
     
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -86,3 +137,38 @@ html[data-theme="auto"] {
   }
 }
 
+@media (prefers-color-scheme: dark) {
+  html[data-theme="auto"] {
+    --bg-primary: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    --bg-secondary: #2d3748;
+    --bg-card: #1a202c;
+    --bg-modal: #2d3748;
+    --text-primary: #f7fafc;
+    --text-secondary: #e2e8f0;
+    --text-muted: #a0aec0;
+    --border-color: #4a5568;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.4);
+    --accent-color: #667eea;
+    --accent-hover: #5a6fd8;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+    --table-row-even: #374151;
+    --table-row-odd: #2d3748;
+    --table-hover: #4a5568;
+    
+    --app-bg: var(--bg-primary);
+    --primary-color: var(--accent-color);
+    --primary-hover: var(--accent-hover);
+    --card-bg: var(--bg-card);
+    --hover-bg: var(--table-hover);
+    --header-bg: rgba(0, 0, 0, 0.3);
+    --text-tertiary: #666666;
+    --secondary-color: #81C784;
+    
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+}
