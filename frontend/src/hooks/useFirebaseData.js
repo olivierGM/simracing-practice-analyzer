@@ -8,11 +8,23 @@
  */
 
 import { useState, useEffect } from 'react';
-import { fetchResults, fetchMetadata } from '../services/firebase';
+import { fetchSessions, fetchMetadata } from '../services/firebase';
+import { processSessionData } from '../services/dataProcessor';
 import { mockDriversData, mockMetadata } from '../data/mockData';
 
+/**
+ * Calcule la consistance d'un pilote (écart-type des temps de tour valides)
+ */
+function calculateConsistency(validLapTimes) {
+  if (!validLapTimes || validLapTimes.length < 2) return 0;
+  
+  const mean = validLapTimes.reduce((sum, t) => sum + t, 0) / validLapTimes.length;
+  const variance = validLapTimes.reduce((sum, t) => sum + Math.pow(t - mean, 2), 0) / validLapTimes.length;
+  return Math.sqrt(variance);
+}
+
 // Mode développement : utiliser mock data
-const USE_MOCK_DATA = true; // 🎭 Mock data en dev, Firebase après déploiement
+const USE_MOCK_DATA = false; // 🔥 Test Firebase Firestore (collection sessions)
 
 export function useFirebaseData() {
   const [data, setData] = useState(null);
@@ -32,13 +44,42 @@ export function useFirebaseData() {
           setData(mockDriversData);
           setMetadata(mockMetadata);
         } else {
-          // Charger en parallèle les résultats et métadonnées depuis Firebase
-          const [resultsData, metaData] = await Promise.all([
-            fetchResults(),
+          // Charger les sessions depuis Firestore
+          console.log('🔄 Chargement des sessions depuis Firestore...');
+          const [sessions, metaData] = await Promise.all([
+            fetchSessions(),
             fetchMetadata()
           ]);
           
-          setData(resultsData);
+          console.log(`📊 ${sessions.length} sessions chargées depuis Firestore`);
+          
+          // Traiter les sessions pour générer les données de pilotes
+          console.log('🔄 Traitement des données...');
+          const processedData = processSessionData(sessions);
+          
+          console.log(`👥 ${Object.keys(processedData.byDriver).length} pilotes trouvés`);
+          
+          // Transformer en format attendu par l'app (avec "drivers" array)
+          const driversArray = Object.entries(processedData.byDriver).map(([id, driver]) => ({
+            id,
+            name: `${driver.firstName} ${driver.lastName}`,
+            firstName: driver.firstName,
+            lastName: driver.lastName,
+            category: driver.cupCategory,
+            carModel: driver.carModel,
+            bestTime: driver.bestValidTime,
+            avgTime: driver.averageValidTime,
+            consistency: calculateConsistency(driver.validLapTimes),
+            totalLaps: driver.totalLaps,
+            validLaps: driver.validLaps,
+            wetLaps: driver.wetLaps,
+            bestWetTime: driver.bestWetTime,
+            avgWetTime: driver.averageWetTime,
+            lapTimes: driver.lapTimes,
+            track: sessions[0]?.trackName || 'Unknown' // Prendre le trackName de la première session
+          }));
+          
+          setData({ drivers: driversArray });
           setMetadata(metaData);
         }
       } catch (err) {
@@ -65,12 +106,36 @@ export function useFirebaseData() {
         setData(mockDriversData);
         setMetadata(mockMetadata);
       } else {
-        const [resultsData, metaData] = await Promise.all([
-          fetchResults(),
+        // Charger les sessions depuis Firestore
+        const [sessions, metaData] = await Promise.all([
+          fetchSessions(),
           fetchMetadata()
         ]);
         
-        setData(resultsData);
+        // Traiter les sessions
+        const processedData = processSessionData(sessions);
+        
+        // Transformer en format attendu
+        const driversArray = Object.entries(processedData.byDriver).map(([id, driver]) => ({
+          id,
+          name: `${driver.firstName} ${driver.lastName}`,
+          firstName: driver.firstName,
+          lastName: driver.lastName,
+          category: driver.cupCategory,
+          carModel: driver.carModel,
+          bestTime: driver.bestValidTime,
+          avgTime: driver.averageValidTime,
+          consistency: calculateConsistency(driver.validLapTimes),
+          totalLaps: driver.totalLaps,
+          validLaps: driver.validLaps,
+          wetLaps: driver.wetLaps,
+          bestWetTime: driver.bestWetTime,
+          avgWetTime: driver.averageWetTime,
+          lapTimes: driver.lapTimes,
+          track: sessions[0]?.trackName || 'Unknown'
+        }));
+        
+        setData({ drivers: driversArray });
         setMetadata(metaData);
       }
     } catch (err) {
