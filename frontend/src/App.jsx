@@ -1,62 +1,29 @@
 /**
  * Composant App principal
  * 
- * Point d'entrée de l'application React
- * Phase 3 : Filtres + Tableau des pilotes
+ * Point d'entrée de l'application React avec routing
  */
 
 import { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Header } from './components/layout/Header';
 import { LoadingSpinner } from './components/common/LoadingSpinner';
-import { FiltersBar } from './components/filters/FiltersBar';
-import { DriversTable } from './components/table/DriversTable';
-import { PilotModal } from './components/modal/PilotModal';
+import { HomePage } from './pages/HomePage';
+import { PilotePage } from './pages/PilotePage';
 import { useFirebaseData } from './hooks/useFirebaseData';
-import { useFilters } from './hooks/useFilters';
-import { useSorting } from './hooks/useSorting';
 import './App.css';
 
 function App() {
   const { data, metadata, loading, error } = useFirebaseData();
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [selectedDriver, setSelectedDriver] = useState(null);
 
   // Extraire les pilotes des données
   const drivers = data?.drivers || [];
-
-  // Hooks pour filtres et tri
-  const {
-    periodFilter,
-    setPeriodFilter,
-    trackFilter,
-    setTrackFilter,
-    groupByClass,
-    setGroupByClass,
-    availableTracks,
-    filteredDrivers
-  } = useFilters(drivers);
-
-  const {
-    sortColumn,
-    sortDirection,
-    sortedItems: sortedDrivers,
-    handleSort
-  } = useSorting(filteredDrivers);
 
   // Handler pour le bouton login
   const handleLoginClick = () => {
     setShowLoginModal(true);
     console.log('Login modal à implémenter');
-  };
-
-  // Handler pour clic sur un pilote
-  const handleDriverClick = (driver) => {
-    setSelectedDriver(driver);
-  };
-
-  // Handler pour fermer la modal
-  const handleCloseModal = () => {
-    setSelectedDriver(null);
   };
 
   if (loading) {
@@ -79,51 +46,18 @@ function App() {
   }
 
   return (
-    <div className="app">
-      <Header metadata={metadata} onLoginClick={handleLoginClick} />
-      
-      <main className="main-content">
-        <div className="container">
-          <FiltersBar
-            periodFilter={periodFilter}
-            onPeriodChange={setPeriodFilter}
-            trackFilter={trackFilter}
-            onTrackChange={setTrackFilter}
-            availableTracks={availableTracks}
-            groupByClass={groupByClass}
-            onGroupByClassChange={setGroupByClass}
-          />
-
-          {sortedDrivers.length === 0 ? (
-            <div className="no-data">
-              <p>Aucun pilote trouvé avec les filtres sélectionnés.</p>
-            </div>
-          ) : (
-            <DriversTable
-              drivers={sortedDrivers}
-              sortColumn={sortColumn}
-              sortDirection={sortDirection}
-              onSort={handleSort}
-              groupByClass={groupByClass}
-              onDriverClick={handleDriverClick}
-            />
-          )}
-
-          <div className="stats-footer">
-            <p>{sortedDrivers.length} pilote(s) affiché(s)</p>
-          </div>
-        </div>
-      </main>
-
-      {/* Modal pilote */}
-      {selectedDriver && (
-        <PilotModal
-          driver={selectedDriver}
-          allDrivers={drivers}
-          onClose={handleCloseModal}
-        />
-      )}
-    </div>
+    <BrowserRouter>
+      <div className="app">
+        <Header metadata={metadata} onLoginClick={handleLoginClick} />
+        
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<HomePage drivers={drivers} />} />
+            <Route path="/pilote/:pilotId" element={<PilotePage drivers={drivers} />} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
   );
 }
 
