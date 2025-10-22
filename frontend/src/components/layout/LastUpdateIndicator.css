@@ -1,0 +1,25 @@
+.last-update-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--card-bg, rgba(255, 255, 255, 0.05));
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.update-label {
+  color: var(--text-secondary, #999);
+  font-weight: 500;
+}
+
+.update-date {
+  color: var(--text-primary, #fff);
+  font-weight: 600;
+  cursor: help;
+}
+
+.update-date:hover {
+  color: var(--primary-color, #4CAF50);
+}
+
