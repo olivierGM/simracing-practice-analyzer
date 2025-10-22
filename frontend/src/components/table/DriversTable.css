@@ -1,0 +1,36 @@
+.drivers-table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.driver-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .driver-table {
+    font-size: 14px;
+  }
+  
+  /* Cacher certaines colonnes en mobile */
+  .cell-consistency,
+  .cell-date {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .driver-table {
+    font-size: 12px;
+  }
+  
+  .cell-number {
+    display: none;
+  }
+}
+

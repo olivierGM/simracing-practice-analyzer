@@ -1,0 +1,64 @@
+.driver-row {
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  cursor: pointer;
+}
+
+.driver-row:hover {
+  background: var(--hover-bg);
+  transform: translateX(4px);
+}
+
+.driver-row:last-child {
+  border-bottom: none;
+}
+
+.driver-row td {
+  padding: 14px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+/* Styles spécifiques par colonne */
+.cell-position {
+  text-align: center;
+  font-weight: 700;
+  color: var(--primary-color);
+  font-size: 16px;
+}
+
+.cell-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cell-time {
+  font-family: 'Courier New', monospace;
+  color: var(--text-secondary);
+}
+
+.cell-consistency {
+  color: var(--text-secondary);
+}
+
+.cell-number {
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.cell-date {
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+/* Highlight meilleur temps */
+.driver-row:first-child .cell-time {
+  color: var(--success-color);
+  font-weight: 700;
+}
+
+/* Animation au clic */
+.driver-row:active {
+  transform: translateX(2px) scale(0.99);
+}
+

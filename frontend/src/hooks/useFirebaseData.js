@@ -3,10 +3,16 @@
  * 
  * Charge les résultats (Storage) et métadonnées (Firestore)
  * Gère les états loading/error
+ * 
+ * MODE DEV: Utilise des données mock pour le développement
  */
 
 import { useState, useEffect } from 'react';
 import { fetchResults, fetchMetadata } from '../services/firebase';
+import { mockDriversData, mockMetadata } from '../data/mockData';
+
+// Mode développement : utiliser mock data
+const USE_MOCK_DATA = true;
 
 export function useFirebaseData() {
   const [data, setData] = useState(null);
@@ -20,14 +26,21 @@ export function useFirebaseData() {
         setLoading(true);
         setError(null);
         
-        // Charger en parallèle les résultats et métadonnées
-        const [resultsData, metaData] = await Promise.all([
-          fetchResults(),
-          fetchMetadata()
-        ]);
-        
-        setData(resultsData);
-        setMetadata(metaData);
+        if (USE_MOCK_DATA) {
+          // Simuler un délai réseau
+          await new Promise(resolve => setTimeout(resolve, 500));
+          setData(mockDriversData);
+          setMetadata(mockMetadata);
+        } else {
+          // Charger en parallèle les résultats et métadonnées depuis Firebase
+          const [resultsData, metaData] = await Promise.all([
+            fetchResults(),
+            fetchMetadata()
+          ]);
+          
+          setData(resultsData);
+          setMetadata(metaData);
+        }
       } catch (err) {
         console.error('Error loading Firebase data:', err);
         setError(err.message || 'Failed to load data');
@@ -47,13 +60,19 @@ export function useFirebaseData() {
     setError(null);
     
     try {
-      const [resultsData, metaData] = await Promise.all([
-        fetchResults(),
-        fetchMetadata()
-      ]);
-      
-      setData(resultsData);
-      setMetadata(metaData);
+      if (USE_MOCK_DATA) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        setData(mockDriversData);
+        setMetadata(mockMetadata);
+      } else {
+        const [resultsData, metaData] = await Promise.all([
+          fetchResults(),
+          fetchMetadata()
+        ]);
+        
+        setData(resultsData);
+        setMetadata(metaData);
+      }
     } catch (err) {
       console.error('Error reloading data:', err);
       setError(err.message || 'Failed to reload data');

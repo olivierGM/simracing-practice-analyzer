@@ -1,0 +1,47 @@
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.filter-select {
+  background: var(--app-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 180px;
+}
+
+.filter-select:hover {
+  border-color: var(--primary-color);
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* Dark mode - options dropdown */
+html[data-theme="dark"] .filter-select option {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+/* Light mode - options dropdown */
+html[data-theme="light"] .filter-select option {
+  background: #fff;
+  color: #1a1a1a;
+}
+

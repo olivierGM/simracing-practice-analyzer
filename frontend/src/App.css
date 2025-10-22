@@ -56,3 +56,30 @@
   line-height: 1.5;
   color: #81C784;
 }
+
+.no-data {
+  text-align: center;
+  padding: 48px 24px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 2px dashed var(--border-color);
+}
+
+.no-data p {
+  color: var(--text-secondary);
+  font-size: 16px;
+  margin: 0;
+}
+
+.stats-footer {
+  margin-top: 24px;
+  padding: 16px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.stats-footer p {
+  margin: 0;
+}
