@@ -1,0 +1,60 @@
+/**
+ * Styles pour les cartes de statistiques globales
+ * COPIE EXACTE de style.css (lignes ~850-900)
+ */
+
+.compact-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.compact-stat-card {
+    background: var(--bg-card);
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.compact-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.compact-stat-card h3 {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0 0 8px 0;
+    font-weight: 600;
+}
+
+.compact-stat-card .stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .compact-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .compact-stat-card {
+        padding: 10px;
+    }
+
+    .compact-stat-card h3 {
+        font-size: 0.75rem;
+    }
+
+    .compact-stat-card .stat-value {
+        font-size: 1.2rem;
+    }
+}
+

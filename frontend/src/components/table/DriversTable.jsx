@@ -21,37 +21,51 @@ export function DriversTable({
   groupByClass,
   onDriverClick
 }) {
-  // Grouper les pilotes par classe si activé
+  // Grouper les pilotes par classe si activé (COPIE de la prod)
   const groupedDrivers = useMemo(() => {
     if (!groupByClass) return null;
     
     const groups = {};
     drivers.forEach(driver => {
-      const carClass = driver.carClass || 'Autre';
-      if (!groups[carClass]) {
-        groups[carClass] = [];
+      // Utiliser cupCategory (0=PRO, 2=AMATEUR, 3=SILVER)
+      const categoryNum = driver.category;
+      const categoryName = categoryNum === 0 ? 'PRO' : 
+                          categoryNum === 3 ? 'SILVER' : 
+                          categoryNum === 2 ? 'AMATEUR' : 'Autre';
+      
+      if (!groups[categoryNum]) {
+        groups[categoryNum] = {
+          name: categoryName,
+          drivers: []
+        };
       }
-      groups[carClass].push(driver);
+      groups[categoryNum].drivers.push(driver);
     });
     
     return groups;
   }, [drivers, groupByClass]);
 
   if (groupByClass && groupedDrivers) {
-    // Vue groupée par classe
+    // Vue groupée par classe (ordre: PRO, SILVER, AMATEUR comme en prod)
+    const categoryOrder = [0, 3, 2]; // PRO, SILVER, AMATEUR
+    const orderedCategories = categoryOrder.filter(cat => groupedDrivers[cat]);
+    
     return (
       <div className="drivers-table-container">
-        {Object.entries(groupedDrivers).map(([carClass, classDrivers]) => (
-          <CategorySection
-            key={carClass}
-            categoryName={carClass}
-            drivers={classDrivers}
-            sortColumn={sortColumn}
-            sortDirection={sortDirection}
-            onSort={onSort}
-            onDriverClick={onDriverClick}
-          />
-        ))}
+        {orderedCategories.map(categoryNum => {
+          const group = groupedDrivers[categoryNum];
+          return (
+            <CategorySection
+              key={categoryNum}
+              categoryName={group.name}
+              drivers={group.drivers}
+              sortColumn={sortColumn}
+              sortDirection={sortDirection}
+              onSort={onSort}
+              onDriverClick={onDriverClick}
+            />
+          );
+        })}
       </div>
     );
   }

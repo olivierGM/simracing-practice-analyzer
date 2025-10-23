@@ -49,6 +49,21 @@ export function useFirebaseData() {
           
           console.log(`👥 ${Object.keys(processedData.byDriver).length} pilotes trouvés`);
           
+          // Créer un mapping pilote -> piste(s) depuis les sessions
+          const driverTrackMap = {};
+          sessions.forEach(session => {
+            if (session.sessionResult && session.sessionResult.leaderBoardLines) {
+              session.sessionResult.leaderBoardLines.forEach(line => {
+                const driver = line.car.drivers[0];
+                const driverId = `${driver.firstName}_${driver.lastName}_${line.car.cupCategory}`;
+                
+                if (!driverTrackMap[driverId]) {
+                  driverTrackMap[driverId] = session.trackName;
+                }
+              });
+            }
+          });
+          
           // Transformer en format attendu par l'app (avec "drivers" array)
           // IMPORTANT: Inclure TOUTES les colonnes de la prod (14 colonnes)
           const driversArray = Object.entries(processedData.byDriver).map(([id, driver]) => ({
@@ -82,7 +97,7 @@ export function useFirebaseData() {
             validLapTimes: driver.validLapTimes,
             wetLapTimes: driver.wetLapTimes,
             allLapTimes: driver.allLapTimes,
-            track: sessions[0]?.trackName || 'Unknown' // Prendre le trackName de la première session
+            track: driverTrackMap[id] || 'Unknown' // Piste du pilote (pas toutes les sessions)
           }));
           
           setData({ drivers: driversArray });
@@ -121,6 +136,21 @@ export function useFirebaseData() {
         // Traiter les sessions
         const processedData = processSessionData(sessions);
         
+        // Créer un mapping pilote -> piste(s) depuis les sessions
+        const driverTrackMap = {};
+        sessions.forEach(session => {
+          if (session.sessionResult && session.sessionResult.leaderBoardLines) {
+            session.sessionResult.leaderBoardLines.forEach(line => {
+              const driver = line.car.drivers[0];
+              const driverId = `${driver.firstName}_${driver.lastName}_${line.car.cupCategory}`;
+              
+              if (!driverTrackMap[driverId]) {
+                driverTrackMap[driverId] = session.trackName;
+              }
+            });
+          }
+        });
+        
         // Transformer en format attendu (même structure que loadData)
         const driversArray = Object.entries(processedData.byDriver).map(([id, driver]) => ({
           id,
@@ -153,7 +183,7 @@ export function useFirebaseData() {
           validLapTimes: driver.validLapTimes,
           wetLapTimes: driver.wetLapTimes,
           allLapTimes: driver.allLapTimes,
-          track: sessions[0]?.trackName || 'Unknown'
+          track: driverTrackMap[id] || 'Unknown'
         }));
         
         setData({ drivers: driversArray });

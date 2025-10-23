@@ -7,6 +7,7 @@
 import { useNavigate } from 'react-router-dom';
 import { FiltersBar } from '../components/filters/FiltersBar';
 import { DriversTable } from '../components/table/DriversTable';
+import { GlobalStats } from '../components/layout/GlobalStats';
 import { useFilters } from '../hooks/useFilters';
 import { useSorting } from '../hooks/useSorting';
 
@@ -58,6 +59,9 @@ export function HomePage({ drivers }) {
         groupByClass={groupByClass}
         onGroupByClassChange={setGroupByClass}
       />
+
+      {/* Cartes de statistiques globales (COPIE de la prod) */}
+      <GlobalStats drivers={sortedDrivers} />
 
       {sortedDrivers.length === 0 ? (
         <div className="no-data">
