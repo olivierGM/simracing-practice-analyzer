@@ -4,6 +4,37 @@
  * Copie EXACTE des styles de prod (style.css lignes 910-1299+)
  */
 
+/* Badges de catégorie (COPIE EXACTE de style.css lignes 1666-1695) */
+.category-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.category-badge.pro {
+    background: linear-gradient(45deg, #ffd700, #ffed4e);
+    color: #8b6914;
+    border: 1px solid #ffd700;
+    box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+}
+
+.category-badge.silver {
+    background: linear-gradient(45deg, #c0c0c0, #e8e8e8);
+    color: #4a4a4a;
+    border: 1px solid #c0c0c0;
+    box-shadow: 0 2px 4px rgba(192, 192, 192, 0.3);
+}
+
+.category-badge.amateur {
+    background: linear-gradient(45deg, #ff8c00, #ffa500);
+    color: white;
+    border: 1px solid #ff8c00;
+    box-shadow: 0 2px 4px rgba(255, 140, 0, 0.3);
+}
+
 /* Container wrapper */
 .drivers-table-container {
   width: 100%;

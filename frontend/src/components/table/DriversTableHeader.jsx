@@ -9,11 +9,12 @@ import './DriversTableHeader.css';
 
 export function DriversTableHeader({ sortColumn, sortDirection, onSort }) {
   /**
-   * Retourne l'icône de tri pour une colonne
+   * Retourne l'icône de tri pour une colonne (COPIE EXACTE de la prod)
+   * Prod affiche toujours ↕ et change la direction au click
    */
-  const getSortIcon = (columnKey) => {
-    if (sortColumn !== columnKey) return '';
-    return sortDirection === 'asc' ? ' ↑' : ' ↓';
+  const getSortIcon = (column) => {
+    if (!column.sortable) return '';
+    return ' ↕';
   };
 
   return (
@@ -22,11 +23,11 @@ export function DriversTableHeader({ sortColumn, sortDirection, onSort }) {
         {TABLE_COLUMNS.map(column => (
           <th
             key={column.key}
-            className={`table-header ${column.sortable ? 'sortable' : ''}`}
+            className={column.sortable ? 'sortable' : ''}
             onClick={() => column.sortable && onSort(column.key)}
-            title={column.sortable ? 'Cliquer pour trier' : ''}
           >
-            {column.label}{getSortIcon(column.key)}
+            {column.label}
+            {column.sortable && <span className="sort-indicator">↕</span>}
           </th>
         ))}
       </tr>

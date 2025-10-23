@@ -12,15 +12,23 @@ export const PERIOD_FILTERS = [
   { value: 'day', label: 'Dernière journée' }
 ];
 
-// Colonnes du tableau principal
+// Colonnes du tableau principal (COPIE EXACTE de la prod - 14 colonnes)
+// Voir script-public.js lignes 942-956
 export const TABLE_COLUMNS = [
-  { key: 'position', label: 'Position', sortable: true },
-  { key: 'name', label: 'Pilote', sortable: true },
-  { key: 'bestTime', label: 'Meilleur temps', sortable: true },
-  { key: 'potential', label: 'Potentiel', sortable: true },
-  { key: 'consistency', label: 'Constance', sortable: true },
-  { key: 'validLaps', label: 'Tours valides', sortable: true },
-  { key: 'lastSession', label: 'Dernière session', sortable: true }
+  { key: 'position', label: 'Pos', sortable: false },
+  { key: 'name', label: 'Pilote', sortable: true, dataType: 'text' },
+  { key: 'category', label: 'Classe', sortable: true, dataType: 'text' },
+  { key: 'totalLaps', label: 'Tours', sortable: true, dataType: 'number' },
+  { key: 'validLaps', label: 'Tours Valides', sortable: true, dataType: 'number' },
+  { key: 'bestValidTime', label: 'Meilleur valide', sortable: true, dataType: 'time' },
+  { key: 'averageValidTime', label: 'Moyenne valide', sortable: true, dataType: 'time' },
+  { key: 'validConsistency', label: 'Const. valide', sortable: true, dataType: 'percentage' },
+  { key: 'bestWetTime', label: 'Meilleur wet', sortable: true, dataType: 'time' },
+  { key: 'averageWetTime', label: 'Moyenne wet', sortable: true, dataType: 'time' },
+  { key: 'wetConsistency', label: 'Const. wet', sortable: true, dataType: 'percentage' },
+  { key: 'bestOverallTime', label: 'Meilleur total', sortable: true, dataType: 'time' },
+  { key: 'averageOverallTime', label: 'Moyenne total', sortable: true, dataType: 'time' },
+  { key: 'totalConsistency', label: 'Const. total', sortable: true, dataType: 'percentage' }
 ];
 
 // Colonnes de la liste des tours (dans la modal)

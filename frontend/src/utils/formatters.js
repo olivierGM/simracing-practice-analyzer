@@ -5,19 +5,21 @@
  */
 
 /**
- * Formate un temps en millisecondes en MM:SS.mmm
+ * Formate un temps en millisecondes en MM:SS.mmm (COPIE EXACTE de la prod)
+ * Prod affiche: 01:34.087 (avec padding sur les minutes)
  * 
  * @param {number} ms - Temps en millisecondes
  * @returns {string} Temps formaté
  */
 export function formatTime(ms) {
-  if (!ms || ms === 0) return '-';
+  if (!ms || ms === 0) return '--:--.---';
   
   const totalSeconds = ms / 1000;
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   
-  return `${minutes}:${seconds.toFixed(3).padStart(6, '0')}`;
+  // Padding: minutes sur 2 chiffres, secondes sur 6 caractères (SS.mmm)
+  return `${String(minutes).padStart(2, '0')}:${seconds.toFixed(3).padStart(6, '0')}`;
 }
 
 /**
