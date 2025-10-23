@@ -9,12 +9,12 @@
  * Retourne les pilotes filtrés avec memoization
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { DURATIONS } from '../utils/constants';
 
 export function useFilters(drivers = []) {
   const [periodFilter, setPeriodFilter] = useState('all');
-  const [trackFilter, setTrackFilter] = useState('all');
+  const [trackFilter, setTrackFilter] = useState('');
   const [groupByClass, setGroupByClass] = useState(false);
 
   // Extraction des pistes uniques disponibles
@@ -29,6 +29,15 @@ export function useFilters(drivers = []) {
     
     return Array.from(tracks).sort();
   }, [drivers]);
+  
+  // Initialiser trackFilter avec la première piste quand les pistes sont chargées
+  // (COPIE de updateSessionSelect() dans script-public.js ligne 1556)
+  useEffect(() => {
+    if (availableTracks.length > 0 && !trackFilter) {
+      // Sélectionner automatiquement la première piste (ordre alphabétique)
+      setTrackFilter(availableTracks[0]);
+    }
+  }, [availableTracks, trackFilter]);
 
   // Application des filtres avec memoization
   const filteredDrivers = useMemo(() => {
@@ -52,8 +61,8 @@ export function useFilters(drivers = []) {
     }
     // 'all' = pas de filtre sur la période
 
-    // Filtre par piste
-    if (trackFilter !== 'all') {
+    // Filtre par piste (toujours filtrer, pas d'option "all")
+    if (trackFilter) {
       result = result.filter(d => d.track === trackFilter);
     }
 
