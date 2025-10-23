@@ -1,103 +1,78 @@
 /**
- * Service de calculs de performance
+ * Service de calculs pour les statistiques de pilotes
  * 
- * Contient tous les algorithmes pour calculer :
- * - Potentiel (meilleur temps théorique)
- * - Constance (écart-type des temps)
- * - Comparaison de segments
+ * Réplique EXACTEMENT les fonctions de script-public.js pour la parité complète
  */
 
 /**
- * Calcule le temps potentiel (somme des meilleurs segments)
+ * Calcule la consistance d'un pilote (COPIE EXACTE de script-public.js ligne 1263)
  * 
- * @param {Object} segments - Objet contenant les temps de segments
- * @returns {number} Temps potentiel en millisecondes
+ * @param {Array} lapTimes - Temps de tours
+ * @param {number} bestTime - Meilleur temps
+ * @param {number} averageTime - Temps moyen
+ * @returns {number} Consistance en % (0-100)
  */
-export function calculatePotential(segments) {
-  return Object.keys(segments).reduce((sum, key) => {
-    if (key.startsWith('S') && !key.includes('Best')) {
-      return sum + segments[key];
+export function calculateConsistency(lapTimes, bestTime, averageTime) {
+    if (!lapTimes || lapTimes.length === 0 || !bestTime || !averageTime || averageTime === 0) {
+        return 0;
     }
-    return sum;
-  }, 0);
-}
-
-/**
- * Calcule la constance (écart-type des temps de tours valides)
- * 
- * @param {Array} validLaps - Array des tours valides
- * @returns {number} Écart-type en millisecondes
- */
-export function calculateConsistency(validLaps) {
-  if (!validLaps || validLaps.length < 2) return 0;
-  
-  const times = validLaps.map(lap => lap.totalTime);
-  const mean = times.reduce((a, b) => a + b, 0) / times.length;
-  const variance = times.reduce((sum, time) => sum + Math.pow(time - mean, 2), 0) / times.length;
-  
-  return Math.sqrt(variance);
-}
-
-/**
- * Trouve les meilleurs segments globaux parmi tous les pilotes
- * 
- * @param {Array} drivers - Array de tous les pilotes
- * @returns {Object} Meilleurs segments globaux
- */
-export function findGlobalBestSegments(drivers) {
-  const globalBest = {};
-  
-  drivers.forEach(driver => {
-    if (!driver.segments) return;
     
-    Object.entries(driver.segments).forEach(([key, value]) => {
-      if (!globalBest[key] || value < globalBest[key]) {
-        globalBest[key] = value;
-      }
-    });
-  });
-  
-  return globalBest;
+    // Calculer l'écart type
+    const variance = lapTimes.reduce((sum, time) => {
+        const diff = time - averageTime;
+        return sum + (diff * diff);
+    }, 0) / lapTimes.length;
+    
+    const standardDeviation = Math.sqrt(variance);
+    
+    // Calculer le coefficient de variation (écart type / moyenne)
+    const coefficientOfVariation = standardDeviation / averageTime;
+    
+    // Consistance = (1 - coefficient_de_variation) * 100
+    // Mais on ajuste pour avoir des résultats plus réalistes
+    const consistency = Math.max(0, Math.min(100, (1 - coefficientOfVariation * 2) * 100));
+    
+    return Math.round(consistency * 100) / 100; // Arrondir à 2 décimales
 }
 
 /**
- * Détermine le focus du comparateur de segments
+ * Retourne le nom de la catégorie (COPIE EXACTE de script-public.js ligne 1286)
  * 
- * @param {Object} selectedDriver - Pilote sélectionné
- * @param {Array} allDrivers - Tous les pilotes
- * @returns {Object} Focus avec primary, secondary et label
+ * @param {number} category - Numéro de catégorie (0, 2, 3)
+ * @returns {string} Nom de la catégorie
  */
-export function getSegmentComparatorFocus(selectedDriver, allDrivers) {
-  const driverBest = selectedDriver.segments || {};
-  const globalBest = findGlobalBestSegments(allDrivers);
-  
-  return {
-    primary: driverBest,
-    secondary: globalBest,
-    label: 'Meilleur pilote vs Meilleur global'
-  };
+export function getCategoryName(category) {
+    switch (category) {
+        case 0: return 'PRO';
+        case 2: return 'AMATEUR';
+        case 3: return 'SILVER';
+        default: return `Catégorie ${category}`;
+    }
 }
 
 /**
- * Calcule le delta entre deux segments
+ * Retourne la classe CSS pour la catégorie
  * 
- * @param {number} time1 - Premier temps
- * @param {number} time2 - Deuxième temps
- * @returns {number} Delta (positif si time1 > time2)
+ * @param {number} category - Numéro de catégorie (0, 2, 3)
+ * @returns {string} Classe CSS pour le badge
  */
-export function calculateSegmentDelta(time1, time2) {
-  return time1 - time2;
+export function getCategoryClass(category) {
+    switch (category) {
+        case 0: return 'pro';
+        case 2: return 'amateur';
+        case 3: return 'silver';
+        default: return 'default';
+    }
 }
 
 /**
- * Formate un delta en string avec signe
+ * Calcule le gap entre le pilote et le leader
  * 
- * @param {number} delta - Delta en millisecondes
- * @returns {string} Delta formaté (ex: "+0.123" ou "-0.045")
+ * @param {number} driverTime - Temps du pilote (ms)
+ * @param {number} leaderTime - Temps du leader (ms)
+ * @returns {string|null} Gap formaté en secondes
  */
-export function formatDelta(delta) {
-  const sign = delta >= 0 ? '+' : '';
-  const seconds = (delta / 1000).toFixed(3);
-  return `${sign}${seconds}`;
+export function calculateGap(driverTime, leaderTime) {
+  if (!driverTime || !leaderTime) return null;
+  return ((driverTime - leaderTime) / 1000).toFixed(3);
 }
-

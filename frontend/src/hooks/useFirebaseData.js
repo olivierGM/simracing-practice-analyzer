@@ -10,18 +10,8 @@
 import { useState, useEffect } from 'react';
 import { fetchSessions, fetchMetadata } from '../services/firebase';
 import { processSessionData } from '../services/dataProcessor';
+import { calculateConsistency } from '../services/calculations';
 import { mockDriversData, mockMetadata } from '../data/mockData';
-
-/**
- * Calcule la consistance d'un pilote (écart-type des temps de tour valides)
- */
-function calculateConsistency(validLapTimes) {
-  if (!validLapTimes || validLapTimes.length < 2) return 0;
-  
-  const mean = validLapTimes.reduce((sum, t) => sum + t, 0) / validLapTimes.length;
-  const variance = validLapTimes.reduce((sum, t) => sum + Math.pow(t - mean, 2), 0) / validLapTimes.length;
-  return Math.sqrt(variance);
-}
 
 // Mode développement : utiliser mock data
 const USE_MOCK_DATA = false; // 🔥 Test Firebase Firestore (collection sessions)
@@ -60,6 +50,7 @@ export function useFirebaseData() {
           console.log(`👥 ${Object.keys(processedData.byDriver).length} pilotes trouvés`);
           
           // Transformer en format attendu par l'app (avec "drivers" array)
+          // IMPORTANT: Inclure TOUTES les colonnes de la prod (14 colonnes)
           const driversArray = Object.entries(processedData.byDriver).map(([id, driver]) => ({
             id,
             name: `${driver.firstName} ${driver.lastName}`,
@@ -67,15 +58,30 @@ export function useFirebaseData() {
             lastName: driver.lastName,
             category: driver.cupCategory,
             carModel: driver.carModel,
-            bestTime: driver.bestValidTime,
-            avgTime: driver.averageValidTime,
-            consistency: calculateConsistency(driver.validLapTimes),
-            totalLaps: driver.totalLaps,
+            
+            // Statistiques valides
+            bestValidTime: driver.bestValidTime,
+            averageValidTime: driver.averageValidTime,
+            validConsistency: calculateConsistency(driver.validLapTimes || [], driver.bestValidTime, driver.averageValidTime),
             validLaps: driver.validLaps,
-            wetLaps: driver.wetLaps,
+            
+            // Statistiques wet
             bestWetTime: driver.bestWetTime,
-            avgWetTime: driver.averageWetTime,
+            averageWetTime: driver.averageWetTime,
+            wetConsistency: calculateConsistency(driver.wetLapTimes || [], driver.bestWetTime, driver.averageWetTime),
+            wetLaps: driver.wetLaps,
+            
+            // Statistiques totales
+            bestOverallTime: driver.bestOverallTime,
+            averageOverallTime: driver.averageOverallTime,
+            totalConsistency: calculateConsistency(driver.allLapTimes || [], driver.bestOverallTime, driver.averageOverallTime),
+            totalLaps: driver.totalLaps,
+            
+            // Données pour la modal pilote
             lapTimes: driver.lapTimes,
+            validLapTimes: driver.validLapTimes,
+            wetLapTimes: driver.wetLapTimes,
+            allLapTimes: driver.allLapTimes,
             track: sessions[0]?.trackName || 'Unknown' // Prendre le trackName de la première session
           }));
           
@@ -115,7 +121,7 @@ export function useFirebaseData() {
         // Traiter les sessions
         const processedData = processSessionData(sessions);
         
-        // Transformer en format attendu
+        // Transformer en format attendu (même structure que loadData)
         const driversArray = Object.entries(processedData.byDriver).map(([id, driver]) => ({
           id,
           name: `${driver.firstName} ${driver.lastName}`,
@@ -123,15 +129,30 @@ export function useFirebaseData() {
           lastName: driver.lastName,
           category: driver.cupCategory,
           carModel: driver.carModel,
-          bestTime: driver.bestValidTime,
-          avgTime: driver.averageValidTime,
-          consistency: calculateConsistency(driver.validLapTimes),
-          totalLaps: driver.totalLaps,
+          
+          // Statistiques valides
+          bestValidTime: driver.bestValidTime,
+          averageValidTime: driver.averageValidTime,
+          validConsistency: calculateConsistency(driver.validLapTimes || [], driver.bestValidTime, driver.averageValidTime),
           validLaps: driver.validLaps,
-          wetLaps: driver.wetLaps,
+          
+          // Statistiques wet
           bestWetTime: driver.bestWetTime,
-          avgWetTime: driver.averageWetTime,
+          averageWetTime: driver.averageWetTime,
+          wetConsistency: calculateConsistency(driver.wetLapTimes || [], driver.bestWetTime, driver.averageWetTime),
+          wetLaps: driver.wetLaps,
+          
+          // Statistiques totales
+          bestOverallTime: driver.bestOverallTime,
+          averageOverallTime: driver.averageOverallTime,
+          totalConsistency: calculateConsistency(driver.allLapTimes || [], driver.bestOverallTime, driver.averageOverallTime),
+          totalLaps: driver.totalLaps,
+          
+          // Données pour la modal pilote
           lapTimes: driver.lapTimes,
+          validLapTimes: driver.validLapTimes,
+          wetLapTimes: driver.wetLapTimes,
+          allLapTimes: driver.allLapTimes,
           track: sessions[0]?.trackName || 'Unknown'
         }));
         
