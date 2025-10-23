@@ -76,3 +76,32 @@ export function calculateGap(driverTime, leaderTime) {
   if (!driverTime || !leaderTime) return null;
   return ((driverTime - leaderTime) / 1000).toFixed(3);
 }
+
+/**
+ * Trouve les meilleurs temps de segments globaux parmi tous les pilotes
+ * 
+ * @param {Array} allDrivers - Tous les pilotes
+ * @returns {Array} Meilleurs temps par segment
+ */
+export function findGlobalBestSegments(allDrivers) {
+  if (!allDrivers || allDrivers.length === 0) return [];
+  
+  const segmentBests = [];
+  
+  // Parcourir tous les pilotes et leurs tours
+  allDrivers.forEach(driver => {
+    if (driver.lapTimes) {
+      driver.lapTimes.forEach(lap => {
+        if (lap.splits && lap.splits.length > 0) {
+          lap.splits.forEach((split, index) => {
+            if (!segmentBests[index] || split < segmentBests[index]) {
+              segmentBests[index] = split;
+            }
+          });
+        }
+      });
+    }
+  });
+  
+  return segmentBests;
+}
