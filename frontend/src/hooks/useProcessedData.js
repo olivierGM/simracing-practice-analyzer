@@ -16,6 +16,19 @@ export function useProcessedData(sessions = [], selectedTrack = '') {
     return sessions.filter(session => session.trackName === selectedTrack);
   }, [sessions, selectedTrack]);
   
+  // Trouver la date de la session la plus récente
+  const mostRecentSessionDate = useMemo(() => {
+    if (filteredSessions.length === 0) return null;
+    
+    const dates = filteredSessions
+      .map(s => s.Date ? new Date(s.Date) : null)
+      .filter(d => d !== null);
+    
+    if (dates.length === 0) return null;
+    
+    return new Date(Math.max(...dates.map(d => d.getTime())));
+  }, [filteredSessions]);
+  
   // Traiter les sessions filtrées
   const drivers = useMemo(() => {
     if (filteredSessions.length === 0) return [];
@@ -57,7 +70,11 @@ export function useProcessedData(sessions = [], selectedTrack = '') {
       validLapTimes: driver.validLapTimes,
       wetLapTimes: driver.wetLapTimes,
       allLapTimes: driver.allLapTimes,
-      track: selectedTrack
+      track: selectedTrack,
+      
+      // Calculer la date de la dernière session (pour filtre période)
+      // Utiliser la date de session la plus récente de la piste
+      lastSession: mostRecentSessionDate
     }))
       // Trier par meilleur temps valide (COPIE EXACTE de la prod ligne 959-974)
       .sort((a, b) => {

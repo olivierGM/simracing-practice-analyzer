@@ -4,6 +4,7 @@
  * Page principale avec liste des pilotes
  */
 
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiltersBar } from '../components/filters/FiltersBar';
 import { DriversTable } from '../components/table/DriversTable';
@@ -11,6 +12,7 @@ import { GlobalStats } from '../components/layout/GlobalStats';
 import { useFilters } from '../hooks/useFilters';
 import { useProcessedData } from '../hooks/useProcessedData';
 import { useSorting } from '../hooks/useSorting';
+import { DURATIONS } from '../utils/constants';
 
 export function HomePage({ drivers, sessions = [] }) {
   const navigate = useNavigate();
@@ -27,8 +29,38 @@ export function HomePage({ drivers, sessions = [] }) {
     filteredDrivers
   } = useFilters(drivers, sessions);
   
-  // Retraiter les sessions pour la piste sélectionnée (COMME LA PROD)
-  const processedDrivers = useProcessedData(sessions, trackFilter);
+  // COPIE DE LA PROD ligne 1164-1182: Filtrer les sessions par période AVANT retraitement
+  const filteredSessions = useMemo(() => {
+    let result = [...sessions];
+    
+    // Filtrer par piste
+    if (trackFilter) {
+      result = result.filter(session => session.trackName === trackFilter);
+    }
+    
+    // Filtrer par date (COPIE EXACTE de la prod)
+    if (periodFilter !== 'all') {
+      const now = new Date();
+      const cutoffDate = new Date();
+      
+      if (periodFilter === 'week') {
+        cutoffDate.setTime(now.getTime() - DURATIONS.ONE_WEEK);
+      } else if (periodFilter === 'day') {
+        cutoffDate.setTime(now.getTime() - DURATIONS.ONE_DAY);
+      }
+      
+      result = result.filter(session => {
+        if (!session.Date) return false;
+        const sessionDate = new Date(session.Date);
+        return sessionDate >= cutoffDate;
+      });
+    }
+    
+    return result;
+  }, [sessions, trackFilter, periodFilter]);
+  
+  // Retraiter les sessions FILTRÉES (COMME LA PROD ligne 1185-1186)
+  const processedDrivers = useProcessedData(filteredSessions, trackFilter);
 
   const {
     sortColumn,
