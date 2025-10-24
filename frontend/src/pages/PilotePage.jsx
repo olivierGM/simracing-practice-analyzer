@@ -10,16 +10,27 @@ import { PilotStats } from '../components/pilot/PilotStats';
 import { SegmentComparator } from '../components/pilot/SegmentComparator';
 import { ProgressionChart } from '../components/pilot/ProgressionChart';
 import { LapsTable } from '../components/pilot/LapsTable';
+import { useProcessedData } from '../hooks/useProcessedData';
 import './PilotePage.css';
 
-export function PilotePage({ drivers }) {
+export function PilotePage({ drivers, sessions = [] }) {
   const { circuitId, pilotId } = useParams();
   const navigate = useNavigate();
 
-  // Trouver le pilote
-  const pilot = useMemo(() => {
-    return drivers.find(d => d.id === pilotId);
+  // Décoder le nom du circuit depuis l'URL pour déterminer la piste
+  const trackName = useMemo(() => {
+    // Essayer de trouver le pilote dans les drivers globaux pour avoir son track
+    const globalPilot = drivers.find(d => d.id === pilotId);
+    return globalPilot?.track || '';
   }, [drivers, pilotId]);
+
+  // Reprocesser les données pour la piste spécifique du pilote
+  const driversForTrack = useProcessedData(sessions, trackName);
+
+  // Trouver le pilote dans les données retraitées (données correctes pour cette piste)
+  const pilot = useMemo(() => {
+    return driversForTrack.find(d => d.id === pilotId);
+  }, [driversForTrack, pilotId]);
 
   // Décoder le nom du circuit depuis l'URL
   const circuitName = useMemo(() => {
@@ -102,7 +113,7 @@ export function PilotePage({ drivers }) {
         <PilotStats driver={pilot} />
 
         {/* Comparateur de segments */}
-        <SegmentComparator driver={pilot} allDrivers={drivers} />
+        <SegmentComparator driver={pilot} allDrivers={driversForTrack} />
 
         {/* Graphique de progression */}
         <ProgressionChart driver={pilot} />

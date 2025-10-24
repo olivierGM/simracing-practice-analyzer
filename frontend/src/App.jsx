@@ -51,10 +51,10 @@ function App() {
         <Header metadata={metadata} onLoginClick={handleLoginClick} />
         
         <main className="main-content">
-          <Routes>
-            <Route path="/" element={<HomePage drivers={drivers} sessions={sessions} />} />
-            <Route path="/circuit/:circuitId/pilote/:pilotId" element={<PilotePage drivers={drivers} />} />
-          </Routes>
+                <Routes>
+                  <Route path="/" element={<HomePage drivers={drivers} sessions={sessions} />} />
+                  <Route path="/circuit/:circuitId/pilote/:pilotId" element={<PilotePage drivers={drivers} sessions={sessions} />} />
+                </Routes>
         </main>
       </div>
     </BrowserRouter>
