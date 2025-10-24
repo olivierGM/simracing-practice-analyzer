@@ -9,6 +9,7 @@ import { FiltersBar } from '../components/filters/FiltersBar';
 import { DriversTable } from '../components/table/DriversTable';
 import { GlobalStats } from '../components/layout/GlobalStats';
 import { useFilters } from '../hooks/useFilters';
+import { useProcessedData } from '../hooks/useProcessedData';
 import { useSorting } from '../hooks/useSorting';
 
 export function HomePage({ drivers, sessions = [] }) {
@@ -25,13 +26,16 @@ export function HomePage({ drivers, sessions = [] }) {
     availableTracks,
     filteredDrivers
   } = useFilters(drivers, sessions);
+  
+  // Retraiter les sessions pour la piste sélectionnée (COMME LA PROD)
+  const processedDrivers = useProcessedData(sessions, trackFilter);
 
   const {
     sortColumn,
     sortDirection,
     sortedItems: sortedDrivers,
     handleSort
-  } = useSorting(filteredDrivers);
+  } = useSorting(processedDrivers);
 
   // Navigation vers la fiche pilote
   const handleDriverClick = (driver) => {

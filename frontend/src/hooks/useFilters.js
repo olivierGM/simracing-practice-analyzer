@@ -63,6 +63,10 @@ export function useFilters(drivers = [], sessions = []) {
     }
   }, [availableTracks, trackFilter, mostRecentTrack]);
 
+  // PROBLÈME: Les pilotes sont déjà regroupés toutes pistes confondues
+  // Il faut retraiter les sessions pour la piste sélectionnée uniquement
+  // TODO: Implémenter le retraitement par piste
+  
   // Application des filtres avec memoization
   const filteredDrivers = useMemo(() => {
     if (!drivers || drivers.length === 0) return [];
