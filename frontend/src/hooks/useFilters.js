@@ -12,7 +12,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { DURATIONS } from '../utils/constants';
 
-export function useFilters(drivers = []) {
+export function useFilters(drivers = [], sessions = []) {
   const [periodFilter, setPeriodFilter] = useState('all');
   const [trackFilter, setTrackFilter] = useState('');
   const [groupByClass, setGroupByClass] = useState(false);
@@ -30,14 +30,38 @@ export function useFilters(drivers = []) {
     return Array.from(tracks).sort();
   }, [drivers]);
   
-  // Initialiser trackFilter avec la première piste quand les pistes sont chargées
-  // (COPIE de updateSessionSelect() dans script-public.js ligne 1556)
+  // Trouver la piste avec la session la plus récente (COPIE de getMostRecentTrack() ligne 1506)
+  const mostRecentTrack = useMemo(() => {
+    if (!sessions || sessions.length === 0) return null;
+    
+    let mostRecentTrack = null;
+    let mostRecentDate = new Date(0); // Date très ancienne
+    
+    sessions.forEach(session => {
+      if (session.Date && session.trackName) {
+        const sessionDate = new Date(session.Date);
+        if (sessionDate > mostRecentDate) {
+          mostRecentDate = sessionDate;
+          mostRecentTrack = session.trackName;
+        }
+      }
+    });
+    
+    return mostRecentTrack;
+  }, [sessions]);
+  
+  // Initialiser trackFilter avec la piste la plus récente (COPIE de updateSessionSelect() ligne 1570)
   useEffect(() => {
     if (availableTracks.length > 0 && !trackFilter) {
-      // Sélectionner automatiquement la première piste (ordre alphabétique)
-      setTrackFilter(availableTracks[0]);
+      // Sélectionner automatiquement la piste avec la session la plus récente
+      const defaultTrack = mostRecentTrack && availableTracks.includes(mostRecentTrack)
+        ? mostRecentTrack
+        : availableTracks[0]; // Fallback sur la première si pas trouvée
+      
+      console.log(`🏁 Piste sélectionnée automatiquement: ${defaultTrack}`);
+      setTrackFilter(defaultTrack);
     }
-  }, [availableTracks, trackFilter]);
+  }, [availableTracks, trackFilter, mostRecentTrack]);
 
   // Application des filtres avec memoization
   const filteredDrivers = useMemo(() => {

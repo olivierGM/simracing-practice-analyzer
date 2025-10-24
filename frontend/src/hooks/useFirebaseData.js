@@ -19,6 +19,7 @@ const USE_MOCK_DATA = false; // 🔥 Test Firebase Firestore (collection session
 export function useFirebaseData() {
   const [data, setData] = useState(null);
   const [metadata, setMetadata] = useState(null);
+  const [sessions, setSessions] = useState([]); // Pour trouver la piste la plus récente
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -102,6 +103,7 @@ export function useFirebaseData() {
           
           setData({ drivers: driversArray });
           setMetadata(metaData);
+          setSessions(sessions); // Stocker les sessions pour trouver la plus récente
         }
       } catch (err) {
         console.error('Error loading Firebase data:', err);
@@ -188,6 +190,7 @@ export function useFirebaseData() {
         
         setData({ drivers: driversArray });
         setMetadata(metaData);
+        setSessions(sessions);
       }
     } catch (err) {
       console.error('Error reloading data:', err);
@@ -200,6 +203,7 @@ export function useFirebaseData() {
   return {
     data,
     metadata,
+    sessions,
     loading,
     error,
     reload

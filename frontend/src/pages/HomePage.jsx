@@ -11,7 +11,7 @@ import { GlobalStats } from '../components/layout/GlobalStats';
 import { useFilters } from '../hooks/useFilters';
 import { useSorting } from '../hooks/useSorting';
 
-export function HomePage({ drivers }) {
+export function HomePage({ drivers, sessions = [] }) {
   const navigate = useNavigate();
 
   // Hooks pour filtres et tri
@@ -24,7 +24,7 @@ export function HomePage({ drivers }) {
     setGroupByClass,
     availableTracks,
     filteredDrivers
-  } = useFilters(drivers);
+  } = useFilters(drivers, sessions);
 
   const {
     sortColumn,

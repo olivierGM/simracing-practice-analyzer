@@ -14,7 +14,7 @@ import { useFirebaseData } from './hooks/useFirebaseData';
 import './App.css';
 
 function App() {
-  const { data, metadata, loading, error } = useFirebaseData();
+  const { data, metadata, sessions, loading, error } = useFirebaseData();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Extraire les pilotes des données
@@ -52,7 +52,7 @@ function App() {
         
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<HomePage drivers={drivers} />} />
+            <Route path="/" element={<HomePage drivers={drivers} sessions={sessions} />} />
             <Route path="/circuit/:circuitId/pilote/:pilotId" element={<PilotePage drivers={drivers} />} />
           </Routes>
         </main>
