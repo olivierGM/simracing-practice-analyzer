@@ -17,18 +17,18 @@ export function useFilters(drivers = [], sessions = []) {
   const [trackFilter, setTrackFilter] = useState('');
   const [groupByClass, setGroupByClass] = useState(false);
 
-  // Extraction des pistes uniques disponibles
+  // Extraction des pistes uniques disponibles (DEPUIS LES SESSIONS, pas les drivers!)
   const availableTracks = useMemo(() => {
     const tracks = new Set();
     
-    drivers.forEach(driver => {
-      if (driver.track) {
-        tracks.add(driver.track);
+    sessions.forEach(session => {
+      if (session.trackName) {
+        tracks.add(session.trackName);
       }
     });
     
     return Array.from(tracks).sort();
-  }, [drivers]);
+  }, [sessions]);
   
   // Trouver la piste avec la session la plus récente (COPIE de getMostRecentTrack() ligne 1506)
   const mostRecentTrack = useMemo(() => {
