@@ -24,8 +24,9 @@ export function useProcessedData(sessions = [], selectedTrack = '') {
     
     const processedData = processSessionData(filteredSessions);
     
-    // Transformer en array de pilotes (même logique que useFirebaseData)
-    const driversArray = Object.entries(processedData.byDriver).map(([id, driver]) => ({
+    // Transformer en array de pilotes ET TRIER par bestValidTime (COPIE de la prod ligne 959)
+    const driversArray = Object.entries(processedData.byDriver)
+      .map(([id, driver]) => ({
       id,
       name: `${driver.firstName} ${driver.lastName}`,
       firstName: driver.firstName,
@@ -57,7 +58,24 @@ export function useProcessedData(sessions = [], selectedTrack = '') {
       wetLapTimes: driver.wetLapTimes,
       allLapTimes: driver.allLapTimes,
       track: selectedTrack
-    }));
+    }))
+      // Trier par meilleur temps valide (COPIE EXACTE de la prod ligne 959-974)
+      .sort((a, b) => {
+        const timeA = a.bestValidTime || 0;
+        const timeB = b.bestValidTime || 0;
+        
+        // Si les deux temps sont à 0, garder l'ordre original
+        if (timeA === 0 && timeB === 0) return 0;
+        
+        // Si seul A est à 0, A va en dernier
+        if (timeA === 0) return 1;
+        
+        // Si seul B est à 0, B va en dernier
+        if (timeB === 0) return -1;
+        
+        // Sinon, trier normalement par temps
+        return timeA - timeB;
+      });
     
     console.log(`👥 ${driversArray.length} pilotes trouvés pour ${selectedTrack}`);
     

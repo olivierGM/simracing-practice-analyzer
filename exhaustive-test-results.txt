@@ -1,0 +1,208 @@
+
+Running 5 tests using 1 worker
+
+[1A[2K[1/5] [chromium] › tests/e2e/exhaustive-parity-test.spec.js:5:3 › Test EXHAUSTIF de parité Prod vs React › 1. Changement de piste - Chaque piste
+[1A[2K[chromium] › tests/e2e/exhaustive-parity-test.spec.js:5:3 › Test EXHAUSTIF de parité Prod vs React › 1. Changement de piste - Chaque piste
+
+🏁 TEST CHANGEMENT DE PISTE:
+
+
+[1A[2K
+--- misano ---
+
+[1A[2K(node:86362) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1A[2K  Pilotes: Prod 30 vs React 30 ✅
+
+[1A[2K  1er: "Mederick Dumas" vs "Mederick Dumas" ✅
+
+[1A[2K  Temps: 01:34.087 vs 01:34.087 ✅
+
+[1A[2K
+--- red_bull_ring ---
+
+[1A[2K  Pilotes: Prod 42 vs React 42 ✅
+
+[1A[2K  1er: "Kevin Godin" vs "Martin Lesage" ❌
+
+[1A[2K  Temps: 01:27.987 vs 01:29.160 ❌
+
+[1A[2K  ⚠️  ÉCHEC sur red_bull_ring
+
+[1A[2K
+--- donington ---
+
+[1A[2K  Pilotes: Prod 47 vs React 47 ✅
+
+[1A[2K  1er: "Mederick Dumas" vs "Marc-Andre Lebel" ❌
+
+[1A[2K  Temps: 01:26.507 vs 01:29.162 ❌
+
+[1A[2K  ⚠️  ÉCHEC sur donington
+
+[1A[2K
+--- nurburgring ---
+
+[1A[2K  1) [chromium] › tests/e2e/exhaustive-parity-test.spec.js:5:3 › Test EXHAUSTIF de parité Prod vs React › 1. Changement de piste - Chaque piste 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: page.selectOption: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('#sessionSelect')[22m
+    [2m    - locator resolved to <select id="sessionSelect" class="session-select">…</select>[22m
+    [2m  - attempting select option action[22m
+    [2m    2 × waiting for element to be visible and enabled[22m
+    [2m      - did not find some options[22m
+    [2m    - retrying select option action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible and enabled[22m
+    [2m      - did not find some options[22m
+    [2m    - retrying select option action[22m
+    [2m      - waiting 100ms[22m
+    [2m    23 × waiting for element to be visible and enabled[22m
+    [2m       - did not find some options[22m
+    [2m     - retrying select option action[22m
+    [2m       - waiting 500ms[22m
+
+
+      27 |       
+      28 |       // Sélectionner en REACT
+    > 29 |       await page.selectOption('#sessionSelect', track);
+         |                  ^
+      30 |       await page.waitForTimeout(1500);
+      31 |       const reactCount = await page.locator('tbody tr').count();
+      32 |       const reactFirst = await page.locator('tbody tr:first-child td:nth-child(2)').textContent();
+        at /Users/ogmegelas/Documents/practice lap/tests/e2e/exhaustive-parity-test.spec.js:29:18
+
+    Error Context: test-results/exhaustive-parity-test-Tes-0e27a-ent-de-piste---Chaque-piste-chromium/error-context.md
+
+
+[1A[2K[2/5] [chromium] › tests/e2e/exhaustive-parity-test.spec.js:51:3 › Test EXHAUSTIF de parité Prod vs React › 2. Grouper par classe - Vérifier sections
+[1A[2K[chromium] › tests/e2e/exhaustive-parity-test.spec.js:51:3 › Test EXHAUSTIF de parité Prod vs React › 2. Grouper par classe - Vérifier sections
+
+☑️  TEST GROUPEMENT PAR CLASSE:
+
+
+[1A[2K(node:86668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1A[2K  2) [chromium] › tests/e2e/exhaustive-parity-test.spec.js:51:3 › Test EXHAUSTIF de parité Prod vs React › 2. Grouper par classe - Vérifier sections 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: page.check: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('#groupByClass')[22m
+
+
+      60 |     
+      61 |     // Activer en PROD
+    > 62 |     await prodPage.check('#groupByClass');
+         |                    ^
+      63 |     await prodPage.waitForTimeout(1500);
+      64 |     
+      65 |     const prodTables = await prodPage.locator('.driver-table').count();
+        at /Users/ogmegelas/Documents/practice lap/tests/e2e/exhaustive-parity-test.spec.js:62:20
+
+    Error Context: test-results/exhaustive-parity-test-Tes-ed89a--classe---Vérifier-sections-chromium/error-context.md
+
+
+[1A[2K[3/5] [chromium] › tests/e2e/exhaustive-parity-test.spec.js:83:3 › Test EXHAUSTIF de parité Prod vs React › 3. Tri des colonnes - Pilote, Tours, Meilleur temps
+[1A[2K[chromium] › tests/e2e/exhaustive-parity-test.spec.js:83:3 › Test EXHAUSTIF de parité Prod vs React › 3. Tri des colonnes - Pilote, Tours, Meilleur temps
+
+🔄 TEST TRI DES COLONNES:
+
+
+[1A[2K
+--- TRI PAR: Pilote ---
+
+[1A[2K(node:86946) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1A[2K  Top 3 noms: ✅
+
+[1A[2K    Prod: Alexandre Bisson, Cedric Couturier, Christopher St-Pierre
+
+[1A[2K    React: Alexandre Bisson, Cedric Couturier, Christopher St-Pierre
+
+[1A[2K  Top 3 valeurs: ✅
+
+[1A[2K    Prod: Alexandre Bisson, Cedric Couturier, Christopher St-Pierre
+
+[1A[2K    React: Alexandre Bisson, Cedric Couturier, Christopher St-Pierre
+
+[1A[2K
+--- TRI PAR: Tours ---
+
+[1A[2K  Top 3 noms: ✅
+
+[1A[2K    Prod: Daniel Dubé, Julien Levasseur, Jean-Francois Tremblay
+
+[1A[2K    React: Daniel Dubé, Julien Levasseur, Jean-Francois Tremblay
+
+[1A[2K  Top 3 valeurs: ✅
+
+[1A[2K    Prod: 1, 2, 4
+
+[1A[2K    React: 1, 2, 4
+
+[1A[2K
+--- TRI PAR: Meilleur valide ---
+
+[1A[2K  Top 3 noms: ✅
+
+[1A[2K    Prod: Mederick Dumas, Mario Dumas, Claude Labrecque
+
+[1A[2K    React: Mederick Dumas, Mario Dumas, Claude Labrecque
+
+[1A[2K  Top 3 valeurs: ✅
+
+[1A[2K    Prod: 01:34.087, 01:34.190, 01:34.305
+
+[1A[2K    React: 01:34.087, 01:34.190, 01:34.305
+
+[1A[2K[4/5] [chromium] › tests/e2e/exhaustive-parity-test.spec.js:131:3 › Test EXHAUSTIF de parité Prod vs React › 4. Combinaisons filtres - Période + Piste
+[1A[2K[chromium] › tests/e2e/exhaustive-parity-test.spec.js:131:3 › Test EXHAUSTIF de parité Prod vs React › 4. Combinaisons filtres - Période + Piste
+
+🔀 TEST COMBINAISONS FILTRES:
+
+
+[1A[2K
+--- all + misano ---
+
+[1A[2K  Pilotes: Prod 30 vs React 30 ✅
+
+[1A[2K
+--- week + misano ---
+
+[1A[2K  Pilotes: Prod 30 vs React 30 ✅
+
+[1A[2K
+--- day + misano ---
+
+[1A[2K  Pilotes: Prod 0 vs React 30 ❌
+
+[1A[2K
+--- all + donington ---
+
+[1A[2K  Pilotes: Prod 47 vs React 47 ✅
+
+[1A[2K[5/5] [chromium] › tests/e2e/exhaustive-parity-test.spec.js:172:3 › Test EXHAUSTIF de parité Prod vs React › 5. Statistiques globales - Vérifier valeurs
+[1A[2K[chromium] › tests/e2e/exhaustive-parity-test.spec.js:172:3 › Test EXHAUSTIF de parité Prod vs React › 5. Statistiques globales - Vérifier valeurs
+
+📊 TEST STATISTIQUES GLOBALES:
+
+
+[1A[2KNombre de cartes: Prod 6 vs React 6 ✅
+
+[1A[2K
+Total Tours: "1266" vs "1266" ✅
+
+[1A[2K  2 failed
+    [chromium] › tests/e2e/exhaustive-parity-test.spec.js:5:3 › Test EXHAUSTIF de parité Prod vs React › 1. Changement de piste - Chaque piste 
+    [chromium] › tests/e2e/exhaustive-parity-test.spec.js:51:3 › Test EXHAUSTIF de parité Prod vs React › 2. Grouper par classe - Vérifier sections 
+  3 passed (1.7m)
+
+  Serving HTML report at http://localhost:62014. Press Ctrl+C to quit.
