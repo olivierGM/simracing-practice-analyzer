@@ -8,8 +8,11 @@ import './ACCServersBanner.css';
  */
 export function ACCServersBanner({ trackName }) {
   const { servers, loading, error } = useACCServers(trackName);
+  
+  console.log('🎮 ACCServersBanner - trackName:', trackName);
 
   if (!trackName) {
+    console.log('🎮 ACCServersBanner - No trackName, returning null');
     return null;
   }
 
@@ -19,6 +22,7 @@ export function ACCServersBanner({ trackName }) {
   }
 
   if (loading) {
+    console.log('🎮 ACCServersBanner - Loading...');
     return (
       <div className="acc-banner">
         <div className="acc-banner-loading">Chargement serveurs ACC...</div>
