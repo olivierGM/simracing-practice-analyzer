@@ -1,18 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 100 100">
   <!-- Chronomètre - Version compacte 32x32 -->
-  <circle cx="50" cy="50" r="35" fill="#1a1a1a" stroke="#10b981" stroke-width="3"/>
-  <circle cx="50" cy="50" r="30" fill="none" stroke="#10b981" stroke-width="2"/>
+  <circle cx="50" cy="50" r="40" fill="#1a1a1a" stroke="#10b981" stroke-width="5"/>
+  <circle cx="50" cy="50" r="32" fill="none" stroke="#10b981" stroke-width="3"/>
   
   <!-- Heures -->
-  <line x1="50" y1="20" x2="50" y2="25" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-  <line x1="80" y1="50" x2="75" y2="50" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-  <line x1="50" y1="80" x2="50" y2="75" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-  <line x1="20" y1="50" x2="25" y2="50" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+  <line x1="50" y1="15" x2="50" y2="28" stroke="#fbbf24" stroke-width="5" stroke-linecap="round"/>
+  <line x1="85" y1="50" x2="72" y2="50" stroke="#fbbf24" stroke-width="5" stroke-linecap="round"/>
+  <line x1="50" y1="85" x2="50" y2="72" stroke="#fbbf24" stroke-width="5" stroke-linecap="round"/>
+  <line x1="15" y1="50" x2="28" y2="50" stroke="#fbbf24" stroke-width="5" stroke-linecap="round"/>
   
   <!-- Aiguilles -->
-  <line x1="50" y1="50" x2="50" y2="30" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="50" y1="50" x2="65" y2="50" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+  <line x1="50" y1="50" x2="50" y2="25" stroke="#10b981" stroke-width="4" stroke-linecap="round"/>
+  <line x1="50" y1="50" x2="70" y2="50" stroke="#ef4444" stroke-width="3.5" stroke-linecap="round"/>
   
   <!-- Centre -->
-  <circle cx="50" cy="50" r="4" fill="#10b981"/>
+  <circle cx="50" cy="50" r="6" fill="#ef4444"/>
 </svg>
