@@ -267,11 +267,15 @@ export function AdminPage() {
                       <div className="log-status">{statusIcon}</div>
                       <div className="log-details">
                         <strong>{log.trigger || 'Scheduled'}</strong> - 
-                        {log.scraping ? 
-                          `${log.scraping.totalSessionsFound || 0} trouvées, ${log.scraping.newSessionsFound || 0} nouvelles` :
-                          'Pas de données'}
+                        {log.scraping ? (
+                          `${log.scraping.totalSessionsFound || 0} trouvées, ${log.scraping.newSessionsFound || 0} nouvelles`
+                        ) : (
+                          'Pas de données'
+                        )}
                         {log.errors && log.errors.length > 0 && (
-                          <br/><small>Erreur: {log.errors[0]}</small>
+                          <>
+                            <br/><small>Erreur: {log.errors[0]}</small>
+                          </>
                         )}
                       </div>
                       <div className="log-time">

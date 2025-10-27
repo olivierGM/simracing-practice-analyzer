@@ -2,17 +2,117 @@
 
 ```yaml
 - generic [ref=e3]:
-  - generic [ref=e4]: "[plugin:vite:react-babel] /Users/ogmegelas/Documents/practice lap/frontend/src/pages/AdminPage.jsx: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (274:31) 277 | <div className=\"log-time\">"
-  - generic [ref=e5]: /Users/ogmegelas/Documents/practice lap/frontend/src/pages/AdminPage.jsx:274:31
-  - generic [ref=e6]: "272 | 'Pas de données'} 273 | {log.errors && log.errors.length > 0 && ( 274 | <br/><small>Erreur: {log.errors[0]}</small> | ^ 275 | )} 276 | </div>"
-  - generic [ref=e7]: at constructor (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:367:19) at JSXParserMixin.raise (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:6630:19) at JSXParserMixin.jsxParseElementAt (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:4775:18) at JSXParserMixin.jsxParseElement (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:4782:17) at JSXParserMixin.parseExprAtom (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:4792:19) at JSXParserMixin.parseExprSubscripts (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:11085:23) at JSXParserMixin.parseUpdate (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:11070:21) at JSXParserMixin.parseMaybeUnary (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:11050:23) at JSXParserMixin.parseMaybeUnaryOrPrivate (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10903:61) at JSXParserMixin.parseExprOps (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10908:23) at JSXParserMixin.parseMaybeConditional (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10885:23) at JSXParserMixin.parseMaybeAssign (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10835:21) at /Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10804:39 at JSXParserMixin.allowInAnd (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:12436:12) at JSXParserMixin.parseMaybeAssignAllowIn (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10804:17) at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:12503:17) at JSXParserMixin.parseParenAndDistinguishExpression (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:11683:28) at JSXParserMixin.parseExprAtom (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:11335:23) at JSXParserMixin.parseExprAtom (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:4797:20) at JSXParserMixin.parseExprSubscripts (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:11085:23) at JSXParserMixin.parseUpdate (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:11070:21) at JSXParserMixin.parseMaybeUnary (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:11050:23) at JSXParserMixin.parseMaybeUnaryOrPrivate (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10903:61) at JSXParserMixin.parseExprOpBaseRightExpr (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10990:34) at JSXParserMixin.parseExprOpRightExpr (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10985:21) at JSXParserMixin.parseExprOp (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10951:27) at JSXParserMixin.parseExprOp (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10957:21) at JSXParserMixin.parseExprOps (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10912:17) at JSXParserMixin.parseMaybeConditional (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10885:23) at JSXParserMixin.parseMaybeAssign (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10835:21) at JSXParserMixin.parseExpressionBase (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10788:23) at /Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10784:39 at JSXParserMixin.allowInAnd (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:12436:12) at JSXParserMixin.parseExpression (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10784:17) at JSXParserMixin.jsxParseExpressionContainer (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:4665:31) at JSXParserMixin.jsxParseElementAt (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:4744:36) at JSXParserMixin.jsxParseElementAt (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:4731:32) at JSXParserMixin.jsxParseElement (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:4782:17) at JSXParserMixin.parseExprAtom (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:4792:19) at JSXParserMixin.parseExprSubscripts (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:11085:23) at JSXParserMixin.parseUpdate (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:11070:21) at JSXParserMixin.parseMaybeUnary (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:11050:23) at JSXParserMixin.parseMaybeUnaryOrPrivate (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10903:61) at JSXParserMixin.parseExprOps (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10908:23) at JSXParserMixin.parseMaybeConditional (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10885:23) at JSXParserMixin.parseMaybeAssign (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10835:21) at /Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10804:39 at JSXParserMixin.allowInAnd (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:12436:12) at JSXParserMixin.parseMaybeAssignAllowIn (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:10804:17) at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (/Users/ogmegelas/Documents/practice lap/frontend/node_modules/@babel/parser/lib/index.js:12503:17)
-  - generic [ref=e8]:
-    - text: Click outside, press Esc key, or fix the code to dismiss.
-    - text: You can also disable this overlay by setting
-    - code [ref=e9]: server.hmr.overlay
-    - text: to
-    - code [ref=e10]: "false"
-    - text: in
-    - code [ref=e11]: vite.config.js
-    - text: .
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - heading "🏁 Analyseur de Temps - Sim Racing" [level=1] [ref=e7]
+        - paragraph [ref=e8]: Analysez les performances par classe et pilote
+      - generic [ref=e9]:
+        - generic [ref=e10] [cursor=pointer]:
+          - generic [ref=e11]: "Dernière session :"
+          - 'generic "Dernière session: • Début: 2025-10-27 10 h 30 min 18 s • Durée estimée: 1305min • Fin estimée: 2025-10-28 08 h 15 min 18 s • Nombre de sessions: 243" [ref=e12]': Il y a 6h
+        - 'button "Actuellement: Mode sombre • Cliquer pour: Suivre le système" [ref=e13] [cursor=pointer]': 🌙
+        - button "Connexion admin" [ref=e14] [cursor=pointer]: ⚙️
+  - main [ref=e15]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - heading "🤖 EGT Auto Scraper Dashboard" [level=3] [ref=e20]
+          - paragraph [ref=e21]: Monitoring du système de scraping automatique
+        - generic [ref=e22]:
+          - button "🔄 Actualiser Logs" [ref=e23] [cursor=pointer]
+          - button "Déconnexion" [ref=e24] [cursor=pointer]
+      - generic [ref=e25]:
+        - button "🚀 Lancer Scraping Manuel" [ref=e27] [cursor=pointer]
+        - generic [ref=e29]:
+          - heading "📊 Dernier Run" [level=4] [ref=e30]
+          - generic [ref=e32]:
+            - strong [ref=e33]: ✅ Succès
+            - generic [ref=e34]: 27/10/2025 16:00:03
+        - generic [ref=e36]:
+          - generic [ref=e37]:
+            - generic [ref=e38]: 📁
+            - generic [ref=e39]:
+              - generic [ref=e40]: "1"
+              - generic [ref=e41]: Sessions Total
+          - generic [ref=e42]:
+            - generic [ref=e43]: ✅
+            - generic [ref=e44]:
+              - generic [ref=e45]: 100.0%
+              - generic [ref=e46]: Taux de Succès
+          - generic [ref=e47]:
+            - generic [ref=e48]: ⏰
+            - generic [ref=e49]:
+              - generic [ref=e50]: "-"
+              - generic [ref=e51]: Dernier Run
+              - generic [ref=e52]: 27/10/2025
+          - generic [ref=e53]:
+            - generic [ref=e54]: 🔄
+            - generic [ref=e55]:
+              - generic [ref=e56]: "-"
+              - generic [ref=e57]: Prochain Run
+              - generic [ref=e58]: ~1h
+        - generic [ref=e59]:
+          - heading "📋 Logs des Exécutions" [level=4] [ref=e60]
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - generic [ref=e63]: ✅
+              - generic [ref=e64]:
+                - strong [ref=e65]: scheduled
+                - text: "-20 trouvées, 0 nouvelles"
+              - generic [ref=e66]: 27/10/2025 16:00:03
+            - generic [ref=e67]:
+              - generic [ref=e68]: ✅
+              - generic [ref=e69]:
+                - strong [ref=e70]: scheduled
+                - text: "-20 trouvées, 0 nouvelles"
+              - generic [ref=e71]: 27/10/2025 15:00:04
+            - generic [ref=e72]:
+              - generic [ref=e73]: ✅
+              - generic [ref=e74]:
+                - strong [ref=e75]: scheduled
+                - text: "-20 trouvées, 0 nouvelles"
+              - generic [ref=e76]: 27/10/2025 14:00:07
+            - generic [ref=e77]:
+              - generic [ref=e78]: ✅
+              - generic [ref=e79]:
+                - strong [ref=e80]: scheduled
+                - text: "-20 trouvées, 0 nouvelles"
+              - generic [ref=e81]: 27/10/2025 13:00:05
+            - generic [ref=e82]:
+              - generic [ref=e83]: ✅
+              - generic [ref=e84]:
+                - strong [ref=e85]: scheduled
+                - text: "-20 trouvées, 0 nouvelles"
+              - generic [ref=e86]: 27/10/2025 12:00:05
+            - generic [ref=e87]:
+              - generic [ref=e88]: ✅
+              - generic [ref=e89]:
+                - strong [ref=e90]: scheduled
+                - text: "-20 trouvées, 1 nouvelles"
+              - generic [ref=e91]: 27/10/2025 11:00:04
+            - generic [ref=e92]:
+              - generic [ref=e93]: ✅
+              - generic [ref=e94]:
+                - strong [ref=e95]: scheduled
+                - text: "-20 trouvées, 0 nouvelles"
+              - generic [ref=e96]: 27/10/2025 10:00:05
+            - generic [ref=e97]:
+              - generic [ref=e98]: ✅
+              - generic [ref=e99]:
+                - strong [ref=e100]: scheduled
+                - text: "-20 trouvées, 0 nouvelles"
+              - generic [ref=e101]: 27/10/2025 09:00:04
+            - generic [ref=e102]:
+              - generic [ref=e103]: ✅
+              - generic [ref=e104]:
+                - strong [ref=e105]: scheduled
+                - text: "-20 trouvées, 0 nouvelles"
+              - generic [ref=e106]: 27/10/2025 08:00:04
+            - generic [ref=e107]:
+              - generic [ref=e108]: ✅
+              - generic [ref=e109]:
+                - strong [ref=e110]: scheduled
+                - text: "-20 trouvées, 0 nouvelles"
+              - generic [ref=e111]: 27/10/2025 07:00:07
 ```
