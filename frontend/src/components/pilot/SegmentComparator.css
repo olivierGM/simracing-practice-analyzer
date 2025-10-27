@@ -3,7 +3,7 @@
   padding: 16px;
   border-radius: 8px;
   border: 1px solid var(--border-color);
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .segment-header {
@@ -40,7 +40,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  white-space: nowrap;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 100%;
 }
 
 .segment-focus-hint strong {
@@ -149,5 +151,16 @@
   
   .segment-card {
     padding: 12px;
+  }
+  
+  .segment-focus-hint {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+  .segment-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }

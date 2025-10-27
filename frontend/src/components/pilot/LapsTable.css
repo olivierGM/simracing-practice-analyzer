@@ -142,13 +142,23 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .laps-header,
-  .lap-item {
-    min-width: 559px;
-    grid-template-columns: 45px 100px 80px 80px 80px 80px 45px 45px;
+  .laps-section {
+    padding: 12px;
   }
   
   .laps-list {
     overflow-x: auto;
+    overflow-y: auto;
+    max-height: 400px;
+    -webkit-overflow-scrolling: touch;
+    /* Empêcher le scroll de la page entière sur mobile */
+    position: relative;
+    isolation: isolate;
+  }
+  
+  .laps-header,
+  .lap-item {
+    min-width: 559px;
+    grid-template-columns: 45px 100px 80px 80px 80px 80px 45px 45px;
   }
 }
