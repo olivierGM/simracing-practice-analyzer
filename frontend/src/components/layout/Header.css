@@ -4,12 +4,12 @@
  * Copie EXACTE des styles de prod (style.css lignes 264-373)
  */
 
-header {
+header, .app-header {
   margin-bottom: 12px;
   color: var(--text-primary);
 }
 
-.header-row {
+.header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -36,7 +36,8 @@ header {
 }
 
 /* Bouton Admin discret en haut à droite */
-.admin-access-btn {
+.admin-access-btn,
+.login-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
@@ -52,19 +53,21 @@ header {
   backdrop-filter: blur(10px);
 }
 
-.admin-access-btn:hover {
+.admin-access-btn:hover,
+.login-btn:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.3);
   transform: scale(1.1);
 }
 
-.admin-access-btn:active {
+.admin-access-btn:active,
+.login-btn:active {
   transform: scale(0.95);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .header-row {
+  .header-content {
     flex-direction: column;
     align-items: flex-start;
   }

@@ -12,7 +12,7 @@ export function ThemeToggle() {
   const { currentTheme, cycleTheme } = useTheme();
 
   /**
-   * Retourne l'icône selon le thème actif
+   * Retourne l'icône selon le thème actif (COPIE prod)
    */
   const getIcon = () => {
     switch (currentTheme) {
@@ -21,25 +21,25 @@ export function ThemeToggle() {
       case 'light':
         return '☀️';
       case 'auto':
-        return '🌓';
+        return '🖥️'; // Prod utilise 🖥️ pour auto
       default:
-        return '🌙';
+        return '🖥️';
     }
   };
 
   /**
-   * Retourne le label pour le tooltip
+   * Retourne le label pour le tooltip (COPIE prod format)
    */
   const getLabel = () => {
     switch (currentTheme) {
       case 'dark':
-        return 'Mode sombre';
+        return 'Actuellement: Mode sombre • Cliquer pour: Suivre le système';
       case 'light':
-        return 'Mode clair';
+        return 'Actuellement: Mode clair • Cliquer pour: Mode sombre';
       case 'auto':
-        return 'Mode automatique';
+        return 'Actuellement: Suit le système • Cliquer pour: Mode clair';
       default:
-        return 'Thème';
+        return 'Basculer le thème';
     }
   };
 

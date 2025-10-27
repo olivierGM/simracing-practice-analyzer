@@ -16,7 +16,10 @@ export function Header({ metadata, onLoginClick }) {
   return (
     <header className="app-header">
       <div className="header-content">
-        <h1 className="app-title">Sim Racing Practice Analyzer</h1>
+        <div className="header-titles">
+          <h1>🏁 Analyseur de Temps - Sim Racing</h1>
+          <p>Analysez les performances par classe et pilote</p>
+        </div>
         
         <div className="header-actions">
           <LastUpdateIndicator metadata={metadata} />
@@ -27,7 +30,7 @@ export function Header({ metadata, onLoginClick }) {
             onClick={onLoginClick}
             aria-label="Connexion admin"
           >
-            🔐 Admin
+            ⚙️
           </button>
         </div>
       </div>
