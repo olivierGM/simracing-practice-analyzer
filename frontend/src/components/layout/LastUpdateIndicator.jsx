@@ -8,7 +8,7 @@
  */
 
 import { useMemo } from 'react';
-import { parseSessionDate, formatUpdateDate, createSessionTooltip } from '../../services/timezone';
+import { formatUpdateDate, createSessionTooltip } from '../../services/timezone';
 import './LastUpdateIndicator.css';
 
 export function LastUpdateIndicator({ metadata }) {
@@ -21,8 +21,8 @@ export function LastUpdateIndicator({ metadata }) {
       };
     }
 
-    // Parser la date avec l'offset timezone
-    const sessionDate = parseSessionDate(metadata.lastUpdate);
+    // Convertir l'ISO string en Date (metadata.lastUpdate est déjà en ISO format)
+    const sessionDate = new Date(metadata.lastUpdate);
     
     // Formater le texte "Il y a Xh"
     const text = formatUpdateDate(sessionDate);
