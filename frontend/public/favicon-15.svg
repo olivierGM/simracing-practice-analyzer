@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Circuit ovale classique -->
+  <rect x="0" y="0" width="100" height="100" fill="#1a1a1a"/>
+  <ellipse cx="50" cy="50" rx="40" ry="25" fill="none" stroke="#10b981" stroke-width="3"/>
+  <ellipse cx="50" cy="50" rx="30" ry="15" fill="none" stroke="#fbbf24" stroke-width="2"/>
+  <!-- Ligne de départ -->
+  <rect x="10" y="45" width="8" height="10" fill="#ef4444"/>
+  <rect x="10" y="47" width="8" height="6" fill="#1a1a1a"/>
+</svg>
