@@ -105,3 +105,105 @@ export function findGlobalBestSegments(allDrivers) {
   
   return segmentBests;
 }
+
+/**
+ * Calcule les statistiques de segments pour un pilote
+ * Retourne: { bestS1, bestS2, bestS3, avgS1, avgS2, avgS3 }
+ */
+export function calculatePilotSegmentStats(driver) {
+  const allS1 = [];
+  const allS2 = [];
+  const allS3 = [];
+  
+  if (!driver.lapTimes) return null;
+  
+  driver.lapTimes.forEach(lap => {
+    if (lap.splits && lap.splits.length >= 3 && lap.isValid) {
+      allS1.push(lap.splits[0]);
+      allS2.push(lap.splits[1]);
+      allS3.push(lap.splits[2]);
+    }
+  });
+  
+  if (allS1.length === 0) return null;
+  
+  return {
+    bestS1: Math.min(...allS1),
+    bestS2: Math.min(...allS2),
+    bestS3: Math.min(...allS3),
+    avgS1: allS1.reduce((sum, t) => sum + t, 0) / allS1.length,
+    avgS2: allS2.reduce((sum, t) => sum + t, 0) / allS2.length,
+    avgS3: allS3.reduce((sum, t) => sum + t, 0) / allS3.length,
+  };
+}
+
+/**
+ * Calcule les statistiques de segments globales et par classe
+ * COPIE de calculateSegmentStats() ligne 1714 de script-public.js
+ */
+export function calculateGlobalSegmentStats(drivers) {
+  const stats = {
+    global: { allS1: [], allS2: [], allS3: [] },
+    byCategory: {}
+  };
+  
+  // Collecter tous les segments
+  drivers.forEach(driver => {
+    const category = driver.category;
+    
+    if (!stats.byCategory[category]) {
+      stats.byCategory[category] = { allS1: [], allS2: [], allS3: [] };
+    }
+    
+    if (driver.lapTimes) {
+      driver.lapTimes.forEach(lap => {
+        if (lap.splits && lap.splits.length >= 3 && lap.isValid) {
+          // Global
+          stats.global.allS1.push(lap.splits[0]);
+          stats.global.allS2.push(lap.splits[1]);
+          stats.global.allS3.push(lap.splits[2]);
+          
+          // Par catégorie
+          stats.byCategory[category].allS1.push(lap.splits[0]);
+          stats.byCategory[category].allS2.push(lap.splits[1]);
+          stats.byCategory[category].allS3.push(lap.splits[2]);
+        }
+      });
+    }
+  });
+  
+  // Calculer best et avg pour global
+  const globalStats = stats.global;
+  if (globalStats.allS1.length > 0) {
+    globalStats.bestS1 = Math.min(...globalStats.allS1);
+    globalStats.avgS1 = globalStats.allS1.reduce((sum, t) => sum + t, 0) / globalStats.allS1.length;
+  }
+  if (globalStats.allS2.length > 0) {
+    globalStats.bestS2 = Math.min(...globalStats.allS2);
+    globalStats.avgS2 = globalStats.allS2.reduce((sum, t) => sum + t, 0) / globalStats.allS2.length;
+  }
+  if (globalStats.allS3.length > 0) {
+    globalStats.bestS3 = Math.min(...globalStats.allS3);
+    globalStats.avgS3 = globalStats.allS3.reduce((sum, t) => sum + t, 0) / globalStats.allS3.length;
+  }
+  
+  // Calculer best et avg pour chaque catégorie
+  Object.keys(stats.byCategory).forEach(category => {
+    const catStats = stats.byCategory[category];
+    
+    if (catStats.allS1.length > 0) {
+      catStats.bestS1 = Math.min(...catStats.allS1);
+      catStats.avgS1 = catStats.allS1.reduce((sum, t) => sum + t, 0) / catStats.allS1.length;
+    }
+    if (catStats.allS2.length > 0) {
+      catStats.bestS2 = Math.min(...catStats.allS2);
+      catStats.avgS2 = catStats.allS2.reduce((sum, t) => sum + t, 0) / catStats.allS2.length;
+    }
+    if (catStats.allS3.length > 0) {
+      catStats.bestS3 = Math.min(...catStats.allS3);
+      catStats.avgS3 = catStats.allS3.reduce((sum, t) => sum + t, 0) / catStats.allS3.length;
+    }
+  });
+  
+  return stats;
+}
