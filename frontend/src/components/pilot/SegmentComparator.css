@@ -45,9 +45,21 @@
 
 .segment-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   margin-top: 20px;
+}
+
+.focus-badge {
+  background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .segment-card {
@@ -104,10 +116,16 @@
   text-align: center;
 }
 
-/* Responsive - Garder 2 colonnes jusqu'à 768px (tablette) */
+/* Responsive - 4 colonnes en desktop, 2 en tablette, 1 en mobile */
+@media (max-width: 1024px) {
+  .segment-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .segment-grid {
-    grid-template-columns: 1fr; /* 1 colonne sur mobile/tablette */
+    grid-template-columns: 1fr; /* 1 colonne sur mobile */
   }
   
   .segment-row {

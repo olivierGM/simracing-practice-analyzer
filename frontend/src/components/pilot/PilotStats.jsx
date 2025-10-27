@@ -47,7 +47,7 @@ export function PilotStats({ driver, allDrivers = [] }) {
         
         <div className="stat-item">
           <span className="stat-label">Meilleur temps:</span>
-          <span className="stat-value best-time">{formatTime(driver.bestValidTime)}</span>
+          <span className="stat-value">{formatTime(driver.bestValidTime)}</span>
         </div>
         
         <div className="stat-item">

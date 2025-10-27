@@ -113,10 +113,6 @@ export function HomePage({ drivers, sessions = [] }) {
           onDriverClick={handleDriverClick}
         />
       )}
-
-      <div className="stats-footer">
-        <p>{sortedDrivers.length} pilote(s) affiché(s)</p>
-      </div>
     </div>
   );
 }

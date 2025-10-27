@@ -95,26 +95,18 @@ export function PilotePage({ drivers, sessions = [] }) {
 
   return (
     <div className="container">
-      {/* Breadcrumb */}
-      <nav className="breadcrumb">
-        <button onClick={() => navigate('/')} className="breadcrumb-link">
-          Accueil
-        </button>
-        <span className="breadcrumb-separator">/</span>
-        <span className="breadcrumb-current">{pilot.track}</span>
-        <span className="breadcrumb-separator">/</span>
-        <span className="breadcrumb-current">{pilot.name}</span>
-      </nav>
-
       {/* Header de la fiche pilote */}
       <div className="pilot-page-header">
+        <div className="pilot-title-group">
+          <h1 className="pilot-page-title">{pilot.name}</h1>
+          <div className="pilot-meta">
+            <span className="pilot-circuit">{pilot.track}</span>
+            <span className="pilot-category-badge">{pilot.category}</span>
+          </div>
+        </div>
         <button onClick={() => navigate('/')} className="back-button">
           ← Retour
         </button>
-        <div className="pilot-title-group">
-          <h1 className="pilot-page-title">{pilot.name}</h1>
-          <p className="pilot-circuit">{pilot.track}</p>
-        </div>
       </div>
 
       {/* Contenu de la fiche */}
