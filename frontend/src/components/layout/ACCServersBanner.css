@@ -1,0 +1,95 @@
+.acc-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.acc-banner-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.acc-banner-loading {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.acc-banner-servers {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  overflow-x: auto;
+  flex: 1;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.acc-banner-servers::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.acc-banner-server {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.acc-banner-server-name {
+  font-weight: 600;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.acc-banner-server-drivers {
+  font-weight: 700;
+  color: #fbbf24;
+  flex-shrink: 0;
+}
+
+/* Animation pour bandeau défilant si plus de 3 serveurs */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.33%);
+  }
+}
+
+.acc-banner-servers.scrolling {
+  animation: scroll 15s linear infinite;
+}
+
+@media (max-width: 768px) {
+  .acc-banner {
+    margin: 12px 10px;
+    padding: 6px 12px;
+  }
+
+  .acc-banner-server {
+    font-size: 12px;
+    padding: 3px 8px;
+  }
+
+  .acc-banner-server-name {
+    max-width: 80px;
+  }
+
+  .acc-banner-icon {
+    font-size: 18px;
+  }
+}
+

@@ -8,17 +8,26 @@
  * - Bouton login admin
  */
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { LastUpdateIndicator } from './LastUpdateIndicator';
+import { ACCServersBanner } from './ACCServersBanner';
+import { useFilters } from '../../hooks/useFilters';
 import './Header.css';
 
-export function Header({ metadata }) {
+export function Header({ metadata, drivers = [], sessions = [] }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Récupérer le circuit sélectionné depuis l'URL ou les filtres
+  const { trackFilter } = useFilters(drivers, sessions);
   
   const handleAdminClick = () => {
     navigate('/admin');
   };
+
+  // Afficher le bandeau seulement sur la page d'accueil
+  const isHomePage = location.pathname === '/';
 
   return (
     <header className="app-header">
@@ -41,6 +50,9 @@ export function Header({ metadata }) {
           </button>
         </div>
       </div>
+      
+      {/* Bandeau des serveurs ACC (uniquement sur la page d'accueil) */}
+      {isHomePage && <ACCServersBanner trackName={trackFilter} />}
     </header>
   );
 }

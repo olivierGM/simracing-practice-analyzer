@@ -232,6 +232,77 @@ exports.getScrapingLogs = functions.https.onRequest(async (req, res) => {
 });
 
 /**
+ * Fonction Firebase pour récupérer les serveurs ACC actifs
+ * Proxy pour contourner les restrictions CORS
+ */
+exports.getACCServers = functions.https.onRequest(async (req, res) => {
+    // Ajouter les headers CORS
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    // Gérer les requêtes OPTIONS (preflight)
+    if (req.method === 'OPTIONS') {
+        res.status(204).send('');
+        return;
+    }
+    
+    try {
+        const { track, limit = 25 } = req.query;
+        
+        if (!track) {
+            return res.status(400).json({
+                success: false,
+                error: 'Le paramètre track est requis'
+            });
+        }
+        
+        // URL de l'API ACC Status
+        const url = `https://acc-status.jonatan.net/api/v2/acc/servers?limit=${limit}&skip=0&sort[drivers]=-1&mode=public&track=${track}&safety_rating[min]=0&safety_rating[max]=100&offline=false`;
+        
+        console.log(`🎮 Récupération des serveurs ACC pour le circuit: ${track}`);
+        
+        // Faire l'appel HTTP depuis le serveur
+        const https = require('https');
+        const http = require('http');
+        const axios = require('axios');
+        
+        const response = await axios.get(url);
+        
+        if (response.status !== 200) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        
+        // Filtrer pour garder seulement les serveurs avec des joueurs
+        const activeServers = response.data
+            .filter(server => server.drivers > 0)
+            .slice(0, 3)
+            .map(server => ({
+                name: server.name ? server.name.substring(0, 20) : 'Serveur',
+                drivers: server.drivers,
+                serverType: server.serverType,
+                weather: server.weather,
+                trackCondition: server.trackCondition
+            }));
+        
+        console.log(`✅ ${activeServers.length} serveur(s) trouvé(s) pour ${track}`);
+        
+        res.status(200).json({
+            success: true,
+            servers: activeServers
+        });
+        
+    } catch (error) {
+        console.error('❌ Erreur lors de la récupération des serveurs ACC:', error);
+        
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+/**
  * Fonction de test pour développement local
  */
 exports.testScraping = functions.https.onRequest(async (req, res) => {
