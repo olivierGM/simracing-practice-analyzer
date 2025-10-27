@@ -133,32 +133,33 @@ export function LapsTable({ driver }) {
     <div className="laps-section">
       <h3>🏁 Détail des Tours ({laps.length} tours)</h3>
       
-      {/* Header avec grid comme prod */}
-      <div className="laps-header">
-        <div className="lap-header-item sortable" onClick={() => handleSort('lapNumber')}>
-          Tour <span className="sort-indicator">{getSortIcon('lapNumber')}</span>
-        </div>
-        <div className="lap-header-item sortable" onClick={() => handleSort('date')}>
-          Date/Heure <span className="sort-indicator">{getSortIcon('date')}</span>
-        </div>
-        <div className="lap-header-item sortable" onClick={() => handleSort('S1')}>
-          S1 <span className="sort-indicator">{getSortIcon('S1')}</span>
-        </div>
-        <div className="lap-header-item sortable" onClick={() => handleSort('S2')}>
-          S2 <span className="sort-indicator">{getSortIcon('S2')}</span>
-        </div>
-        <div className="lap-header-item sortable" onClick={() => handleSort('S3')}>
-          S3 <span className="sort-indicator">{getSortIcon('S3')}</span>
-        </div>
-        <div className="lap-header-item sortable" onClick={() => handleSort('totalTime')}>
-          Total <span className="sort-indicator">{getSortIcon('totalTime')}</span>
-        </div>
-        <div className="lap-header-item">Valide</div>
-        <div className="lap-header-item">Wet</div>
-      </div>
-      
-      {/* List avec grid comme prod */}
+      {/* List avec header et tours - scrollable ensemble */}
       <div className="laps-list">
+        {/* Header avec grid comme prod */}
+        <div className="laps-header">
+          <div className="lap-header-item sortable" onClick={() => handleSort('lapNumber')}>
+            Tour <span className="sort-indicator">{getSortIcon('lapNumber')}</span>
+          </div>
+          <div className="lap-header-item sortable" onClick={() => handleSort('date')}>
+            Date/Heure <span className="sort-indicator">{getSortIcon('date')}</span>
+          </div>
+          <div className="lap-header-item sortable" onClick={() => handleSort('S1')}>
+            S1 <span className="sort-indicator">{getSortIcon('S1')}</span>
+          </div>
+          <div className="lap-header-item sortable" onClick={() => handleSort('S2')}>
+            S2 <span className="sort-indicator">{getSortIcon('S2')}</span>
+          </div>
+          <div className="lap-header-item sortable" onClick={() => handleSort('S3')}>
+            S3 <span className="sort-indicator">{getSortIcon('S3')}</span>
+          </div>
+          <div className="lap-header-item sortable" onClick={() => handleSort('totalTime')}>
+            Total <span className="sort-indicator">{getSortIcon('totalTime')}</span>
+          </div>
+          <div className="lap-header-item">Valide</div>
+          <div className="lap-header-item">Wet</div>
+        </div>
+        
+        {/* Tours */}
         {sortedLaps.map((lap, index) => (
           <div key={index} className="lap-item">
             <div className="lap-number">{lap.lapNumber}</div>

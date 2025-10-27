@@ -17,7 +17,7 @@
   font-weight: 600;
 }
 
-/* Header avec grid comme prod - COMPACT */
+/* Header avec grid comme prod - COMPACT - Dans le scrollable */
 .laps-header {
   display: grid;
   grid-template-columns: 50px 120px 90px 90px 90px 90px 50px 50px;
@@ -28,7 +28,9 @@
   padding: 4px 8px;
   gap: 6px;
   align-items: center;
-  border-radius: 6px 6px 0 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .laps-header .sortable {
@@ -52,11 +54,10 @@
   opacity: 0.8;
 }
 
-/* Item de tour avec grid comme prod */
+/* Container scrollable avec header et tours ensemble */
 .laps-list {
   border: 1px solid var(--border-color);
-  border-top: none;
-  border-radius: 0 0 6px 6px;
+  border-radius: 6px;
   overflow: hidden;
 }
 
@@ -70,6 +71,7 @@
   font-size: 0.8rem;
   transition: background 0.2s ease;
   min-height: 26px;
+  background: var(--card-bg);
 }
 
 .lap-item:hover {
