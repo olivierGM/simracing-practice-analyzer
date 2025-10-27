@@ -41,20 +41,28 @@
 /* Responsive */
 @media (max-width: 768px) {
     .compact-stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
+        grid-template-columns: 1fr;
+        gap: 6px;
     }
 
     .compact-stat-card {
-        padding: 10px;
+        padding: 6px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        min-height: 40px;
     }
 
     .compact-stat-card h3 {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
+        margin: 0;
+        flex: 1;
     }
 
     .compact-stat-card .stat-value {
-        font-size: 1.2rem;
+        font-size: 0.95rem;
+        margin-left: 8px;
     }
 }
 

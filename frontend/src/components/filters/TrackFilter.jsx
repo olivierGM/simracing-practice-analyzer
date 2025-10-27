@@ -14,7 +14,7 @@ export function TrackFilter({ value, onChange, tracks = [] }) {
       </label>
       <select
         id="sessionSelect"
-        className="session-select"
+        className="filter-select"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >

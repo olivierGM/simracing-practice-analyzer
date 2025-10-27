@@ -4,14 +4,13 @@
  * Copie EXACTE des styles de prod (style.css lignes 62-88)
  */
 
-/* Bouton Toggle Thème */
-.theme-toggle-btn {
+/* Bouton Toggle Thème - PAS CIRCULAIRE */
+.theme-toggle {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  padding: 8px 16px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
   display: flex;
@@ -19,23 +18,15 @@
   justify-content: center;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  margin-right: 10px;
+  min-width: 45px;
+  height: 40px;
 }
 
-.theme-toggle-btn:hover {
+.theme-toggle:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
 }
 
-.theme-toggle-btn:active {
+.theme-toggle:active {
   transform: scale(0.95);
-}
-
-/* Enlever les styles par défaut du bouton */
-.theme-toggle-btn {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  outline: none;
 }
