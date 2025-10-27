@@ -11,7 +11,7 @@ import { SegmentComparator } from '../components/pilot/SegmentComparator';
 import { ProgressionChart } from '../components/pilot/ProgressionChart';
 import { LapsTable } from '../components/pilot/LapsTable';
 import { useProcessedData } from '../hooks/useProcessedData';
-import { getCategoryName } from '../services/calculations';
+import { getCategoryName, getCategoryClass } from '../services/calculations';
 import './PilotePage.css';
 
 export function PilotePage({ drivers, sessions = [] }) {
