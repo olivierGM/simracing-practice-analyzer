@@ -11,6 +11,7 @@ import { SegmentComparator } from '../components/pilot/SegmentComparator';
 import { ProgressionChart } from '../components/pilot/ProgressionChart';
 import { LapsTable } from '../components/pilot/LapsTable';
 import { useProcessedData } from '../hooks/useProcessedData';
+import { getCategoryName } from '../services/calculations';
 import './PilotePage.css';
 
 export function PilotePage({ drivers, sessions = [] }) {
@@ -117,12 +118,10 @@ export function PilotePage({ drivers, sessions = [] }) {
       {/* Header de la fiche pilote */}
       <div className="pilot-page-header">
         <div className="pilot-title-group">
-          <h1 className="pilot-page-title">
-            {pilot.name} <span className="pilot-category-rank">#{categoryStats.categoryPosition}/{categoryStats.categoryDrivers}</span>
-          </h1>
-          <div className="pilot-meta">
-            <span className="pilot-circuit">{pilot.track}</span>
-            <span className="pilot-category-badge">{pilot.category}</span>
+          <h1 className="pilot-page-title">{pilot.name}</h1>
+          <div className="pilot-details">
+            <span className="pilot-category-badge">{getCategoryName(pilot.category)}</span>
+            <span className="pilot-position">#{categoryStats.categoryPosition}/{categoryStats.categoryDrivers}</span>
           </div>
         </div>
         <button onClick={() => navigate('/')} className="back-button">

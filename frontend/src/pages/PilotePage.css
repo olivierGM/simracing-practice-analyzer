@@ -101,11 +101,20 @@
   flex: 1;
 }
 
-.pilot-category-rank {
-  font-size: 24px;
-  font-weight: 500;
+.pilot-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.pilot-position {
+  font-size: 16px;
+  font-weight: 600;
   color: var(--text-secondary);
-  margin-left: 8px;
+  background: var(--secondary-bg);
+  padding: 4px 12px;
+  border-radius: 12px;
 }
 
 .pilot-page-content {
