@@ -47,20 +47,17 @@ export function formatSegmentTime(ms) {
  * Formate un delta de temps avec couleur
  * 
  * @param {number} delta - Delta en millisecondes
- * @returns {Object} {text, className}
+ * @returns {string} Delta formaté en secondes (ex: "+1.234" ou "-0.567")
  */
 export function formatDelta(delta) {
   if (!delta || delta === 0) {
-    return { text: '-', className: '' };
+    return '0.000';
   }
   
   const sign = delta > 0 ? '+' : '';
   const seconds = (delta / 1000).toFixed(3);
-  const text = `${sign}${seconds}`;
   
-  const className = delta > 0 ? 'delta-positive' : 'delta-negative';
-  
-  return { text, className };
+  return `${sign}${seconds}`;
 }
 
 /**
