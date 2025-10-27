@@ -137,11 +137,14 @@ export function PilotePage({ drivers, sessions = [] }) {
         {/* Comparateur de segments */}
         <SegmentComparator driver={pilot} allDrivers={driversForTrack} />
 
-        {/* Graphique de progression */}
-        <ProgressionChart driver={pilot} />
+        {/* Container laps et graphique côte à côte */}
+        <div className="laps-chart-container">
+          {/* Liste des tours */}
+          <LapsTable driver={pilot} />
 
-        {/* Liste des tours */}
-        <LapsTable driver={pilot} />
+          {/* Graphique de progression */}
+          <ProgressionChart driver={pilot} />
+        </div>
       </div>
     </div>
   );
