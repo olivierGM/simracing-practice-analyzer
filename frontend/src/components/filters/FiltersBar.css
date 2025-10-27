@@ -4,6 +4,7 @@
   padding: 20px;
   margin-bottom: 24px;
   border: 1px solid var(--border-color);
+  width: 100%;
 }
 
 .filters-container {
@@ -15,14 +16,28 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .filters-bar {
+    padding: 16px;
+  }
+  
   .filters-container {
     flex-direction: column;
     align-items: stretch;
     gap: 16px;
+    width: 100%;
   }
   
   .filter-group {
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .filter-select {
+    width: 100% !important;
+    min-width: 100% !important;
   }
 }
 
