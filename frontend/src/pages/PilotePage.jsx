@@ -21,7 +21,9 @@ export function PilotePage({ drivers, sessions = [] }) {
   const trackName = useMemo(() => {
     // Essayer de trouver le pilote dans les drivers globaux pour avoir son track
     const globalPilot = drivers.find(d => d.id === pilotId);
-    return globalPilot?.track || '';
+    const track = globalPilot?.track || '';
+    console.log('🔍 PilotePage DEBUG - pilotId:', pilotId, 'track:', track);
+    return track;
   }, [drivers, pilotId]);
 
   // Reprocesser les données pour la piste spécifique du pilote
