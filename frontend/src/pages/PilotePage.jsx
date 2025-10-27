@@ -121,7 +121,7 @@ export function PilotePage({ drivers, sessions = [] }) {
           <h1 className="pilot-page-title">{pilot.name}</h1>
           <div className="pilot-details">
             <span className={`pilot-category-badge ${getCategoryClass(pilot.category)}`}>{getCategoryName(pilot.category)}</span>
-            <span className="pilot-position">#{categoryStats.categoryPosition}/{categoryStats.categoryDrivers}</span>
+            <span className={`pilot-position ${getCategoryClass(pilot.category)}`}>#{categoryStats.categoryPosition}/{categoryStats.categoryDrivers}</span>
           </div>
         </div>
         <button onClick={() => navigate('/')} className="back-button">
