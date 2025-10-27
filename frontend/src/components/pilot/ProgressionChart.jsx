@@ -111,18 +111,18 @@ export function ProgressionChart({ driver }) {
           borderWidth: 2,
           fill: false,
           tension: 0.1,
-          pointRadius: 0,
+          pointRadius: 4,
+          borderDash: [2, 2]
         },
         {
-          label: '☀️ Tours Sec',
+          label: '🌞 Tours Sec',
           data: dryTimes,
-          borderColor: '#f59e0b',
-          backgroundColor: 'rgba(245, 158, 11, 0.1)',
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
           borderWidth: 2,
           fill: false,
           tension: 0.1,
           pointRadius: 4,
-          pointHoverRadius: 7,
         },
         {
           label: '🌧️ Tours Wet',
@@ -133,7 +133,6 @@ export function ProgressionChart({ driver }) {
           fill: false,
           tension: 0.1,
           pointRadius: 4,
-          pointHoverRadius: 7,
         },
       ],
     };
@@ -239,6 +238,17 @@ export function ProgressionChart({ driver }) {
   return (
     <div className="chart-section">
       <h3>📈 Évolution des Temps de Tour</h3>
+      
+      {/* Légende custom comme la prod */}
+      <div className="chart-legend">
+        {chartData.datasets.map((dataset, index) => (
+          <div key={index} className="legend-item">
+            <span className="legend-color" style={{ borderColor: dataset.borderColor, borderDash: dataset.borderDash }}></span>
+            <span className="legend-label">{dataset.label}</span>
+          </div>
+        ))}
+      </div>
+      
       <div className="chart-container">
         <Line data={chartData} options={options} />
       </div>

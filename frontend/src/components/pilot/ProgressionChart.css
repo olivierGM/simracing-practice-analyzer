@@ -13,6 +13,35 @@
   color: var(--text-primary);
 }
 
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: var(--secondary-bg);
+  border-radius: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-color {
+  width: 20px;
+  height: 3px;
+  border: 2px solid;
+  border-radius: 2px;
+}
+
+.legend-label {
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
 .chart-container {
   position: relative;
   height: 400px;
