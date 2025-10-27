@@ -155,8 +155,12 @@ export function LapsTable({ driver }) {
           <div className="lap-header-item sortable" onClick={() => handleSort('totalTime')}>
             Total <span className="sort-indicator">{getSortIcon('totalTime')}</span>
           </div>
-          <div className="lap-header-item">Valide</div>
-          <div className="lap-header-item">Wet</div>
+          <div className="lap-header-item sortable" onClick={() => handleSort('isValid')}>
+            Valide <span className="sort-indicator">{getSortIcon('isValid')}</span>
+          </div>
+          <div className="lap-header-item sortable" onClick={() => handleSort('isWet')}>
+            Wet <span className="sort-indicator">{getSortIcon('isWet')}</span>
+          </div>
         </div>
         
         {/* Tours */}
