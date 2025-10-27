@@ -58,14 +58,16 @@ export function SegmentComparator({ driver, allDrivers }) {
       return null;
     }
     
+    // Gap en millisecondes (pilote - référence)
     const gap = (pilotTime - refTime) * 1000;
     const isPositive = gap <= 0;
+    const gapFormatted = isPositive ? '+' : '' + (Math.abs(gap) / 1000).toFixed(3) + 's';
     
     return (
       <div className="segment-row" key={segment}>
         <span className="segment-name">{segment}:</span>
         <span className="segment-time">{formatSegmentTime(pilotTime)} vs {formatSegmentTime(refTime)}</span>
-        <span className={`segment-gap ${isPositive ? 'positive' : 'negative'}`}>{formatGap(gap)}</span>
+        <span className={`segment-gap ${isPositive ? 'positive' : 'negative'}`}>{gapFormatted}</span>
         <span className="segment-color">{isPositive ? '🟢' : '🔴'}</span>
       </div>
     );
