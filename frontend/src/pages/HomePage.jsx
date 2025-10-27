@@ -4,7 +4,7 @@
  * Page principale avec liste des pilotes
  */
 
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiltersBar } from '../components/filters/FiltersBar';
 import { DriversTable } from '../components/table/DriversTable';
@@ -12,6 +12,7 @@ import { GlobalStats } from '../components/layout/GlobalStats';
 import { useFilters } from '../hooks/useFilters';
 import { useProcessedData } from '../hooks/useProcessedData';
 import { useSorting } from '../hooks/useSorting';
+import { useTrackContext } from '../contexts/TrackContext';
 import { DURATIONS } from '../utils/constants';
 
 export function HomePage({ drivers, sessions = [] }) {
