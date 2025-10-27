@@ -18,13 +18,21 @@ export function PilotePage({ drivers, sessions = [] }) {
   const navigate = useNavigate();
 
   // Décoder le nom du circuit depuis l'URL pour déterminer la piste
+  // CRITIQUE: Utiliser circuitId de l'URL, pas le track global du pilote
+  // car un pilote peut avoir roulé sur plusieurs pistes
   const trackName = useMemo(() => {
-    // Essayer de trouver le pilote dans les drivers globaux pour avoir son track
-    const globalPilot = drivers.find(d => d.id === pilotId);
-    const track = globalPilot?.track || '';
-    console.log('🔍 PilotePage DEBUG - pilotId:', pilotId, 'track:', track);
+    // Convertir circuitId en nom de track
+    // ex: "misano" -> "misano", "red-bull-ring" -> "red bull ring"
+    if (!circuitId) return '';
+    
+    const track = circuitId
+      .split('-')
+      .map(word => word.charAt(0).toLowerCase() + word.slice(1))
+      .join(' ');
+    
+    console.log('🔍 PilotePage DEBUG - circuitId:', circuitId, '-> track:', track);
     return track;
-  }, [drivers, pilotId]);
+  }, [circuitId]);
 
   // Reprocesser les données pour la piste spécifique du pilote
   const driversForTrack = useProcessedData(sessions, trackName);
