@@ -8,11 +8,18 @@
  * - Bouton login admin
  */
 
+import { useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { LastUpdateIndicator } from './LastUpdateIndicator';
 import './Header.css';
 
-export function Header({ metadata, onLoginClick }) {
+export function Header({ metadata }) {
+  const navigate = useNavigate();
+  
+  const handleAdminClick = () => {
+    navigate('/admin');
+  };
+
   return (
     <header className="app-header">
       <div className="header-content">
@@ -27,7 +34,7 @@ export function Header({ metadata, onLoginClick }) {
           <button
             id="loginBtn"
             className="login-btn"
-            onClick={onLoginClick}
+            onClick={handleAdminClick}
             aria-label="Connexion admin"
           >
             ⚙️

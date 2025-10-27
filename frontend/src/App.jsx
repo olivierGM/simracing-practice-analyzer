@@ -16,16 +16,9 @@ import './App.css';
 
 function App() {
   const { data, metadata, sessions, loading, error } = useFirebaseData();
-  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Extraire les pilotes des données
   const drivers = data?.drivers || [];
-
-  // Handler pour le bouton login
-  const handleLoginClick = () => {
-    setShowLoginModal(true);
-    console.log('Login modal à implémenter');
-  };
 
   if (loading) {
     return (
@@ -49,7 +42,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app">
-        <Header metadata={metadata} onLoginClick={handleLoginClick} />
+        <Header metadata={metadata} />
         
         <main className="main-content">
                 <Routes>
