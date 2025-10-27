@@ -1,25 +1,33 @@
 /**
  * Composant LapsTable
  * 
- * Tableau de tous les tours du pilote avec tri
- * 
- * TODO: Ajouter les données de tours dans mockData
+ * Tableau de tous les tours du pilote avec tri (COPIE de la prod)
+ * Colonnes: Tour, Date, Total, S1, S2, S3, Valide, Wet
  */
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { formatTime } from '../../utils/formatters';
 import './LapsTable.css';
 
 export function LapsTable({ driver }) {
   const [sortColumn, setSortColumn] = useState('lapNumber');
-  const [sortDirection, setSortDirection] = useState('asc');
+  const [sortDirection, setSortDirection] = useState('desc'); // Descending by default (dernier tour en premier)
 
-  // Pour l'instant, données mock de tours
-  const laps = [
-    { lapNumber: 1, S1: 18234, S2: 19456, S3: 20123, S4: 18654, S5: 19234, S6: 17832, totalTime: 113533 },
-    { lapNumber: 2, S1: 18123, S2: 19345, S3: 20012, S4: 18543, S5: 19123, S6: 17721, totalTime: 112867 },
-    { lapNumber: 3, S1: 18345, S2: 19567, S3: 20234, S4: 18765, S5: 19345, S6: 17943, totalTime: 114199 },
-  ];
+  // Extraire les tours depuis driver.lapTimes
+  const laps = useMemo(() => {
+    if (!driver.lapTimes || driver.lapTimes.length === 0) return [];
+    
+    return driver.lapTimes.map((lap, index) => ({
+      lapNumber: index + 1,
+      date: lap.sessionDate || '--',
+      totalTime: lap.laptime || 0,
+      S1: lap.splits && lap.splits[0] ? lap.splits[0] : 0,
+      S2: lap.splits && lap.splits[1] ? lap.splits[1] : 0,
+      S3: lap.splits && lap.splits[2] ? lap.splits[2] : 0,
+      isValid: lap.isValid || false,
+      isWet: lap.isWetSession || false,
+    }));
+  }, [driver.lapTimes]);
 
   const handleSort = (column) => {
     if (sortColumn === column) {
@@ -30,6 +38,29 @@ export function LapsTable({ driver }) {
     }
   };
 
+  // Trier les tours
+  const sortedLaps = useMemo(() => {
+    if (laps.length === 0) return [];
+    
+    const sorted = [...laps].sort((a, b) => {
+      let aVal = a[sortColumn];
+      let bVal = b[sortColumn];
+      
+      // Pour les dates (strings), comparer alphabétiquement
+      if (sortColumn === 'date') {
+        return sortDirection === 'asc' 
+          ? String(aVal).localeCompare(String(bVal))
+          : String(bVal).localeCompare(String(aVal));
+      }
+      
+      // Pour les nombres
+      const comparison = aVal - bVal;
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+    
+    return sorted;
+  }, [laps, sortColumn, sortDirection]);
+
   const getSortIcon = (column) => {
     if (sortColumn !== column) return '';
     return sortDirection === 'asc' ? ' ↑' : ' ↓';
@@ -37,33 +68,45 @@ export function LapsTable({ driver }) {
 
   return (
     <div className="laps-section">
-      <h3 className="section-title">Liste des tours</h3>
+      <h3>🏁 Détail des Tours ({laps.length} tours)</h3>
       
       <div className="laps-table-container">
         <table className="laps-table">
           <thead>
             <tr>
-              <th onClick={() => handleSort('lapNumber')}>Tour{getSortIcon('lapNumber')}</th>
-              <th onClick={() => handleSort('S1')}>S1{getSortIcon('S1')}</th>
-              <th onClick={() => handleSort('S2')}>S2{getSortIcon('S2')}</th>
-              <th onClick={() => handleSort('S3')}>S3{getSortIcon('S3')}</th>
-              <th onClick={() => handleSort('S4')}>S4{getSortIcon('S4')}</th>
-              <th onClick={() => handleSort('S5')}>S5{getSortIcon('S5')}</th>
-              <th onClick={() => handleSort('S6')}>S6{getSortIcon('S6')}</th>
-              <th onClick={() => handleSort('totalTime')}>Total{getSortIcon('totalTime')}</th>
+              <th onClick={() => handleSort('lapNumber')} className="sortable">
+                Tour ⬍{getSortIcon('lapNumber')}
+              </th>
+              <th onClick={() => handleSort('date')} className="sortable">
+                Date{getSortIcon('date')}
+              </th>
+              <th onClick={() => handleSort('totalTime')} className="sortable">
+                Total{getSortIcon('totalTime')}
+              </th>
+              <th onClick={() => handleSort('S1')} className="sortable">
+                S1{getSortIcon('S1')}
+              </th>
+              <th onClick={() => handleSort('S2')} className="sortable">
+                S2{getSortIcon('S2')}
+              </th>
+              <th onClick={() => handleSort('S3')} className="sortable">
+                S3{getSortIcon('S3')}
+              </th>
+              <th>Valide</th>
+              <th>Wet</th>
             </tr>
           </thead>
           <tbody>
-            {laps.map(lap => (
+            {sortedLaps.map(lap => (
               <tr key={lap.lapNumber}>
                 <td className="lap-number">{lap.lapNumber}</td>
+                <td className="lap-date">{lap.date}</td>
+                <td className="total-time">{formatTime(lap.totalTime)}</td>
                 <td>{formatTime(lap.S1)}</td>
                 <td>{formatTime(lap.S2)}</td>
                 <td>{formatTime(lap.S3)}</td>
-                <td>{formatTime(lap.S4)}</td>
-                <td>{formatTime(lap.S5)}</td>
-                <td>{formatTime(lap.S6)}</td>
-                <td className="total-time">{formatTime(lap.totalTime)}</td>
+                <td className="valid-indicator">{lap.isValid ? '✓' : ''}</td>
+                <td className="wet-indicator">{lap.isWet ? '🌧️' : ''}</td>
               </tr>
             ))}
           </tbody>
