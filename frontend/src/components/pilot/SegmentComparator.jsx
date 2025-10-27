@@ -49,7 +49,10 @@ export function SegmentComparator({ driver, allDrivers }) {
 
   const formatGap = (gap) => {
     if (gap === 0 || isNaN(gap)) return '+0.000s';
-    return `${gap > 0 ? '+' : ''}${(gap / 1000).toFixed(3)}s`;
+    // Gap est déjà en ms, diviser par 1000 pour avoir des secondes
+    const gapInSeconds = Math.abs(gap) / 1000;
+    const sign = gap > 0 ? '+' : '';
+    return `${sign}${gapInSeconds.toFixed(3)}s`;
   };
 
   const renderSegmentRow = (segment, pilotTime, refTime) => {

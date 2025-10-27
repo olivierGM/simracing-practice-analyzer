@@ -39,9 +39,7 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 16px;
 }
 
 .pilot-title-group {
@@ -109,12 +107,15 @@
 }
 
 .pilot-position {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--text-secondary);
-  background: var(--secondary-bg);
-  padding: 4px 12px;
-  border-radius: 12px;
+  color: white;
+  background: #2a2a2a;
+  padding: 6px 10px;
+  border-radius: 50%;
+  min-width: 60px;
+  text-align: center;
+  display: inline-block;
 }
 
 .pilot-page-content {
