@@ -104,14 +104,12 @@
   text-align: center;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .segment-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
+/* Responsive - Garder 2 colonnes jusqu'à 768px (tablette) */
 @media (max-width: 768px) {
+  .segment-grid {
+    grid-template-columns: 1fr; /* 1 colonne sur mobile/tablette */
+  }
+  
   .segment-row {
     grid-template-columns: 35px 1fr 70px 25px;
     font-size: 12px;

@@ -4,13 +4,25 @@
  * Affiche les statistiques principales du pilote (COPIE du modal prod)
  */
 
-import { formatTime } from '../../utils/formatters';
+import { formatTime, formatDelta } from '../../utils/formatters';
 import { getCategoryName } from '../../services/calculations';
 import './PilotStats.css';
 
-export function PilotStats({ driver }) {
+export function PilotStats({ driver, allDrivers = [] }) {
   // Calculer le temps potentiel (somme des meilleurs segments)
   const potentialTime = driver.bestValidTime || 0; // TODO: calculer depuis les segments
+  
+  // Calculer l'écart au leader (comme prod)
+  const leaderTime = allDrivers.reduce((best, d) => {
+    if (d.bestValidTime && d.bestValidTime > 0) {
+      return best === 0 || d.bestValidTime < best ? d.bestValidTime : best;
+    }
+    return best;
+  }, 0);
+  
+  const gapToLeader = (driver.bestValidTime && driver.bestValidTime > 0 && leaderTime > 0)
+    ? driver.bestValidTime - leaderTime
+    : null;
   
   return (
     <section className="pilot-stats-section">
@@ -51,7 +63,9 @@ export function PilotStats({ driver }) {
         
         <div className="stat-item">
           <span className="stat-label">Écart au leader:</span>
-          <span className="stat-value">--:--.---</span>
+          <span className="stat-value">
+            {gapToLeader !== null ? formatDelta(gapToLeader) : '--:--.---'}
+          </span>
         </div>
         
         <div className="stat-item constance-item">

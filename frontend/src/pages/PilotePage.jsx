@@ -110,7 +110,7 @@ export function PilotePage({ drivers, sessions = [] }) {
       {/* Contenu de la fiche */}
       <div className="pilot-page-content">
         {/* Stats principales */}
-        <PilotStats driver={pilot} />
+        <PilotStats driver={pilot} allDrivers={driversForTrack} />
 
         {/* Comparateur de segments */}
         <SegmentComparator driver={pilot} allDrivers={driversForTrack} />
