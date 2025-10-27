@@ -26,10 +26,25 @@ alwaysApply: false
 - Vérifie que la fonctionnalité marche avant toute autre chose
 - Écris des tests unitaires pour s'assurer que ça fonctionne
 
+### 📸 RÈGLE 1 : Capturer la référence visuelle AVANT
+**AVANT de commencer à coder une feature UI :**
+- Prendre 2-3 screenshots Playwright de la prod (différents pilotes/circuits)
+- Documenter le sélecteur exact : `<div class="segment-card">`
+- Identifier les valeurs attendues : gaps, positions, couleurs
+- **Objectif:** -90% des ajustements UI avant le merge
+
+### 🧪 RÈGLE 2 : Tester le format des données EN PREMIER
+**AVANT d'implémenter une logique de formatage :**
+- Extraire un JSON de 2-3 pilotes en prod avec Playwright
+- Écrire un test avec valeurs attendues exactes
+- Implémenter ensuite
+- **Objectif:** -70% des bugs de formatage
+
 ### Tests techniques
 - Exécute les tests unitaires
 - Lance les tests end-to-end Playwright (ou propose-les s'ils n'existent pas)
 - Valide avec Playwright que la fonctionnalité fonctionne et qu'il n'y ait pas d'erreur console
+- **RÈGLE 3 : Screenshot diff React vs Prod** après chaque feature
 - Tous les tests doivent passer avant commit
 
 ---
