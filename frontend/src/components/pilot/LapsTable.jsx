@@ -20,16 +20,18 @@ export function LapsTable({ driver }) {
     let bestSplit1 = Infinity, bestSplit2 = Infinity, bestSplit3 = Infinity, bestTotal = Infinity;
     
     const lapsData = driver.lapTimes.map((lap, index) => {
-      const sessionDate = lap.sessionDate || '--';
+      const sessionDate = lap.sessionDate || '';
       let formattedDate = sessionDate;
-      if (sessionDate !== '--' && sessionDate.length >= 13) {
+      if (sessionDate && sessionDate.length >= 13) {
+        // Format: YYMMDD_HHMMSS -> DD/MM/YY HH:MM
         const year = '20' + sessionDate.substring(0, 2);
         const month = sessionDate.substring(2, 4);
         const day = sessionDate.substring(4, 6);
         const hour = sessionDate.substring(7, 9);
         const minute = sessionDate.substring(9, 11);
-        const second = sessionDate.substring(11, 13);
-        formattedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+        formattedDate = `${day}/${month}/${year.substring(2)} ${hour}:${minute}`;
+      } else {
+        formattedDate = '--';
       }
       
       const splits = lap.splits || [];
