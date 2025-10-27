@@ -7,7 +7,10 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 import './AdminPage.css';
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 const ADMIN_PASSWORD = 'admin123'; // TODO: Remplacer par variable d'environnement
 
@@ -19,6 +22,7 @@ export function AdminPage() {
   const [status, setStatus] = useState('Chargement...');
   const navigate = useNavigate();
   const chartRef = useRef(null);
+  const chartInstanceRef = useRef(null);
 
   // Authentification
   const handleLogin = (e) => {
@@ -122,6 +126,162 @@ export function AdminPage() {
       loadScrapingLogs();
     }
   }, [authenticated]);
+
+  // Rendre le graphique de performance
+  useEffect(() => {
+    if (logs.length > 0 && chartRef.current) {
+      renderPerformanceChart(logs);
+    }
+  }, [logs]);
+
+  const renderPerformanceChart = (chartLogs) => {
+    if (!chartRef.current) {
+      console.warn('Canvas du graphique de performance non trouvé');
+      return;
+    }
+
+    const ctx = chartRef.current.getContext('2d');
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
+    }
+
+    // Filtrer les logs des 7 derniers jours
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const recentLogs = chartLogs.filter(log => {
+      const logDate = log.timestamp ? 
+        new Date(log.timestamp._seconds * 1000 + log.timestamp._nanoseconds / 1000000) :
+        new Date();
+      return logDate >= sevenDaysAgo;
+    }).reverse();
+
+    if (recentLogs.length === 0) {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.fillStyle = '#666';
+      ctx.font = '16px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('Aucune donnée récente', ctx.canvas.width / 2, ctx.canvas.height / 2);
+      return;
+    }
+
+    const labels = recentLogs.map(log => {
+      const logDate = log.timestamp ? 
+        new Date(log.timestamp._seconds * 1000 + log.timestamp._nanoseconds / 1000000) :
+        new Date();
+      return logDate.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+    });
+
+    const successfulDownloads = recentLogs.map(log => log.downloads?.successful || 0);
+    const failedDownloads = recentLogs.map(log => log.downloads?.failed || 0);
+    const totalDownloads = recentLogs.map(log => log.downloads?.total || 0);
+
+    chartInstanceRef.current = new ChartJS(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Téléchargements Réussis',
+            data: successfulDownloads,
+            borderColor: '#22c55e',
+            backgroundColor: 'rgba(34, 197, 94, 0.2)',
+            fill: true,
+            tension: 0.3,
+            pointBackgroundColor: '#22c55e',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 5
+          },
+          {
+            label: 'Téléchargements Échoués',
+            data: failedDownloads,
+            borderColor: '#ef4444',
+            backgroundColor: 'rgba(239, 68, 68, 0.2)',
+            fill: true,
+            tension: 0.3,
+            pointBackgroundColor: '#ef4444',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 5
+          },
+          {
+            label: 'Total Tentatives',
+            data: totalDownloads,
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+            fill: true,
+            tension: 0.3,
+            pointBackgroundColor: '#3b82f6',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 5
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          intersect: false,
+          mode: 'index'
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Date',
+              color: '#666',
+              font: { size: 12, weight: 'bold' }
+            },
+            grid: { color: 'rgba(0, 0, 0, 0.1)' }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Nombre de Sessions',
+              color: '#666',
+              font: { size: 12, weight: 'bold' }
+            },
+            beginAtZero: true,
+            grid: { color: 'rgba(0, 0, 0, 0.1)' }
+          }
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 20,
+              font: { size: 12 }
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            borderColor: '#3b82f6',
+            borderWidth: 1,
+            cornerRadius: 8,
+            displayColors: true,
+            callbacks: {
+              title: function(context) { return `📅 ${context[0].label}`; },
+              label: function(context) {
+                const value = context.parsed.y;
+                let icon = '';
+                if (context.dataset.label.includes('Réussis')) { icon = '✅'; }
+                else if (context.dataset.label.includes('Échoués')) { icon = '❌'; }
+                else if (context.dataset.label.includes('Total')) { icon = '📊'; }
+                return `${icon} ${context.dataset.label}: ${value}`;
+              }
+            }
+          }
+        }
+      }
+    });
+    console.log('📈 Graphique de performance rendu avec succès');
+  };
 
   // Affichage login
   if (!authenticated) {
@@ -246,6 +406,12 @@ export function AdminPage() {
                 </div>
               </div>
             </div>
+          </div>
+          
+          {/* Graphique de performance */}
+          <div className="performance-chart">
+            <h4>📈 Performances (7 derniers jours)</h4>
+            <canvas ref={chartRef} width="400" height="200"></canvas>
           </div>
           
           {/* Logs détaillés */}

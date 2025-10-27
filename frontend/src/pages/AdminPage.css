@@ -411,6 +411,25 @@
   text-align: right;
 }
 
+.performance-chart {
+  margin-bottom: 24px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.performance-chart h4 {
+  margin: 0 0 16px 0;
+  color: var(--text-primary);
+  font-size: 18px;
+}
+
+.performance-chart canvas {
+  width: 100%;
+  max-height: 300px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .stats-grid {
