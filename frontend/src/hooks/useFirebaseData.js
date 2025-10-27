@@ -101,8 +101,25 @@ export function useFirebaseData() {
             track: driverTrackMap[id] || 'Unknown' // Piste du pilote (pas toutes les sessions)
           }));
           
+          // Calculer lastUpdate depuis les sessions (COPIE de la prod ligne 650)
+          const mostRecentSessionDate = sessions.reduce((latest, session) => {
+            if (session.Date) {
+              const sessionDate = new Date(session.Date);
+              return !latest || sessionDate > latest ? sessionDate : latest;
+            }
+            return latest;
+          }, null);
+          
+          // Créer les métadonnées calculées
+          const calculatedMetadata = {
+            lastUpdate: mostRecentSessionDate ? mostRecentSessionDate.toISOString() : null,
+            sessionCount: sessions.length
+          };
+          
+          console.log('📅 Dernière session calculée:', calculatedMetadata.lastUpdate);
+          
           setData({ drivers: driversArray });
-          setMetadata(metaData);
+          setMetadata(calculatedMetadata);
           setSessions(sessions); // Stocker les sessions pour trouver la plus récente
         }
       } catch (err) {
