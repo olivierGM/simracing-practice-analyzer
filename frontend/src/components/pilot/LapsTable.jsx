@@ -17,9 +17,18 @@ export function LapsTable({ driver }) {
   const { laps, bestTimes } = useMemo(() => {
     if (!driver.lapTimes || driver.lapTimes.length === 0) return { laps: [], bestTimes: null };
     
+    // Trier les tours par date avant de les mapper
+    const sortedLapTimes = [...driver.lapTimes].sort((a, b) => {
+      const dateA = a.sessionDate || '';
+      const dateB = b.sessionDate || '';
+      if (dateA < dateB) return -1;
+      if (dateA > dateB) return 1;
+      return 0;
+    });
+    
     let bestSplit1 = Infinity, bestSplit2 = Infinity, bestSplit3 = Infinity, bestTotal = Infinity;
     
-    const lapsData = driver.lapTimes.map((lap, index) => {
+    const lapsData = sortedLapTimes.map((lap, index) => {
       const sessionDate = lap.sessionDate || '';
       let formattedDate = sessionDate;
       if (sessionDate && sessionDate.length >= 13) {
@@ -44,7 +53,7 @@ export function LapsTable({ driver }) {
       if (lapTime > 0) bestTotal = Math.min(bestTotal, lapTime);
       
       return {
-        lapNumber: index + 1,
+        lapNumber: index + 1, // Index après tri par date
         date: formattedDate,
         totalTime: lapTime,
         S1: splits[0] || 0,
