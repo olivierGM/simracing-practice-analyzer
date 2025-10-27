@@ -65,10 +65,12 @@ export function SegmentComparator({ driver, allDrivers }) {
     const gap = (pilotTime - refTime) * 1000;
     const isPositive = gap <= 0;
     
-    // Format gap: si positif (pilote plus rapide), afficher +X.XXXs
-    // Si négatif (pilote plus lent), afficher X.XXXs sans signe
+    // Format gap: si positif (pilote plus rapide), afficher +X.000s
+    // Si négatif (pilote plus lent), afficher X.000s sans signe
+    // Gap est en ms, on doit afficher en secondes avec 3 décimales
     const gapInSeconds = Math.abs(gap) / 1000;
-    const gapFormatted = isPositive ? `+${gapInSeconds.toFixed(3)}s` : `${gapInSeconds.toFixed(3)}s`;
+    const sign = isPositive ? '+' : '';
+    const gapFormatted = `${sign}${gapInSeconds.toFixed(3)}s`;
     
     return (
       <div className="segment-row" key={segment}>

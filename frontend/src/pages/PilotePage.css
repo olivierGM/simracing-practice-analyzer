@@ -107,15 +107,13 @@
 }
 
 .pilot-position {
-  font-size: 14px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: white;
-  background: #2a2a2a;
-  padding: 6px 10px;
-  border-radius: 50%;
-  min-width: 60px;
-  text-align: center;
-  display: inline-block;
+  border: 1px solid var(--border-color);
 }
 
 .pilot-page-content {
