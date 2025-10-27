@@ -66,7 +66,22 @@ export function ProgressionChart({ driver }) {
     
     if (groupedSessions.length === 0) return null;
     
-    const labels = groupedSessions.map((_, i) => `Session ${i + 1}`);
+    // Extraire les dates de session pour les labels
+    const labels = groupedSessions.map((session, i) => {
+      // Prendre la date du premier tour de chaque session
+      const firstLap = driver.lapTimes[i * sessionsPerGroup];
+      if (firstLap && firstLap.sessionDate) {
+        // Format: YYMMDD_HHMMSS -> DD/MM/YY
+        const sessionDate = firstLap.sessionDate;
+        if (sessionDate.length >= 6) {
+          const day = sessionDate.substring(4, 6);
+          const month = sessionDate.substring(2, 4);
+          const year = '20' + sessionDate.substring(0, 2);
+          return `${day}/${month}/${year.substring(2)}`;
+        }
+      }
+      return `Session ${i + 1}`;
+    });
     
     // 1. Meilleur temps cumulatif (ligne 377-382)
     let cumulativeBest = null;
@@ -189,7 +204,7 @@ export function ProgressionChart({ driver }) {
       x: {
         title: {
           display: true,
-          text: 'Sessions'
+          text: 'Dates'
         },
         ticks: {
           maxTicksLimit: 10,
