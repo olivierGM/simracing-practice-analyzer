@@ -53,6 +53,25 @@ export function PilotePage({ drivers, sessions = [] }) {
       .join(' ');
   }, [circuitId]);
 
+  // Calculer le classement de la catégorie
+  const categoryStats = useMemo(() => {
+    if (!pilot || !driversForTrack) return { categoryPosition: 0, categoryDrivers: 0 };
+    
+    const categoryDrivers = driversForTrack.filter(d => d.category === pilot.category);
+    const sortedCategoryDrivers = [...categoryDrivers].sort((a, b) => {
+      const timeA = a.bestValidTime || 0;
+      const timeB = b.bestValidTime || 0;
+      if (timeA === 0 && timeB === 0) return 0;
+      if (timeA === 0) return 1;
+      if (timeB === 0) return -1;
+      return timeA - timeB;
+    });
+    
+    const categoryPosition = sortedCategoryDrivers.findIndex(d => d.id === pilotId) + 1;
+    
+    return { categoryPosition, categoryDrivers: categoryDrivers.length };
+  }, [pilot, driversForTrack, pilotId]);
+
   // Si pilote non trouvé
   if (!pilot) {
     return (
@@ -98,7 +117,9 @@ export function PilotePage({ drivers, sessions = [] }) {
       {/* Header de la fiche pilote */}
       <div className="pilot-page-header">
         <div className="pilot-title-group">
-          <h1 className="pilot-page-title">{pilot.name}</h1>
+          <h1 className="pilot-page-title">
+            {pilot.name} <span className="pilot-category-rank">#{categoryStats.categoryPosition}/{categoryStats.categoryDrivers}</span>
+          </h1>
           <div className="pilot-meta">
             <span className="pilot-circuit">{pilot.track}</span>
             <span className="pilot-category-badge">{pilot.category}</span>

@@ -13,7 +13,7 @@ export function useTheme() {
   const [currentTheme, setCurrentTheme] = useState(() => {
     // Charger le thème depuis localStorage au montage
     const saved = localStorage.getItem('theme-preference');
-    return saved || 'auto'; // Auto par défaut (comme prod)
+    return saved || 'dark'; // Dark par défaut
   });
 
   useEffect(() => {
