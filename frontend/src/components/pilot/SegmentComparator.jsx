@@ -23,7 +23,7 @@ export function SegmentComparator({ driver, allDrivers }) {
   if (!pilotStats || !globalStats) {
     return (
       <div className="segment-section">
-        <h3>🏁 Comparateur de Segments <span className="focus-badge">Focus: {maxGapSegment.segment}</span><span className="info-icon">ℹ️</span></h3>
+        <h3>🏁 Comparateur de Segments<span className="info-icon">ℹ️</span></h3>
         <p>Aucune donnée de segments disponible</p>
       </div>
     );
@@ -75,6 +75,9 @@ export function SegmentComparator({ driver, allDrivers }) {
     <div className="segment-section">
       <div className="segment-header">
         <h3>🏁 Comparateur de Segments <span className="focus-badge">Focus: {maxGapSegment.segment}</span><span className="info-icon">ℹ️</span></h3>
+        <div className="segment-focus-hint">
+          💡 Focus sur <strong>{maxGapSegment.segment}</strong> pour {formatGap(maxGapSegment.gap)} de gain
+        </div>
       </div>
 
       <div className="segment-grid">
