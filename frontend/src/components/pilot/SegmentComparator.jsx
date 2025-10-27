@@ -42,9 +42,9 @@ export function SegmentComparator({ driver, allDrivers }) {
     gap > max.gap ? { segment: seg, gap } : max
   , { segment: 'S1', gap: gaps.S1 });
 
-  const formatSegmentTime = (ms) => {
-    if (!ms) return '--';
-    return `${(ms / 1000).toFixed(3)}s`;
+  const formatSegmentTime = (timeInMs) => {
+    if (!timeInMs || timeInMs === 0) return '0.000s';
+    return `${(timeInMs / 1000).toFixed(3)}s`;
   };
 
   const formatGap = (gap) => {
@@ -61,13 +61,13 @@ export function SegmentComparator({ driver, allDrivers }) {
       return null;
     }
     
-    // Gap en millisecondes (pilote - référence)
-    const gap = (pilotTime - refTime) * 1000;
-    const isPositive = gap <= 0;
+    // Gap: pilote plus lent = positif, pilote plus rapide = négatif
+    // Comme en prod ligne 1001-1010: gap = pilotTime - refTime
+    const gap = pilotTime - refTime; // En ms
+    const isPositive = gap <= 0; // Si négatif, pilote plus rapide
     
-    // Format gap: si positif (pilote plus rapide), afficher +X.000s
-    // Si négatif (pilote plus lent), afficher X.000s sans signe
-    // Gap est en ms, on doit afficher en secondes avec 3 décimales
+    // Format comme en prod (ligne 1048)
+    // Conversion ms → secondes pour l'affichage
     const gapInSeconds = Math.abs(gap) / 1000;
     const sign = isPositive ? '+' : '';
     const gapFormatted = `${sign}${gapInSeconds.toFixed(3)}s`;
