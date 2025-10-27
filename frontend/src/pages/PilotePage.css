@@ -162,8 +162,8 @@
   }
   
   .laps-chart-container .chart-section {
-    flex: 0 0 400px;
-    max-width: 400px;
+    flex: 1;
+    min-width: 0;
     background: transparent;
     padding: 0;
     border: none;
@@ -172,8 +172,8 @@
   }
   
   .laps-chart-container .laps-section {
-    flex: 1;
-    min-width: 0;
+    flex: 0 0 670px;
+    max-width: 670px;
     background: transparent;
     padding: 0;
     border: none;
