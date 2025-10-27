@@ -145,6 +145,7 @@
 /* Container laps et graphique côte à côte - comme en prod */
 .laps-chart-container {
   display: flex;
+  flex-direction: column;
   gap: 20px;
   padding: 20px;
   background: var(--card-bg);
@@ -153,23 +154,47 @@
   align-items: flex-start;
 }
 
-.laps-chart-container .laps-section {
-  flex: 0 0 720px;
-  max-width: 720px;
-  background: transparent;
-  padding: 0;
-  border: none;
-  border-radius: 0;
+/* Desktop breakpoint - côte à côte */
+@media (min-width: 1200px) {
+  .laps-chart-container {
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  .laps-chart-container .chart-section {
+    flex: 0 0 400px;
+    max-width: 400px;
+    background: transparent;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+  
+  .laps-chart-container .laps-section {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+  }
 }
 
 .laps-chart-container .chart-section {
-  flex: 1;
-  min-width: 300px;
   background: transparent;
   padding: 0;
   border: none;
   border-radius: 0;
   margin-bottom: 0;
+}
+
+.laps-chart-container .laps-section {
+  background: transparent;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  width: 100%;
 }
 
 /* Animation d'entrée */
@@ -208,5 +233,11 @@
   .laps-chart-container {
     flex-direction: column;
     gap: 16px;
+    padding: 12px;
+  }
+  
+  .laps-chart-container .chart-section,
+  .laps-chart-container .laps-section {
+    width: 100%;
   }
 }
