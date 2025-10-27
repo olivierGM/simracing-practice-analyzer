@@ -12,9 +12,10 @@ import { HomePage } from './pages/HomePage';
 import { PilotePage } from './pages/PilotePage';
 import { AdminPage } from './pages/AdminPage';
 import { useFirebaseData } from './hooks/useFirebaseData';
+import { TrackProvider, useTrackContext } from './contexts/TrackContext';
 import './App.css';
 
-function App() {
+function AppContent() {
   const { data, metadata, sessions, loading, error } = useFirebaseData();
 
   // Extraire les pilotes des données
@@ -39,10 +40,12 @@ function App() {
     );
   }
 
+  const { trackFilter } = useTrackContext();
+
   return (
     <BrowserRouter>
       <div className="app">
-        <Header metadata={metadata} drivers={drivers} sessions={sessions} />
+        <Header metadata={metadata} trackName={trackFilter} />
         
         <main className="main-content">
                 <Routes>
@@ -53,6 +56,36 @@ function App() {
         </main>
       </div>
     </BrowserRouter>
+  );
+}
+
+function App() {
+  const { data, metadata, sessions, loading, error } = useFirebaseData();
+  const drivers = data?.drivers || [];
+
+  if (loading) {
+    return (
+      <div className="app">
+        <LoadingSpinner message="Chargement des données..." />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="app">
+        <div className="error-container">
+          <h2>Erreur de chargement</h2>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <TrackProvider>
+      <AppContent />
+    </TrackProvider>
   );
 }
 

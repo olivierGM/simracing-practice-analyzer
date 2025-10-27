@@ -12,15 +12,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { LastUpdateIndicator } from './LastUpdateIndicator';
 import { ACCServersBanner } from './ACCServersBanner';
-import { useFilters } from '../../hooks/useFilters';
 import './Header.css';
 
-export function Header({ metadata, drivers = [], sessions = [] }) {
+export function Header({ metadata, trackName }) {
   const navigate = useNavigate();
   const location = useLocation();
-  
-  // Récupérer le circuit sélectionné depuis l'URL ou les filtres
-  const { trackFilter } = useFilters(drivers, sessions);
   
   const handleAdminClick = () => {
     navigate('/admin');
@@ -52,7 +48,7 @@ export function Header({ metadata, drivers = [], sessions = [] }) {
       </div>
       
       {/* Bandeau des serveurs ACC (uniquement sur la page d'accueil) */}
-      {isHomePage && <ACCServersBanner trackName={trackFilter} />}
+      {isHomePage && <ACCServersBanner trackName={trackName} />}
     </header>
   );
 }

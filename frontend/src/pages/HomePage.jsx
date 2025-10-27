@@ -16,6 +16,7 @@ import { DURATIONS } from '../utils/constants';
 
 export function HomePage({ drivers, sessions = [] }) {
   const navigate = useNavigate();
+  const { setTrackFilter: setContextTrackFilter } = useTrackContext();
 
   // Hooks pour filtres et tri
   const {
@@ -28,6 +29,11 @@ export function HomePage({ drivers, sessions = [] }) {
     availableTracks,
     filteredDrivers
   } = useFilters(drivers, sessions);
+  
+  // Mettre à jour le contexte quand trackFilter change
+  useEffect(() => {
+    setContextTrackFilter(trackFilter);
+  }, [trackFilter, setContextTrackFilter]);
   
   // COPIE DE LA PROD ligne 1164-1182: Filtrer les sessions par période AVANT retraitement
   const filteredSessions = useMemo(() => {
