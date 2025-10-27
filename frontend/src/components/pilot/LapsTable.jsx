@@ -53,6 +53,17 @@ export function LapsTable({ driver }) {
           : String(bVal).localeCompare(String(aVal));
       }
       
+      // Pour les temps : 0 = PIRE (comme prod)
+      const timeColumns = ['totalTime', 'S1', 'S2', 'S3'];
+      if (timeColumns.includes(sortColumn)) {
+        const aIsInvalid = aVal === 0 || aVal === null || aVal === undefined;
+        const bIsInvalid = bVal === 0 || bVal === null || bVal === undefined;
+        
+        if (aIsInvalid && bIsInvalid) return 0;
+        if (aIsInvalid) return sortDirection === 'asc' ? 1 : -1;
+        if (bIsInvalid) return sortDirection === 'asc' ? -1 : 1;
+      }
+      
       // Pour les nombres
       const comparison = aVal - bVal;
       return sortDirection === 'asc' ? comparison : -comparison;
