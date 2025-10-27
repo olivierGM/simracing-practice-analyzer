@@ -48,11 +48,16 @@ export function SegmentComparator({ driver, allDrivers }) {
   };
 
   const formatGap = (gap) => {
-    if (gap === 0) return '+0.000s';
+    if (gap === 0 || isNaN(gap)) return '+0.000s';
     return `${gap > 0 ? '+' : ''}${(gap / 1000).toFixed(3)}s`;
   };
 
   const renderSegmentRow = (segment, pilotTime, refTime) => {
+    // Guard: Si les temps ne sont pas disponibles, ne rien afficher
+    if (!pilotTime || !refTime || pilotTime === 0 || refTime === 0) {
+      return null;
+    }
+    
     const gap = (pilotTime - refTime) * 1000;
     const isPositive = gap <= 0;
     
