@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Style ACC - Élégant avec ligne de course -->
+  <circle cx="50" cy="50" r="40" fill="#1a1a1a" stroke="#10b981" stroke-width="1"/>
+  <path d="M 20 30 Q 40 20, 60 30 Q 80 40, 70 55 L 50 75 Q 25 65, 20 30 Z" 
+        fill="none" stroke="#fbbf24" stroke-width="3" fill="none"/>
+  <circle cx="55" cy="50" r="3" fill="#ef4444"/>
+  <circle cx="35" cy="50" r="3" fill="#ef4444"/>
+</svg>
+

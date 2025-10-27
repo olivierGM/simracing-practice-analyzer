@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Style hyper moderne - Data flow -->
+  <circle cx="50" cy="50" r="35" fill="#1a1a1a" stroke="#10b981" stroke-width="2"/>
+  <!-- Cercles concentriques -->
+  <circle cx="50" cy="50" r="28" fill="none" stroke="#fbbf24" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="#ef4444" stroke-width="1.5" opacity="0.5"/>
+  <!-- Lignes de vitesse -->
+  <path d="M 50 15 L 50 50" stroke="#10b981" stroke-width="2" fill="none"/>
+  <path d="M 30 50 L 50 50 L 35 65" stroke="#fbbf24" stroke-width="2" fill="none"/>
+  <circle cx="50" cy="50" r="8" fill="#10b981"/>
+</svg>
+
