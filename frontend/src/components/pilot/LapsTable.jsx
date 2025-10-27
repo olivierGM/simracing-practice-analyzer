@@ -17,16 +17,32 @@ export function LapsTable({ driver }) {
   const laps = useMemo(() => {
     if (!driver.lapTimes || driver.lapTimes.length === 0) return [];
     
-    return driver.lapTimes.map((lap, index) => ({
-      lapNumber: index + 1,
-      date: lap.sessionDate || '--',
-      totalTime: lap.laptime || 0,
-      S1: lap.splits && lap.splits[0] ? lap.splits[0] : 0,
-      S2: lap.splits && lap.splits[1] ? lap.splits[1] : 0,
-      S3: lap.splits && lap.splits[2] ? lap.splits[2] : 0,
-      isValid: lap.isValid || false,
-      isWet: lap.isWetSession || false,
-    }));
+    return driver.lapTimes.map((lap, index) => {
+      // Format du fileName: YYMMDD_HHMMSS_FP
+      // Ex: 251026_194700_FP = 25 Oct 2025 19:47:00
+      const sessionDate = lap.sessionDate || '--';
+      let formattedDate = sessionDate;
+      if (sessionDate !== '--' && sessionDate.length >= 13) {
+        const year = '20' + sessionDate.substring(0, 2);
+        const month = sessionDate.substring(2, 4);
+        const day = sessionDate.substring(4, 6);
+        const hour = sessionDate.substring(7, 9);
+        const minute = sessionDate.substring(9, 11);
+        const second = sessionDate.substring(11, 13);
+        formattedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+      }
+      
+      return {
+        lapNumber: index + 1,
+        date: formattedDate,
+        totalTime: lap.time || lap.laptime || 0,
+        S1: lap.splits && lap.splits[0] ? lap.splits[0] : 0,
+        S2: lap.splits && lap.splits[1] ? lap.splits[1] : 0,
+        S3: lap.splits && lap.splits[2] ? lap.splits[2] : 0,
+        isValid: lap.isValid || false,
+        isWet: lap.isWet || false,
+      };
+    });
   }, [driver.lapTimes]);
 
   const handleSort = (column) => {

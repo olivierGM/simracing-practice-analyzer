@@ -10,7 +10,7 @@
       - generic [ref=e9]:
         - generic [ref=e10] [cursor=pointer]:
           - generic [ref=e11]: "Dernière session :"
-          - 'generic "Dernière session: • Début: 2025-10-27 10 h 30 min 18 s • Durée estimée: 1305min • Fin estimée: 2025-10-28 08 h 15 min 18 s • Nombre de sessions: 243" [ref=e12]': Il y a 31 min
+          - 'generic "Dernière session: • Début: 2025-10-27 10 h 30 min 18 s • Durée estimée: 1305min • Fin estimée: 2025-10-28 08 h 15 min 18 s • Nombre de sessions: 243" [ref=e12]': Il y a 1h
         - 'button "Actuellement: Suit le système • Cliquer pour: Mode clair" [ref=e13]': 🖥️
         - button "Connexion admin" [ref=e14] [cursor=pointer]: ⚙️
   - main [ref=e15]:
