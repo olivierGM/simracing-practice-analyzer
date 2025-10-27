@@ -1,3 +1,8 @@
+/**
+ * Styles pour le tableau des tours
+ * COPIE EXACTE de prod (deploy/components/pilot-card/pilot-card.css lignes 268-439)
+ */
+
 .laps-section {
   background: var(--card-bg);
   padding: 24px;
@@ -5,74 +10,147 @@
   border: 1px solid var(--border-color);
 }
 
-.laps-table-container {
-  overflow-x: auto;
-  margin-top: 16px;
-}
-
-.laps-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-
-.laps-table thead {
-  background: var(--primary-color);
-  color: white;
-}
-
-.laps-table th {
-  padding: 12px 10px;
-  text-align: left;
+.laps-section h3 {
+  margin: 0 0 16px 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
   font-weight: 600;
+}
+
+/* Header avec grid comme prod */
+.laps-header {
+  display: grid;
+  grid-template-columns: 50px 120px 90px 90px 90px 90px 50px 50px;
+  background: #6366f1 !important;
+  color: white !important;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 8px;
+  gap: 6px;
+  align-items: center;
+  border-radius: 6px 6px 0 0;
+}
+
+.laps-header .sortable {
   cursor: pointer;
   user-select: none;
   transition: background-color 0.2s ease;
+  padding: 2px 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.laps-table th:hover {
-  background: var(--primary-hover);
+.laps-header .sortable:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.laps-table tbody tr {
+.laps-header .sort-indicator {
+  font-size: 0.7rem;
+  margin-left: 4px;
+  opacity: 0.8;
+}
+
+/* Item de tour avec grid comme prod */
+.laps-list {
+  border: 1px solid var(--border-color);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  overflow: hidden;
+}
+
+.lap-item {
+  display: grid;
+  grid-template-columns: 50px 120px 90px 90px 90px 90px 50px 50px;
+  padding: 6px 8px;
   border-bottom: 1px solid var(--border-color);
-  transition: background-color 0.2s ease;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.8rem;
+  transition: background 0.2s ease;
 }
 
-.laps-table tbody tr:hover {
-  background: var(--hover-bg);
+.lap-item:hover {
+  background: var(--bg-hover);
 }
 
-.laps-table tbody tr:last-child {
+.lap-item:last-child {
   border-bottom: none;
 }
 
-.laps-table td {
-  padding: 10px;
-  color: var(--text-secondary);
-  font-family: 'Courier New', monospace;
-}
-
+/* Colonnes spécifiques */
 .lap-number {
-  font-weight: 700;
-  color: var(--text-primary) !important;
+  font-weight: 600;
+  color: #495057;
   text-align: center;
+  background: #e9ecef;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 0.8rem;
 }
 
-.total-time {
-  color: var(--primary-color) !important;
+.lap-datetime {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: left;
+}
+
+.lap-split-1, .lap-split-2, .lap-split-3 {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.lap-total {
   font-weight: 600;
+  color: var(--text-primary);
+  font-family: 'Courier New', monospace;
+  text-align: right;
+  font-size: 0.85rem;
+}
+
+.lap-valid, .lap-wet {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.lap-valid {
+  color: var(--success-color);
+}
+
+.lap-wet {
+  color: var(--accent-color);
+}
+
+/* Highlight pour les meilleurs temps */
+.best-time {
+  background: var(--success-color) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 8px rgba(16, 185, 129, 0.4); }
+  50% { box-shadow: 0 0 12px rgba(16, 185, 129, 0.6); }
+  100% { box-shadow: 0 0 8px rgba(16, 185, 129, 0.4); }
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .laps-table {
-    font-size: 12px;
+  .laps-header,
+  .lap-item {
+    min-width: 559px;
+    grid-template-columns: 45px 100px 80px 80px 80px 80px 45px 45px;
   }
   
-  .laps-table th,
-  .laps-table td {
-    padding: 8px 6px;
+  .laps-list {
+    overflow-x: auto;
   }
 }
-

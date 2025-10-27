@@ -2,7 +2,7 @@
  * Composant LapsTable
  * 
  * Tableau de tous les tours du pilote avec tri (COPIE de la prod)
- * Colonnes: Tour, Date, Total, S1, S2, S3, Valide, Wet
+ * Utilise GRID au lieu de TABLE comme la prod
  */
 
 import { useState, useMemo } from 'react';
@@ -11,15 +11,15 @@ import './LapsTable.css';
 
 export function LapsTable({ driver }) {
   const [sortColumn, setSortColumn] = useState('lapNumber');
-  const [sortDirection, setSortDirection] = useState('desc'); // Descending by default (dernier tour en premier)
+  const [sortDirection, setSortDirection] = useState('desc'); // Descending by default
 
-  // Extraire les tours depuis driver.lapTimes
-  const laps = useMemo(() => {
-    if (!driver.lapTimes || driver.lapTimes.length === 0) return [];
+  // Extraire les tours et calculer les meilleurs temps
+  const { laps, bestTimes } = useMemo(() => {
+    if (!driver.lapTimes || driver.lapTimes.length === 0) return { laps: [], bestTimes: null };
     
-    return driver.lapTimes.map((lap, index) => {
-      // Format du fileName: YYMMDD_HHMMSS_FP
-      // Ex: 251026_194700_FP = 25 Oct 2025 19:47:00
+    let bestSplit1 = Infinity, bestSplit2 = Infinity, bestSplit3 = Infinity, bestTotal = Infinity;
+    
+    const lapsData = driver.lapTimes.map((lap, index) => {
       const sessionDate = lap.sessionDate || '--';
       let formattedDate = sessionDate;
       if (sessionDate !== '--' && sessionDate.length >= 13) {
@@ -32,17 +32,36 @@ export function LapsTable({ driver }) {
         formattedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
       }
       
+      const splits = lap.splits || [];
+      const lapTime = lap.time || lap.laptime || 0;
+      
+      // Track meilleurs temps
+      if (splits[0] && splits[0] > 0) bestSplit1 = Math.min(bestSplit1, splits[0]);
+      if (splits[1] && splits[1] > 0) bestSplit2 = Math.min(bestSplit2, splits[1]);
+      if (splits[2] && splits[2] > 0) bestSplit3 = Math.min(bestSplit3, splits[2]);
+      if (lapTime > 0) bestTotal = Math.min(bestTotal, lapTime);
+      
       return {
         lapNumber: index + 1,
         date: formattedDate,
-        totalTime: lap.time || lap.laptime || 0,
-        S1: lap.splits && lap.splits[0] ? lap.splits[0] : 0,
-        S2: lap.splits && lap.splits[1] ? lap.splits[1] : 0,
-        S3: lap.splits && lap.splits[2] ? lap.splits[2] : 0,
+        totalTime: lapTime,
+        S1: splits[0] || 0,
+        S2: splits[1] || 0,
+        S3: splits[2] || 0,
         isValid: lap.isValid || false,
         isWet: lap.isWet || false,
       };
     });
+    
+    return {
+      laps: lapsData,
+      bestTimes: {
+        S1: bestSplit1 === Infinity ? 0 : bestSplit1,
+        S2: bestSplit2 === Infinity ? 0 : bestSplit2,
+        S3: bestSplit3 === Infinity ? 0 : bestSplit3,
+        total: bestTotal === Infinity ? 0 : bestTotal
+      }
+    };
   }, [driver.lapTimes]);
 
   const handleSort = (column) => {
@@ -62,14 +81,12 @@ export function LapsTable({ driver }) {
       let aVal = a[sortColumn];
       let bVal = b[sortColumn];
       
-      // Pour les dates (strings), comparer alphabétiquement
       if (sortColumn === 'date') {
         return sortDirection === 'asc' 
           ? String(aVal).localeCompare(String(bVal))
           : String(bVal).localeCompare(String(aVal));
       }
       
-      // Pour les temps : 0 = PIRE (comme prod)
       const timeColumns = ['totalTime', 'S1', 'S2', 'S3'];
       if (timeColumns.includes(sortColumn)) {
         const aIsInvalid = aVal === 0 || aVal === null || aVal === undefined;
@@ -80,7 +97,6 @@ export function LapsTable({ driver }) {
         if (bIsInvalid) return sortDirection === 'asc' ? -1 : 1;
       }
       
-      // Pour les nombres
       const comparison = aVal - bVal;
       return sortDirection === 'asc' ? comparison : -comparison;
     });
@@ -89,57 +105,70 @@ export function LapsTable({ driver }) {
   }, [laps, sortColumn, sortDirection]);
 
   const getSortIcon = (column) => {
-    if (sortColumn !== column) return '';
-    return sortDirection === 'asc' ? ' ↑' : ' ↓';
+    if (sortColumn !== column) return '↕️';
+    return sortDirection === 'asc' ? '↑' : '↓';
   };
+
+  if (laps.length === 0) {
+    return (
+      <div className="laps-section">
+        <h3>🏁 Détail des Tours</h3>
+        <p>Aucun tour disponible</p>
+      </div>
+    );
+  }
 
   return (
     <div className="laps-section">
       <h3>🏁 Détail des Tours ({laps.length} tours)</h3>
       
-      <div className="laps-table-container">
-        <table className="laps-table">
-          <thead>
-            <tr>
-              <th onClick={() => handleSort('lapNumber')} className="sortable">
-                Tour ⬍{getSortIcon('lapNumber')}
-              </th>
-              <th onClick={() => handleSort('date')} className="sortable">
-                Date{getSortIcon('date')}
-              </th>
-              <th onClick={() => handleSort('totalTime')} className="sortable">
-                Total{getSortIcon('totalTime')}
-              </th>
-              <th onClick={() => handleSort('S1')} className="sortable">
-                S1{getSortIcon('S1')}
-              </th>
-              <th onClick={() => handleSort('S2')} className="sortable">
-                S2{getSortIcon('S2')}
-              </th>
-              <th onClick={() => handleSort('S3')} className="sortable">
-                S3{getSortIcon('S3')}
-              </th>
-              <th>Valide</th>
-              <th>Wet</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedLaps.map(lap => (
-              <tr key={lap.lapNumber}>
-                <td className="lap-number">{lap.lapNumber}</td>
-                <td className="lap-date">{lap.date}</td>
-                <td className="total-time">{formatTime(lap.totalTime)}</td>
-                <td>{formatTime(lap.S1)}</td>
-                <td>{formatTime(lap.S2)}</td>
-                <td>{formatTime(lap.S3)}</td>
-                <td className="valid-indicator">{lap.isValid ? '✓' : ''}</td>
-                <td className="wet-indicator">{lap.isWet ? '🌧️' : ''}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Header avec grid comme prod */}
+      <div className="laps-header">
+        <div className="lap-header-item sortable" onClick={() => handleSort('lapNumber')}>
+          Tour <span className="sort-indicator">{getSortIcon('lapNumber')}</span>
+        </div>
+        <div className="lap-header-item sortable" onClick={() => handleSort('date')}>
+          Date/Heure <span className="sort-indicator">{getSortIcon('date')}</span>
+        </div>
+        <div className="lap-header-item sortable" onClick={() => handleSort('S1')}>
+          S1 <span className="sort-indicator">{getSortIcon('S1')}</span>
+        </div>
+        <div className="lap-header-item sortable" onClick={() => handleSort('S2')}>
+          S2 <span className="sort-indicator">{getSortIcon('S2')}</span>
+        </div>
+        <div className="lap-header-item sortable" onClick={() => handleSort('S3')}>
+          S3 <span className="sort-indicator">{getSortIcon('S3')}</span>
+        </div>
+        <div className="lap-header-item sortable" onClick={() => handleSort('totalTime')}>
+          Total <span className="sort-indicator">{getSortIcon('totalTime')}</span>
+        </div>
+        <div className="lap-header-item">Valide</div>
+        <div className="lap-header-item">Wet</div>
+      </div>
+      
+      {/* List avec grid comme prod */}
+      <div className="laps-list">
+        {sortedLaps.map((lap, index) => (
+          <div key={index} className="lap-item">
+            <div className="lap-number">{lap.lapNumber}</div>
+            <div className="lap-datetime">{lap.date}</div>
+            <div className={`lap-split-1 ${bestTimes && lap.S1 === bestTimes.S1 ? 'best-time' : ''}`}>
+              {lap.S1 > 0 ? formatTime(lap.S1) : '-'}
+            </div>
+            <div className={`lap-split-2 ${bestTimes && lap.S2 === bestTimes.S2 ? 'best-time' : ''}`}>
+              {lap.S2 > 0 ? formatTime(lap.S2) : '-'}
+            </div>
+            <div className={`lap-split-3 ${bestTimes && lap.S3 === bestTimes.S3 ? 'best-time' : ''}`}>
+              {lap.S3 > 0 ? formatTime(lap.S3) : '-'}
+            </div>
+            <div className={`lap-total ${bestTimes && lap.totalTime === bestTimes.total ? 'best-time' : ''}`}>
+              {formatTime(lap.totalTime)}
+            </div>
+            <div className="lap-valid">{lap.isValid ? '✅' : '❌'}</div>
+            <div className="lap-wet">{lap.isWet ? '🌧️' : '☀️'}</div>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
-
