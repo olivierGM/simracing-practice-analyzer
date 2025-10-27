@@ -42,7 +42,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app">
-        <Header metadata={metadata} />
+        <Header metadata={metadata} drivers={drivers} sessions={sessions} />
         
         <main className="main-content">
                 <Routes>
