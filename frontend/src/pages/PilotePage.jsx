@@ -120,7 +120,7 @@ export function PilotePage({ drivers, sessions = [] }) {
         <div className="pilot-title-group">
           <h1 className="pilot-page-title">{pilot.name}</h1>
           <div className="pilot-details">
-            <span className="pilot-category-badge">{getCategoryName(pilot.category)}</span>
+            <span className={`pilot-category-badge ${getCategoryClass(pilot.category)}`}>{getCategoryName(pilot.category)}</span>
             <span className="pilot-position">#{categoryStats.categoryPosition}/{categoryStats.categoryDrivers}</span>
           </div>
         </div>
