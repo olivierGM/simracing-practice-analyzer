@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- Chrono avec ⏱️ style -->
-  <circle cx="50" cy="50" r="40" fill="#10b981" stroke="#059669" stroke-width="3"/>
-  <path d="M 50 20 L 50 50 L 40 40" stroke="#fbbf24" stroke-width="3" fill="none"/>
-</svg>
-

@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- Style Gran Turismo - Vitesse moderne -->
-  <rect x="15" y="40" width="70" height="20" rx="10" fill="#1a1a1a" stroke="#10b981" stroke-width="2"/>
-  <rect x="20" y="43" width="60" height="14" rx="7" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
-  <circle cx="30" cy="50" r="6" fill="#10b981"/>
-  <circle cx="70" cy="50" r="6" fill="#10b981"/>
-  <rect x="35" y="47" width="30" height="6" rx="3" fill="#ef4444"/>
-</svg>
-
