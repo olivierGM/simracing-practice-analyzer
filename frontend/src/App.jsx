@@ -11,6 +11,7 @@ import { LoadingSpinner } from './components/common/LoadingSpinner';
 import { HomePage } from './pages/HomePage';
 import { PilotePage } from './pages/PilotePage';
 import { AdminPage } from './pages/AdminPage';
+import { AnalyticsTracker } from './components/layout/AnalyticsTracker';
 import { useFirebaseData } from './hooks/useFirebaseData';
 import { TrackProvider, useTrackContext } from './contexts/TrackContext';
 import './App.css';
@@ -44,6 +45,7 @@ function AppContent() {
 
   return (
     <BrowserRouter>
+      <AnalyticsTracker />
       <div className="app">
         <Header metadata={metadata} trackName={trackFilter} />
         

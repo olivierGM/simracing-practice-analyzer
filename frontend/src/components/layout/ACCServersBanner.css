@@ -2,8 +2,10 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: 0;
   margin: 12px 0;
+  margin-left: 0;
+  margin-right: 0;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -23,12 +25,9 @@
 
 .acc-banner-servers-container {
   flex: 1;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden; /* Changé de auto à hidden pour l'animation CSS */
   position: relative;
   -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  cursor: grab;
 }
 
 .acc-banner-servers-container:active {
@@ -51,6 +50,27 @@
   align-items: center;
   width: max-content;
   min-width: 100%;
+}
+
+/* Animation CSS pour scroll infini fluide sur mobile */
+@media (max-width: 768px) {
+  .acc-banner-servers-container {
+    overflow: hidden; /* Hidden pour permettre l'animation CSS */
+  }
+  
+  @keyframes acc-scroll-infinite {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%); /* -50% car on a doublé le contenu */
+    }
+  }
+  
+  .acc-banner-servers.auto-scrolling {
+    animation: acc-scroll-infinite 30s linear infinite;
+    will-change: transform;
+  }
 }
 
 .acc-banner-server {
@@ -127,7 +147,9 @@
 
 @media (max-width: 768px) {
   .acc-banner {
-    margin: 12px 10px;
+    margin: 12px 0;
+    margin-left: 0;
+    margin-right: 0;
     padding: 6px 12px;
   }
 

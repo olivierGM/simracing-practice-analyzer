@@ -8,6 +8,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
+import { trackAdminAction } from '../services/analytics';
 import './AdminPage.css';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
@@ -30,13 +31,16 @@ export function AdminPage() {
     if (password === ADMIN_PASSWORD) {
       setAuthenticated(true);
       setStatus('');
+      trackAdminAction('login', { success: true });
     } else {
       setStatus('❌ Mot de passe incorrect');
+      trackAdminAction('login', { success: false });
     }
     setPassword('');
   };
 
   const handleLogout = () => {
+    trackAdminAction('logout');
     setAuthenticated(false);
     setPassword('');
     setLogs([]);
@@ -75,6 +79,7 @@ export function AdminPage() {
   const triggerManualScraping = async () => {
     try {
       console.log('🚀 Lancement du scraping manuel...');
+      trackAdminAction('scraping_trigger', { manual: true });
       setLoading(true);
       setStatus('⏳ Lancement en cours...');
       

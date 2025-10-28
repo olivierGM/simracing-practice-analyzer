@@ -16,6 +16,7 @@ export function ACCServersBanner({ trackName }) {
   const [isDragging, setIsDragging] = useState(false);
   const [animationPaused, setAnimationPaused] = useState(false);
   const serversContainerRef = useRef(null);
+  const serversListRef = useRef(null);
   
   // Détecter si on est sur mobile
   useEffect(() => {
@@ -29,125 +30,53 @@ export function ACCServersBanner({ trackName }) {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Scroll automatique pour mobile
+
+  // Gestion du drag pour mobile - pause l'animation CSS lors du touch
   useEffect(() => {
-    // Vérifier les conditions de base
-    if (!isMobile || animationPaused || isDragging) return;
-    
-    // Attendre que le container soit monté et que les serveurs soient chargés
-    if (!serversContainerRef.current || !servers || servers.length === 0) {
-      // Réessayer après un court délai si les données ne sont pas encore prêtes
-      const timeout = setTimeout(() => {
-        if (serversContainerRef.current && servers && servers.length > 0) {
-          // Forcer un re-render pour déclencher le useEffect
-          setIsMobile(window.innerWidth <= 768);
-        }
-      }, 500);
-      return () => clearTimeout(timeout);
-    }
+    if (!isMobile || !serversContainerRef.current || !serversListRef.current) return;
 
     const container = serversContainerRef.current;
-    let animationFrameId = null;
-    const scrollSpeed = 0.5; // pixels par frame
-
-    const autoScroll = () => {
-      // Vérifier que les conditions sont toujours valides
-      if (animationPaused || isDragging || !container || !isMobile) {
-        if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId);
-          animationFrameId = null;
-        }
-        return;
-      }
-      
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      
-      // Si pas assez de contenu pour scroller, ne rien faire
-      if (maxScroll <= 0) {
-        animationFrameId = requestAnimationFrame(autoScroll);
-        return;
-      }
-      
-      // Si on arrive à la fin, revenir au début (boucle infinie)
-      if (container.scrollLeft >= maxScroll - 1) {
-        container.scrollLeft = 0;
-      } else {
-        container.scrollLeft += scrollSpeed;
-      }
-      
-      animationFrameId = requestAnimationFrame(autoScroll);
-    };
-
-    // Démarrer l'animation après un court délai pour s'assurer que le DOM est prêt
-    const startTimeout = setTimeout(() => {
-      animationFrameId = requestAnimationFrame(autoScroll);
-    }, 100);
-
-    return () => {
-      clearTimeout(startTimeout);
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-    };
-  }, [isMobile, animationPaused, isDragging, servers]);
-
-  // Gestion du drag pour mobile
-  useEffect(() => {
-    if (!isMobile || !serversContainerRef.current) return;
-
-    const container = serversContainerRef.current;
-    let startX = 0;
-    let scrollLeft = 0;
-    let isTouching = false;
+    const serversList = serversListRef.current;
     let resumeTimeout = null;
+    let touchStartTime = 0;
+    let isTouching = false;
 
-    const handleTouchStart = (e) => {
+    // Détecter le début d'un touch
+    const handleTouchStart = () => {
       isTouching = true;
+      touchStartTime = Date.now();
       setIsDragging(true);
       setAnimationPaused(true);
-      startX = e.touches[0].pageX - container.offsetLeft;
-      scrollLeft = container.scrollLeft || 0;
       
-      // Annuler le timeout de reprise s'il existe
       if (resumeTimeout) {
         clearTimeout(resumeTimeout);
         resumeTimeout = null;
       }
     };
 
-    const handleTouchMove = (e) => {
-      if (!isTouching) return;
-      e.preventDefault();
-      const x = e.touches[0].pageX - container.offsetLeft;
-      const walk = (x - startX) * 2;
-      container.scrollLeft = scrollLeft - walk;
-    };
-
     const handleTouchEnd = () => {
       isTouching = false;
-      setIsDragging(false);
       
-      // Après 2 secondes d'inactivité, reprendre l'animation
+      // Reprendre l'animation après 2 secondes d'inactivité
       resumeTimeout = setTimeout(() => {
+        setIsDragging(false);
         setAnimationPaused(false);
       }, 2000);
     };
 
-    container.addEventListener('touchstart', handleTouchStart, { passive: false });
-    container.addEventListener('touchmove', handleTouchMove, { passive: false });
-    container.addEventListener('touchend', handleTouchEnd);
+    // Écouter les événements touch
+    container.addEventListener('touchstart', handleTouchStart, { passive: true });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
       container.removeEventListener('touchstart', handleTouchStart);
-      container.removeEventListener('touchmove', handleTouchMove);
       container.removeEventListener('touchend', handleTouchEnd);
       if (resumeTimeout) {
         clearTimeout(resumeTimeout);
       }
     };
   }, [isMobile]);
-  
-  console.log('🎮 ACCServersBanner - trackName:', trackName);
+
 
   // Maintenant on peut faire les returns conditionnels APRÈS tous les hooks
   if (!trackName) {
@@ -161,7 +90,6 @@ export function ACCServersBanner({ trackName }) {
   }
 
   if (loading) {
-    console.log('🎮 ACCServersBanner - Loading...');
     return (
       <div className="acc-banner">
         <div className="acc-banner-loading">Chargement serveurs ACC...</div>
@@ -220,7 +148,10 @@ export function ACCServersBanner({ trackName }) {
         className="acc-banner-servers-container"
         ref={serversContainerRef}
       >
-        <div className="acc-banner-servers">
+        <div 
+          className={`acc-banner-servers ${isMobile && !animationPaused && !isDragging ? 'auto-scrolling' : ''}`}
+          ref={serversListRef}
+        >
           {serversToDisplay.map((item, index) => {
             // Si l'item est le serveur EGT (a une propriété hasPractice)
             if (item.hasPractice && item.drivers !== undefined) {

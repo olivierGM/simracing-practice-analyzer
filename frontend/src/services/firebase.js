@@ -24,10 +24,11 @@ const firebaseConfig = {
 };
 
 // Initialiser Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
 
 /**
  * Récupère les sessions depuis Firestore (COMME EN PROD)
@@ -126,4 +127,5 @@ export async function logoutAdmin() {
 export function onAuthChanged(callback) {
   return onAuthStateChanged(auth, callback);
 }
+
 

@@ -14,6 +14,7 @@ import { useFilters } from '../hooks/useFilters';
 import { useProcessedData } from '../hooks/useProcessedData';
 import { useSorting } from '../hooks/useSorting';
 import { useTrackContext } from '../contexts/TrackContext';
+import { trackFilterChange, trackSort, trackPilotClick } from '../services/analytics';
 import { DURATIONS } from '../utils/constants';
 
 export function HomePage({ drivers, sessions = [] }) {
@@ -35,7 +36,21 @@ export function HomePage({ drivers, sessions = [] }) {
   // Mettre à jour le contexte quand trackFilter change
   useEffect(() => {
     setContextTrackFilter(trackFilter);
+    // Track le changement de filtre piste
+    if (trackFilter) {
+      trackFilterChange('track', trackFilter);
+    }
   }, [trackFilter, setContextTrackFilter]);
+  
+  // Track le changement de filtre période
+  useEffect(() => {
+    trackFilterChange('period', periodFilter);
+  }, [periodFilter]);
+  
+  // Track le changement de groupement par classe
+  useEffect(() => {
+    trackFilterChange('group_by_class', groupByClass ? 'enabled' : 'disabled');
+  }, [groupByClass]);
   
   // COPIE DE LA PROD ligne 1164-1182: Filtrer les sessions par période AVANT retraitement
   const filteredSessions = useMemo(() => {
@@ -74,11 +89,20 @@ export function HomePage({ drivers, sessions = [] }) {
     sortColumn,
     sortDirection,
     sortedItems: sortedDrivers,
-    handleSort
+    handleSort: originalHandleSort
   } = useSorting(processedDrivers);
+  
+  // Wrapper pour handleSort avec tracking
+  const handleSort = (column) => {
+    trackSort(column, sortColumn === column && sortDirection === 'asc' ? 'desc' : 'asc');
+    originalHandleSort(column);
+  };
 
   // Navigation vers la fiche pilote
   const handleDriverClick = (driver) => {
+    // Track le clic sur le pilote
+    trackPilotClick(driver.name, driver.track || 'unknown', driver.category || 'unknown');
+    
     // Normaliser le nom du circuit pour l'URL (enlever espaces et caractères spéciaux)
     const circuitSlug = driver.track
       ? driver.track
