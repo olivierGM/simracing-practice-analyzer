@@ -11,9 +11,10 @@
 import { useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { LastUpdateIndicator } from './LastUpdateIndicator';
+import { EGTPracticeServer } from './EGTPracticeServer';
 import './Header.css';
 
-export function Header({ metadata }) {
+export function Header({ metadata, trackName }) {
   const navigate = useNavigate();
   
   const handleAdminClick = () => {
@@ -29,6 +30,7 @@ export function Header({ metadata }) {
         </div>
         
         <div className="header-actions">
+          <EGTPracticeServer trackName={trackName} />
           <LastUpdateIndicator metadata={metadata} />
           <ThemeToggle />
           <button

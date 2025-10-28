@@ -4,18 +4,21 @@
  * Page principale avec liste des pilotes
  */
 
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiltersBar } from '../components/filters/FiltersBar';
 import { DriversTable } from '../components/table/DriversTable';
 import { GlobalStats } from '../components/layout/GlobalStats';
+import { ACCServersBanner } from '../components/layout/ACCServersBanner';
 import { useFilters } from '../hooks/useFilters';
 import { useProcessedData } from '../hooks/useProcessedData';
 import { useSorting } from '../hooks/useSorting';
+import { useTrackContext } from '../contexts/TrackContext';
 import { DURATIONS } from '../utils/constants';
 
 export function HomePage({ drivers, sessions = [] }) {
   const navigate = useNavigate();
+  const { setTrackFilter: setContextTrackFilter } = useTrackContext();
 
   // Hooks pour filtres et tri
   const {
@@ -28,6 +31,11 @@ export function HomePage({ drivers, sessions = [] }) {
     availableTracks,
     filteredDrivers
   } = useFilters(drivers, sessions);
+  
+  // Mettre à jour le contexte quand trackFilter change
+  useEffect(() => {
+    setContextTrackFilter(trackFilter);
+  }, [trackFilter, setContextTrackFilter]);
   
   // COPIE DE LA PROD ligne 1164-1182: Filtrer les sessions par période AVANT retraitement
   const filteredSessions = useMemo(() => {
@@ -95,6 +103,9 @@ export function HomePage({ drivers, sessions = [] }) {
         groupByClass={groupByClass}
         onGroupByClassChange={setGroupByClass}
       />
+
+      {/* Bandeau des serveurs ACC (sous la barre de filtres) */}
+      <ACCServersBanner trackName={trackFilter} />
 
       {/* Cartes de statistiques globales (COPIE de la prod) */}
       <GlobalStats drivers={sortedDrivers} />

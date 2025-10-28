@@ -35,6 +35,7 @@ header, .app-header {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 /* Bouton Admin discret en haut à droite */
