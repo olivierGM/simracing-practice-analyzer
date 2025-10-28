@@ -23,6 +23,12 @@ header, .app-header {
   margin-bottom: 2px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   color: #ffffff; /* Blanc sur gradient violet */
+  transition: all 0.3s ease;
+}
+
+.header-titles h1:hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
 }
 
 .header-titles p {
