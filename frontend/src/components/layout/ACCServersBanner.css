@@ -3,7 +3,7 @@
   color: white;
   padding: 8px 16px;
   border-radius: 8px;
-  margin: 12px 20px;
+  margin: 12px 0;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -21,18 +21,36 @@
   opacity: 0.9;
 }
 
+.acc-banner-servers-container {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  cursor: grab;
+}
+
+.acc-banner-servers-container:active {
+  cursor: grabbing;
+}
+
+/* Désactiver la scrollbar sur mobile */
+.acc-banner-servers-container::-webkit-scrollbar {
+  display: none;
+}
+
+.acc-banner-servers-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .acc-banner-servers {
   display: flex;
   gap: 20px;
   align-items: center;
-  overflow-x: auto;
-  flex: 1;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
-}
-
-.acc-banner-servers::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  width: max-content;
+  min-width: 100%;
 }
 
 .acc-banner-server {
@@ -57,6 +75,18 @@
   font-weight: 700;
   color: #fbbf24;
   flex-shrink: 0;
+}
+
+.acc-banner-server-egt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.acc-banner-egt-logo {
+  height: 16px;
+  width: auto;
+  object-fit: contain;
 }
 
 .acc-banner-sessions {

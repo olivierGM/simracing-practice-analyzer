@@ -8,22 +8,18 @@
  * - Bouton login admin
  */
 
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { LastUpdateIndicator } from './LastUpdateIndicator';
-import { ACCServersBanner } from './ACCServersBanner';
+import { EGTPracticeServer } from './EGTPracticeServer';
 import './Header.css';
 
 export function Header({ metadata, trackName }) {
   const navigate = useNavigate();
-  const location = useLocation();
   
   const handleAdminClick = () => {
     navigate('/admin');
   };
-
-  // Afficher le bandeau seulement sur la page d'accueil
-  const isHomePage = location.pathname === '/';
 
   return (
     <header className="app-header">
@@ -34,6 +30,7 @@ export function Header({ metadata, trackName }) {
         </div>
         
         <div className="header-actions">
+          <EGTPracticeServer trackName={trackName} />
           <LastUpdateIndicator metadata={metadata} />
           <ThemeToggle />
           <button
@@ -46,9 +43,6 @@ export function Header({ metadata, trackName }) {
           </button>
         </div>
       </div>
-      
-      {/* Bandeau des serveurs ACC (uniquement sur la page d'accueil) */}
-      {isHomePage && <ACCServersBanner trackName={trackName} />}
     </header>
   );
 }

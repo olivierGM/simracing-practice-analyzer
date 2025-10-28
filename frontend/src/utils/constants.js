@@ -109,3 +109,24 @@ export const SUCCESS_MESSAGES = {
   DATA_LOADED: 'Données chargées avec succès'
 };
 
+/**
+ * Mappe les noms de circuits internes vers les noms utilisés par l'API ACC
+ * @param {string} trackName - Nom du circuit interne
+ * @returns {string} - Nom du circuit pour l'API ACC
+ */
+export function getACCTrackName(trackName) {
+  const trackMap = {
+    'valencia': 'valencia',
+    'nurburgring': 'nurburgring',
+    'donington': 'donington',
+    'red_bull_ring': 'red_bull_ring',
+    'misano': 'misano',
+    'snetterton': 'snetterton',
+    'monza': 'monza',
+    'zandvoort': 'zandvoort',
+    // Ajouter d'autres mappings si nécessaire
+  };
+
+  return trackMap[trackName] || trackName;
+}
+

@@ -16,7 +16,9 @@ import { TrackProvider, useTrackContext } from './contexts/TrackContext';
 import './App.css';
 
 function AppContent() {
+  // ⚠️ IMPORTANT: Tous les hooks doivent être appelés AVANT tout return conditionnel
   const { data, metadata, sessions, loading, error } = useFirebaseData();
+  const { trackFilter } = useTrackContext();
 
   // Extraire les pilotes des données
   const drivers = data?.drivers || [];
@@ -39,8 +41,6 @@ function AppContent() {
       </div>
     );
   }
-
-  const { trackFilter } = useTrackContext();
 
   return (
     <BrowserRouter>

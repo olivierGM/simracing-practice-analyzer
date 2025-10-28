@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getACCTrackName } from '../utils/constants';
 
 // Mock data pour développement local
 const MOCK_SERVERS = [
@@ -85,33 +86,12 @@ export function useACCServers(trackName) {
     fetchServers();
     
     if (!USE_MOCK) {
-      // Rafraîchir toutes les minutes
-      const interval = setInterval(fetchServers, 60000);
+      // Rafraîchir toutes les 2 minutes (au lieu de 1 minute pour réduire les reloads)
+      const interval = setInterval(fetchServers, 120000);
       return () => clearInterval(interval);
     }
   }, [trackName]);
 
   return { servers, loading, error };
-}
-
-/**
- * Mappe les noms de circuits internes vers les noms utilisés par l'API ACC
- * @param {string} trackName - Nom du circuit interne
- * @returns {string} - Nom du circuit pour l'API ACC
- */
-function getACCTrackName(trackName) {
-  const trackMap = {
-    'valencia': 'valencia',
-    'nurburgring': 'nurburgring',
-    'donington': 'donington',
-    'red_bull_ring': 'red_bull_ring',
-    'misano': 'misano',
-    'snetterton': 'snetterton',
-    'monza': 'monza',
-    'zandvoort': 'zandvoort',
-    // Ajouter d'autres mappings si nécessaire
-  };
-
-  return trackMap[trackName] || trackName;
 }
 

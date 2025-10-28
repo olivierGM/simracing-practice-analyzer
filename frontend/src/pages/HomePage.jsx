@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { FiltersBar } from '../components/filters/FiltersBar';
 import { DriversTable } from '../components/table/DriversTable';
 import { GlobalStats } from '../components/layout/GlobalStats';
+import { ACCServersBanner } from '../components/layout/ACCServersBanner';
 import { useFilters } from '../hooks/useFilters';
 import { useProcessedData } from '../hooks/useProcessedData';
 import { useSorting } from '../hooks/useSorting';
@@ -102,6 +103,9 @@ export function HomePage({ drivers, sessions = [] }) {
         groupByClass={groupByClass}
         onGroupByClassChange={setGroupByClass}
       />
+
+      {/* Bandeau des serveurs ACC (sous la barre de filtres) */}
+      <ACCServersBanner trackName={trackFilter} />
 
       {/* Cartes de statistiques globales (COPIE de la prod) */}
       <GlobalStats drivers={sortedDrivers} />
