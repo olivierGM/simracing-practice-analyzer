@@ -34,6 +34,23 @@ export function ACCServersBanner({ trackName }) {
     return null; // Ne rien afficher si aucun serveur
   }
 
+  // Filtrer pour ne garder que la session active
+  const getActiveSession = (sessions) => {
+    if (!sessions || sessions.length === 0) return null;
+    return sessions.find(s => s.active) || null;
+  };
+
+  // Formater une session (ex: "R20'")
+  const formatSession = (session) => {
+    if (!session) return null;
+    
+    const icons = { Race: 'R', Qualifying: 'Q', Practice: 'P' };
+    const icon = icons[session.type] || 'P';
+    
+    // Afficher seulement la durée totale (ex: "R20'")
+    return <span className="session-active">{icon}{session.elapsed_time}'</span>;
+  };
+
   return (
     <div className="acc-banner">
       <div className="acc-banner-icon">🎮</div>
@@ -41,7 +58,19 @@ export function ACCServersBanner({ trackName }) {
         {servers.map((server, index) => (
           <div key={index} className="acc-banner-server">
             <span className="acc-banner-server-name">{server.name}</span>
-            <span className="acc-banner-server-drivers">{server.drivers} pilotes</span>
+            <span className="acc-banner-server-drivers">
+              🏎️ {server.drivers}/{server.max_drivers}
+            </span>
+            <div className="acc-banner-sessions">
+              {(() => {
+                const activeSession = getActiveSession(server.sessions);
+                return activeSession ? (
+                  <span className="session-item">
+                    {formatSession(activeSession)}
+                  </span>
+                ) : null;
+              })()}
+            </div>
           </div>
         ))}
       </div>

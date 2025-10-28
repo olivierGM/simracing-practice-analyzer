@@ -274,15 +274,15 @@ exports.getACCServers = functions.https.onRequest(async (req, res) => {
         }
         
         // Filtrer pour garder seulement les serveurs avec des joueurs
-        const activeServers = response.data
+        const servers = response.data.servers || [];
+        const activeServers = servers
             .filter(server => server.drivers > 0)
             .slice(0, 3)
             .map(server => ({
                 name: server.name ? server.name.substring(0, 20) : 'Serveur',
                 drivers: server.drivers,
-                serverType: server.serverType,
-                weather: server.weather,
-                trackCondition: server.trackCondition
+                max_drivers: server.max_drivers || 30,
+                sessions: server.sessions || []
             }));
         
         console.log(`✅ ${activeServers.length} serveur(s) trouvé(s) pour ${track}`);

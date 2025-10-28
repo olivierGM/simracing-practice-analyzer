@@ -59,6 +59,28 @@
   flex-shrink: 0;
 }
 
+.acc-banner-sessions {
+  display: flex;
+  gap: 4px;
+  font-size: 11px;
+}
+
+.session-item {
+  padding: 2px 4px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.session-active {
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+.session-inactive {
+  color: #a3e635;
+  font-weight: 500;
+}
+
 /* Animation pour bandeau défilant si plus de 3 serveurs */
 @keyframes scroll {
   0% {
