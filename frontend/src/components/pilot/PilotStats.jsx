@@ -5,12 +5,19 @@
  */
 
 import { formatTime, formatDelta } from '../../utils/formatters';
-import { getCategoryName } from '../../services/calculations';
+import { getCategoryName, calculatePilotSegmentStats } from '../../services/calculations';
 import './PilotStats.css';
 
 export function PilotStats({ driver, allDrivers = [] }) {
-  // Calculer le temps potentiel (somme des meilleurs segments)
-  const potentialTime = driver.bestValidTime || 0; // TODO: calculer depuis les segments
+  // Calculer le temps potentiel (somme des meilleurs segments valides du pilote)
+  let potentialTime = driver.bestValidTime || 0;
+  const pilotSegStats = calculatePilotSegmentStats(driver);
+  if (pilotSegStats && pilotSegStats.bestS1 && pilotSegStats.bestS2 && pilotSegStats.bestS3) {
+    const sumBestSplits = pilotSegStats.bestS1 + pilotSegStats.bestS2 + pilotSegStats.bestS3;
+    if (sumBestSplits > 0) {
+      potentialTime = sumBestSplits;
+    }
+  }
   
   // Calculer l'écart au leader (comme prod)
   const leaderTime = allDrivers.reduce((best, d) => {
