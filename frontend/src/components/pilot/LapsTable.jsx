@@ -7,41 +7,31 @@
 
 import { useState, useMemo } from 'react';
 import { formatTime } from '../../utils/formatters';
+import { formatSessionDateTime } from '../../services/timezone';
 import './LapsTable.css';
 
 export function LapsTable({ driver }) {
   const [sortColumn, setSortColumn] = useState('lapNumber');
-  const [sortDirection, setSortDirection] = useState('desc'); // Descending by default
+  const [sortDirection, setSortDirection] = useState('asc'); // Ascending by default (1, 2, 3...)
 
   // Extraire les tours et calculer les meilleurs temps
   const { laps, bestTimes } = useMemo(() => {
     if (!driver.lapTimes || driver.lapTimes.length === 0) return { laps: [], bestTimes: null };
     
-    // Trier les tours par date avant de les mapper
+    // Trier les tours par date en ordre décroissant (plus récent en premier)
     const sortedLapTimes = [...driver.lapTimes].sort((a, b) => {
       const dateA = a.sessionDate || '';
       const dateB = b.sessionDate || '';
-      if (dateA < dateB) return -1;
-      if (dateA > dateB) return 1;
+      if (dateA < dateB) return 1;  // Inversé: plus récent en premier
+      if (dateA > dateB) return -1; // Inversé: plus récent en premier
       return 0;
     });
     
     let bestSplit1 = Infinity, bestSplit2 = Infinity, bestSplit3 = Infinity, bestTotal = Infinity;
     
     const lapsData = sortedLapTimes.map((lap, index) => {
-      const sessionDate = lap.sessionDate || '';
-      let formattedDate = sessionDate;
-      if (sessionDate && sessionDate.length >= 13) {
-        // Format: YYMMDD_HHMMSS -> DD/MM/YY HH:MM
-        const year = '20' + sessionDate.substring(0, 2);
-        const month = sessionDate.substring(2, 4);
-        const day = sessionDate.substring(4, 6);
-        const hour = sessionDate.substring(7, 9);
-        const minute = sessionDate.substring(9, 11);
-        formattedDate = `${day}/${month}/${year.substring(2)} ${hour}:${minute}`;
-      } else {
-        formattedDate = '--';
-      }
+      // Utiliser la fonction utilitaire pour formater avec +2h
+      const formattedDate = formatSessionDateTime(lap.sessionDate || '');
       
       const splits = lap.splits || [];
       const lapTime = lap.time || lap.laptime || 0;
@@ -53,7 +43,7 @@ export function LapsTable({ driver }) {
       if (lapTime > 0) bestTotal = Math.min(bestTotal, lapTime);
       
       return {
-        lapNumber: index + 1, // Index après tri par date
+        lapNumber: index + 1, // Plus récent = 1, plus vieux = dernier
         date: formattedDate,
         totalTime: lapTime,
         S1: splits[0] || 0,

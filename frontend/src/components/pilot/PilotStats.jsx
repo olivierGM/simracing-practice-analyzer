@@ -30,6 +30,20 @@ export function PilotStats({ driver, allDrivers = [] }) {
   const gapToLeader = (driver.bestValidTime && driver.bestValidTime > 0 && leaderTime > 0)
     ? driver.bestValidTime - leaderTime
     : null;
+
+  // Formateur pour afficher +MM:SS.mmm avec zéros à gauche
+  const formatFullDelta = (deltaMs) => {
+    if (deltaMs === null || deltaMs === undefined) return '+00:00.000';
+    const sign = deltaMs >= 0 ? '+' : '-';
+    const msAbs = Math.abs(deltaMs);
+    const minutes = Math.floor(msAbs / 60000);
+    const seconds = Math.floor((msAbs % 60000) / 1000);
+    const millis = Math.floor(msAbs % 1000);
+    const mm = String(minutes).padStart(2, '0');
+    const ss = String(seconds).padStart(2, '0');
+    const mmm = String(millis).padStart(3, '0');
+    return `${sign}${mm}:${ss}.${mmm}`;
+  };
   
   return (
     <section className="pilot-stats-section">
@@ -71,7 +85,7 @@ export function PilotStats({ driver, allDrivers = [] }) {
         <div className="stat-item">
           <span className="stat-label">Écart au leader:</span>
           <span className="stat-value">
-            {gapToLeader !== null ? formatDelta(gapToLeader) : '--:--.---'}
+            {gapToLeader !== null ? formatFullDelta(gapToLeader) : '+00:00.000'}
           </span>
         </div>
         
