@@ -96,7 +96,7 @@ export function formatSessionDateTime(sessionDateStr) {
 
 /**
  * Formate une date en "Il y a Xh/min/jours"
- * Applique automatiquement +2h pour corriger le décalage horaire
+ * NOTE: Ne pas ajouter +2h ici car metadata.lastUpdate est déjà ajusté
  * 
  * @param {Date} date - Date à formater
  * @returns {string} Texte formaté
@@ -104,10 +104,8 @@ export function formatSessionDateTime(sessionDateStr) {
 export function formatUpdateDate(date) {
   if (!date) return '-';
   
-  // Appliquer +2h pour corriger le décalage horaire
-  const adjustedDate = addTimezoneOffset(date);
   const now = new Date();
-  const diffMs = now.getTime() - adjustedDate.getTime();
+  const diffMs = now.getTime() - date.getTime();
   const diffMinutes = Math.floor(diffMs / 60000);
   const diffHours = Math.floor(diffMinutes / 60);
   const diffDays = Math.floor(diffHours / 24);
@@ -131,7 +129,7 @@ export function estimateSessionDuration(sessionCount) {
 
 /**
  * Crée un tooltip détaillé pour l'indicateur "Dernière session"
- * Applique automatiquement +2h pour corriger le décalage horaire
+ * NOTE: Ne pas ajouter +2h ici car sessionStartDate est déjà ajusté
  * 
  * @param {Date} sessionStartDate - Date de début de session
  * @param {number} sessionCount - Nombre de sessions
@@ -140,10 +138,8 @@ export function estimateSessionDuration(sessionCount) {
 export function createSessionTooltip(sessionStartDate, sessionCount) {
   if (!sessionStartDate) return 'Aucune donnée disponible';
   
-  // Appliquer +2h pour corriger le décalage horaire
-  const adjustedStartDate = addTimezoneOffset(sessionStartDate);
   const durationMinutes = estimateSessionDuration(sessionCount);
-  const adjustedEndDate = addTimezoneOffset(new Date(sessionStartDate.getTime() + (durationMinutes * 60000)));
+  const sessionEndDate = new Date(sessionStartDate.getTime() + (durationMinutes * 60000));
   
   const formatDate = (date) => date.toLocaleString('fr-CA', {
     year: 'numeric',
@@ -155,9 +151,9 @@ export function createSessionTooltip(sessionStartDate, sessionCount) {
   });
   
   return `Dernière session:\n` +
-         `• Début: ${formatDate(adjustedStartDate)}\n` +
+         `• Début: ${formatDate(sessionStartDate)}\n` +
          `• Durée estimée: ${durationMinutes}min\n` +
-         `• Fin estimée: ${formatDate(adjustedEndDate)}\n` +
+         `• Fin estimée: ${formatDate(sessionEndDate)}\n` +
          `• Nombre de sessions: ${sessionCount}`;
 }
 
