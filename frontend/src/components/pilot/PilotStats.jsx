@@ -9,10 +9,13 @@ import { getCategoryName, calculatePilotSegmentStats } from '../../services/calc
 import './PilotStats.css';
 
 export function PilotStats({ driver, allDrivers = [] }) {
-  // Calculer le temps potentiel (somme des meilleurs segments valides du pilote)
+  // Calculer le temps potentiel (somme des meilleurs segments de TOUS les tours)
   let potentialTime = driver.bestValidTime || 0;
   const pilotSegStats = calculatePilotSegmentStats(driver);
-  if (pilotSegStats && pilotSegStats.bestS1 && pilotSegStats.bestS2 && pilotSegStats.bestS3) {
+  if (pilotSegStats && 
+      pilotSegStats.bestS1 !== undefined && pilotSegStats.bestS1 !== null && pilotSegStats.bestS1 > 0 &&
+      pilotSegStats.bestS2 !== undefined && pilotSegStats.bestS2 !== null && pilotSegStats.bestS2 > 0 &&
+      pilotSegStats.bestS3 !== undefined && pilotSegStats.bestS3 !== null && pilotSegStats.bestS3 > 0) {
     const sumBestSplits = pilotSegStats.bestS1 + pilotSegStats.bestS2 + pilotSegStats.bestS3;
     if (sumBestSplits > 0) {
       potentialTime = sumBestSplits;
@@ -92,7 +95,14 @@ export function PilotStats({ driver, allDrivers = [] }) {
         <div className="stat-item constance-item">
           <span className="stat-label">
             Constance
-            <button className="info-icon" title="Écart-type des temps de tours valides">ℹ️</button>
+            <button
+              type="button"
+              className="info-icon"
+              aria-label="Aide Constance"
+              data-tooltip="Écart-type des temps de tours valides. Plus le pourcentage est faible, plus le pilote est constant."
+            >
+              ℹ️
+            </button>
           </span>
           <span className="stat-value constance-value">
             {driver.validConsistency ? (

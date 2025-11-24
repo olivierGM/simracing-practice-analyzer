@@ -19,11 +19,23 @@ export function SegmentComparator({ driver, allDrivers }) {
   const globalStats = useMemo(() => {
     return calculateGlobalSegmentStats(allDrivers);
   }, [allDrivers]);
+  const segmentInfoTooltip =
+    "Compare les meilleurs segments du pilote aux références globales et de catégorie. Les écarts positifs indiquent le retard à combler.";
 
   if (!pilotStats || !globalStats) {
     return (
       <div className="segment-section">
-        <h3>🏁 Comparateur de Segments<span className="info-icon">ℹ️</span></h3>
+        <h3>
+          🏁 Comparateur de Segments
+          <button
+            type="button"
+            className="info-icon"
+            aria-label="Aide Comparateur de Segments"
+            data-tooltip={segmentInfoTooltip}
+          >
+            ℹ️
+          </button>
+        </h3>
         <p>Aucune donnée de segments disponible</p>
       </div>
     );
@@ -85,7 +97,17 @@ export function SegmentComparator({ driver, allDrivers }) {
   return (
     <div className="segment-section">
       <div className="segment-header">
-        <h3>🏁 Comparateur de Segments<span className="info-icon">ℹ️</span></h3>
+        <h3>
+          🏁 Comparateur de Segments
+          <button
+            type="button"
+            className="info-icon"
+            aria-label="Aide Comparateur de Segments"
+            data-tooltip={segmentInfoTooltip}
+          >
+            ℹ️
+          </button>
+        </h3>
         <div className="segment-focus-hint">
           💡 Focus sur <strong>{maxGapSegment.segment}</strong> pour {formatGap(maxGapSegment.gap)} de gain
         </div>

@@ -19,7 +19,8 @@ export function DriversTable({
   sortDirection,
   onSort,
   groupByClass,
-  onDriverClick
+  onDriverClick,
+  hasWetTimes = false
 }) {
   // Grouper les pilotes par classe si activé (COPIE de la prod)
   const groupedDrivers = useMemo(() => {
@@ -63,6 +64,7 @@ export function DriversTable({
               sortDirection={sortDirection}
               onSort={onSort}
               onDriverClick={onDriverClick}
+              hasWetTimes={hasWetTimes}
             />
           );
         })}
@@ -78,6 +80,7 @@ export function DriversTable({
           sortColumn={sortColumn}
           sortDirection={sortDirection}
           onSort={onSort}
+          hasWetTimes={hasWetTimes}
         />
         <tbody>
           {drivers.map((driver, index) => (
@@ -86,6 +89,7 @@ export function DriversTable({
               driver={driver}
               position={index + 1}
               onClick={() => onDriverClick(driver)}
+              hasWetTimes={hasWetTimes}
             />
           ))}
         </tbody>

@@ -15,7 +15,8 @@ export function CategorySection({
   sortColumn,
   sortDirection,
   onSort,
-  onDriverClick
+  onDriverClick,
+  hasWetTimes = false
 }) {
   return (
     <div className="category-section">
@@ -26,6 +27,7 @@ export function CategorySection({
           sortColumn={sortColumn}
           sortDirection={sortDirection}
           onSort={onSort}
+          hasWetTimes={hasWetTimes}
         />
         <tbody>
           {drivers.map((driver, index) => (
@@ -34,6 +36,7 @@ export function CategorySection({
               driver={driver}
               position={index + 1} // Ranking recommence à 1 pour chaque catégorie
               onClick={() => onDriverClick(driver)}
+              hasWetTimes={hasWetTimes}
             />
           ))}
         </tbody>

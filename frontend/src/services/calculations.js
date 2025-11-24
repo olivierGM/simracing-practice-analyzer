@@ -117,17 +117,33 @@ export function calculatePilotSegmentStats(driver) {
   
   if (!driver.lapTimes) return null;
   
+  let lapsWithSplits = 0;
+  let lapsWithoutSplits = 0;
+  
+  // IMPORTANT: Pour le temps potentiel, on prend les meilleurs segments de TOUS les tours
+  // (valides ET invalides), car un tour invalide peut avoir un meilleur segment qu'un tour valide
   driver.lapTimes.forEach(lap => {
-    if (lap.splits && lap.splits.length >= 3 && lap.isValid) {
-      allS1.push(lap.splits[0]);
-      allS2.push(lap.splits[1]);
-      allS3.push(lap.splits[2]);
+    if (lap.splits && lap.splits.length >= 3) {
+      lapsWithSplits++;
+      const s1 = lap.splits[0];
+      const s2 = lap.splits[1];
+      const s3 = lap.splits[2];
+      
+      // Valider que les segments sont des nombres valides (> 0)
+      if (s1 && s1 > 0) allS1.push(s1);
+      if (s2 && s2 > 0) allS2.push(s2);
+      if (s3 && s3 > 0) allS3.push(s3);
+    } else {
+      lapsWithoutSplits++;
     }
   });
   
-  if (allS1.length === 0) return null;
+  if (allS1.length === 0 || allS2.length === 0 || allS3.length === 0) {
+    console.warn(`⚠️ calculatePilotSegmentStats: Pas assez de segments pour ${driver.name || 'pilote inconnu'}. Laps avec splits: ${lapsWithSplits}, Laps sans splits: ${lapsWithoutSplits}, S1: ${allS1.length}, S2: ${allS2.length}, S3: ${allS3.length}`);
+    return null;
+  }
   
-  return {
+  const result = {
     bestS1: Math.min(...allS1),
     bestS2: Math.min(...allS2),
     bestS3: Math.min(...allS3),
@@ -135,6 +151,8 @@ export function calculatePilotSegmentStats(driver) {
     avgS2: allS2.reduce((sum, t) => sum + t, 0) / allS2.length,
     avgS3: allS3.reduce((sum, t) => sum + t, 0) / allS3.length,
   };
+  
+  return result;
 }
 
 /**

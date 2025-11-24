@@ -9,7 +9,7 @@ import { formatTime } from '../../utils/formatters';
 import { getCategoryName, getCategoryClass } from '../../services/calculations';
 import './DriverRow.css';
 
-export function DriverRow({ driver, position, onClick }) {
+export function DriverRow({ driver, position, onClick, hasWetTimes = false }) {
   /**
    * Formate la consistance en pourcentage
    */
@@ -18,26 +18,50 @@ export function DriverRow({ driver, position, onClick }) {
     return `${consistency}%`;
   };
 
-  return (
-    <tr onClick={onClick}>
-      <td>{position}</td>
-      <td>{driver.name}</td>
-      <td>
+  // Définir l'ordre des colonnes (même ordre que TABLE_COLUMNS)
+  const cells = [
+    { key: 'position', content: position },
+    { key: 'name', content: driver.name },
+    { 
+      key: 'category', 
+      content: (
         <span className={`category-badge ${getCategoryClass(driver.category)}`}>
           {getCategoryName(driver.category)}
         </span>
-      </td>
-      <td data-value={driver.totalLaps || 0}>{driver.totalLaps || 0}</td>
-      <td data-value={driver.validLaps || 0}>{driver.validLaps || 0}</td>
-      <td data-value={driver.bestValidTime || 0}>{formatTime(driver.bestValidTime || 0)}</td>
-      <td data-value={driver.averageValidTime || 0}>{formatTime(driver.averageValidTime || 0)}</td>
-      <td data-value={driver.validConsistency || 0}>{formatConsistency(driver.validConsistency)}</td>
-      <td data-value={driver.bestWetTime || 0}>{formatTime(driver.bestWetTime || 0)}</td>
-      <td data-value={driver.averageWetTime || 0}>{formatTime(driver.averageWetTime || 0)}</td>
-      <td data-value={driver.wetConsistency || 0}>{formatConsistency(driver.wetConsistency)}</td>
-      <td data-value={driver.bestOverallTime || 0}>{formatTime(driver.bestOverallTime || 0)}</td>
-      <td data-value={driver.averageOverallTime || 0}>{formatTime(driver.averageOverallTime || 0)}</td>
-      <td data-value={driver.totalConsistency || 0}>{formatConsistency(driver.totalConsistency)}</td>
+      )
+    },
+    { key: 'totalLaps', content: driver.totalLaps || 0, dataValue: driver.totalLaps || 0 },
+    { key: 'validLaps', content: driver.validLaps || 0, dataValue: driver.validLaps || 0 },
+    { key: 'bestValidTime', content: formatTime(driver.bestValidTime || 0), dataValue: driver.bestValidTime || 0 },
+    { key: 'averageValidTime', content: formatTime(driver.averageValidTime || 0), dataValue: driver.averageValidTime || 0 },
+    { key: 'validConsistency', content: formatConsistency(driver.validConsistency), dataValue: driver.validConsistency || 0 },
+    { key: 'bestWetTime', content: formatTime(driver.bestWetTime || 0), dataValue: driver.bestWetTime || 0 },
+    { key: 'averageWetTime', content: formatTime(driver.averageWetTime || 0), dataValue: driver.averageWetTime || 0 },
+    { key: 'wetConsistency', content: formatConsistency(driver.wetConsistency), dataValue: driver.wetConsistency || 0 },
+    { key: 'bestOverallTime', content: formatTime(driver.bestOverallTime || 0), dataValue: driver.bestOverallTime || 0 },
+    { key: 'averageOverallTime', content: formatTime(driver.averageOverallTime || 0), dataValue: driver.averageOverallTime || 0 },
+    { key: 'totalConsistency', content: formatConsistency(driver.totalConsistency), dataValue: driver.totalConsistency || 0 },
+  ];
+
+  // Filtrer les colonnes wet si aucun wet time n'existe
+  const visibleCells = hasWetTimes 
+    ? cells 
+    : cells.filter(cell => 
+        cell.key !== 'bestWetTime' && 
+        cell.key !== 'averageWetTime' && 
+        cell.key !== 'wetConsistency'
+      );
+
+  return (
+    <tr onClick={onClick}>
+      {visibleCells.map((cell, index) => (
+        <td 
+          key={cell.key} 
+          data-value={cell.dataValue !== undefined ? cell.dataValue : undefined}
+        >
+          {cell.content}
+        </td>
+      ))}
     </tr>
   );
 }

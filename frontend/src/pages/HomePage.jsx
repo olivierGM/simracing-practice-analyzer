@@ -91,6 +91,15 @@ export function HomePage({ drivers, sessions = [] }) {
     sortedItems: sortedDrivers,
     handleSort: originalHandleSort
   } = useSorting(processedDrivers);
+
+  // Vérifier s'il y a des wet times dans les données
+  const hasWetTimes = useMemo(() => {
+    return sortedDrivers.some(driver => 
+      (driver.bestWetTime && driver.bestWetTime > 0) ||
+      (driver.averageWetTime && driver.averageWetTime > 0) ||
+      (driver.wetConsistency && driver.wetConsistency > 0)
+    );
+  }, [sortedDrivers]);
   
   // Wrapper pour handleSort avec tracking
   const handleSort = (column) => {
@@ -146,6 +155,7 @@ export function HomePage({ drivers, sessions = [] }) {
           onSort={handleSort}
           groupByClass={groupByClass}
           onDriverClick={handleDriverClick}
+          hasWetTimes={hasWetTimes}
         />
       )}
     </div>

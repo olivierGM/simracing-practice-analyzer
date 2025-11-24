@@ -7,7 +7,7 @@
 import { TABLE_COLUMNS } from '../../utils/constants';
 import './DriversTableHeader.css';
 
-export function DriversTableHeader({ sortColumn, sortDirection, onSort }) {
+export function DriversTableHeader({ sortColumn, sortDirection, onSort, hasWetTimes = false }) {
   /**
    * Retourne l'icône de tri pour une colonne (COPIE EXACTE de la prod)
    * Prod affiche toujours ↕ et change la direction au click
@@ -17,10 +17,19 @@ export function DriversTableHeader({ sortColumn, sortDirection, onSort }) {
     return ' ↕';
   };
 
+  // Filtrer les colonnes wet si aucun wet time n'existe
+  const visibleColumns = hasWetTimes 
+    ? TABLE_COLUMNS 
+    : TABLE_COLUMNS.filter(col => 
+        col.key !== 'bestWetTime' && 
+        col.key !== 'averageWetTime' && 
+        col.key !== 'wetConsistency'
+      );
+
   return (
     <thead>
       <tr>
-        {TABLE_COLUMNS.map(column => (
+        {visibleColumns.map(column => (
           <th
             key={column.key}
             className={column.sortable ? 'sortable' : ''}
