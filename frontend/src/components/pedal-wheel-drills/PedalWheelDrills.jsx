@@ -176,14 +176,26 @@ export function PedalWheelDrills() {
             <details className="raw-data">
               <summary>🔧 Données brutes (Debug)</summary>
               <div className="raw-data-content">
-                <div className="raw-data-section">
-                  <h4>Axes</h4>
-                  <pre>{JSON.stringify(raw.axes, null, 2)}</pre>
-                </div>
-                <div className="raw-data-section">
-                  <h4>Boutons</h4>
-                  <pre>{JSON.stringify(raw.buttons, null, 2)}</pre>
-                </div>
+                {gamepads.map((gamepad, index) => (
+                  <div key={gamepad.index} className="raw-data-section">
+                    <h4>Device {index + 1}: {gamepad.id}</h4>
+                    <div className="raw-data-subsection">
+                      <h5>Axes</h5>
+                      <pre>{JSON.stringify(Array.from(gamepad.axes || []), null, 2)}</pre>
+                    </div>
+                    <div className="raw-data-subsection">
+                      <h5>Boutons</h5>
+                      <pre>{JSON.stringify(Array.from(gamepad.buttons || []).map(btn => ({
+                        pressed: btn.pressed,
+                        touched: btn.touched,
+                        value: btn.value
+                      })), null, 2)}</pre>
+                    </div>
+                  </div>
+                ))}
+                {gamepads.length === 0 && (
+                  <p className="raw-data-empty">Aucun device connecté</p>
+                )}
               </div>
             </details>
           </section>
