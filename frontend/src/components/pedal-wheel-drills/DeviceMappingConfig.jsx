@@ -5,7 +5,7 @@
  * Interface intuitive : cliquer sur une fonction puis bouger/appuyer pour assigner
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   loadMappingConfig,
   saveMappingConfig,
@@ -16,6 +16,7 @@ import {
   AXIS_TYPES
 } from '../../services/deviceMappingService';
 import { getConnectedGamepads, getGamepadInfo } from '../../services/gamepadService';
+import { getMappedValue } from '../../services/deviceMappingService';
 import './DeviceMappingConfig.css';
 
 // Fonctions assignables avec leurs labels
@@ -23,16 +24,20 @@ const ASSIGNABLE_FUNCTIONS = [
   { type: AXIS_TYPES.ACCELERATOR, label: '⚡ Accélérateur', icon: '⚡' },
   { type: AXIS_TYPES.BRAKE, label: '🛑 Frein', icon: '🛑' },
   { type: AXIS_TYPES.WHEEL, label: '🎮 Volant', icon: '🎮' },
-  { type: AXIS_TYPES.CLUTCH, label: '🔧 Embrayage', icon: '🔧' }
+  { type: AXIS_TYPES.SHIFT_UP, label: '⬆️ Shift Up', icon: '⬆️' },
+  { type: AXIS_TYPES.SHIFT_DOWN, label: '⬇️ Shift Down', icon: '⬇️' }
 ];
 
 export function DeviceMappingConfig({ onConfigChange }) {
   const [config, setConfig] = useState(loadMappingConfig());
   const [gamepads, setGamepads] = useState([]);
   const [assigningFunction, setAssigningFunction] = useState(null); // Fonction en cours d'assignation
-  const [previousAxesValues, setPreviousAxesValues] = useState({}); // Valeurs précédentes pour détecter les changements
   const [debugInfo, setDebugInfo] = useState(null); // Info de debug
+  const [realtimeValues, setRealtimeValues] = useState({}); // Valeurs en temps réel pour les tests
   const assignmentTimeoutRef = useRef(null);
+  const configRef = useRef(config); // Ref pour éviter les dépendances dans useEffect
+  const debugUpdateTimeoutRef = useRef(null); // Pour limiter les mises à jour de debug
+  const previousAxesValuesRef = useRef({}); // Ref pour éviter les re-renders
 
   // Charger les gamepads avec polling
   useEffect(() => {
@@ -46,28 +51,114 @@ export function DeviceMappingConfig({ onConfigChange }) {
     return () => clearInterval(interval);
   }, []);
 
+  // Mettre à jour les valeurs en temps réel pour les fonctions assignées
+  useEffect(() => {
+    const updateRealtimeValues = () => {
+      const connected = getConnectedGamepads();
+      const currentConfig = configRef.current;
+      const values = {};
+      
+      // Vérifier si chaque fonction est assignée et récupérer sa valeur
+      ASSIGNABLE_FUNCTIONS.forEach(func => {
+        // Vérifier si la fonction est assignée dans la config
+        let isAssigned = false;
+        for (const [deviceIndex, axisMappings] of Object.entries(currentConfig.axisMappings || {})) {
+          for (const [axisIndex, mapping] of Object.entries(axisMappings)) {
+            if (mapping && mapping.type === func.type) {
+              isAssigned = true;
+              break;
+            }
+          }
+          if (isAssigned) break;
+        }
+        
+        if (isAssigned) {
+          const rawValue = getMappedValue(func.type, connected, currentConfig);
+          values[func.type] = rawValue;
+        }
+      });
+      
+      setRealtimeValues(values);
+    };
+    
+    updateRealtimeValues();
+    const interval = setInterval(updateRealtimeValues, 50); // Polling rapide pour les valeurs en temps réel
+    
+    return () => clearInterval(interval);
+  }, [config]); // Recharger quand config change
+
   // Détecter les changements d'axes pendant l'assignation
   useEffect(() => {
     if (!assigningFunction) {
-      // Sauvegarder les valeurs actuelles comme référence
+      // Sauvegarder les valeurs actuelles comme référence (dans une ref pour éviter les re-renders)
       const currentValues = {};
       gamepads.forEach(gamepad => {
         if (gamepad && gamepad.axes) {
           currentValues[gamepad.index] = Array.from(gamepad.axes);
         }
+        if (gamepad && gamepad.buttons) {
+          currentValues[`${gamepad.index}_buttons`] = Array.from(gamepad.buttons);
+        }
       });
-      setPreviousAxesValues(currentValues);
+      previousAxesValuesRef.current = currentValues;
       return;
     }
 
-    // Détecter quel axe a changé
+    // Détecter quel axe ou bouton a changé
     const detectAxisChange = () => {
       gamepads.forEach(gamepad => {
-        if (!gamepad || !gamepad.axes) return;
+        if (!gamepad) return;
 
         const deviceIndex = gamepad.index;
+        
+        // Détecter les boutons pour SHIFT_UP/DOWN
+        if ((assigningFunction === AXIS_TYPES.SHIFT_UP || assigningFunction === AXIS_TYPES.SHIFT_DOWN) && gamepad.buttons) {
+          const currentButtons = Array.from(gamepad.buttons);
+          const previousButtons = previousAxesValuesRef.current[`${deviceIndex}_buttons`] || Array(currentButtons.length).fill({ pressed: false });
+          
+          currentButtons.forEach((button, buttonIndex) => {
+            const wasPressed = previousButtons[buttonIndex]?.pressed || false;
+            const isPressed = button.pressed;
+            
+            // Si un bouton vient d'être pressé, l'assigner
+            if (isPressed && !wasPressed) {
+              const currentConfig = configRef.current;
+              // Pour les boutons, on utilise un index négatif pour les différencier des axes
+              const newConfig = mapAxis(
+                deviceIndex,
+                -buttonIndex - 1, // Index négatif pour les boutons
+                assigningFunction,
+                false, // Pas d'inversion pour les boutons
+                currentConfig
+              );
+              setConfig(newConfig);
+              setAssigningFunction(null);
+              setDebugInfo(null);
+              
+              // Mettre à jour les valeurs précédentes
+              const updatedValues = { ...previousAxesValuesRef.current };
+              updatedValues[`${deviceIndex}_buttons`] = currentButtons;
+              previousAxesValuesRef.current = updatedValues;
+
+              // Notifier le changement
+              if (onConfigChange) {
+                onConfigChange(newConfig);
+              }
+            }
+          });
+          
+          // Mettre à jour les valeurs précédentes des boutons
+          const updatedValues = { ...previousAxesValuesRef.current };
+          updatedValues[`${deviceIndex}_buttons`] = currentButtons;
+          previousAxesValuesRef.current = updatedValues;
+          return; // Ne pas continuer avec les axes pour les boutons
+        }
+        
+        // Détecter les axes pour les autres fonctions
+        if (!gamepad.axes) return;
+        
         const currentAxes = Array.from(gamepad.axes);
-        const previousAxes = previousAxesValues[deviceIndex] || [];
+        const previousAxes = previousAxesValuesRef.current[deviceIndex] || [];
 
         // Chercher l'axe qui a le plus changé
         let maxChange = 0;
@@ -91,9 +182,13 @@ export function DeviceMappingConfig({ onConfigChange }) {
           if (assigningFunction === AXIS_TYPES.WHEEL) {
             threshold = 0.02; // Volant : très sensible
           } else if (assigningFunction === AXIS_TYPES.ACCELERATOR || 
-                     assigningFunction === AXIS_TYPES.BRAKE ||
-                     assigningFunction === AXIS_TYPES.CLUTCH) {
+                     assigningFunction === AXIS_TYPES.BRAKE) {
             threshold = 0.1; // Pédales : besoin d'un changement plus important
+          } else if (assigningFunction === AXIS_TYPES.SHIFT_UP || 
+                     assigningFunction === AXIS_TYPES.SHIFT_DOWN) {
+            // Pour les boutons, on détecte les changements de boutons, pas les axes
+            // On gère ça dans une autre partie du code
+            threshold = 0.1;
           }
           
           // Détecter aussi les changements vers les extrêmes (-1 ou 1)
@@ -113,8 +208,8 @@ export function DeviceMappingConfig({ onConfigChange }) {
           }
         });
 
-        // Debug info
-        if (allChanges.length > 0) {
+        // Debug info (limiter les mises à jour pour éviter les re-renders)
+        if (allChanges.length > 0 && !debugUpdateTimeoutRef.current) {
           const maxChangeInfo = allChanges.reduce((max, curr) => 
             curr.change > max.change ? curr : max
           );
@@ -127,13 +222,17 @@ export function DeviceMappingConfig({ onConfigChange }) {
             threshold = 0.1;
           }
           
-          setDebugInfo({
-            maxChange: maxChangeInfo.change,
-            axis: maxChangeInfo.axis,
-            current: maxChangeInfo.current,
-            previous: maxChangeInfo.previous,
-            threshold: threshold
-          });
+          // Mettre à jour le debug info seulement toutes les 100ms pour éviter les re-renders
+          debugUpdateTimeoutRef.current = setTimeout(() => {
+            setDebugInfo({
+              maxChange: maxChangeInfo.change,
+              axis: maxChangeInfo.axis,
+              current: maxChangeInfo.current,
+              previous: maxChangeInfo.previous,
+              threshold: threshold
+            });
+            debugUpdateTimeoutRef.current = null;
+          }, 100);
         }
 
         // Si un axe a changé significativement, l'assigner
@@ -141,41 +240,31 @@ export function DeviceMappingConfig({ onConfigChange }) {
         if (assigningFunction === AXIS_TYPES.WHEEL) {
           threshold = 0.02;
         } else if (assigningFunction === AXIS_TYPES.ACCELERATOR || 
-                   assigningFunction === AXIS_TYPES.BRAKE ||
-                   assigningFunction === AXIS_TYPES.CLUTCH) {
+                   assigningFunction === AXIS_TYPES.BRAKE) {
           threshold = 0.1;
         }
         
         if (changedAxisIndex >= 0 && maxChange > threshold) {
-          // Détecter si l'axe doit être inversé
-          // Pour les pédales : si la valeur est négative quand on appuie, il faut inverser
-          // Pour le volant : pas d'inversion nécessaire
-          let shouldInvert = false;
-          
-          if (assigningFunction === AXIS_TYPES.ACCELERATOR || 
-              assigningFunction === AXIS_TYPES.BRAKE ||
-              assigningFunction === AXIS_TYPES.CLUTCH) {
-            // Pour les pédales SimJack, les valeurs sont négatives quand on appuie
-            // Si la valeur est négative (< -0.5), il faut inverser pour avoir 0-100%
-            shouldInvert = changedAxisValue < -0.5;
-          }
+          // Pour les axes, pas d'inversion par défaut (l'utilisateur peut l'activer manuellement)
+          const shouldInvert = false;
 
-          // Assigner l'axe
+          // Assigner l'axe (utiliser configRef pour éviter les dépendances)
+          const currentConfig = configRef.current;
           const newConfig = mapAxis(
             deviceIndex,
             changedAxisIndex,
             assigningFunction,
             shouldInvert,
-            config
+            currentConfig
           );
           setConfig(newConfig);
           setAssigningFunction(null);
           setDebugInfo(null);
           
-          // Mettre à jour les valeurs précédentes
-          const updatedValues = { ...previousAxesValues };
+          // Mettre à jour les valeurs précédentes (dans la ref pour éviter les re-renders)
+          const updatedValues = { ...previousAxesValuesRef.current };
           updatedValues[deviceIndex] = currentAxes;
-          setPreviousAxesValues(updatedValues);
+          previousAxesValuesRef.current = updatedValues;
 
           // Notifier le changement
           if (onConfigChange) {
@@ -202,26 +291,52 @@ export function DeviceMappingConfig({ onConfigChange }) {
       if (assignmentTimeoutRef.current) {
         clearTimeout(assignmentTimeoutRef.current);
       }
+      if (debugUpdateTimeoutRef.current) {
+        clearTimeout(debugUpdateTimeoutRef.current);
+        debugUpdateTimeoutRef.current = null;
+      }
     };
-  }, [assigningFunction, gamepads, previousAxesValues, config, onConfigChange]);
+  }, [assigningFunction, gamepads]); // Retirer previousAxesValues (utilise une ref maintenant)
 
-  // Notifier les changements de config
+  // Mettre à jour la ref quand config change
   useEffect(() => {
-    if (onConfigChange) {
-      onConfigChange(config);
-    }
-  }, [config, onConfigChange]);
+    configRef.current = config;
+  }, [config]);
 
   const handleStartAssignment = (functionType) => {
     setAssigningFunction(functionType);
-    // Sauvegarder les valeurs actuelles comme référence
+    // Sauvegarder les valeurs actuelles comme référence (dans une ref)
     const currentValues = {};
     gamepads.forEach(gamepad => {
       if (gamepad && gamepad.axes) {
         currentValues[gamepad.index] = Array.from(gamepad.axes);
       }
+      if (gamepad && gamepad.buttons) {
+        currentValues[`${gamepad.index}_buttons`] = Array.from(gamepad.buttons);
+      }
     });
-    setPreviousAxesValues(currentValues);
+    previousAxesValuesRef.current = currentValues;
+  };
+
+  const handleToggleInvert = (functionType) => {
+    const assignment = getCurrentAssignment(functionType);
+    if (!assignment) return;
+    
+    // Trouver le mapping actuel et inverser l'inversion
+    const newConfig = { ...config };
+    for (const [deviceIndex, axisMappings] of Object.entries(newConfig.axisMappings)) {
+      for (const [axisIndex, mapping] of Object.entries(axisMappings)) {
+        if (mapping.type === functionType) {
+          mapping.invert = !mapping.invert;
+          setConfig(newConfig);
+          saveMappingConfig(newConfig);
+          if (onConfigChange) {
+            onConfigChange(newConfig);
+          }
+          return;
+        }
+      }
+    }
   };
 
   const handleCancelAssignment = () => {
@@ -229,6 +344,10 @@ export function DeviceMappingConfig({ onConfigChange }) {
     setDebugInfo(null);
     if (assignmentTimeoutRef.current) {
       clearTimeout(assignmentTimeoutRef.current);
+    }
+    if (debugUpdateTimeoutRef.current) {
+      clearTimeout(debugUpdateTimeoutRef.current);
+      debugUpdateTimeoutRef.current = null;
     }
   };
 
@@ -247,11 +366,24 @@ export function DeviceMappingConfig({ onConfigChange }) {
           const gamepad = gamepads.find(gp => gp.index === parseInt(deviceIndex));
           if (gamepad) {
             const info = getGamepadInfo(gamepad);
-            return {
-              device: info.id,
-              axis: parseInt(axisIndex),
-              invert: mapping.invert
-            };
+            const axisIdx = parseInt(axisIndex);
+            // Si l'index est négatif, c'est un bouton
+            if (axisIdx < 0) {
+              const buttonIndex = -axisIdx - 1;
+              return {
+                device: info.id,
+                button: buttonIndex,
+                invert: mapping.invert,
+                isButton: true
+              };
+            } else {
+              return {
+                device: info.id,
+                axis: axisIdx,
+                invert: mapping.invert,
+                isButton: false
+              };
+            }
           }
         }
       }
@@ -295,10 +427,68 @@ export function DeviceMappingConfig({ onConfigChange }) {
                     <div className="function-details">
                       <span className="function-label">{func.label}</span>
                       {currentAssignment && (
-                        <span className="function-assignment">
-                          Assigné: {currentAssignment.device} - Axe {currentAssignment.axis}
-                          {currentAssignment.invert && ' (inversé)'}
-                        </span>
+                        <>
+                          <span className="function-assignment">
+                            Assigné: {currentAssignment.device} - {
+                              currentAssignment.isButton 
+                                ? `Bouton ${currentAssignment.button}`
+                                : `Axe ${currentAssignment.axis}`
+                            }
+                            {currentAssignment.invert && ' (inversé)'}
+                          </span>
+                          {/* Barre de test en temps réel */}
+                          <div className="function-test-bar">
+                            <div className="test-bar-container">
+                              {func.type === AXIS_TYPES.WHEEL ? (
+                                // Barre horizontale pour le volant (gauche/droite)
+                                <div className="test-bar test-bar-wheel">
+                                  <div
+                                    className="test-bar-fill test-bar-fill-wheel"
+                                    style={{
+                                      width: `${Math.abs(realtimeValues[func.type] || 0) * 50}%`,
+                                      left: (realtimeValues[func.type] || 0) < 0 ? '0' : 'auto',
+                                      right: (realtimeValues[func.type] || 0) >= 0 ? '0' : 'auto'
+                                    }}
+                                  />
+                                  <div
+                                    className="test-bar-indicator"
+                                    style={{
+                                      left: `${((realtimeValues[func.type] || 0) + 1) * 50}%`
+                                    }}
+                                  />
+                                </div>
+                              ) : func.type === AXIS_TYPES.SHIFT_UP || func.type === AXIS_TYPES.SHIFT_DOWN ? (
+                                // Barre pour les boutons (on/off)
+                                <div className="test-bar test-bar-button">
+                                  <div
+                                    className={`test-bar-fill test-bar-fill-button ${(realtimeValues[func.type] || 0) > 0.5 ? 'active' : ''}`}
+                                    style={{
+                                      width: `${(realtimeValues[func.type] || 0) > 0.5 ? 100 : 0}%`
+                                    }}
+                                  />
+                                </div>
+                              ) : (
+                                // Barre horizontale pour les pédales (0-100%)
+                                <div className="test-bar test-bar-pedal">
+                                  <div
+                                    className="test-bar-fill test-bar-fill-pedal"
+                                    style={{
+                                      width: `${(realtimeValues[func.type] || 0) * 100}%`
+                                    }}
+                                  />
+                                </div>
+                              )}
+                            </div>
+                            <span className="test-bar-value">
+                              {func.type === AXIS_TYPES.WHEEL 
+                                ? `${((realtimeValues[func.type] || 0) * 900).toFixed(0)}°`
+                                : func.type === AXIS_TYPES.SHIFT_UP || func.type === AXIS_TYPES.SHIFT_DOWN
+                                ? (realtimeValues[func.type] || 0) > 0.5 ? 'ON' : 'OFF'
+                                : `${((realtimeValues[func.type] || 0) * 100).toFixed(0)}%`
+                              }
+                            </span>
+                          </div>
+                        </>
                       )}
                        {isAssigning && (
                          <div className="function-assigning-hint">
@@ -322,12 +512,24 @@ export function DeviceMappingConfig({ onConfigChange }) {
                         Annuler
                       </button>
                     ) : (
-                      <button
-                        className="assign-button"
-                        onClick={() => handleStartAssignment(func.type)}
-                      >
-                        {currentAssignment ? 'Réassigner' : 'Assigner'}
-                      </button>
+                      <>
+                        <button
+                          className="assign-button"
+                          onClick={() => handleStartAssignment(func.type)}
+                        >
+                          {currentAssignment ? 'Réassigner' : 'Assigner'}
+                        </button>
+                        {currentAssignment && 
+                         (func.type === AXIS_TYPES.ACCELERATOR || func.type === AXIS_TYPES.BRAKE) && (
+                          <button
+                            className="invert-button"
+                            onClick={() => handleToggleInvert(func.type)}
+                            title={currentAssignment.invert ? "Désactiver l'inversion" : "Activer l'inversion"}
+                          >
+                            {currentAssignment.invert ? '↩️ Inversé' : '↪️ Normal'}
+                          </button>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>

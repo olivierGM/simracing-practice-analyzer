@@ -7,7 +7,6 @@
  */
 
 import { useState } from 'react';
-import { DeviceConnector } from './DeviceConnector';
 import { DeviceMappingConfig } from './DeviceMappingConfig';
 import { useMappedGamepads } from '../../hooks/useMappedGamepads';
 import { loadMappingConfig } from '../../services/deviceMappingService';
@@ -15,7 +14,7 @@ import './PedalWheelDrills.css';
 
 export function PedalWheelDrills() {
   const [mappingConfig, setMappingConfig] = useState(loadMappingConfig());
-  const [showConfig, setShowConfig] = useState(false);
+  const [showConfig, setShowConfig] = useState(true); // Ouvert par défaut
   
   const {
     isSupported,
@@ -23,7 +22,8 @@ export function PedalWheelDrills() {
     wheel,
     accelerator,
     brake,
-    clutch
+    shiftUp,
+    shiftDown
   } = useMappedGamepads(mappingConfig);
 
   const handleConfigChange = (newConfig) => {
@@ -38,23 +38,21 @@ export function PedalWheelDrills() {
   // Convertir les valeurs en pourcentages
   const acceleratorPercent = (accelerator * 100).toFixed(1);
   const brakePercent = (brake * 100).toFixed(1);
-  const clutchPercent = (clutch * 100).toFixed(1);
 
   return (
     <div className="pedal-wheel-drills">
       <div className="drills-container">
-        {/* Section Connexion */}
+        {/* Section Configuration */}
         <section className="drills-section">
           <div className="section-header-with-button">
-            <h2 className="section-title">🔌 Connexion Périphérique</h2>
+            <h2 className="section-title">⚙️ Configuration</h2>
             <button
               className="config-toggle-button"
               onClick={() => setShowConfig(!showConfig)}
             >
-              {showConfig ? '▼' : '⚙️'} Configuration
+              {showConfig ? '▼' : '▶'} {showConfig ? 'Masquer' : 'Afficher'}
             </button>
           </div>
-          <DeviceConnector />
           
           {/* Panneau de configuration */}
           {showConfig && (
@@ -146,30 +144,6 @@ export function PedalWheelDrills() {
                 </div>
               </div>
 
-              {/* Embrayage (si présent) */}
-              {clutch > 0.01 && (
-                <div className="input-display input-display-clutch">
-                  <div className="input-display-header">
-                    <h3>🔧 Embrayage</h3>
-                    <span className="input-value">{clutchPercent}%</span>
-                  </div>
-                  <div className="input-bar-container">
-                    <div className="input-bar input-bar-vertical">
-                      <div
-                        className="input-bar-fill input-bar-fill-clutch"
-                        style={{
-                          height: `${clutch * 100}%`
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="input-labels">
-                    <span>0%</span>
-                    <span>50%</span>
-                    <span>100%</span>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Données brutes (pour debug) */}

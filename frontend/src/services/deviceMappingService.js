@@ -21,7 +21,8 @@ export const AXIS_TYPES = {
   WHEEL: 'wheel',           // Volant (gauche/droite)
   ACCELERATOR: 'accelerator', // Accélérateur
   BRAKE: 'brake',            // Frein
-  CLUTCH: 'clutch'           // Embrayage
+  SHIFT_UP: 'shift_up',      // Shift Up (bouton)
+  SHIFT_DOWN: 'shift_down'   // Shift Down (bouton)
 };
 
 /**
@@ -208,15 +209,36 @@ export function applyAxisMapping(deviceIndex, axisIndex, rawValue, config) {
  */
 export function getMappedValue(axisType, gamepads, config) {
   for (const gamepad of gamepads) {
-    if (!gamepad || !gamepad.axes) continue;
+    if (!gamepad) continue;
     
     const deviceIndex = gamepad.index;
-    const axes = gamepad.axes;
     
-    for (let i = 0; i < axes.length; i++) {
-      const mapping = applyAxisMapping(deviceIndex, i, axes[i], config);
-      if (mapping && mapping.type === axisType) {
-        return mapping.value;
+    // Vérifier les axes
+    if (gamepad.axes) {
+      const axes = gamepad.axes;
+      for (let i = 0; i < axes.length; i++) {
+        const mapping = applyAxisMapping(deviceIndex, i, axes[i], config);
+        if (mapping && mapping.type === axisType) {
+          return mapping.value;
+        }
+      }
+    }
+    
+    // Vérifier les boutons (pour SHIFT_UP/DOWN)
+    if (gamepad.buttons && (axisType === AXIS_TYPES.SHIFT_UP || axisType === AXIS_TYPES.SHIFT_DOWN)) {
+      const buttons = gamepad.buttons;
+      const axisMappings = config.axisMappings[deviceIndex] || {};
+      
+      // Chercher un mapping avec index négatif (bouton)
+      for (const [axisIndexStr, mapping] of Object.entries(axisMappings)) {
+        const axisIndex = parseInt(axisIndexStr);
+        if (axisIndex < 0 && mapping.type === axisType) {
+          // Index négatif = bouton, convertir en index de bouton
+          const buttonIndex = -axisIndex - 1;
+          if (buttonIndex < buttons.length) {
+            return buttons[buttonIndex].pressed ? 1 : 0;
+          }
+        }
       }
     }
   }

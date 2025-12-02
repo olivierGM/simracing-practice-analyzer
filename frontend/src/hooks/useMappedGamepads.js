@@ -24,7 +24,8 @@ export function useMappedGamepads(config = null) {
     wheel: 0,
     accelerator: 0,
     brake: 0,
-    clutch: 0
+    shiftUp: false,
+    shiftDown: false
   });
   const [isSupported, setIsSupported] = useState(false);
   
@@ -63,13 +64,15 @@ export function useMappedGamepads(config = null) {
     const wheel = getMappedValue(AXIS_TYPES.WHEEL, connected, currentConfigRef.current);
     const accelerator = getMappedValue(AXIS_TYPES.ACCELERATOR, connected, currentConfigRef.current);
     const brake = getMappedValue(AXIS_TYPES.BRAKE, connected, currentConfigRef.current);
-    const clutch = getMappedValue(AXIS_TYPES.CLUTCH, connected, currentConfigRef.current);
+    const shiftUp = getMappedValue(AXIS_TYPES.SHIFT_UP, connected, currentConfigRef.current) > 0.5;
+    const shiftDown = getMappedValue(AXIS_TYPES.SHIFT_DOWN, connected, currentConfigRef.current) > 0.5;
 
     setMappedValues({
       wheel,
       accelerator,
       brake,
-      clutch
+      shiftUp,
+      shiftDown
     });
 
     // Continuer le polling seulement si on est toujours monté
@@ -103,7 +106,8 @@ export function useMappedGamepads(config = null) {
     wheel: mappedValues.wheel,
     accelerator: mappedValues.accelerator,
     brake: mappedValues.brake,
-    clutch: mappedValues.clutch,
+    shiftUp: mappedValues.shiftUp,
+    shiftDown: mappedValues.shiftDown,
     
     // Config actuelle
     config: currentConfigRef.current
