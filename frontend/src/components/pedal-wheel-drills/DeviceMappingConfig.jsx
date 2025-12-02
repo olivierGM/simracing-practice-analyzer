@@ -86,14 +86,30 @@ export function DeviceMappingConfig({ onConfigChange }) {
             previous: previousValue
           });
           
-          // Seuil de détection plus bas pour être plus réactif
-          // Pour le volant, on accepte des changements plus petits
-          const threshold = assigningFunction === AXIS_TYPES.WHEEL ? 0.02 : 0.05;
+          // Seuil de détection adaptatif selon le type de fonction
+          let threshold = 0.05;
+          if (assigningFunction === AXIS_TYPES.WHEEL) {
+            threshold = 0.02; // Volant : très sensible
+          } else if (assigningFunction === AXIS_TYPES.ACCELERATOR || 
+                     assigningFunction === AXIS_TYPES.BRAKE ||
+                     assigningFunction === AXIS_TYPES.CLUTCH) {
+            threshold = 0.1; // Pédales : besoin d'un changement plus important
+          }
           
-          if (change > maxChange && change > threshold) {
-            maxChange = change;
-            changedAxisIndex = axisIndex;
-            changedAxisValue = currentValue;
+          // Détecter aussi les changements vers les extrêmes (-1 ou 1)
+          // Pour les pédales, on détecte quand on appuie (valeur qui va vers -1)
+          const isMovingToExtreme = (assigningFunction === AXIS_TYPES.ACCELERATOR || 
+                                     assigningFunction === AXIS_TYPES.BRAKE ||
+                                     assigningFunction === AXIS_TYPES.CLUTCH) &&
+                                    (Math.abs(currentValue) > 0.5 && Math.abs(previousValue) < 0.5);
+          
+          // Détecter si le changement est significatif OU si on va vers un extrême
+          if ((change > maxChange && change > threshold) || isMovingToExtreme) {
+            if (change > maxChange || isMovingToExtreme) {
+              maxChange = Math.max(change, 0.2); // Forcer un changement minimum si on détecte un extrême
+              changedAxisIndex = axisIndex;
+              changedAxisValue = currentValue;
+            }
           }
         });
 
@@ -102,17 +118,34 @@ export function DeviceMappingConfig({ onConfigChange }) {
           const maxChangeInfo = allChanges.reduce((max, curr) => 
             curr.change > max.change ? curr : max
           );
+          let threshold = 0.05;
+          if (assigningFunction === AXIS_TYPES.WHEEL) {
+            threshold = 0.02;
+          } else if (assigningFunction === AXIS_TYPES.ACCELERATOR || 
+                     assigningFunction === AXIS_TYPES.BRAKE ||
+                     assigningFunction === AXIS_TYPES.CLUTCH) {
+            threshold = 0.1;
+          }
+          
           setDebugInfo({
             maxChange: maxChangeInfo.change,
             axis: maxChangeInfo.axis,
             current: maxChangeInfo.current,
             previous: maxChangeInfo.previous,
-            threshold: assigningFunction === AXIS_TYPES.WHEEL ? 0.02 : 0.05
+            threshold: threshold
           });
         }
 
         // Si un axe a changé significativement, l'assigner
-        const threshold = assigningFunction === AXIS_TYPES.WHEEL ? 0.02 : 0.05;
+        let threshold = 0.05;
+        if (assigningFunction === AXIS_TYPES.WHEEL) {
+          threshold = 0.02;
+        } else if (assigningFunction === AXIS_TYPES.ACCELERATOR || 
+                   assigningFunction === AXIS_TYPES.BRAKE ||
+                   assigningFunction === AXIS_TYPES.CLUTCH) {
+          threshold = 0.1;
+        }
+        
         if (changedAxisIndex >= 0 && maxChange > threshold) {
           // Détecter si l'axe doit être inversé
           // Pour les pédales : si la valeur est négative quand on appuie, il faut inverser
@@ -122,8 +155,9 @@ export function DeviceMappingConfig({ onConfigChange }) {
           if (assigningFunction === AXIS_TYPES.ACCELERATOR || 
               assigningFunction === AXIS_TYPES.BRAKE ||
               assigningFunction === AXIS_TYPES.CLUTCH) {
-            // Pour les pédales, si la valeur est négative quand on appuie, inverser
-            shouldInvert = changedAxisValue < -0.1;
+            // Pour les pédales SimJack, les valeurs sont négatives quand on appuie
+            // Si la valeur est négative (< -0.5), il faut inverser pour avoir 0-100%
+            shouldInvert = changedAxisValue < -0.5;
           }
 
           // Assigner l'axe
@@ -271,8 +305,8 @@ export function DeviceMappingConfig({ onConfigChange }) {
                            <span>⏳ Bougez/appuyez sur le contrôle maintenant...</span>
                            {debugInfo && (
                              <span className="debug-info">
-                               Détection: Axe {debugInfo.axis} - Changement: {debugInfo.maxChange.toFixed(3)} 
-                               (Seuil: {debugInfo.threshold}) - Valeur: {debugInfo.current.toFixed(3)}
+                               Axe {debugInfo.axis}: {debugInfo.current.toFixed(3)} 
+                               (Changement: {debugInfo.maxChange.toFixed(3)}, Seuil: {debugInfo.threshold})
                              </span>
                            )}
                          </div>
