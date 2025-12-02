@@ -3,28 +3,34 @@
  * 
  * Composant principal pour les drills pédales/volant
  * Phase 1 : Affichage de la connexion et des valeurs en temps réel
+ * Avec support de mapping personnalisé et plusieurs devices
  */
 
 import { useState } from 'react';
 import { DeviceConnector } from './DeviceConnector';
-import { useGamepad } from '../../hooks/useGamepad';
+import { DeviceMappingConfig } from './DeviceMappingConfig';
+import { useMappedGamepads } from '../../hooks/useMappedGamepads';
+import { loadMappingConfig } from '../../services/deviceMappingService';
 import './PedalWheelDrills.css';
 
 export function PedalWheelDrills() {
-  const [selectedGamepadIndex, setSelectedGamepadIndex] = useState(null);
+  const [mappingConfig, setMappingConfig] = useState(loadMappingConfig());
+  const [showConfig, setShowConfig] = useState(false);
   
   const {
-    isConnected,
+    isSupported,
+    gamepads,
     wheel,
     accelerator,
     brake,
-    clutch,
-    raw
-  } = useGamepad(selectedGamepadIndex);
+    clutch
+  } = useMappedGamepads(mappingConfig);
 
-  const handleGamepadSelect = (index) => {
-    setSelectedGamepadIndex(index);
+  const handleConfigChange = (newConfig) => {
+    setMappingConfig(newConfig);
   };
+
+  const hasAssignedDevices = Object.keys(mappingConfig.deviceAssignments).length > 0;
 
   // Convertir la valeur du volant en degrés (approximation)
   const wheelDegrees = (wheel * 900).toFixed(1); // -900° à +900° (environ 2.5 tours)
@@ -39,12 +45,27 @@ export function PedalWheelDrills() {
       <div className="drills-container">
         {/* Section Connexion */}
         <section className="drills-section">
-          <h2 className="section-title">🔌 Connexion Périphérique</h2>
-          <DeviceConnector onGamepadSelect={handleGamepadSelect} />
+          <div className="section-header-with-button">
+            <h2 className="section-title">🔌 Connexion Périphérique</h2>
+            <button
+              className="config-toggle-button"
+              onClick={() => setShowConfig(!showConfig)}
+            >
+              {showConfig ? '▼' : '⚙️'} Configuration
+            </button>
+          </div>
+          <DeviceConnector />
+          
+          {/* Panneau de configuration */}
+          {showConfig && (
+            <div className="config-panel">
+              <DeviceMappingConfig onConfigChange={handleConfigChange} />
+            </div>
+          )}
         </section>
 
         {/* Section Affichage en Temps Réel */}
-        {isConnected && (
+        {isSupported && (hasAssignedDevices || gamepads.length > 0) && (
           <section className="drills-section">
             <h2 className="section-title">📊 Valeurs en Temps Réel</h2>
             <div className="realtime-display">
@@ -168,11 +189,26 @@ export function PedalWheelDrills() {
           </section>
         )}
 
-        {/* Message si non connecté */}
-        {!isConnected && selectedGamepadIndex !== null && (
+        {/* Message si aucun device assigné */}
+        {!hasAssignedDevices && gamepads.length > 0 && (
           <section className="drills-section">
             <div className="info-message">
-              <p>⏳ En attente de connexion du périphérique...</p>
+              <p>⚙️ Configurez le mapping de vos périphériques pour voir les valeurs en temps réel.</p>
+              <button
+                className="show-config-button"
+                onClick={() => setShowConfig(true)}
+              >
+                Ouvrir la configuration
+              </button>
+            </div>
+          </section>
+        )}
+
+        {/* Message si aucun device connecté */}
+        {gamepads.length === 0 && isSupported && (
+          <section className="drills-section">
+            <div className="info-message">
+              <p>⏳ Connectez vos périphériques pour commencer.</p>
             </div>
           </section>
         )}
