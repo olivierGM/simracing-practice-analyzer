@@ -1,0 +1,262 @@
+.device-connector {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.device-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.device-status-error {
+  background-color: var(--error-bg, rgba(255, 0, 0, 0.1));
+  border: 1px solid var(--error-border, rgba(255, 0, 0, 0.3));
+}
+
+.device-status-warning {
+  background-color: var(--warning-bg, rgba(255, 193, 7, 0.1));
+  border: 1px solid var(--warning-border, rgba(255, 193, 7, 0.3));
+}
+
+.device-status-success {
+  background-color: var(--success-bg, rgba(76, 175, 80, 0.1));
+  border: 1px solid var(--success-border, rgba(76, 175, 80, 0.3));
+}
+
+.status-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.status-content {
+  flex: 1;
+}
+
+.status-content h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.status-content p {
+  margin: 0.5rem 0;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  line-height: 1.5;
+}
+
+.status-hint {
+  margin-top: 1rem !important;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.device-count {
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+}
+
+.device-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.device-item {
+  padding: 1rem;
+  border: 2px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  border-radius: 8px;
+  background-color: var(--card-bg, rgba(255, 255, 255, 0.05));
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.device-item:hover {
+  border-color: var(--primary-color, #4CAF50);
+  background-color: var(--card-bg-hover, rgba(255, 255, 255, 0.1));
+  transform: translateY(-2px);
+}
+
+.device-item-active {
+  border-color: var(--primary-color, #4CAF50);
+  background-color: var(--primary-bg, rgba(76, 175, 80, 0.1));
+}
+
+.device-item-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.device-item-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.device-item-info {
+  flex: 1;
+}
+
+.device-item-info h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.device-item-details {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+.device-item-badge {
+  padding: 0.25rem 0.75rem;
+  background-color: var(--primary-color, #4CAF50);
+  color: white;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.device-info {
+  padding: 1.5rem;
+  background-color: var(--card-bg, rgba(255, 255, 255, 0.05));
+  border-radius: 8px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+}
+
+.device-info h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.device-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.device-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.device-info-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  font-weight: 500;
+}
+
+.device-info-value {
+  font-size: 1rem;
+  color: var(--text-primary, #fff);
+  font-weight: 600;
+  font-family: monospace;
+}
+
+/* Dark mode support */
+[data-theme="dark"] .device-status-error {
+  background-color: rgba(255, 0, 0, 0.15);
+  border-color: rgba(255, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .device-status-warning {
+  background-color: rgba(255, 193, 7, 0.15);
+  border-color: rgba(255, 193, 7, 0.4);
+}
+
+[data-theme="dark"] .device-status-success {
+  background-color: rgba(76, 175, 80, 0.15);
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+/* Light mode support */
+[data-theme="light"] .device-status-error {
+  background-color: rgba(255, 0, 0, 0.1);
+  border-color: rgba(255, 0, 0, 0.3);
+}
+
+[data-theme="light"] .device-status-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  border-color: rgba(255, 193, 7, 0.3);
+}
+
+[data-theme="light"] .device-status-success {
+  background-color: rgba(76, 175, 80, 0.1);
+  border-color: rgba(76, 175, 80, 0.3);
+}
+
+/* Guide de dépannage */
+.troubleshooting-guide {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: var(--card-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  border-radius: 8px;
+}
+
+.troubleshooting-summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.5rem;
+  user-select: none;
+  list-style: none;
+}
+
+.troubleshooting-summary:hover {
+  color: var(--primary-color, #4CAF50);
+}
+
+.troubleshooting-summary::-webkit-details-marker {
+  display: none;
+}
+
+.troubleshooting-content {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+}
+
+.troubleshooting-content h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.troubleshooting-content ol {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.troubleshooting-content li {
+  margin: 0.75rem 0;
+  line-height: 1.6;
+}
+
+.troubleshooting-content ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.troubleshooting-content ul li {
+  margin: 0.25rem 0;
+}
+
+.troubleshooting-note {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: var(--info-bg, rgba(33, 150, 243, 0.1));
+  border-left: 3px solid var(--info-color, #2196F3);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+

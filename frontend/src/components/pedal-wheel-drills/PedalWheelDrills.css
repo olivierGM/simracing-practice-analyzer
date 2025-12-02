@@ -1,0 +1,245 @@
+.pedal-wheel-drills {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.drills-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.drills-section {
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+  color: var(--text-primary, #fff);
+}
+
+/* Affichage en temps réel */
+.realtime-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.input-display {
+  padding: 1.5rem;
+  background-color: var(--card-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  border-radius: 12px;
+}
+
+.input-display-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.input-display-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.input-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: monospace;
+  color: var(--primary-color, #4CAF50);
+}
+
+.input-bar-container {
+  margin: 1rem 0;
+}
+
+/* Barre horizontale pour le volant */
+.input-bar {
+  position: relative;
+  background-color: var(--bar-bg, rgba(255, 255, 255, 0.1));
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.input-bar-wheel {
+  height: 40px;
+  width: 100%;
+}
+
+.input-bar-fill-wheel {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%);
+  transition: width 0.05s linear, left 0.05s linear, right 0.05s linear;
+}
+
+.input-indicator {
+  position: absolute;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background-color: #fff;
+  transform: translateX(-50%);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  transition: left 0.05s linear;
+}
+
+/* Barre verticale pour les pédales */
+.input-bar-vertical {
+  width: 40px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.input-bar-fill-accelerator {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(180deg, #4CAF50 0%, #8BC34A 100%);
+  transition: height 0.05s linear;
+}
+
+.input-bar-fill-brake {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(180deg, #f44336 0%, #ff5722 100%);
+  transition: height 0.05s linear;
+}
+
+.input-bar-fill-clutch {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(180deg, #ff9800 0%, #ffc107 100%);
+  transition: height 0.05s linear;
+}
+
+.input-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  margin-top: 0.5rem;
+}
+
+.input-display-wheel .input-labels {
+  justify-content: space-between;
+}
+
+.input-display-accelerator .input-labels,
+.input-display-brake .input-labels,
+.input-display-clutch .input-labels {
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Données brutes */
+.raw-data {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: var(--card-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  border-radius: 8px;
+}
+
+.raw-data summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.5rem;
+  user-select: none;
+}
+
+.raw-data summary:hover {
+  color: var(--primary-color, #4CAF50);
+}
+
+.raw-data-content {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.raw-data-section {
+  padding: 1rem;
+  background-color: var(--bg-secondary, rgba(0, 0, 0, 0.2));
+  border-radius: 4px;
+}
+
+.raw-data-section h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+.raw-data-section pre {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-primary, #fff);
+  overflow-x: auto;
+}
+
+/* Message d'info */
+.info-message {
+  padding: 2rem;
+  text-align: center;
+  background-color: var(--card-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  border-radius: 8px;
+}
+
+.info-message p {
+  margin: 0;
+  font-size: 1.125rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pedal-wheel-drills {
+    padding: 1rem;
+  }
+
+  .realtime-display {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .raw-data-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dark mode */
+[data-theme="dark"] .input-display {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .raw-data {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Light mode */
+[data-theme="light"] .input-display {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .raw-data {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+

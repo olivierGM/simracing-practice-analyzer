@@ -12,6 +12,7 @@ import { HomePage } from './pages/HomePage';
 import { PilotePage } from './pages/PilotePage';
 import { AdminPage } from './pages/AdminPage';
 import { AngleMeasurementPage } from './pages/AngleMeasurementPage';
+import { PedalWheelDrillsPage } from './pages/PedalWheelDrillsPage';
 import NotFound from './pages/NotFound';
 import { AnalyticsTracker } from './components/layout/AnalyticsTracker';
 import { useFirebaseData } from './hooks/useFirebaseData';
@@ -57,6 +58,7 @@ function AppContent() {
                   <Route path="/circuit/:circuitId/pilote/:pilotId" element={<PilotePage drivers={drivers} sessions={sessions} />} />
                   <Route path="/admin" element={<AdminPage />} />
                   <Route path="/angle-measurement" element={<AngleMeasurementPage />} />
+                  <Route path="/pedal-wheel-drills" element={<PedalWheelDrillsPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
         </main>

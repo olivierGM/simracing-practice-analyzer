@@ -36,6 +36,11 @@ export function ToolsMenu({ navigate }) {
     setIsOpen(false);
   };
 
+  const handlePedalWheelDrillsClick = () => {
+    navigate('/pedal-wheel-drills');
+    setIsOpen(false);
+  };
+
   return (
     <div className="tools-menu-container" ref={menuRef}>
       <button
@@ -54,6 +59,12 @@ export function ToolsMenu({ navigate }) {
             onClick={handleAngleMeasurementClick}
           >
             📐 Mesure d'angles de Rig
+          </button>
+          <button
+            className="tools-menu-item"
+            onClick={handlePedalWheelDrillsClick}
+          >
+            🎮 Drills Pédales & Volant
           </button>
         </div>
       )}
