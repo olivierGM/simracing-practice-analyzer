@@ -5,7 +5,7 @@
  * Utilise requestAnimationFrame pour le polling des données
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   getConnectedGamepads,
   mapRacingWheelAxes,
@@ -35,23 +35,36 @@ export function useGamepad(gamepadIndex = null) {
   
   const animationFrameRef = useRef(null);
   const lastGamepadRef = useRef(null);
+  const gamepadIndexRef = useRef(gamepadIndex);
+  const isSupportedRef = useRef(false);
+
+  // Mettre à jour les refs quand les valeurs changent
+  useEffect(() => {
+    gamepadIndexRef.current = gamepadIndex;
+  }, [gamepadIndex]);
 
   // Vérifier le support de l'API
   useEffect(() => {
-    setIsSupported(isGamepadAPISupported());
+    const supported = isGamepadAPISupported();
+    isSupportedRef.current = supported;
+    setIsSupported(supported);
   }, []);
 
-  // Fonction de polling des données
-  const pollGamepad = () => {
-    if (!isSupported) return;
+  // Fonction de polling des données (mémorisée avec useCallback)
+  const pollGamepad = useCallback(() => {
+    if (!isSupportedRef.current) {
+      animationFrameRef.current = null;
+      return;
+    }
 
     const connected = getConnectedGamepads();
     setGamepads(connected);
 
     // Sélectionner le gamepad
     let currentGamepad = null;
-    if (gamepadIndex !== null && connected[gamepadIndex]) {
-      currentGamepad = connected[gamepadIndex];
+    const currentIndex = gamepadIndexRef.current;
+    if (currentIndex !== null && connected[currentIndex]) {
+      currentGamepad = connected[currentIndex];
     } else if (connected.length > 0) {
       currentGamepad = connected[0];
     }
@@ -82,13 +95,15 @@ export function useGamepad(gamepadIndex = null) {
       setGamepadData(mapped);
     }
 
-    // Continuer le polling
-    animationFrameRef.current = requestAnimationFrame(pollGamepad);
-  };
+    // Continuer le polling seulement si on est toujours monté
+    if (animationFrameRef.current !== null) {
+      animationFrameRef.current = requestAnimationFrame(pollGamepad);
+    }
+  }, []); // Pas de dépendances - utilise des refs
 
   // Démarrer le polling
   useEffect(() => {
-    if (!isSupported) return;
+    if (!isSupportedRef.current) return;
 
     // Démarrer le polling
     animationFrameRef.current = requestAnimationFrame(pollGamepad);
@@ -97,9 +112,10 @@ export function useGamepad(gamepadIndex = null) {
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
       }
     };
-  }, [isSupported, gamepadIndex]);
+  }, [pollGamepad]);
 
   // Écouter les événements de connexion/déconnexion
   useEffect(() => {

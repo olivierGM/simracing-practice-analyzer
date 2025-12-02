@@ -5,7 +5,7 @@
  * Utilise le système de configuration de mapping
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { getConnectedGamepads } from '../services/gamepadService';
 import {
   loadMappingConfig,
@@ -30,6 +30,7 @@ export function useMappedGamepads(config = null) {
   
   const animationFrameRef = useRef(null);
   const currentConfigRef = useRef(config || loadMappingConfig());
+  const isSupportedRef = useRef(false);
 
   // Charger la config si non fournie
   useEffect(() => {
@@ -42,13 +43,18 @@ export function useMappedGamepads(config = null) {
 
   // Vérifier le support de l'API
   useEffect(() => {
-    setIsSupported(typeof navigator !== 'undefined' && 
-                   typeof navigator.getGamepads === 'function');
+    const supported = typeof navigator !== 'undefined' && 
+                      typeof navigator.getGamepads === 'function';
+    isSupportedRef.current = supported;
+    setIsSupported(supported);
   }, []);
 
-  // Fonction de polling des données
-  const pollGamepads = () => {
-    if (!isSupported) return;
+  // Fonction de polling des données (mémorisée avec useCallback)
+  const pollGamepads = useCallback(() => {
+    if (!isSupportedRef.current) {
+      animationFrameRef.current = null;
+      return;
+    }
 
     const connected = getConnectedGamepads();
     setGamepads(connected);
@@ -66,13 +72,15 @@ export function useMappedGamepads(config = null) {
       clutch
     });
 
-    // Continuer le polling
-    animationFrameRef.current = requestAnimationFrame(pollGamepads);
-  };
+    // Continuer le polling seulement si on est toujours monté
+    if (animationFrameRef.current !== null) {
+      animationFrameRef.current = requestAnimationFrame(pollGamepads);
+    }
+  }, []); // Pas de dépendances - utilise des refs
 
   // Démarrer le polling
   useEffect(() => {
-    if (!isSupported) return;
+    if (!isSupportedRef.current) return;
 
     // Démarrer le polling
     animationFrameRef.current = requestAnimationFrame(pollGamepads);
@@ -81,16 +89,10 @@ export function useMappedGamepads(config = null) {
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
       }
     };
-  }, [isSupported]);
-
-  // Mettre à jour la config quand elle change
-  useEffect(() => {
-    if (config) {
-      currentConfigRef.current = config;
-    }
-  }, [config]);
+  }, [pollGamepads]);
 
   return {
     // État
