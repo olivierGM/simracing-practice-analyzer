@@ -124,10 +124,20 @@ export function DeviceMappingConfig({ onConfigChange }) {
   useEffect(() => {
     configRef.current = config;
   }, [config]);
+  
+  // Mettre à jour onConfigChangeRef quand onConfigChange change
+  useEffect(() => {
+    onConfigChangeRef.current = onConfigChange;
+  }, [onConfigChange]);
 
   // Détecter les changements d'axes pour l'assignation automatique
   useEffect(() => {
-    if (!assigningFunction) return;
+    if (!assigningFunction) {
+      console.log('[DEBUG] ⚠️ useEffect détection - assigningFunction est null, arrêt');
+      return;
+    }
+    
+    console.log('[DEBUG] 🔄 Démarrage interval de détection pour:', assigningFunction);
     
     const detectAxisChange = () => {
       if (!assigningFunction) {
@@ -414,10 +424,10 @@ export function DeviceMappingConfig({ onConfigChange }) {
     detectKeyPress();
     
     return () => {
-      console.log('[DEBUG] 🛑 Arrêt interval de détection');
+      console.log('[DEBUG] 🛑 Arrêt interval de détection pour:', assigningFunction);
       clearInterval(interval);
     };
-  }, [assigningFunction, onConfigChange]);
+  }, [assigningFunction]); // Retirer onConfigChange des dépendances pour éviter les re-renders
 
   // Sauvegarder les valeurs précédentes des axes au début de l'assignation
   useEffect(() => {
