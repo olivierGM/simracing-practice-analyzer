@@ -20,13 +20,13 @@ const DIFFICULTY_LABELS = {
 };
 
 const TOLERANCE_BY_DIFFICULTY = {
-  easy: 10,
+  easy: 5,
   medium: 5,
-  hard: 2,
-  extreme: 2,
-  insane: 1.5,
-  insane_plus_1: 1,
-  insane_plus_2: 0.5
+  hard: 5,
+  extreme: 5,
+  insane: 5,
+  insane_plus_1: 5,
+  insane_plus_2: 5
 };
 
 export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
