@@ -1,0 +1,369 @@
+{
+  "name": "Cadence Braking - Freinage en Cadence",
+  "difficulty": "medium",
+  "description": "Drill pour pratiquer le freinage en cadence (pumping). Alternance rapide entre freinage fort et relâchement pour éviter le blocage des roues sur surface glissante.",
+  "duration": 50,
+  "targets": [
+    {
+      "time": 1.0,
+      "percent": 80,
+      "duration": 0.3
+    },
+    {
+      "time": 1.6,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 2.1,
+      "percent": 80,
+      "duration": 0.3
+    },
+    {
+      "time": 2.7,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 3.2,
+      "percent": 80,
+      "duration": 0.3
+    },
+    {
+      "time": 3.8,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 5.0,
+      "percent": 100,
+      "duration": 0.2
+    },
+    {
+      "time": 5.5,
+      "percent": 30,
+      "duration": 0.2
+    },
+    {
+      "time": 6.0,
+      "percent": 100,
+      "duration": 0.2
+    },
+    {
+      "time": 6.5,
+      "percent": 30,
+      "duration": 0.2
+    },
+    {
+      "time": 7.0,
+      "percent": 100,
+      "duration": 0.2
+    },
+    {
+      "time": 7.5,
+      "percent": 30,
+      "duration": 0.2
+    },
+    {
+      "time": 9.0,
+      "percent": 70,
+      "duration": 0.3
+    },
+    {
+      "time": 9.6,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 10.1,
+      "percent": 70,
+      "duration": 0.3
+    },
+    {
+      "time": 10.7,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 11.2,
+      "percent": 70,
+      "duration": 0.3
+    },
+    {
+      "time": 11.8,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 13.0,
+      "percent": 90,
+      "duration": 0.25
+    },
+    {
+      "time": 13.5,
+      "percent": 25,
+      "duration": 0.2
+    },
+    {
+      "time": 14.0,
+      "percent": 90,
+      "duration": 0.25
+    },
+    {
+      "time": 14.5,
+      "percent": 25,
+      "duration": 0.2
+    },
+    {
+      "time": 15.0,
+      "percent": 90,
+      "duration": 0.25
+    },
+    {
+      "time": 15.5,
+      "percent": 25,
+      "duration": 0.2
+    },
+    {
+      "time": 17.0,
+      "percent": 80,
+      "duration": 0.3
+    },
+    {
+      "time": 17.6,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 18.1,
+      "percent": 80,
+      "duration": 0.3
+    },
+    {
+      "time": 18.7,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 19.2,
+      "percent": 80,
+      "duration": 0.3
+    },
+    {
+      "time": 19.8,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 21.0,
+      "percent": 100,
+      "duration": 0.2
+    },
+    {
+      "time": 21.5,
+      "percent": 30,
+      "duration": 0.2
+    },
+    {
+      "time": 22.0,
+      "percent": 100,
+      "duration": 0.2
+    },
+    {
+      "time": 22.5,
+      "percent": 30,
+      "duration": 0.2
+    },
+    {
+      "time": 23.0,
+      "percent": 100,
+      "duration": 0.2
+    },
+    {
+      "time": 23.5,
+      "percent": 30,
+      "duration": 0.2
+    },
+    {
+      "time": 25.0,
+      "percent": 70,
+      "duration": 0.3
+    },
+    {
+      "time": 25.6,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 26.1,
+      "percent": 70,
+      "duration": 0.3
+    },
+    {
+      "time": 26.7,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 27.2,
+      "percent": 70,
+      "duration": 0.3
+    },
+    {
+      "time": 27.8,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 29.0,
+      "percent": 90,
+      "duration": 0.25
+    },
+    {
+      "time": 29.5,
+      "percent": 25,
+      "duration": 0.2
+    },
+    {
+      "time": 30.0,
+      "percent": 90,
+      "duration": 0.25
+    },
+    {
+      "time": 30.5,
+      "percent": 25,
+      "duration": 0.2
+    },
+    {
+      "time": 31.0,
+      "percent": 90,
+      "duration": 0.25
+    },
+    {
+      "time": 31.5,
+      "percent": 25,
+      "duration": 0.2
+    },
+    {
+      "time": 33.0,
+      "percent": 80,
+      "duration": 0.3
+    },
+    {
+      "time": 33.6,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 34.1,
+      "percent": 80,
+      "duration": 0.3
+    },
+    {
+      "time": 34.7,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 35.2,
+      "percent": 80,
+      "duration": 0.3
+    },
+    {
+      "time": 35.8,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 37.0,
+      "percent": 100,
+      "duration": 0.2
+    },
+    {
+      "time": 37.5,
+      "percent": 30,
+      "duration": 0.2
+    },
+    {
+      "time": 38.0,
+      "percent": 100,
+      "duration": 0.2
+    },
+    {
+      "time": 38.5,
+      "percent": 30,
+      "duration": 0.2
+    },
+    {
+      "time": 39.0,
+      "percent": 100,
+      "duration": 0.2
+    },
+    {
+      "time": 39.5,
+      "percent": 30,
+      "duration": 0.2
+    },
+    {
+      "time": 41.0,
+      "percent": 70,
+      "duration": 0.3
+    },
+    {
+      "time": 41.6,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 42.1,
+      "percent": 70,
+      "duration": 0.3
+    },
+    {
+      "time": 42.7,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 43.2,
+      "percent": 70,
+      "duration": 0.3
+    },
+    {
+      "time": 43.8,
+      "percent": 20,
+      "duration": 0.2
+    },
+    {
+      "time": 45.0,
+      "percent": 90,
+      "duration": 0.25
+    },
+    {
+      "time": 45.5,
+      "percent": 25,
+      "duration": 0.2
+    },
+    {
+      "time": 46.0,
+      "percent": 90,
+      "duration": 0.25
+    },
+    {
+      "time": 46.5,
+      "percent": 25,
+      "duration": 0.2
+    },
+    {
+      "time": 47.0,
+      "percent": 90,
+      "duration": 0.25
+    },
+    {
+      "time": 47.5,
+      "percent": 25,
+      "duration": 0.2
+    }
+  ]
+}
+

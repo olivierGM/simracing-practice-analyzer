@@ -12,6 +12,11 @@ import {
   getMappedValue,
   AXIS_TYPES
 } from '../services/deviceMappingService';
+import {
+  initializeKeyboardListeners,
+  cleanupKeyboardListeners,
+  getKeyboardValue
+} from '../services/keyboardService';
 
 /**
  * Hook pour utiliser plusieurs gamepads avec mapping
@@ -42,12 +47,19 @@ export function useMappedGamepads(config = null) {
     }
   }, [config]);
 
-  // Vérifier le support de l'API
+  // Vérifier le support de l'API et initialiser le clavier
   useEffect(() => {
     const supported = typeof navigator !== 'undefined' && 
                       typeof navigator.getGamepads === 'function';
     isSupportedRef.current = supported;
     setIsSupported(supported);
+    
+    // Initialiser les listeners clavier
+    initializeKeyboardListeners();
+    
+    return () => {
+      cleanupKeyboardListeners();
+    };
   }, []);
 
   // Fonction de polling des données (mémorisée avec useCallback)
@@ -60,12 +72,26 @@ export function useMappedGamepads(config = null) {
     const connected = getConnectedGamepads();
     setGamepads(connected);
 
-    // Appliquer le mapping pour obtenir les valeurs
-    const wheel = getMappedValue(AXIS_TYPES.WHEEL, connected, currentConfigRef.current);
-    const accelerator = getMappedValue(AXIS_TYPES.ACCELERATOR, connected, currentConfigRef.current);
-    const brake = getMappedValue(AXIS_TYPES.BRAKE, connected, currentConfigRef.current);
-    const shiftUp = getMappedValue(AXIS_TYPES.SHIFT_UP, connected, currentConfigRef.current) > 0.5;
-    const shiftDown = getMappedValue(AXIS_TYPES.SHIFT_DOWN, connected, currentConfigRef.current) > 0.5;
+    // Appliquer le mapping pour obtenir les valeurs depuis les gamepads
+    let wheel = getMappedValue(AXIS_TYPES.WHEEL, connected, currentConfigRef.current);
+    let accelerator = getMappedValue(AXIS_TYPES.ACCELERATOR, connected, currentConfigRef.current);
+    let brake = getMappedValue(AXIS_TYPES.BRAKE, connected, currentConfigRef.current);
+    let shiftUp = getMappedValue(AXIS_TYPES.SHIFT_UP, connected, currentConfigRef.current) > 0.5;
+    let shiftDown = getMappedValue(AXIS_TYPES.SHIFT_DOWN, connected, currentConfigRef.current) > 0.5;
+
+    // Combiner avec les valeurs du clavier (priorité au gamepad si les deux sont actifs)
+    const keyboardWheel = getKeyboardValue('wheel');
+    const keyboardAccel = getKeyboardValue('accelerator');
+    const keyboardBrake = getKeyboardValue('brake');
+    const keyboardShiftUp = getKeyboardValue('shift_up') > 0.5;
+    const keyboardShiftDown = getKeyboardValue('shift_down') > 0.5;
+
+    // Utiliser le clavier si les gamepads ne sont pas actifs, sinon combiner (max)
+    wheel = Math.abs(wheel) > 0.1 ? wheel : keyboardWheel;
+    accelerator = accelerator > 0.1 ? accelerator : keyboardAccel;
+    brake = brake > 0.1 ? brake : keyboardBrake;
+    shiftUp = shiftUp || keyboardShiftUp;
+    shiftDown = shiftDown || keyboardShiftDown;
 
     setMappedValues({
       wheel,

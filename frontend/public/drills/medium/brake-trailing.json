@@ -1,0 +1,244 @@
+{
+  "name": "Brake Trailing - Dégraissage Progressif",
+  "difficulty": "medium",
+  "description": "Drill pour pratiquer le brake trailing avec des gradients de freinage réalistes. Simule des freinages succincts avec dégraissage progressif (ex: 80% → 60% → 40%).",
+  "duration": 45,
+  "targets": [
+    {
+      "time": 1.0,
+      "percent": 100,
+      "duration": 0.3
+    },
+    {
+      "time": 1.8,
+      "percent": 80,
+      "duration": 0.4
+    },
+    {
+      "time": 2.5,
+      "percent": 60,
+      "duration": 0.5
+    },
+    {
+      "time": 3.3,
+      "percent": 40,
+      "duration": 0.6
+    },
+    {
+      "time": 4.5,
+      "percent": 20,
+      "duration": 0.3
+    },
+    {
+      "time": 6.0,
+      "percent": 100,
+      "duration": 0.2
+    },
+    {
+      "time": 6.5,
+      "percent": 80,
+      "duration": 0.3
+    },
+    {
+      "time": 7.1,
+      "percent": 60,
+      "duration": 0.4
+    },
+    {
+      "time": 7.8,
+      "percent": 40,
+      "duration": 0.5
+    },
+    {
+      "time": 9.0,
+      "percent": 80,
+      "duration": 0.4
+    },
+    {
+      "time": 9.7,
+      "percent": 60,
+      "duration": 0.5
+    },
+    {
+      "time": 10.5,
+      "percent": 40,
+      "duration": 0.6
+    },
+    {
+      "time": 11.5,
+      "percent": 20,
+      "duration": 0.4
+    },
+    {
+      "time": 13.0,
+      "percent": 100,
+      "duration": 0.3
+    },
+    {
+      "time": 13.6,
+      "percent": 80,
+      "duration": 0.4
+    },
+    {
+      "time": 14.3,
+      "percent": 60,
+      "duration": 0.5
+    },
+    {
+      "time": 15.1,
+      "percent": 40,
+      "duration": 0.6
+    },
+    {
+      "time": 16.5,
+      "percent": 60,
+      "duration": 0.5
+    },
+    {
+      "time": 17.3,
+      "percent": 40,
+      "duration": 0.6
+    },
+    {
+      "time": 18.2,
+      "percent": 20,
+      "duration": 0.4
+    },
+    {
+      "time": 20.0,
+      "percent": 100,
+      "duration": 0.2
+    },
+    {
+      "time": 20.5,
+      "percent": 80,
+      "duration": 0.3
+    },
+    {
+      "time": 21.1,
+      "percent": 60,
+      "duration": 0.4
+    },
+    {
+      "time": 21.8,
+      "percent": 40,
+      "duration": 0.5
+    },
+    {
+      "time": 23.0,
+      "percent": 80,
+      "duration": 0.4
+    },
+    {
+      "time": 23.7,
+      "percent": 60,
+      "duration": 0.5
+    },
+    {
+      "time": 24.5,
+      "percent": 40,
+      "duration": 0.6
+    },
+    {
+      "time": 25.5,
+      "percent": 20,
+      "duration": 0.4
+    },
+    {
+      "time": 27.0,
+      "percent": 100,
+      "duration": 0.3
+    },
+    {
+      "time": 27.6,
+      "percent": 80,
+      "duration": 0.4
+    },
+    {
+      "time": 28.3,
+      "percent": 60,
+      "duration": 0.5
+    },
+    {
+      "time": 29.1,
+      "percent": 40,
+      "duration": 0.6
+    },
+    {
+      "time": 30.5,
+      "percent": 60,
+      "duration": 0.5
+    },
+    {
+      "time": 31.3,
+      "percent": 40,
+      "duration": 0.6
+    },
+    {
+      "time": 32.2,
+      "percent": 20,
+      "duration": 0.4
+    },
+    {
+      "time": 34.0,
+      "percent": 100,
+      "duration": 0.2
+    },
+    {
+      "time": 34.5,
+      "percent": 80,
+      "duration": 0.3
+    },
+    {
+      "time": 35.1,
+      "percent": 60,
+      "duration": 0.4
+    },
+    {
+      "time": 35.8,
+      "percent": 40,
+      "duration": 0.5
+    },
+    {
+      "time": 37.0,
+      "percent": 80,
+      "duration": 0.4
+    },
+    {
+      "time": 37.7,
+      "percent": 60,
+      "duration": 0.5
+    },
+    {
+      "time": 38.5,
+      "percent": 40,
+      "duration": 0.6
+    },
+    {
+      "time": 39.5,
+      "percent": 20,
+      "duration": 0.4
+    },
+    {
+      "time": 41.0,
+      "percent": 100,
+      "duration": 0.3
+    },
+    {
+      "time": 41.6,
+      "percent": 80,
+      "duration": 0.4
+    },
+    {
+      "time": 42.3,
+      "percent": 60,
+      "duration": 0.5
+    },
+    {
+      "time": 43.1,
+      "percent": 40,
+      "duration": 0.6
+    }
+  ]
+}
+

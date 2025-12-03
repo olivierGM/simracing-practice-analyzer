@@ -17,6 +17,16 @@ import {
 } from '../../services/deviceMappingService';
 import { getConnectedGamepads, getGamepadInfo } from '../../services/gamepadService';
 import { getMappedValue } from '../../services/deviceMappingService';
+import {
+  initializeKeyboardListeners,
+  cleanupKeyboardListeners,
+  assignKeyToFunction,
+  unassignKey,
+  getAssignedKeys,
+  formatKeyCode,
+  isKeyPressed,
+  getKeyboardValue
+} from '../../services/keyboardService';
 import './DeviceMappingConfig.css';
 
 // Fonctions assignables avec leurs labels
@@ -39,6 +49,14 @@ export function DeviceMappingConfig({ onConfigChange }) {
   const debugUpdateTimeoutRef = useRef(null); // Pour limiter les mises à jour de debug
   const previousAxesValuesRef = useRef({}); // Ref pour éviter les re-renders
 
+  // Initialiser le clavier
+  useEffect(() => {
+    initializeKeyboardListeners();
+    return () => {
+      cleanupKeyboardListeners();
+    };
+  }, []);
+
   // Charger les gamepads avec polling
   useEffect(() => {
     const updateGamepads = () => {
@@ -59,8 +77,9 @@ export function DeviceMappingConfig({ onConfigChange }) {
       const values = {};
       
       // Vérifier si chaque fonction est assignée et récupérer sa valeur
+      const assignedKeys = getAssignedKeys();
       ASSIGNABLE_FUNCTIONS.forEach(func => {
-        // Vérifier si la fonction est assignée dans la config
+        // Vérifier si la fonction est assignée dans la config (gamepad)
         let isAssigned = false;
         for (const [deviceIndex, axisMappings] of Object.entries(currentConfig.axisMappings || {})) {
           for (const [axisIndex, mapping] of Object.entries(axisMappings)) {
@@ -72,9 +91,27 @@ export function DeviceMappingConfig({ onConfigChange }) {
           if (isAssigned) break;
         }
         
+        // Vérifier aussi si assignée au clavier
+        if (!isAssigned) {
+          for (const assignedType of Object.values(assignedKeys)) {
+            if (assignedType === func.type) {
+              isAssigned = true;
+              break;
+            }
+          }
+        }
+        
         if (isAssigned) {
-          const rawValue = getMappedValue(func.type, connected, currentConfig);
-          values[func.type] = rawValue;
+          // Récupérer les valeurs depuis gamepad et clavier
+          const keyboardValue = getKeyboardValue(func.type);
+          const gamepadValue = getMappedValue(func.type, connected, currentConfig);
+          
+          // Utiliser le gamepad si actif, sinon le clavier
+          if (func.type === 'wheel') {
+            values[func.type] = Math.abs(gamepadValue) > 0.1 ? gamepadValue : keyboardValue;
+          } else {
+            values[func.type] = gamepadValue > 0.1 ? gamepadValue : keyboardValue;
+          }
         }
       });
       
@@ -274,6 +311,49 @@ export function DeviceMappingConfig({ onConfigChange }) {
       });
     };
 
+    // Détecter les touches clavier pressées
+    const detectKeyPress = () => {
+      if (!assigningFunction) return;
+
+      // Écouter les événements clavier via window
+      const handleKeyDown = (e) => {
+        e.preventDefault(); // Empêcher le comportement par défaut
+        
+        // Assigner la touche à la fonction
+        assignKeyToFunction(e.code, assigningFunction);
+        
+        // Notifier le changement
+        setAssigningFunction(null);
+        setDebugInfo(null);
+        
+        // Mettre à jour la config (les touches clavier sont gérées séparément)
+        if (onConfigChange) {
+          onConfigChange(configRef.current);
+        }
+        
+        // Retirer le listener
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+      
+      // Ajouter le listener temporaire
+      window.addEventListener('keydown', handleKeyDown);
+      
+      // Retirer le listener après 10 secondes ou quand l'assignation est annulée
+      const timeoutId = setTimeout(() => {
+        window.removeEventListener('keydown', handleKeyDown);
+      }, 10000);
+      
+      return () => {
+        clearTimeout(timeoutId);
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    };
+
+    let keyCleanup = null;
+    if (assigningFunction) {
+      keyCleanup = detectKeyPress();
+    }
+
     // Démarrer la détection avec polling rapide
     const detectionInterval = setInterval(detectAxisChange, 30);
     
@@ -295,8 +375,11 @@ export function DeviceMappingConfig({ onConfigChange }) {
         clearTimeout(debugUpdateTimeoutRef.current);
         debugUpdateTimeoutRef.current = null;
       }
+      if (keyCleanup) {
+        keyCleanup();
+      }
     };
-  }, [assigningFunction, gamepads]); // Retirer previousAxesValues (utilise une ref maintenant)
+  }, [assigningFunction, gamepads, onConfigChange]); // Retirer previousAxesValues (utilise une ref maintenant)
 
   // Mettre à jour la ref quand config change
   useEffect(() => {
@@ -360,6 +443,19 @@ export function DeviceMappingConfig({ onConfigChange }) {
 
   // Obtenir l'assignation actuelle pour une fonction
   const getCurrentAssignment = (functionType) => {
+    // Vérifier d'abord les touches clavier
+    const assignedKeys = getAssignedKeys();
+    for (const [keyCode, assignedType] of Object.entries(assignedKeys)) {
+      if (assignedType === functionType) {
+        return {
+          type: 'keyboard',
+          key: formatKeyCode(keyCode),
+          keyCode: keyCode
+        };
+      }
+    }
+    
+    // Ensuite vérifier les gamepads
     for (const [deviceIndex, axisMappings] of Object.entries(config.axisMappings)) {
       for (const [axisIndex, mapping] of Object.entries(axisMappings)) {
         if (mapping.type === functionType) {
@@ -371,6 +467,7 @@ export function DeviceMappingConfig({ onConfigChange }) {
             if (axisIdx < 0) {
               const buttonIndex = -axisIdx - 1;
               return {
+                type: 'gamepad',
                 device: info.id,
                 button: buttonIndex,
                 invert: mapping.invert,
@@ -378,6 +475,7 @@ export function DeviceMappingConfig({ onConfigChange }) {
               };
             } else {
               return {
+                type: 'gamepad',
                 device: info.id,
                 axis: axisIdx,
                 invert: mapping.invert,
@@ -429,12 +527,16 @@ export function DeviceMappingConfig({ onConfigChange }) {
                       {currentAssignment && (
                         <>
                           <span className="function-assignment">
-                            Assigné: {currentAssignment.device} - {
-                              currentAssignment.isButton 
-                                ? `Bouton ${currentAssignment.button}`
-                                : `Axe ${currentAssignment.axis}`
+                            Assigné: {
+                              currentAssignment.type === 'keyboard'
+                                ? `⌨️ Touche ${currentAssignment.key}`
+                                : `${currentAssignment.device} - ${
+                                    currentAssignment.isButton 
+                                      ? `Bouton ${currentAssignment.button}`
+                                      : `Axe ${currentAssignment.axis}`
+                                  }`
                             }
-                            {currentAssignment.invert && ' (inversé)'}
+                            {currentAssignment.type === 'gamepad' && currentAssignment.invert && ' (inversé)'}
                           </span>
                           {/* Barre de test en temps réel */}
                           <div className="function-test-bar">

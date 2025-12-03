@@ -1,0 +1,105 @@
+.drill-selector {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.drill-selector-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary, #fff);
+  text-align: center;
+}
+
+.drill-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.drill-option {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: var(--card-bg, rgba(255, 255, 255, 0.05));
+  border: 2px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  position: relative;
+}
+
+.drill-option:hover:not(.drill-option-disabled) {
+  background-color: var(--card-bg-hover, rgba(255, 255, 255, 0.1));
+  border-color: var(--primary-color, #2196F3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.drill-option-selected {
+  border-color: var(--primary-color, #2196F3);
+  background-color: var(--primary-color, rgba(33, 150, 243, 0.1));
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+}
+
+.drill-option-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+}
+
+.drill-option-icon {
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+
+.drill-option-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.drill-option-label {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+}
+
+.drill-option-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  line-height: 1.4;
+}
+
+.drill-option-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  background-color: var(--secondary-color, rgba(255, 193, 7, 0.2));
+  border: 1px solid var(--secondary-color-border, rgba(255, 193, 7, 0.4));
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+}
+
+@media (max-width: 768px) {
+  .drill-options-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .drill-option {
+    padding: 1rem;
+  }
+  
+  .drill-option-icon {
+    font-size: 2rem;
+  }
+}
+

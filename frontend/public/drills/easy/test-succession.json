@@ -1,0 +1,29 @@
+{
+  "name": "Test - Succession Basique",
+  "difficulty": "easy",
+  "description": "Drill de test avec 4 pressages simples pour valider la mécanique",
+  "duration": 10,
+  "targets": [
+    {
+      "time": 1.0,
+      "percent": 80,
+      "duration": 1.0
+    },
+    {
+      "time": 3.0,
+      "percent": 20,
+      "duration": 1.0
+    },
+    {
+      "time": 5.0,
+      "percent": 60,
+      "duration": 1.0
+    },
+    {
+      "time": 7.0,
+      "percent": 40,
+      "duration": 1.0
+    }
+  ]
+}
+

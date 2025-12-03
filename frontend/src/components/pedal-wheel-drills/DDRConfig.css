@@ -1,0 +1,173 @@
+.ddr-config {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: var(--card-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  border-radius: 12px;
+}
+
+.ddr-config-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.ddr-config-back-button {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--secondary-color, rgba(255, 255, 255, 0.1));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  border-radius: 8px;
+  color: var(--text-primary, #fff);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ddr-config-back-button:hover {
+  background-color: var(--secondary-color-hover, rgba(255, 255, 255, 0.2));
+}
+
+.ddr-config-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+  margin: 0;
+}
+
+.ddr-config-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.ddr-config-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ddr-config-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+}
+
+.ddr-config-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.ddr-config-option {
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  border-radius: 8px;
+  color: var(--text-primary, #fff);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ddr-config-option:hover {
+  border-color: var(--primary-color, #2196F3);
+  transform: translateY(-2px);
+}
+
+.ddr-config-option-selected {
+  background-color: var(--primary-color, rgba(33, 150, 243, 0.2));
+  border-color: var(--primary-color, #2196F3);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+}
+
+.ddr-config-option-label {
+  font-size: 1.125rem;
+}
+
+.ddr-config-option-detail {
+  font-size: 0.875rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  font-weight: normal;
+}
+
+.ddr-config-tolerance-input {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ddr-config-tolerance-field {
+  padding: 0.75rem 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  border-radius: 8px;
+  color: var(--text-primary, #fff);
+  font-size: 1.125rem;
+  font-weight: 600;
+  width: 100px;
+  text-align: center;
+}
+
+.ddr-config-tolerance-field:focus {
+  outline: none;
+  border-color: var(--primary-color, #2196F3);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+}
+
+.ddr-config-tolerance-unit {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+}
+
+.ddr-config-hint {
+  font-size: 0.875rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.ddr-config-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.ddr-config-start-button {
+  padding: 1rem 3rem;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ddr-config-start-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+@media (max-width: 768px) {
+  .ddr-config {
+    padding: 1rem;
+  }
+  
+  .ddr-config-options {
+    grid-template-columns: 1fr;
+  }
+}
+

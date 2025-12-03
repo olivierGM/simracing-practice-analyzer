@@ -1,0 +1,110 @@
+.drill-song-selector {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.drill-song-selector-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+  margin-bottom: 1rem;
+}
+
+.drill-song-section {
+  margin-bottom: 1.5rem;
+}
+
+.drill-song-section-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.drill-songs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.drill-song-empty {
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  font-size: 0.875rem;
+}
+
+.drill-song-item {
+  padding: 1rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  border-radius: 8px;
+  color: var(--text-primary, #fff);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.drill-song-item:hover {
+  border-color: var(--primary-color, #2196F3);
+  transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.drill-song-item-selected {
+  background-color: var(--primary-color, rgba(33, 150, 243, 0.2));
+  border-color: var(--primary-color, #2196F3);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+}
+
+.drill-song-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.drill-song-name {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.drill-song-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+.drill-song-details {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.drill-song-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.drill-song-detail-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.drill-song-detail-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary, #fff);
+  font-family: monospace;
+}
+
