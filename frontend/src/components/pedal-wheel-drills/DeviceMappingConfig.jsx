@@ -405,18 +405,24 @@ export function DeviceMappingConfig({ onConfigChange }) {
   }, [assigningFunction]);
 
   const handleStartAssignment = (functionType) => {
+    console.log('[DEBUG] 🎯 DÉBUT ASSIGNATION:', functionType);
     setAssigningFunction(functionType);
     setDebugInfo(null);
     
     // Sauvegarder les valeurs actuelles des axes comme référence
     const connected = getConnectedGamepads();
+    console.log('[DEBUG] Gamepads au début de l\'assignation:', connected.length);
     const currentValues = {};
     connected.forEach((gamepad) => {
       const deviceIndex = gamepad.index; // Utiliser l'index du gamepad
-      currentValues[deviceIndex] = Array.from(gamepad.axes);
-      currentValues[`${deviceIndex}_buttons`] = Array.from(gamepad.buttons);
+      const axes = Array.from(gamepad.axes);
+      const buttons = Array.from(gamepad.buttons);
+      console.log('[DEBUG] Device', deviceIndex, '- Axes initiaux:', axes, 'Buttons:', buttons.length);
+      currentValues[deviceIndex] = axes;
+      currentValues[`${deviceIndex}_buttons`] = buttons;
     });
     previousAxesValuesRef.current = currentValues;
+    console.log('[DEBUG] Valeurs précédentes sauvegardées:', Object.keys(currentValues));
   };
 
   const handleToggleInvert = (functionType) => {
