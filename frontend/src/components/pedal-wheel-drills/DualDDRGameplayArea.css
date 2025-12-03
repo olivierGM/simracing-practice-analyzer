@@ -65,22 +65,27 @@
 .ddr-judgment-line {
   position: absolute;
   bottom: 30%;
-  left: 0;
-  right: 0;
-  height: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 4px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   z-index: 10;
   pointer-events: none;
+  background-color: #fff;
+  box-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.8),
+    0 0 40px rgba(255, 255, 255, 0.6);
 }
 
 .ddr-judgment-line-brake {
-  background: linear-gradient(90deg, transparent 0%, rgba(219, 68, 55, 0.3) 50%, transparent 100%);
+  border: 2px solid rgba(219, 68, 55, 0.5);
 }
 
 .ddr-judgment-line-throttle {
-  background: linear-gradient(90deg, transparent 0%, rgba(15, 157, 88, 0.3) 50%, transparent 100%);
+  border: 2px solid rgba(15, 157, 88, 0.5);
 }
 
 /* Barre de progression verticale */
@@ -159,13 +164,15 @@
 
 /* Judgment result */
 .ddr-judgment-result {
+  position: absolute;
+  right: calc(100% + 12px);
   font-size: 1.2rem;
   font-weight: 900;
   font-family: 'Arial Black', 'Impact', sans-serif;
   letter-spacing: 2px;
   text-transform: uppercase;
   animation: judgmentPop 0.4s ease;
-  margin-right: calc(1.25rem + 12px);
+  white-space: nowrap;
 }
 
 .ddr-judgment-PERFECT {
