@@ -13,6 +13,7 @@ import { DDRStatsBar } from './DDRStatsBar';
 import { DDRGameplayArea } from './DDRGameplayArea';
 import { DDRInputsBar } from './DDRInputsBar';
 import { DDRResultsScreen } from './DDRResultsScreen';
+import { DDRCountdown } from './DDRCountdown';
 import { usePercentageDrill, ZONE_STATUS } from '../../hooks/useDrillEngine';
 import enhancedDrillAudioService from '../../services/enhancedDrillAudioService';
 import './PercentageDrill.css';
@@ -39,6 +40,7 @@ export function PercentageDrill({
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [showCountdown, setShowCountdown] = useState(false);
   const [finalJudgmentCounts, setFinalJudgmentCounts] = useState({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
 
   // Valeur actuelle selon le type d'input
@@ -64,22 +66,23 @@ export function PercentageDrill({
     setShowResults(false);
     reset();
     
-    // NE PAS activer le jeu tout de suite
-    // Attendre le countdown
+    // Afficher le countdown visuel
+    setShowCountdown(true);
+    
+    // Jouer aussi l'audio si activé
     if (audioEnabled) {
-      // Petit délai pour que la vue se charge
       setTimeout(() => {
         enhancedDrillAudioService.playCountdown(() => {
-          // MAINTENANT on active le jeu
-          setIsActive(true);
-          setIsPaused(false);
+          // Le countdown visuel gère le démarrage
         });
       }, 100);
-    } else {
-      // Sans audio, démarrer immédiatement
-      setIsActive(true);
-      setIsPaused(false);
     }
+  };
+  
+  const handleCountdownComplete = () => {
+    setShowCountdown(false);
+    setIsActive(true);
+    setIsPaused(false);
   };
 
   const handlePause = () => {
@@ -87,15 +90,18 @@ export function PercentageDrill({
   };
 
   const handleStop = () => {
-    setIsActive(false);
-    setIsPaused(false);
+    // Sauvegarder l'état actuel avant de le modifier
+    const wasActive = isActive;
     
     // Annuler le countdown s'il est en cours
     enhancedDrillAudioService.cancelCountdown();
+    setShowCountdown(false);
+    setIsActive(false);
+    setIsPaused(false);
     
     // Si on arrête pendant le countdown (avant que le jeu démarre vraiment)
     // Ne pas afficher les résultats
-    if (!isActive) {
+    if (!wasActive) {
       setShowConfig(true);
       return;
     }
@@ -189,6 +195,9 @@ export function PercentageDrill({
   // Mode jeu actif
   return (
     <div className="percentage-drill percentage-drill-ddr">
+      {/* Countdown visuel overlay */}
+      {showCountdown && <DDRCountdown onComplete={handleCountdownComplete} />}
+      
       {/* Header avec contrôles */}
       <div className="drill-header">
         <button className="drill-back-button" onClick={handleStop}>
@@ -198,6 +207,7 @@ export function PercentageDrill({
         <button 
           className="drill-button drill-button-pause" 
           onClick={handlePause}
+          disabled={showCountdown}
         >
           {isPaused ? '▶️ Reprendre' : '⏸️ Pause'}
         </button>

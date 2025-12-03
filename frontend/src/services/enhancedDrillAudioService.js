@@ -57,35 +57,35 @@ class EnhancedDrillAudioService {
     this.musicSource = null;
     this.musicLoopTimeout = null;
     
-    // Musiques synthétiques (pas de fichiers externes)
-    this.useSynthMusic = true;
+    // Vraies musiques (hébergées localement ou CDN)
     this.currentMusicIndex = 0;
     
-    // Différentes progressions musicales
+    // Playlist de musiques (on utilisera des musiques synthétiques améliorées pour l'instant)
+    // À remplacer par de vraies musiques MP3 plus tard
     this.musicThemes = [
       {
-        name: 'Arcade Classic',
-        melody: [440, 523, 659, 523, 440, 392, 440, 523], // A-C-E-C-A-G-A-C
+        name: 'Arcade Energy',
+        melody: [440, 523, 659, 784, 659, 523, 440, 392],
         bass: [220, 220, 165, 165],
+        bpm: 145
+      },
+      {
+        name: 'Racing Rush',
+        melody: [523, 659, 784, 880, 784, 659, 523, 494],
+        bass: [262, 262, 196, 196],
+        bpm: 155
+      },
+      {
+        name: 'Retro Drive',
+        melody: [392, 494, 587, 698, 587, 494, 392, 349],
+        bass: [196, 196, 147, 147],
         bpm: 140
       },
       {
-        name: 'Retro Rush',
-        melody: [523, 587, 659, 784, 659, 587, 523, 494], // C-D-E-G-E-D-C-B
-        bass: [262, 262, 196, 196],
-        bpm: 150
-      },
-      {
-        name: 'Pixel Power',
-        melody: [392, 440, 494, 523, 494, 440, 392, 349], // G-A-B-C-B-A-G-F
-        bass: [196, 196, 147, 147],
-        bpm: 135
-      },
-      {
-        name: 'Neon Nights',
-        melody: [659, 698, 784, 880, 784, 698, 659, 587], // E-F-G-A-G-F-E-D
+        name: 'Neon Circuit',
+        melody: [659, 784, 880, 1047, 880, 784, 659, 587],
         bass: [330, 330, 247, 247],
-        bpm: 145
+        bpm: 150
       }
     ];
     
