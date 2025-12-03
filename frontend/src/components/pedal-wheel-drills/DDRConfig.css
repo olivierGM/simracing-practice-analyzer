@@ -1,6 +1,6 @@
 .ddr-config {
   width: 100%;
-  max-width: 800px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
   background-color: var(--card-bg, rgba(255, 255, 255, 0.05));
@@ -39,10 +39,20 @@
 }
 
 .ddr-config-content {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 350px 1fr;
   gap: 2rem;
   margin-bottom: 2rem;
+}
+
+.ddr-config-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ddr-config-drills {
+  min-width: 0;
 }
 
 .ddr-config-section {
@@ -193,6 +203,12 @@
   font-size: 0.95rem;
   color: var(--text-primary, #fff);
   user-select: none;
+}
+
+@media (max-width: 1024px) {
+  .ddr-config-content {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {

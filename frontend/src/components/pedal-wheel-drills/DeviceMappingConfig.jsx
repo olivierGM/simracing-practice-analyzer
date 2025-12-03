@@ -400,12 +400,12 @@ export function DeviceMappingConfig({ onConfigChange }) {
         </button>
       </div>
 
-      {gamepads.length === 0 ? (
-        <div className="config-message">
-          <p>Connectez vos périphériques pour commencer la configuration.</p>
-        </div>
-      ) : (
-        <div className="config-content">
+      <div className="config-content">
+        {gamepads.length === 0 && (
+          <div className="config-message-inline">
+            <p>⚠️ Aucun périphérique détecté. Connectez vos périphériques pour assigner les contrôles.</p>
+          </div>
+        )}
           {/* Liste des fonctions à assigner */}
           <div className="functions-list">
             <h4>Assigner les fonctions</h4>
@@ -554,8 +554,7 @@ export function DeviceMappingConfig({ onConfigChange }) {
               })}
             </div>
           </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

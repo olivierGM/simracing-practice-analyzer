@@ -74,9 +74,6 @@ export function PercentageDrill({
   };
 
   const handleStop = () => {
-    setIsActive(false);
-    setIsPaused(false);
-    
     // Jouer le son de fin
     if (audioEnabled) {
       const comboInfo = enhancedDrillAudioService.getComboInfo();
@@ -85,6 +82,8 @@ export function PercentageDrill({
     }
     
     // Afficher l'écran de résultats
+    setIsActive(false);
+    setIsPaused(false);
     setShowResults(true);
   };
   
@@ -103,7 +102,7 @@ export function PercentageDrill({
   };
 
   // Si on est en mode configuration
-  if (showConfig || !isActive) {
+  if (showConfig) {
     return (
       <div className="percentage-drill">
         <DDRConfig
@@ -167,16 +166,16 @@ export function PercentageDrill({
   return (
     <div className="percentage-drill percentage-drill-ddr">
       {/* Header avec contrôles */}
-      <div className="drill-header">
+      <div className="drill-header drill-header-compact">
         <button className="drill-back-button" onClick={handleStop}>
-          ⏹️ Arrêter
+          ⏹️
         </button>
-        <h2 className="drill-title">📊 Drill de Pourcentages</h2>
+        <h3 className="drill-title drill-title-compact">Drill de Pourcentages</h3>
         <button 
           className="drill-button drill-button-pause" 
           onClick={handlePause}
         >
-          {isPaused ? '▶️ Reprendre' : '⏸️ Pause'}
+          {isPaused ? '▶️' : '⏸️'}
         </button>
       </div>
 

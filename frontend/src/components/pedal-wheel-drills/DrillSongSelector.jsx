@@ -125,7 +125,6 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
       <div className="drill-songs-list">
         {/* Options Random par difficulté */}
         <div className="drill-song-section">
-          <h4 className="drill-song-section-title">🎲 Mode Aléatoire</h4>
           {['medium', 'hard', 'extreme', 'insane', 'insane_plus_1', 'insane_plus_2'].map(diffKey => (
             <button
               key={`random-${diffKey}`}
@@ -149,8 +148,7 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
 
         {/* Drill Songs Customs */}
         {allDrillSongs.length > 0 && (
-          <div className="drill-song-section">
-            <h4 className="drill-song-section-title">🎵 Drill Songs ({allDrillSongs.length})</h4>
+          <div className="drill-song-section drill-song-section-custom">
             {allDrillSongs.map((song) => (
               <button
                 key={song.path}

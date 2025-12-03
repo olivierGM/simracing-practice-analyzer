@@ -46,95 +46,75 @@ export function DDRConfig({
         <button className="ddr-config-back-button" onClick={onBack}>
           ← Retour
         </button>
-        <h2 className="ddr-config-title">⚙️ Configuration</h2>
+        <h2 className="ddr-config-title">Sélection du Drill</h2>
       </div>
 
       <div className="ddr-config-content">
-        <div className="ddr-config-section">
-          <label className="ddr-config-label">Pédale</label>
-          <div className="ddr-config-options">
-            <button
-              className={`ddr-config-option ${inputType === 'accelerator' ? 'ddr-config-option-selected' : ''}`}
-              onClick={() => onInputTypeChange('accelerator')}
-            >
-              ⚡ Accélérateur
-            </button>
-            <button
-              className={`ddr-config-option ${inputType === 'brake' ? 'ddr-config-option-selected' : ''}`}
-              onClick={() => onInputTypeChange('brake')}
-            >
-              🛑 Frein
-            </button>
+        {/* Colonne gauche : Settings */}
+        <div className="ddr-config-settings">
+          <div className="ddr-config-section">
+            <label className="ddr-config-label">Pédale</label>
+            <div className="ddr-config-options">
+              <button
+                className={`ddr-config-option ${inputType === 'accelerator' ? 'ddr-config-option-selected' : ''}`}
+                onClick={() => onInputTypeChange('accelerator')}
+              >
+                ⚡ Accélérateur
+              </button>
+              <button
+                className={`ddr-config-option ${inputType === 'brake' ? 'ddr-config-option-selected' : ''}`}
+                onClick={() => onInputTypeChange('brake')}
+              >
+                🛑 Frein
+              </button>
+            </div>
+          </div>
+
+          <div className="ddr-config-section">
+            <label className="ddr-config-label">Options Audio</label>
+            <div className="ddr-config-options-vertical">
+              <label className="ddr-config-checkbox">
+                <input
+                  type="checkbox"
+                  checked={audioEnabled}
+                  onChange={(e) => onAudioEnabledChange(e.target.checked)}
+                />
+                <span>🔊 Effets sonores</span>
+              </label>
+              <label className="ddr-config-checkbox">
+                <input
+                  type="checkbox"
+                  checked={musicEnabled}
+                  onChange={(e) => onMusicEnabledChange(e.target.checked)}
+                  disabled={!audioEnabled}
+                />
+                <span>🎵 Musique de fond</span>
+              </label>
+            </div>
+          </div>
+
+          <div className="ddr-config-section">
+            <label className="ddr-config-label">Options Visuelles</label>
+            <div className="ddr-config-options-vertical">
+              <label className="ddr-config-checkbox">
+                <input
+                  type="checkbox"
+                  checked={blindMode}
+                  onChange={(e) => onBlindModeChange(e.target.checked)}
+                />
+                <span>👁️ Mode Blind</span>
+              </label>
+            </div>
           </div>
         </div>
 
-        <div className="ddr-config-section">
-          <label className="ddr-config-label">Tolérance (%)</label>
-          <div className="ddr-config-tolerance-input">
-            <input
-              type="number"
-              min="1"
-              max="20"
-              step="0.5"
-              value={tolerance}
-              onChange={(e) => onToleranceChange(parseFloat(e.target.value) || 5)}
-              className="ddr-config-tolerance-field"
-            />
-            <span className="ddr-config-tolerance-unit">±{tolerance}%</span>
-          </div>
-          <p className="ddr-config-hint">Ajustez la tolérance pour tester différents niveaux de précision</p>
-        </div>
-
-        <div className="ddr-config-section">
+        {/* Colonne droite : Drills */}
+        <div className="ddr-config-drills">
           <DrillSongSelector 
             onSelectDrillSong={onDrillSongChange}
             onSelectDifficulty={onDifficultyChange}
           />
         </div>
-
-        <div className="ddr-config-section">
-          <label className="ddr-config-label">Options Audio</label>
-          <div className="ddr-config-options-vertical">
-            <label className="ddr-config-checkbox">
-              <input
-                type="checkbox"
-                checked={audioEnabled}
-                onChange={(e) => onAudioEnabledChange(e.target.checked)}
-              />
-              <span>🔊 Effets sonores (annonces + jugements + combos)</span>
-            </label>
-            <label className="ddr-config-checkbox">
-              <input
-                type="checkbox"
-                checked={musicEnabled}
-                onChange={(e) => onMusicEnabledChange(e.target.checked)}
-                disabled={!audioEnabled}
-              />
-              <span>🎵 Musique de fond</span>
-            </label>
-          </div>
-          <p className="ddr-config-hint">
-            Sons: Annonces vocales, beeps de jugement, encouragements, combos
-          </p>
-        </div>
-
-        <div className="ddr-config-section">
-          <label className="ddr-config-label">Options Visuelles</label>
-          <div className="ddr-config-options-vertical">
-            <label className="ddr-config-checkbox">
-              <input
-                type="checkbox"
-                checked={blindMode}
-                onChange={(e) => onBlindModeChange(e.target.checked)}
-              />
-              <span>👁️ Mode Blind (cacher barre verticale)</span>
-            </label>
-          </div>
-          <p className="ddr-config-hint">
-            Mode Blind : Testez si vous avez bien appris vos pourcentages sans aide visuelle
-          </p>
-        </div>
-
       </div>
 
       <div className="ddr-config-actions">
