@@ -13,7 +13,7 @@
           - generic [ref=e12]: 0/50
         - generic [ref=e13] [cursor=pointer]:
           - generic [ref=e14]: "Dernière session :"
-          - 'generic "Dernière session: • Début: 2025-12-02 23 h 54 min 58 s • Durée estimée: 2485min • Fin estimée: 2025-12-04 17 h 19 min 58 s • Nombre de sessions: 479" [ref=e15]': Il y a 48 min
+          - 'generic "Dernière session: • Début: 2025-12-02 23 h 54 min 58 s • Durée estimée: 2485min • Fin estimée: 2025-12-04 17 h 19 min 58 s • Nombre de sessions: 479" [ref=e15]': Il y a 54 min
         - button "Outils" [ref=e17] [cursor=pointer]: 🔧 Outils
         - 'button "Actuellement: Mode sombre • Cliquer pour: Suivre le système" [ref=e18] [cursor=pointer]': 🌙
         - button "Connexion admin" [ref=e19] [cursor=pointer]: ⚙️
