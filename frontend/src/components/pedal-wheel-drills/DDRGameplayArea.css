@@ -195,14 +195,14 @@
   }
 }
 
-/* Progress bar verticale - 16px de large, alignée avec la ligne blanche */
+/* Progress bar verticale - 16px de large, exactement superposée avec la ligne de jugement */
 .ddr-progress-bar-vertical {
   position: absolute;
   bottom: 0;
   width: 16px;
   height: 100%;
-  /* Ajustement pour aligner la barre avec la ligne blanche */
-  margin-left: -2px;
+  /* Pas de décalage - même position que la ligne de jugement */
+  margin-left: 0;
   z-index: 15;
   pointer-events: none;
   background-color: rgba(0, 0, 0, 0.5);
