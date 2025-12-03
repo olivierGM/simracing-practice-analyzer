@@ -136,13 +136,63 @@ export function DDRGameplayArea({
     };
   }, [isActive, currentValue, tolerance, targets, currentTime, markTargetHit, markTargetMiss]);
 
-  // Code couleur unique par palier de 20%
+  // Code couleur par palier avec tolérance de ±5% et dégradés entre les paliers
   const getColorForPercent = (percent) => {
-    if (percent >= 80) return '#F44336'; // Rouge - 80-100%
-    if (percent >= 60) return '#FF9800'; // Orange - 60-79%
-    if (percent >= 40) return '#4CAF50'; // Vert - 40-59%
-    if (percent >= 20) return '#2196F3'; // Bleu - 20-39%
-    return '#9E9E9E'; // Gris - 0-19%
+    const tolerance = 5;
+    
+    // Paliers cibles avec leurs couleurs
+    const targets = [
+      { percent: 0, color: '#9E9E9E' },   // Gris
+      { percent: 20, color: '#2196F3' },  // Bleu
+      { percent: 40, color: '#4CAF50' },  // Vert
+      { percent: 60, color: '#FF9800' },  // Orange
+      { percent: 80, color: '#F44336' },  // Rouge
+      { percent: 100, color: '#F44336' }  // Rouge (même couleur pour 80-100)
+    ];
+    
+    // Trouver si on est dans une zone de tolérance d'un palier
+    for (const target of targets) {
+      if (Math.abs(percent - target.percent) <= tolerance) {
+        return target.color;
+      }
+    }
+    
+    // Sinon, faire un dégradé entre les deux paliers les plus proches
+    // Trouver les deux paliers encadrants
+    let lowerTarget = targets[0];
+    let upperTarget = targets[targets.length - 1];
+    
+    for (let i = 0; i < targets.length - 1; i++) {
+      if (percent >= targets[i].percent && percent <= targets[i + 1].percent) {
+        lowerTarget = targets[i];
+        upperTarget = targets[i + 1];
+        break;
+      }
+    }
+    
+    // Calculer la position relative entre les deux paliers
+    const range = upperTarget.percent - lowerTarget.percent;
+    const position = (percent - lowerTarget.percent) / range;
+    
+    // Interpoler entre les deux couleurs
+    const color1 = hexToRgb(lowerTarget.color);
+    const color2 = hexToRgb(upperTarget.color);
+    
+    const r = Math.round(color1.r + (color2.r - color1.r) * position);
+    const g = Math.round(color1.g + (color2.g - color1.g) * position);
+    const b = Math.round(color1.b + (color2.b - color1.b) * position);
+    
+    return `rgb(${r}, ${g}, ${b})`;
+  };
+  
+  // Fonction helper pour convertir hex en RGB
+  const hexToRgb = (hex) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : { r: 0, g: 0, b: 0 };
   };
 
   const getTargetColor = (percent) => {
