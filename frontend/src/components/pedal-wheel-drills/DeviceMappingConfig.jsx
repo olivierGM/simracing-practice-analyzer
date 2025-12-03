@@ -137,7 +137,12 @@ export function DeviceMappingConfig({ onConfigChange }) {
       connected.forEach((gamepad) => {
         const deviceIndex = gamepad.index; // Utiliser l'index du gamepad, pas l'index du tableau
         const currentAxes = Array.from(gamepad.axes);
-        const previousAxes = previousAxesValuesRef.current[deviceIndex] || Array(currentAxes.length).fill(0);
+        
+        // Initialiser les valeurs précédentes si elles n'existent pas
+        if (!previousAxesValuesRef.current[deviceIndex]) {
+          previousAxesValuesRef.current[deviceIndex] = Array(currentAxes.length).fill(0);
+        }
+        const previousAxes = previousAxesValuesRef.current[deviceIndex];
         
         // Chercher l'axe qui a le plus changé
         let maxChange = 0;
@@ -241,9 +246,8 @@ export function DeviceMappingConfig({ onConfigChange }) {
           setDebugInfo(null);
           
           // Mettre à jour les valeurs précédentes (dans la ref pour éviter les re-renders)
-          const updatedValues = { ...previousAxesValuesRef.current };
-          updatedValues[deviceIndex] = currentAxes;
-          previousAxesValuesRef.current = updatedValues;
+          // Ne pas créer un nouvel objet, modifier directement la ref
+          previousAxesValuesRef.current[deviceIndex] = [...currentAxes];
 
           // Notifier le changement
           if (onConfigChange) {
@@ -253,9 +257,13 @@ export function DeviceMappingConfig({ onConfigChange }) {
       });
     };
 
-    // Détecter les touches clavier pressées
+    // Détecter les touches clavier pressées (seulement si aucun gamepad n'est connecté)
     const detectKeyPress = () => {
       if (!assigningFunction) return;
+      
+      const connected = getConnectedGamepads();
+      // Ne pas activer le clavier si des gamepads sont connectés (priorité aux gamepads)
+      if (connected.length > 0) return;
 
       // Écouter les événements clavier via window
       const handleKeyDown = (e) => {
