@@ -92,10 +92,31 @@ export function DDRGameplayArea({
               const diff = Math.abs(currentPercent - target.percent);
               
               if (diff <= tolerance) {
-                // Hit!
-                markTargetHit(target.id, 100 - diff);
+                // Hit! Calculer le niveau de précision style DDR
+                var judgment = 'MISS';
+                var score = 0;
+                
+                if (diff <= 1) {
+                  judgment = 'PERFECT';
+                  score = 100;
+                } else if (diff <= 2) {
+                  judgment = 'GREAT';
+                  score = 90;
+                } else if (diff <= 3.5) {
+                  judgment = 'GOOD';
+                  score = 75;
+                } else if (diff <= tolerance) {
+                  judgment = 'OK';
+                  score = 50;
+                }
+                
+                markTargetHit(target.id, score);
                 setJudgmentResults(prev => {
-                  const newResults = [...prev, { type: 'hit', time: performance.now() }];
+                  const newResults = [...prev, { 
+                    type: judgment, 
+                    time: performance.now(),
+                    diff: diff 
+                  }];
                   return newResults.slice(-10);
                 });
               }
@@ -243,12 +264,15 @@ export function DDRGameplayArea({
             left: `${APPROACH_ZONE_WIDTH}px`
           }}
         >
-          {judgmentResults.slice(-5).map((result, index) => (
+          {judgmentResults.slice(-3).map((result, index) => (
             <div 
-              key={index}
-              className={`ddr-judgment-result ddr-judgment-${result.type}`}
+              key={result.time}
+              className={`ddr-judgment-result ddr-judgment-${result.type.toLowerCase()}`}
+              style={{
+                animationDelay: `${index * 0.05}s`
+              }}
             >
-              {result.type === 'hit' ? '✓' : '✗'}
+              {result.type}
             </div>
           ))}
         </div>
