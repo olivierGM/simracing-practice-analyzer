@@ -1,0 +1,33 @@
+.combined-pedal-drill {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.combined-pedal-drill-ddr {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 1.5rem;
+  height: calc(100vh - 200px);
+  min-height: 700px;
+}
+
+.ddr-gameplay-container {
+  flex: 1;
+  min-height: 500px;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .combined-pedal-drill-ddr {
+    min-height: 600px;
+    padding: 1rem;
+  }
+  
+  .drill-header {
+    margin-bottom: 0.5rem;
+  }
+}
+

@@ -38,9 +38,10 @@ const DRILL_OPTIONS = [
   {
     type: DRILL_TYPES.COMBINED,
     label: '🎯 Drill Combiné',
-    description: 'Combiner pédales et volant simultanément',
+    description: 'Accélérateur + Frein simultanés (Trail braking, transitions)',
     icon: '🎯',
-    available: false // À implémenter plus tard
+    available: true,
+    alpha: true // Marquer comme Alpha
   }
 ];
 
@@ -64,6 +65,9 @@ export function DrillSelector({ onSelectDrill, selectedDrill }) {
             </div>
             {!option.available && (
               <div className="drill-option-badge">Bientôt</div>
+            )}
+            {option.alpha && (
+              <div className="drill-option-badge drill-option-badge-alpha">Alpha</div>
             )}
           </button>
         ))}
