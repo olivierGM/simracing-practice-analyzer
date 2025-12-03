@@ -188,7 +188,7 @@ export function DeviceMappingConfig({ onConfigChange }) {
             threshold = 0.02; // Volant : très sensible
           } else if (assigningFunction === AXIS_TYPES.ACCELERATOR || 
                      assigningFunction === AXIS_TYPES.BRAKE) {
-            threshold = 0.1; // Pédales : besoin d'un changement plus important
+            threshold = 0.05; // Pédales : seuil réduit pour être plus sensible (SimJack)
           } else if (assigningFunction === AXIS_TYPES.SHIFT_UP || 
                      assigningFunction === AXIS_TYPES.SHIFT_DOWN) {
             // Pour les boutons, on détecte les changements de boutons, pas les axes
