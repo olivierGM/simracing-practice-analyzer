@@ -130,13 +130,18 @@ export function DeviceMappingConfig({ onConfigChange }) {
     if (!assigningFunction) return;
     
     const detectAxisChange = () => {
+      if (!assigningFunction) {
+        console.log('[DEBUG] ⚠️ detectAxisChange appelé mais assigningFunction est null');
+        return;
+      }
+      
       const connected = getConnectedGamepads();
       if (connected.length === 0) {
         console.log('[DEBUG] Aucun gamepad connecté');
         return;
       }
       
-      console.log('[DEBUG] Gamepads connectés:', connected.length, connected.map(g => ({ index: g.index, id: g.id, axes: g.axes.length })));
+      console.log('[DEBUG] 🔍 DÉTECTION - Gamepads connectés:', connected.length, 'assigningFunction:', assigningFunction);
       
       // Pour chaque gamepad connecté
       connected.forEach((gamepad) => {
@@ -378,14 +383,20 @@ export function DeviceMappingConfig({ onConfigChange }) {
       });
     };
 
+    console.log('[DEBUG] 🔄 Démarrage interval de détection');
+    
     const interval = setInterval(() => {
-      detectAxisChange();
-      detectButtonChange();
+      if (assigningFunction) {
+        console.log('[DEBUG] ⏱️ Interval tick - assigningFunction:', assigningFunction);
+        detectAxisChange();
+        detectButtonChange();
+      }
     }, 16); // ~60fps
     
     detectKeyPress();
     
     return () => {
+      console.log('[DEBUG] 🛑 Arrêt interval de détection');
       clearInterval(interval);
     };
   }, [assigningFunction, onConfigChange]);
