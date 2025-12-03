@@ -29,6 +29,8 @@ export function PercentageDrill({
   const [tolerance, setTolerance] = useState(5); // Tolérance en % (champ séparé pour tester)
   const [difficulty, setDifficulty] = useState('EASY'); // Difficulté pour les modes Random (vitesse, durée, etc.)
   const [drillSong, setDrillSong] = useState(null); // Drill song sélectionné ou { type: 'random', difficulty: 'easy' }
+  const [audioEnabled, setAudioEnabled] = useState(true); // Sons activés
+  const [blindMode, setBlindMode] = useState(false); // Mode blind (cacher barre verticale)
   
   // État de jeu
   const [isActive, setIsActive] = useState(false);
@@ -101,6 +103,10 @@ export function PercentageDrill({
             }
           }}
           onDifficultyChange={setDifficulty}
+          audioEnabled={audioEnabled}
+          onAudioEnabledChange={setAudioEnabled}
+          blindMode={blindMode}
+          onBlindModeChange={setBlindMode}
           onStart={handleStart}
           onBack={onBack}
         />
@@ -142,6 +148,8 @@ export function PercentageDrill({
           drillSong={drillSong}
           duration={drillSong && drillSong.duration ? drillSong.duration : null}
           difficulty={drillSong && drillSong.type === 'random' ? drillSong.difficulty : (drillSong && drillSong.difficulty ? drillSong.difficulty : 'medium')}
+          audioEnabled={audioEnabled}
+          blindMode={blindMode}
           onComplete={() => {
             // Le drill song est terminé, arrêter automatiquement
             handleStop();

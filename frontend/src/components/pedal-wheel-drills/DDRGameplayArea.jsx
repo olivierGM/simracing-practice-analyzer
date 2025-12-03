@@ -9,6 +9,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useDDRTargets } from '../../hooks/useDDRTargets';
+import drillAudioService from '../../services/drillAudioService';
 import './DDRGameplayArea.css';
 
 // Vitesse de défilement (pixels par seconde)
@@ -24,11 +25,14 @@ export function DDRGameplayArea({
   drillSong = null,
   duration = null,
   difficulty = 'medium',
+  audioEnabled = true,
+  blindMode = false,
   onComplete = null
 }) {
   const containerRef = useRef(null);
   const [judgmentResults, setJudgmentResults] = useState([]);
   const [renderedTargets, setRenderedTargets] = useState([]);
+  const announcedTargetsRef = useRef(new Set()); // Pour éviter d'annoncer plusieurs fois
 
   // Utiliser le hook useDDRTargets pour gérer les cibles
   const {
@@ -55,8 +59,14 @@ export function DDRGameplayArea({
     if (!isActive) {
       setJudgmentResults([]);
       setRenderedTargets([]);
+      announcedTargetsRef.current.clear();
     }
   }, [isActive]);
+  
+  // Activer/désactiver l'audio
+  useEffect(() => {
+    drillAudioService.setEnabled(audioEnabled);
+  }, [audioEnabled]);
 
   // Animer les barres qui défilent
   useEffect(() => {
@@ -119,6 +129,11 @@ export function DDRGameplayArea({
                   }];
                   return newResults.slice(-10);
                 });
+                
+                // Jouer le son de jugement
+                if (audioEnabled) {
+                  drillAudioService.playJudgmentSound(judgment);
+                }
               }
             }
 
@@ -278,21 +293,23 @@ export function DDRGameplayArea({
         </div>
       </div>
 
-      {/* Progress bar verticale - 16px de large */}
-      <div 
-        className="ddr-progress-bar-vertical"
-        style={{
-          left: `${APPROACH_ZONE_WIDTH}px`
-        }}
-      >
+      {/* Progress bar verticale - 20px de large (cachée en mode blind) */}
+      {!blindMode && (
         <div 
-          className="ddr-progress-fill"
+          className="ddr-progress-bar-vertical"
           style={{
-            height: `${currentValue * 100}%`,
-            backgroundColor: getColorForPercent(currentValue * 100)
+            left: `${APPROACH_ZONE_WIDTH}px`
           }}
-        />
-      </div>
+        >
+          <div 
+            className="ddr-progress-fill"
+            style={{
+              height: `${currentValue * 100}%`,
+              backgroundColor: getColorForPercent(currentValue * 100)
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

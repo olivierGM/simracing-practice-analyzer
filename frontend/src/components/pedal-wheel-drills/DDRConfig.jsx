@@ -32,6 +32,10 @@ export function DDRConfig({
   drillSong,
   onDrillSongChange,
   onDifficultyChange,
+  audioEnabled,
+  onAudioEnabledChange,
+  blindMode,
+  onBlindModeChange,
   onStart,
   onBack
 }) {
@@ -85,6 +89,31 @@ export function DDRConfig({
             onSelectDrillSong={onDrillSongChange}
             onSelectDifficulty={onDifficultyChange}
           />
+        </div>
+
+        <div className="ddr-config-section">
+          <label className="ddr-config-label">Options</label>
+          <div className="ddr-config-options-vertical">
+            <label className="ddr-config-checkbox">
+              <input
+                type="checkbox"
+                checked={audioEnabled}
+                onChange={(e) => onAudioEnabledChange(e.target.checked)}
+              />
+              <span>🔊 Sons activés (annonces + jugements)</span>
+            </label>
+            <label className="ddr-config-checkbox">
+              <input
+                type="checkbox"
+                checked={blindMode}
+                onChange={(e) => onBlindModeChange(e.target.checked)}
+              />
+              <span>👁️ Mode Blind (cacher barre verticale)</span>
+            </label>
+          </div>
+          <p className="ddr-config-hint">
+            Mode Blind : Testez si vous avez bien appris vos pourcentages sans aide visuelle
+          </p>
         </div>
 
       </div>
