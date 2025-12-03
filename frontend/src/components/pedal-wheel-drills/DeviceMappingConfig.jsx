@@ -240,7 +240,7 @@ export function DeviceMappingConfig({ onConfigChange }) {
           } else if (assigningFunction === AXIS_TYPES.ACCELERATOR || 
                      assigningFunction === AXIS_TYPES.BRAKE ||
                      assigningFunction === AXIS_TYPES.CLUTCH) {
-            threshold = 0.1;
+            threshold = 0.05; // Seuil réduit pour être plus sensible
           }
           
           // Mettre à jour le debug info seulement toutes les 100ms pour éviter les re-renders
