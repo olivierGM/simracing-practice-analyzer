@@ -28,8 +28,8 @@ export function PercentageDrill({
   const [showConfig, setShowConfig] = useState(true);
   const [inputType, setInputType] = useState('accelerator'); // 'accelerator' ou 'brake'
   const [tolerance, setTolerance] = useState(5); // Tolérance en % (champ séparé pour tester)
-  const [difficulty, setDifficulty] = useState('EASY'); // Difficulté pour les modes Random (vitesse, durée, etc.)
-  const [drillSong, setDrillSong] = useState(null); // Drill song sélectionné ou { type: 'random', difficulty: 'easy' }
+  const [difficulty, setDifficulty] = useState('MEDIUM'); // Difficulté pour les modes Random (vitesse, durée, etc.)
+  const [drillSong, setDrillSong] = useState(null); // Drill song sélectionné ou { type: 'random', difficulty: 'medium' }
   const [audioEnabled, setAudioEnabled] = useState(true); // Sons activés
   const [musicEnabled, setMusicEnabled] = useState(true); // Musique de fond
   const [blindMode, setBlindMode] = useState(false); // Mode blind (cacher barre verticale)
@@ -107,19 +107,23 @@ export function PercentageDrill({
             // Si c'est un mode random, extraire la difficulté pour la vitesse
             if (songOrMode && songOrMode.type === 'random') {
               const diffMap = {
-                easy: 'EASY',
+                easy: 'MEDIUM',
                 medium: 'MEDIUM',
-                hard: 'HARD'
+                hard: 'HARD',
+                extreme: 'EXTREME',
+                insane: 'INSANE',
+                insane_plus_1: 'INSANE_PLUS_1',
+                insane_plus_2: 'INSANE_PLUS_2'
               };
-              setDifficulty(diffMap[songOrMode.difficulty] || 'EASY');
+              setDifficulty(diffMap[songOrMode.difficulty] || 'MEDIUM');
             } else if (songOrMode && songOrMode.difficulty) {
               // Si c'est un drill song, utiliser sa difficulté pour la vitesse
               const diffMap = {
-                easy: 'EASY',
+                easy: 'MEDIUM',
                 medium: 'MEDIUM',
                 hard: 'HARD'
               };
-              setDifficulty(diffMap[songOrMode.difficulty] || 'EASY');
+              setDifficulty(diffMap[songOrMode.difficulty] || 'MEDIUM');
             }
           }}
           onDifficultyChange={setDifficulty}

@@ -8,14 +8,9 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 
 /**
  * Paramètres de génération selon la difficulté
+ * Note: 'easy' supprimé, tous les niveaux décalés d'un cran
  */
 const DIFFICULTY_PARAMS = {
-  easy: {
-    minDuration: 1.0,
-    maxDuration: 4.0,
-    minSpacing: 1.0,
-    maxSpacing: 3.0
-  },
   medium: {
     minDuration: 0.5,
     maxDuration: 3.0,
@@ -59,7 +54,7 @@ const DIFFICULTY_PARAMS = {
  * @param {Object} options
  * @param {number} options.duration - Durée totale en secondes (null = infini)
  * @param {Array<number>} options.percentages - Pourcentages disponibles [20, 40, 60, 80]
- * @param {string} options.difficulty - Difficulté ('easy', 'medium', 'hard')
+ * @param {string} options.difficulty - Difficulté ('medium', 'hard', 'extreme', 'insane', 'insane_plus_1', 'insane_plus_2')
  * @param {number} options.minDuration - Durée minimum d'une cible (secondes) - override si difficulty fournie
  * @param {number} options.maxDuration - Durée maximum d'une cible (secondes) - override si difficulty fournie
  * @param {number} options.minSpacing - Espacement minimum entre cibles (secondes) - override si difficulty fournie
@@ -146,7 +141,7 @@ export function convertDrillSongToTargets(drillSong) {
  * @param {boolean} options.isActive - Si le drill est actif
  * @param {number} options.duration - Durée totale (null = infini, utilisé si drillSong est null)
  * @param {Object} options.drillSong - Drill song à utiliser (prioritaire sur duration)
- * @param {string} options.difficulty - Difficulté pour mode random ('easy', 'medium', 'hard')
+ * @param {string} options.difficulty - Difficulté pour mode random ('medium', 'hard', 'extreme', 'insane', 'insane_plus_1', 'insane_plus_2')
  */
 export function useDDRTargets({ isActive, duration = null, drillSong = null, difficulty = 'medium', onComplete = null }) {
   const [targets, setTargets] = useState([]);

@@ -10,17 +10,15 @@ import { listDrillSongs, loadDrillSong } from '../../services/drillSongService';
 import './DrillSongSelector.css';
 
 const DIFFICULTY_LABELS = {
-  easy: 'Facile',
-  medium: 'Moyen',
-  hard: 'Difficile',
-  extreme: 'Extreme',
-  insane: 'Insane',
-  insane_plus_1: 'Insane +1',
-  insane_plus_2: 'Insane +2'
+  medium: 'Facile',
+  hard: 'Moyen',
+  extreme: 'Difficile',
+  insane: 'Extreme',
+  insane_plus_1: 'Insane',
+  insane_plus_2: 'Insane +1'
 };
 
 const TOLERANCE_BY_DIFFICULTY = {
-  easy: 5,
   medium: 5,
   hard: 5,
   extreme: 5,
@@ -32,7 +30,7 @@ const TOLERANCE_BY_DIFFICULTY = {
 export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
   const [allDrillSongs, setAllDrillSongs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedMode, setSelectedMode] = useState('random-easy'); // ID du mode/song sélectionné
+  const [selectedMode, setSelectedMode] = useState('random-medium'); // ID du mode/song sélectionné
   const [selectedSong, setSelectedSong] = useState(null);
 
   useEffect(() => {
@@ -56,8 +54,8 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
       
       setAllDrillSongs(allSongs);
       
-      // Par défaut, sélectionner Random Easy
-      handleSelectRandom('easy');
+      // Par défaut, sélectionner Random Facile (medium)
+      handleSelectRandom('medium');
     } catch (error) {
       console.error('Error loading drill songs:', error);
     } finally {
@@ -72,7 +70,6 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
     // Notifier le changement de difficulté pour la vitesse (pas la tolérance)
     if (onSelectDifficulty) {
       const difficultyMap = {
-        easy: 'EASY',
         medium: 'MEDIUM',
         hard: 'HARD',
         extreme: 'EXTREME',
@@ -97,12 +94,12 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
       // Notifier le changement de difficulté pour la vitesse (pas la tolérance)
       if (onSelectDifficulty) {
         const difficultyMap = {
-          easy: 'EASY',
+          easy: 'MEDIUM',
           medium: 'MEDIUM',
           hard: 'HARD'
         };
         const finalDifficulty = songDifficulty || song.difficulty;
-        onSelectDifficulty(difficultyMap[finalDifficulty] || 'EASY');
+        onSelectDifficulty(difficultyMap[finalDifficulty] || 'MEDIUM');
       }
       
       if (onSelectDrillSong) {
@@ -129,7 +126,7 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
         {/* Options Random par difficulté */}
         <div className="drill-song-section">
           <h4 className="drill-song-section-title">🎲 Mode Aléatoire</h4>
-          {['easy', 'medium', 'hard', 'extreme', 'insane', 'insane_plus_1', 'insane_plus_2'].map(diffKey => (
+          {['medium', 'hard', 'extreme', 'insane', 'insane_plus_1', 'insane_plus_2'].map(diffKey => (
             <button
               key={`random-${diffKey}`}
               className={`drill-song-item drill-song-item-random ${selectedMode === `random-${diffKey}` ? 'drill-song-item-selected' : ''}`}
@@ -138,7 +135,6 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
               <div className="drill-song-info">
                 <div className="drill-song-name">Random {DIFFICULTY_LABELS[diffKey]}</div>
                 <div className="drill-song-description">
-                  {diffKey === 'easy' && 'Cibles plus longues et espacées - Vitesse lente'}
                   {diffKey === 'medium' && 'Cibles moyennes et espacées - Vitesse modérée'}
                   {diffKey === 'hard' && 'Cibles courtes et rapprochées - Vitesse rapide'}
                   {diffKey === 'extreme' && 'Gaps réduits, beaucoup de mouvement - Très rapide'}
@@ -188,7 +184,7 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
           <div className="drill-song-detail-item">
             <span className="drill-song-detail-label">Vitesse:</span>
             <span className="drill-song-detail-value">
-              {selectedMode.split('-')[1] === 'easy' ? 'Lente' : selectedMode.split('-')[1] === 'medium' ? 'Modérée' : 'Rapide'}
+              {selectedMode.split('-')[1] === 'medium' ? 'Modérée' : selectedMode.split('-')[1] === 'hard' ? 'Rapide' : 'Très Rapide'}
             </span>
           </div>
         </div>

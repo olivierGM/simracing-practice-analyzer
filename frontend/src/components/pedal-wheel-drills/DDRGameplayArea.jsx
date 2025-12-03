@@ -81,8 +81,8 @@ export function DDRGameplayArea({
       enhancedDrillAudioService.initialize();
       
       // Démarrer la musique avec tempo selon difficulté
-      const tempo = difficulty === 'easy' ? 'slow' : 
-                    (difficulty === 'medium' || difficulty === 'hard') ? 'medium' : 'fast';
+      const tempo = difficulty === 'medium' ? 'medium' : 
+                    (difficulty === 'hard' || difficulty === 'extreme') ? 'medium' : 'fast';
       enhancedDrillAudioService.startMusic(tempo);
     } else {
       enhancedDrillAudioService.stopMusic();
