@@ -28,10 +28,12 @@ export function DDRGameplayArea({
   audioEnabled = true,
   musicEnabled = true,
   blindMode = false,
-  onComplete = null
+  onComplete = null,
+  onJudgmentUpdate = null
 }) {
   const containerRef = useRef(null);
   const [judgmentResults, setJudgmentResults] = useState([]);
+  const [judgmentCounts, setJudgmentCounts] = useState({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
   const [renderedTargets, setRenderedTargets] = useState([]);
   const announcedTargetsRef = useRef(new Set()); // Pour éviter d'annoncer plusieurs fois
 
@@ -59,6 +61,7 @@ export function DDRGameplayArea({
   useEffect(() => {
     if (!isActive) {
       setJudgmentResults([]);
+      setJudgmentCounts({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
       setRenderedTargets([]);
       announcedTargetsRef.current.clear();
     }
@@ -153,6 +156,17 @@ export function DDRGameplayArea({
                 }
                 
                 markTargetHit(target.id, score);
+                // Mettre à jour les compteurs de jugements
+                setJudgmentCounts(prev => ({
+                  ...prev,
+                  [judgment]: (prev[judgment] || 0) + 1
+                }));
+                
+                // Notifier le parent
+                if (onJudgmentUpdate) {
+                  onJudgmentUpdate(judgment);
+                }
+                
                 setJudgmentResults(prev => {
                   const newResults = [...prev, { 
                     type: judgment, 
@@ -172,6 +186,17 @@ export function DDRGameplayArea({
             // Miss si la barre est passée sans être touchée
             if (barEndX < judgmentLineX) {
               markTargetMiss(target.id);
+              // Mettre à jour les compteurs de jugements
+              setJudgmentCounts(prev => ({
+                ...prev,
+                MISS: (prev.MISS || 0) + 1
+              }));
+              
+              // Notifier le parent
+              if (onJudgmentUpdate) {
+                onJudgmentUpdate('MISS');
+              }
+              
               setJudgmentResults(prev => {
                 const newResults = [...prev, { type: 'miss', time: performance.now() }];
                 return newResults.slice(-10);

@@ -12,6 +12,7 @@ import { DDRConfig, DIFFICULTY_MODES } from './DDRConfig';
 import { DDRStatsBar } from './DDRStatsBar';
 import { DDRGameplayArea } from './DDRGameplayArea';
 import { DDRInputsBar } from './DDRInputsBar';
+import { DDRResultsScreen } from './DDRResultsScreen';
 import { usePercentageDrill, ZONE_STATUS } from '../../hooks/useDrillEngine';
 import enhancedDrillAudioService from '../../services/enhancedDrillAudioService';
 import './PercentageDrill.css';
@@ -37,6 +38,8 @@ export function PercentageDrill({
   // État de jeu
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [finalJudgmentCounts, setFinalJudgmentCounts] = useState({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
 
   // Valeur actuelle selon le type d'input
   const currentValue = inputType === 'accelerator' ? acceleratorValue : brakeValue;
@@ -58,16 +61,18 @@ export function PercentageDrill({
 
   const handleStart = () => {
     setShowConfig(false);
+    reset();
     
-    // Jouer le countdown avant de démarrer
+    // Jouer le countdown APRÈS le switch de vue, avant de démarrer le jeu
     if (audioEnabled) {
-      enhancedDrillAudioService.playCountdown(() => {
-        reset();
-        setIsActive(true);
-        setIsPaused(false);
-      });
+      // Petit délai pour que la vue se charge
+      setTimeout(() => {
+        enhancedDrillAudioService.playCountdown(() => {
+          setIsActive(true);
+          setIsPaused(false);
+        });
+      }, 100);
     } else {
-      reset();
       setIsActive(true);
       setIsPaused(false);
     }
@@ -88,7 +93,21 @@ export function PercentageDrill({
       enhancedDrillAudioService.playCompletionSound(success);
     }
     
+    // Afficher l'écran de résultats
+    setShowResults(true);
+  };
+  
+  const handleRestart = () => {
+    setShowResults(false);
     reset();
+    setFinalJudgmentCounts({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
+    handleStart();
+  };
+  
+  const handleBackToMenu = () => {
+    setShowResults(false);
+    reset();
+    setFinalJudgmentCounts({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
     setShowConfig(true);
   };
 
@@ -140,6 +159,19 @@ export function PercentageDrill({
     );
   }
 
+  // Écran de résultats
+  if (showResults) {
+    return (
+      <DDRResultsScreen
+        stats={{ accuracy, score, totalTime }}
+        judgmentCounts={finalJudgmentCounts}
+        comboInfo={enhancedDrillAudioService.getComboInfo()}
+        onRestart={handleRestart}
+        onBack={handleBackToMenu}
+      />
+    );
+  }
+
   // Mode jeu actif
   return (
     <div className="percentage-drill percentage-drill-ddr">
@@ -177,6 +209,12 @@ export function PercentageDrill({
           audioEnabled={audioEnabled}
           musicEnabled={musicEnabled}
           blindMode={blindMode}
+          onJudgmentUpdate={(judgment) => {
+            setFinalJudgmentCounts(prev => ({
+              ...prev,
+              [judgment]: (prev[judgment] || 0) + 1
+            }));
+          }}
           onComplete={() => {
             // Le drill song est terminé, arrêter automatiquement
             handleStop();

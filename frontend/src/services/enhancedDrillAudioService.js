@@ -57,30 +57,37 @@ class EnhancedDrillAudioService {
     this.musicSource = null;
     this.musicLoopTimeout = null;
     
-    // Playlist de musiques arcade (URLs Pixabay - libres de droits)
-    this.musicPlaylist = [
+    // Musiques synthétiques (pas de fichiers externes)
+    this.useSynthMusic = true;
+    this.currentMusicIndex = 0;
+    
+    // Différentes progressions musicales
+    this.musicThemes = [
       {
-        name: 'Byte Blast',
-        url: 'https://cdn.pixabay.com/audio/2024/08/07/audio_c1b0e6e5e9.mp3',
+        name: 'Arcade Classic',
+        melody: [440, 523, 659, 523, 440, 392, 440, 523], // A-C-E-C-A-G-A-C
+        bass: [220, 220, 165, 165],
         bpm: 140
       },
       {
-        name: 'Pixel Fight',
-        url: 'https://cdn.pixabay.com/audio/2024/08/07/audio_5e06c8c6c1.mp3',
+        name: 'Retro Rush',
+        melody: [523, 587, 659, 784, 659, 587, 523, 494], // C-D-E-G-E-D-C-B
+        bass: [262, 262, 196, 196],
         bpm: 150
       },
       {
-        name: 'Arcade Theme',
-        url: 'https://cdn.pixabay.com/audio/2024/11/28/audio_3b7f6c9c8c.mp3',
-        bpm: 130
+        name: 'Pixel Power',
+        melody: [392, 440, 494, 523, 494, 440, 392, 349], // G-A-B-C-B-A-G-F
+        bass: [196, 196, 147, 147],
+        bpm: 135
       },
       {
-        name: 'Retro Game',
-        url: 'https://cdn.pixabay.com/audio/2024/12/26/audio_e8e9e5e6e9.mp3',
+        name: 'Neon Nights',
+        melody: [659, 698, 784, 880, 784, 698, 659, 587], // E-F-G-A-G-F-E-D
+        bass: [330, 330, 247, 247],
         bpm: 145
       }
     ];
-    this.currentMusicIndex = 0;
     
     // Système de combos
     this.currentCombo = 0;
@@ -127,9 +134,7 @@ class EnhancedDrillAudioService {
 
   setMusicVolume(volume) {
     this.musicVolume = Math.max(0, Math.min(1, volume));
-    if (this.currentMusic) {
-      this.currentMusic.volume = this.musicVolume;
-    }
+    // Le volume sera appliqué aux prochaines notes
   }
 
   setSfxVolume(volume) {
@@ -142,37 +147,121 @@ class EnhancedDrillAudioService {
   // ==================== MUSIQUE DE FOND ====================
 
   /**
-   * Démarrer la musique de fond (vraies musiques arcade)
+   * Démarrer la musique de fond (musique synthétique améliorée)
    */
   startMusic(tempo = 'medium') {
-    if (!this.enabled || !this.musicEnabled) return;
+    if (!this.enabled || !this.musicEnabled || !this.audioContext) return;
     
     this.stopMusic();
     
-    // Choisir une musique aléatoire de la playlist
-    this.currentMusicIndex = Math.floor(Math.random() * this.musicPlaylist.length);
-    const track = this.musicPlaylist[this.currentMusicIndex];
+    // Choisir un thème musical aléatoire
+    this.currentMusicIndex = Math.floor(Math.random() * this.musicThemes.length);
+    const theme = this.musicThemes[this.currentMusicIndex];
     
-    // Créer un élément Audio HTML5
-    this.currentMusic = new Audio(track.url);
-    this.currentMusic.loop = true;
-    this.currentMusic.volume = this.musicVolume;
+    const beatDuration = 60 / theme.bpm;
     
-    // Jouer la musique
-    this.currentMusic.play().catch(err => {
-      console.warn('Impossible de jouer la musique:', err);
-    });
+    this.musicLoopTimeout = null;
+    this.currentTheme = theme;
+    this.playMusicLoop(beatDuration, 0);
     
-    console.log(`🎵 Playing: ${track.name} (${track.bpm} BPM)`);
+    console.log(`🎵 Playing: ${theme.name} (${theme.bpm} BPM)`);
+  }
+
+  playMusicLoop(beatDuration, beatIndex) {
+    if (!this.enabled || !this.musicEnabled || !this.currentTheme) return;
+    
+    const now = this.audioContext.currentTime;
+    const theme = this.currentTheme;
+    
+    // Basse kick (beat principal)
+    const bassNote = theme.bass[beatIndex % theme.bass.length];
+    this.playKick(now, bassNote);
+    
+    // Hi-hat (rythme rapide)
+    for (let i = 0; i < 4; i++) {
+      this.playHiHat(now + (beatDuration / 4) * i);
+    }
+    
+    // Mélodie
+    const melodyNote = theme.melody[beatIndex % theme.melody.length];
+    this.playMelodyNote(now, melodyNote);
+    
+    // Boucler
+    this.musicLoopTimeout = setTimeout(() => {
+      if (this.enabled && this.musicEnabled) {
+        this.playMusicLoop(beatDuration, beatIndex + 1);
+      }
+    }, beatDuration * 1000);
+  }
+
+  playKick(time, frequency = 150) {
+    if (!this.audioContext) return;
+    
+    const osc = this.audioContext.createOscillator();
+    const gain = this.audioContext.createGain();
+    
+    osc.connect(gain);
+    gain.connect(this.sfxGain);
+    
+    osc.frequency.setValueAtTime(frequency, time);
+    osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.3);
+    
+    gain.gain.setValueAtTime(this.musicVolume * 0.6, time);
+    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.3);
+    
+    osc.start(time);
+    osc.stop(time + 0.3);
+  }
+
+  playHiHat(time) {
+    if (!this.audioContext) return;
+    
+    const osc = this.audioContext.createOscillator();
+    const gain = this.audioContext.createGain();
+    const filter = this.audioContext.createBiquadFilter();
+    
+    osc.type = 'square';
+    osc.frequency.value = 10000;
+    filter.type = 'highpass';
+    filter.frequency.value = 7000;
+    
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.sfxGain);
+    
+    gain.gain.setValueAtTime(this.musicVolume * 0.1, time);
+    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.05);
+    
+    osc.start(time);
+    osc.stop(time + 0.05);
+  }
+
+  playMelodyNote(time, frequency) {
+    if (!this.audioContext) return;
+    
+    const osc = this.audioContext.createOscillator();
+    const gain = this.audioContext.createGain();
+    
+    osc.type = 'square';
+    osc.frequency.value = frequency;
+    
+    osc.connect(gain);
+    gain.connect(this.sfxGain);
+    
+    gain.gain.setValueAtTime(this.musicVolume * 0.15, time);
+    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.25);
+    
+    osc.start(time);
+    osc.stop(time + 0.25);
   }
 
   stopMusic() {
-    // Arrêter la musique
-    if (this.currentMusic) {
-      this.currentMusic.pause();
-      this.currentMusic.currentTime = 0;
-      this.currentMusic = null;
+    // Arrêter la boucle de musique
+    if (this.musicLoopTimeout) {
+      clearTimeout(this.musicLoopTimeout);
+      this.musicLoopTimeout = null;
     }
+    this.currentTheme = null;
   }
   
   /**
@@ -181,25 +270,20 @@ class EnhancedDrillAudioService {
   nextTrack() {
     if (!this.enabled || !this.musicEnabled) return;
     
-    this.currentMusicIndex = (this.currentMusicIndex + 1) % this.musicPlaylist.length;
+    this.currentMusicIndex = (this.currentMusicIndex + 1) % this.musicThemes.length;
     this.startMusic();
   }
 
   // ==================== DUCKING (baisse musique pour voix) ====================
 
   duckMusic(duration = 0.5) {
-    if (!this.currentMusic) return;
-    
+    // Pour la musique synthétique, on baisse temporairement le volume
     const originalVolume = this.musicVolume;
-    
-    // Baisser la musique
-    this.currentMusic.volume = originalVolume * 0.3;
+    this.musicVolume = originalVolume * 0.3;
     
     // Remonter après
     setTimeout(() => {
-      if (this.currentMusic) {
-        this.currentMusic.volume = originalVolume;
-      }
+      this.musicVolume = originalVolume;
     }, duration * 1000);
   }
 
