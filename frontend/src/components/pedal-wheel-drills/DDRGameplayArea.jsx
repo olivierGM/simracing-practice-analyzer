@@ -136,12 +136,17 @@ export function DDRGameplayArea({
     };
   }, [isActive, currentValue, tolerance, targets, currentTime, markTargetHit, markTargetMiss]);
 
+  // Code couleur unique par palier de 20%
+  const getColorForPercent = (percent) => {
+    if (percent >= 80) return '#F44336'; // Rouge - 80-100%
+    if (percent >= 60) return '#FF9800'; // Orange - 60-79%
+    if (percent >= 40) return '#4CAF50'; // Vert - 40-59%
+    if (percent >= 20) return '#2196F3'; // Bleu - 20-39%
+    return '#9E9E9E'; // Gris - 0-19%
+  };
+
   const getTargetColor = (percent) => {
-    if (percent === 20) return '#2196F3'; // Bleu
-    if (percent === 40) return '#4CAF50'; // Vert
-    if (percent === 60) return '#FF9800'; // Orange
-    if (percent === 80) return '#F44336'; // Rouge
-    return '#757575';
+    return getColorForPercent(percent);
   };
 
   return (
@@ -197,17 +202,24 @@ export function DDRGameplayArea({
         </div>
       </div>
 
-      {/* Indicateur de valeur actuelle - Vertical le long de la barre de jugement */}
+      {/* Progress bar verticale simple - 8px de large */}
       <div 
-        className="ddr-current-value-indicator"
+        className="ddr-progress-bar-vertical"
         style={{
-          left: `${APPROACH_ZONE_WIDTH}px`,
-          bottom: `${currentValue * 100}%`
+          left: `${APPROACH_ZONE_WIDTH}px`
         }}
       >
-        <div className="ddr-current-value-marker" />
-        <div className="ddr-current-value-label-vertical">
-          {Math.round(currentValue * 100)}%
+        <div 
+          className="ddr-progress-fill"
+          style={{
+            height: `${currentValue * 100}%`,
+            backgroundColor: getColorForPercent(currentValue * 100)
+          }}
+        >
+          {/* Label du pourcentage en haut de la barre */}
+          <div className="ddr-progress-label">
+            {Math.round(currentValue * 100)}%
+          </div>
         </div>
       </div>
     </div>
