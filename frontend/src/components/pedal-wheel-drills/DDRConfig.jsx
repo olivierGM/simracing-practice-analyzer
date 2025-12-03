@@ -10,7 +10,11 @@ import './DDRConfig.css';
 const DIFFICULTY_MODES = {
   EASY: { label: 'Facile', tolerance: 10 },
   MEDIUM: { label: 'Moyen', tolerance: 5 },
-  HARD: { label: 'Difficile', tolerance: 2 }
+  HARD: { label: 'Difficile', tolerance: 2 },
+  EXTREME: { label: 'Extreme', tolerance: 2 },
+  INSANE: { label: 'Insane', tolerance: 1.5 },
+  INSANE_PLUS_1: { label: 'Insane +1', tolerance: 1 },
+  INSANE_PLUS_2: { label: 'Insane +2', tolerance: 0.5 }
 };
 
 const DURATION_OPTIONS = [

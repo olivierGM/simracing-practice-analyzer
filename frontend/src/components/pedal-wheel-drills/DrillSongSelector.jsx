@@ -12,13 +12,21 @@ import './DrillSongSelector.css';
 const DIFFICULTY_LABELS = {
   easy: 'Facile',
   medium: 'Moyen',
-  hard: 'Difficile'
+  hard: 'Difficile',
+  extreme: 'Extreme',
+  insane: 'Insane',
+  insane_plus_1: 'Insane +1',
+  insane_plus_2: 'Insane +2'
 };
 
 const TOLERANCE_BY_DIFFICULTY = {
   easy: 10,
   medium: 5,
-  hard: 2
+  hard: 2,
+  extreme: 2,
+  insane: 1.5,
+  insane_plus_1: 1,
+  insane_plus_2: 0.5
 };
 
 export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
@@ -66,7 +74,11 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
       const difficultyMap = {
         easy: 'EASY',
         medium: 'MEDIUM',
-        hard: 'HARD'
+        hard: 'HARD',
+        extreme: 'EXTREME',
+        insane: 'INSANE',
+        insane_plus_1: 'INSANE_PLUS_1',
+        insane_plus_2: 'INSANE_PLUS_2'
       };
       onSelectDifficulty(difficultyMap[difficultyKey]);
     }
@@ -117,7 +129,7 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
         {/* Options Random par difficulté */}
         <div className="drill-song-section">
           <h4 className="drill-song-section-title">🎲 Mode Aléatoire</h4>
-          {['easy', 'medium', 'hard'].map(diffKey => (
+          {['easy', 'medium', 'hard', 'extreme', 'insane', 'insane_plus_1', 'insane_plus_2'].map(diffKey => (
             <button
               key={`random-${diffKey}`}
               className={`drill-song-item drill-song-item-random ${selectedMode === `random-${diffKey}` ? 'drill-song-item-selected' : ''}`}
@@ -129,6 +141,10 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
                   {diffKey === 'easy' && 'Cibles plus longues et espacées - Vitesse lente'}
                   {diffKey === 'medium' && 'Cibles moyennes et espacées - Vitesse modérée'}
                   {diffKey === 'hard' && 'Cibles courtes et rapprochées - Vitesse rapide'}
+                  {diffKey === 'extreme' && 'Gaps réduits, beaucoup de mouvement - Très rapide'}
+                  {diffKey === 'insane' && 'Cibles très courtes, gaps minimaux - Extrêmement rapide'}
+                  {diffKey === 'insane_plus_1' && 'Cibles ultra-courtes, gaps quasi-nuls - Fou'}
+                  {diffKey === 'insane_plus_2' && 'Limite humaine - Réflexes surhumains requis'}
                 </div>
               </div>
             </button>

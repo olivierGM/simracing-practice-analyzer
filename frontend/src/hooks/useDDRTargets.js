@@ -27,6 +27,30 @@ const DIFFICULTY_PARAMS = {
     maxDuration: 2.0,
     minSpacing: 0.3,
     maxSpacing: 1.0
+  },
+  extreme: {
+    minDuration: 0.3,
+    maxDuration: 1.5,
+    minSpacing: 0.2,
+    maxSpacing: 0.6
+  },
+  insane: {
+    minDuration: 0.25,
+    maxDuration: 1.0,
+    minSpacing: 0.15,
+    maxSpacing: 0.4
+  },
+  insane_plus_1: {
+    minDuration: 0.2,
+    maxDuration: 0.8,
+    minSpacing: 0.1,
+    maxSpacing: 0.3
+  },
+  insane_plus_2: {
+    minDuration: 0.15,
+    maxDuration: 0.6,
+    minSpacing: 0.05,
+    maxSpacing: 0.2
   }
 };
 
