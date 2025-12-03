@@ -174,14 +174,14 @@ export function DDRGameplayArea({
   function getColorForPercent(percent) {
     var tolerance = 5;
     
-    // Paliers cibles avec leurs couleurs
+    // Paliers cibles avec couleurs Guitar Hero (distinctes et iconiques)
     var targets = [
-      { percent: 0, color: '#9E9E9E', rgb: { r: 158, g: 158, b: 158 } },   // Gris
-      { percent: 20, color: '#2196F3', rgb: { r: 33, g: 150, b: 243 } },   // Bleu
-      { percent: 40, color: '#4CAF50', rgb: { r: 76, g: 175, b: 80 } },    // Vert
-      { percent: 60, color: '#FF9800', rgb: { r: 255, g: 152, b: 0 } },    // Orange
-      { percent: 80, color: '#F44336', rgb: { r: 244, g: 67, b: 54 } },    // Rouge
-      { percent: 100, color: '#F44336', rgb: { r: 244, g: 67, b: 54 } }    // Rouge
+      { percent: 0, color: '#666666', rgb: { r: 102, g: 102, b: 102 } },     // Gris foncé
+      { percent: 20, color: '#22B14C', rgb: { r: 34, g: 177, b: 76 } },      // Vert (GH)
+      { percent: 40, color: '#EF2B2D', rgb: { r: 239, g: 43, b: 45 } },      // Rouge (GH)
+      { percent: 60, color: '#FFC600', rgb: { r: 255, g: 198, b: 0 } },      // Jaune (GH)
+      { percent: 80, color: '#3E75C3', rgb: { r: 62, g: 117, b: 195 } },     // Bleu (GH)
+      { percent: 100, color: '#F66A00', rgb: { r: 246, g: 106, b: 0 } }      // Orange (GH)
     ];
     
     // Trouver si on est dans une zone de tolérance d'un palier
