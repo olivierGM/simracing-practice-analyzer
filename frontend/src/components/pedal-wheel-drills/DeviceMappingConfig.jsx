@@ -240,9 +240,6 @@ export function DeviceMappingConfig({ onConfigChange }) {
           }, 100);
         }
 
-        // Mettre à jour les valeurs précédentes à chaque itération (pour la prochaine comparaison)
-        previousAxesValuesRef.current[deviceIndex] = [...currentAxes];
-        
         // Si un axe a changé significativement, l'assigner
         let threshold = 0.05;
         if (assigningFunction === AXIS_TYPES.WHEEL) {
@@ -290,6 +287,10 @@ export function DeviceMappingConfig({ onConfigChange }) {
           if (onConfigChange) {
             onConfigChange(newConfig);
           }
+        } else {
+          // Mettre à jour les valeurs précédentes seulement si on n'a pas assigné
+          // (pour la prochaine comparaison)
+          previousAxesValuesRef.current[deviceIndex] = [...currentAxes];
         }
       });
     };
