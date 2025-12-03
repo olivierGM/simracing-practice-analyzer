@@ -74,7 +74,7 @@
   align-items: flex-end; /* Aligner à droite de la ligne = à gauche visuellement */
   justify-content: flex-start;
   padding-top: 1rem;
-  padding-right: calc(1.25rem + 12px); /* Augmenté de 12px supplémentaires */
+  /* Pas de padding-right - on le met sur les textes directement */
   gap: 0.5rem;
 }
 
@@ -92,6 +92,8 @@
   font-family: 'Arial Black', 'Impact', sans-serif;
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
   filter: drop-shadow(0 0 8px currentColor);
+  /* Margin à droite pour décaler les textes à gauche de la ligne */
+  margin-right: calc(1.25rem + 12px);
 }
 
 .ddr-judgment-perfect {
