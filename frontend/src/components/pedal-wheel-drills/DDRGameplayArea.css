@@ -74,7 +74,7 @@
   align-items: flex-end; /* Aligner à droite de la ligne = à gauche visuellement */
   justify-content: flex-start;
   padding-top: 1rem;
-  padding-right: 1rem; /* Espace entre la ligne et les textes */
+  padding-right: 1.25rem; /* Augmenté de 1rem à 1.25rem (3-4px de plus) */
   gap: 0.5rem;
 }
 
@@ -195,14 +195,15 @@
   }
 }
 
-/* Progress bar verticale - 16px de large, alignée à gauche de la ligne de jugement */
+/* Progress bar verticale - 16px de large, parfaitement centrée sur la ligne blanche */
 .ddr-progress-bar-vertical {
   position: absolute;
   bottom: 0;
   width: 16px;
   height: 100%;
-  /* Pas de transform - aligné directement à gauche */
-  margin-left: -8px; /* Centrer la ligne de jugement (4px) dans la barre (16px) */
+  /* Centrer parfaitement : ligne blanche (4px) au milieu de la barre (16px) */
+  /* Calcul: (16px - 4px) / 2 = 6px de décalage à gauche */
+  margin-left: -6px;
   z-index: 15;
   pointer-events: none;
   background-color: rgba(0, 0, 0, 0.5);
