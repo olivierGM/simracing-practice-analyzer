@@ -197,18 +197,34 @@ export function DeviceMappingConfig({ onConfigChange }) {
           }
           
           // Détecter aussi les changements vers les extrêmes (-1 ou 1)
-          // Pour les pédales, on détecte quand on appuie (valeur qui va vers -1)
+          // Pour les pédales, on détecte quand on appuie (valeur qui va vers -1 ou vers 1)
+          // Pour les pédales SimJack, elles commencent souvent à -1 et changent quand on appuie
           const isMovingToExtreme = (assigningFunction === AXIS_TYPES.ACCELERATOR || 
                                      assigningFunction === AXIS_TYPES.BRAKE ||
                                      assigningFunction === AXIS_TYPES.CLUTCH) &&
-                                    (Math.abs(currentValue) > 0.5 && Math.abs(previousValue) < 0.5);
+                                    (
+                                      // Cas 1: On passe de repos (< 0.5) à pressé (> 0.5)
+                                      (Math.abs(currentValue) > 0.5 && Math.abs(previousValue) < 0.5) ||
+                                      // Cas 2: On passe de -1 (repos) à autre chose (pressé) - typique SimJack
+                                      (Math.abs(previousValue) > 0.9 && Math.abs(currentValue) < 0.9 && change > 0.05) ||
+                                      // Cas 3: Changement significatif même si les deux valeurs sont élevées
+                                      (change > 0.15 && Math.abs(currentValue) > 0.3)
+                                    );
           
           // Détecter si le changement est significatif OU si on va vers un extrême
           if ((change > maxChange && change > threshold) || isMovingToExtreme) {
             if (change > maxChange || isMovingToExtreme) {
-              maxChange = Math.max(change, 0.2); // Forcer un changement minimum si on détecte un extrême
+              maxChange = Math.max(change, isMovingToExtreme ? 0.2 : change); // Forcer un changement minimum si on détecte un extrême
               changedAxisIndex = axisIndex;
               changedAxisValue = currentValue;
+              console.log('[DEBUG] 🎯 Axe candidat détecté:', {
+                axisIndex,
+                change: change.toFixed(4),
+                currentValue: currentValue.toFixed(4),
+                previousValue: previousValue.toFixed(4),
+                isMovingToExtreme,
+                maxChange: maxChange.toFixed(4)
+              });
             }
           }
         });
@@ -246,7 +262,8 @@ export function DeviceMappingConfig({ onConfigChange }) {
           threshold = 0.02;
         } else if (assigningFunction === AXIS_TYPES.ACCELERATOR || 
                    assigningFunction === AXIS_TYPES.BRAKE) {
-          threshold = 0.1;
+          // Seuil réduit pour les pédales - les SimJack ont souvent des changements subtils
+          threshold = 0.05; // Réduit de 0.1 à 0.05 pour être plus sensible
         }
         
         // Debug: log les changements détectés
