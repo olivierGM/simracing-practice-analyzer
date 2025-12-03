@@ -105,6 +105,9 @@ export function DDRConfig({
                 <span>👁️ Mode Blind</span>
               </label>
             </div>
+            <p className="ddr-config-hint">
+              Une fois vos niveaux de braking appris, testez sans indicateur visuel
+            </p>
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 .pedal-wheel-drills-page {
   width: 100%;
   min-height: 100vh;
-  padding: 0.5rem 2rem 2rem;
+  padding: 0 2rem 2rem;
 }
 
 .page-header {
@@ -11,8 +11,8 @@
 }
 
 .page-header-compact {
-  margin: 0 auto 0.75rem;
-  padding: 0.5rem 0;
+  margin: 0 auto 0.25rem;
+  padding: 0.25rem 0;
 }
 
 .page-title-compact {
