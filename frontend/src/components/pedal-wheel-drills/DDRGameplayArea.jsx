@@ -12,7 +12,7 @@ import { useDDRTargets } from '../../hooks/useDDRTargets';
 import './DDRGameplayArea.css';
 
 // Vitesse de défilement (pixels par seconde)
-const SCROLL_SPEED = 300; // pixels/seconde
+const SCROLL_SPEED = 360; // pixels/seconde (augmenté de 20%: 300 * 1.2 = 360)
 
 // Largeur de la zone d'approche (en pixels, correspond à ~1 seconde)
 const APPROACH_ZONE_WIDTH = 300;

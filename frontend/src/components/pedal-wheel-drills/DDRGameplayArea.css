@@ -64,7 +64,7 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 4px;
+  width: 20px;
   background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
   z-index: 10;
@@ -195,11 +195,11 @@
   }
 }
 
-/* Progress bar verticale - 4px de large, même largeur que la ligne de jugement */
+/* Progress bar verticale - 20px de large, même largeur que la ligne de jugement */
 .ddr-progress-bar-vertical {
   position: absolute;
   bottom: 0;
-  width: 4px;
+  width: 20px;
   height: 100%;
   /* Pas de décalage - même position que la ligne de jugement */
   margin-left: 0;
@@ -207,7 +207,7 @@
   pointer-events: none;
   /* Pas de fond - vide quand pas remplie */
   background-color: transparent;
-  border-radius: 2px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
@@ -218,7 +218,7 @@
   -webkit-transition: height 0.05s linear, background-color 0.2s ease;
   -ms-transition: height 0.05s linear, background-color 0.2s ease;
   transition: height 0.05s linear, background-color 0.2s ease;
-  border-radius: 2px 2px 0 0;
+  border-radius: 4px 4px 0 0;
   -webkit-box-shadow: 0 0 10px currentColor;
   box-shadow: 0 0 10px currentColor;
 }
