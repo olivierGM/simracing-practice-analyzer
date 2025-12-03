@@ -219,6 +219,9 @@ export function DeviceMappingConfig({ onConfigChange }) {
           }, 100);
         }
 
+        // Mettre à jour les valeurs précédentes à chaque itération (pour la prochaine comparaison)
+        previousAxesValuesRef.current[deviceIndex] = [...currentAxes];
+        
         // Si un axe a changé significativement, l'assigner
         let threshold = 0.05;
         if (assigningFunction === AXIS_TYPES.WHEEL) {
@@ -244,10 +247,6 @@ export function DeviceMappingConfig({ onConfigChange }) {
           setConfig(newConfig);
           setAssigningFunction(null);
           setDebugInfo(null);
-          
-          // Mettre à jour les valeurs précédentes (dans la ref pour éviter les re-renders)
-          // Ne pas créer un nouvel objet, modifier directement la ref
-          previousAxesValuesRef.current[deviceIndex] = [...currentAxes];
 
           // Notifier le changement
           if (onConfigChange) {
@@ -257,13 +256,9 @@ export function DeviceMappingConfig({ onConfigChange }) {
       });
     };
 
-    // Détecter les touches clavier pressées (seulement si aucun gamepad n'est connecté)
+    // Détecter les touches clavier pressées
     const detectKeyPress = () => {
       if (!assigningFunction) return;
-      
-      const connected = getConnectedGamepads();
-      // Ne pas activer le clavier si des gamepads sont connectés (priorité aux gamepads)
-      if (connected.length > 0) return;
 
       // Écouter les événements clavier via window
       const handleKeyDown = (e) => {
