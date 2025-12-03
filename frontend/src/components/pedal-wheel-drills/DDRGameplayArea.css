@@ -195,15 +195,14 @@
   }
 }
 
-/* Progress bar verticale - 16px de large, parfaitement centrée sur la ligne blanche */
+/* Progress bar verticale - 16px de large, alignée avec la ligne blanche */
 .ddr-progress-bar-vertical {
   position: absolute;
   bottom: 0;
   width: 16px;
   height: 100%;
-  /* Centrer parfaitement : ligne blanche (4px) au milieu de la barre (16px) */
-  /* Calcul: (16px - 4px) / 2 = 6px de décalage à gauche */
-  margin-left: -6px;
+  /* Ajustement pour aligner la barre avec la ligne blanche */
+  margin-left: -2px;
   z-index: 15;
   pointer-events: none;
   background-color: rgba(0, 0, 0, 0.5);
