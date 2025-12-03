@@ -131,7 +131,12 @@ export function DeviceMappingConfig({ onConfigChange }) {
     
     const detectAxisChange = () => {
       const connected = getConnectedGamepads();
-      if (connected.length === 0) return;
+      if (connected.length === 0) {
+        console.log('[DEBUG] Aucun gamepad connecté');
+        return;
+      }
+      
+      console.log('[DEBUG] Gamepads connectés:', connected.length, connected.map(g => ({ index: g.index, id: g.id, axes: g.axes.length })));
       
       // Pour chaque gamepad connecté
       connected.forEach((gamepad) => {
@@ -140,9 +145,12 @@ export function DeviceMappingConfig({ onConfigChange }) {
         
         // Initialiser les valeurs précédentes si elles n'existent pas
         if (!previousAxesValuesRef.current[deviceIndex]) {
+          console.log('[DEBUG] Initialisation valeurs précédentes pour device', deviceIndex, 'axes:', currentAxes);
           previousAxesValuesRef.current[deviceIndex] = Array(currentAxes.length).fill(0);
         }
         const previousAxes = previousAxesValuesRef.current[deviceIndex];
+        
+        console.log('[DEBUG] Device', deviceIndex, '- Axes actuels:', currentAxes, 'Axes précédents:', previousAxes);
         
         // Chercher l'axe qui a le plus changé
         let maxChange = 0;
@@ -153,6 +161,14 @@ export function DeviceMappingConfig({ onConfigChange }) {
         currentAxes.forEach((currentValue, axisIndex) => {
           const previousValue = previousAxes[axisIndex] || 0;
           const change = Math.abs(currentValue - previousValue);
+          
+          if (change > 0.01) { // Log seulement les changements significatifs
+            console.log('[DEBUG] Axe', axisIndex, 'changé:', {
+              previous: previousValue,
+              current: currentValue,
+              change: change
+            });
+          }
           
           allChanges.push({
             axis: axisIndex,
@@ -229,6 +245,23 @@ export function DeviceMappingConfig({ onConfigChange }) {
         } else if (assigningFunction === AXIS_TYPES.ACCELERATOR || 
                    assigningFunction === AXIS_TYPES.BRAKE) {
           threshold = 0.1;
+        }
+        
+        // Debug: log les changements détectés
+        if (changedAxisIndex >= 0) {
+          console.log('[DEBUG] ⚠️ DÉTECTION AXE:', {
+            deviceIndex,
+            changedAxisIndex,
+            maxChange: maxChange.toFixed(4),
+            threshold: threshold.toFixed(4),
+            currentValue: currentAxes[changedAxisIndex].toFixed(4),
+            previousValue: previousAxes[changedAxisIndex].toFixed(4),
+            assigningFunction,
+            willAssign: maxChange > threshold,
+            allAxes: currentAxes.map((v, i) => ({ axis: i, value: v.toFixed(4), prev: (previousAxes[i] || 0).toFixed(4) }))
+          });
+        } else {
+          console.log('[DEBUG] Aucun axe détecté pour device', deviceIndex, '- maxChange:', maxChange.toFixed(4), 'threshold:', threshold.toFixed(4));
         }
         
         if (changedAxisIndex >= 0 && maxChange > threshold) {
