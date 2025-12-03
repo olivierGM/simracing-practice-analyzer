@@ -87,8 +87,9 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  border-radius: 4px;
-  transition: height 0.05s linear;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.05s linear, background-color 0.2s ease;
+  box-shadow: 0 0 10px currentColor;
 }
 
 /* Barre de progression verticale */
@@ -106,17 +107,7 @@
   overflow: hidden;
 }
 
-.ddr-progress-bar-brake {
-  box-shadow: 
-    0 0 10px rgba(219, 68, 55, 0.5),
-    inset 0 -2px 4px rgba(219, 68, 55, 0.3);
-}
-
-.ddr-progress-bar-throttle {
-  box-shadow: 
-    0 0 10px rgba(15, 157, 88, 0.5),
-    inset 0 -2px 4px rgba(15, 157, 88, 0.3);
-}
+/* Les box-shadows sont maintenant sur le fill directement via currentColor */
 
 /* Targets container */
 .ddr-targets-container {
