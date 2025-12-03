@@ -74,7 +74,7 @@
   align-items: flex-end; /* Aligner à droite de la ligne = à gauche visuellement */
   justify-content: flex-start;
   padding-top: 1rem;
-  padding-right: 1.25rem; /* Augmenté de 1rem à 1.25rem (3-4px de plus) */
+  padding-right: calc(1.25rem + 12px); /* Augmenté de 12px supplémentaires */
   gap: 0.5rem;
 }
 

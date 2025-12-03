@@ -55,6 +55,32 @@ class EnhancedDrillAudioService {
     // Musique de fond
     this.currentMusic = null;
     this.musicSource = null;
+    this.musicLoopTimeout = null;
+    
+    // Playlist de musiques arcade (URLs Pixabay - libres de droits)
+    this.musicPlaylist = [
+      {
+        name: 'Byte Blast',
+        url: 'https://cdn.pixabay.com/audio/2024/08/07/audio_c1b0e6e5e9.mp3',
+        bpm: 140
+      },
+      {
+        name: 'Pixel Fight',
+        url: 'https://cdn.pixabay.com/audio/2024/08/07/audio_5e06c8c6c1.mp3',
+        bpm: 150
+      },
+      {
+        name: 'Arcade Theme',
+        url: 'https://cdn.pixabay.com/audio/2024/11/28/audio_3b7f6c9c8c.mp3',
+        bpm: 130
+      },
+      {
+        name: 'Retro Game',
+        url: 'https://cdn.pixabay.com/audio/2024/12/26/audio_e8e9e5e6e9.mp3',
+        bpm: 145
+      }
+    ];
+    this.currentMusicIndex = 0;
     
     // Système de combos
     this.currentCombo = 0;
@@ -101,8 +127,8 @@ class EnhancedDrillAudioService {
 
   setMusicVolume(volume) {
     this.musicVolume = Math.max(0, Math.min(1, volume));
-    if (this.musicGain) {
-      this.musicGain.gain.value = this.musicVolume;
+    if (this.currentMusic) {
+      this.currentMusic.volume = this.musicVolume;
     }
   }
 
@@ -116,130 +142,65 @@ class EnhancedDrillAudioService {
   // ==================== MUSIQUE DE FOND ====================
 
   /**
-   * Démarrer la musique de fond (synthétisée)
+   * Démarrer la musique de fond (vraies musiques arcade)
    */
   startMusic(tempo = 'medium') {
-    if (!this.enabled || !this.musicEnabled || !this.audioContext) return;
+    if (!this.enabled || !this.musicEnabled) return;
     
     this.stopMusic();
     
-    // Créer une boucle musicale simple et énergique
-    const bpm = tempo === 'slow' ? 120 : tempo === 'medium' ? 140 : 160;
-    const beatDuration = 60 / bpm;
+    // Choisir une musique aléatoire de la playlist
+    this.currentMusicIndex = Math.floor(Math.random() * this.musicPlaylist.length);
+    const track = this.musicPlaylist[this.currentMusicIndex];
     
-    this.playMusicLoop(beatDuration);
-  }
-
-  playMusicLoop(beatDuration) {
-    if (!this.enabled || !this.musicEnabled) return;
+    // Créer un élément Audio HTML5
+    this.currentMusic = new Audio(track.url);
+    this.currentMusic.loop = true;
+    this.currentMusic.volume = this.musicVolume;
     
-    const now = this.audioContext.currentTime;
+    // Jouer la musique
+    this.currentMusic.play().catch(err => {
+      console.warn('Impossible de jouer la musique:', err);
+    });
     
-    // Basse kick (beat principal)
-    this.playKick(now);
-    this.playKick(now + beatDuration);
-    this.playKick(now + beatDuration * 2);
-    this.playKick(now + beatDuration * 3);
-    
-    // Hi-hat (rythme rapide)
-    for (let i = 0; i < 8; i++) {
-      this.playHiHat(now + (beatDuration / 2) * i);
-    }
-    
-    // Mélodie simple
-    this.playMelodyNote(now, 440); // A4
-    this.playMelodyNote(now + beatDuration, 523); // C5
-    this.playMelodyNote(now + beatDuration * 2, 587); // D5
-    this.playMelodyNote(now + beatDuration * 3, 523); // C5
-    
-    // Boucler
-    setTimeout(() => {
-      if (this.enabled && this.musicEnabled) {
-        this.playMusicLoop(beatDuration);
-      }
-    }, beatDuration * 4 * 1000);
-  }
-
-  playKick(time) {
-    if (!this.audioContext) return;
-    
-    const osc = this.audioContext.createOscillator();
-    const gain = this.audioContext.createGain();
-    
-    osc.connect(gain);
-    gain.connect(this.musicGain);
-    
-    osc.frequency.setValueAtTime(150, time);
-    osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.5);
-    
-    gain.gain.setValueAtTime(0.8, time);
-    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.5);
-    
-    osc.start(time);
-    osc.stop(time + 0.5);
-  }
-
-  playHiHat(time) {
-    if (!this.audioContext) return;
-    
-    const osc = this.audioContext.createOscillator();
-    const gain = this.audioContext.createGain();
-    const filter = this.audioContext.createBiquadFilter();
-    
-    osc.type = 'square';
-    osc.frequency.value = 10000;
-    filter.type = 'highpass';
-    filter.frequency.value = 7000;
-    
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(this.musicGain);
-    
-    gain.gain.setValueAtTime(0.15, time);
-    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.05);
-    
-    osc.start(time);
-    osc.stop(time + 0.05);
-  }
-
-  playMelodyNote(time, frequency) {
-    if (!this.audioContext) return;
-    
-    const osc = this.audioContext.createOscillator();
-    const gain = this.audioContext.createGain();
-    
-    osc.type = 'triangle';
-    osc.frequency.value = frequency;
-    
-    osc.connect(gain);
-    gain.connect(this.musicGain);
-    
-    gain.gain.setValueAtTime(0.1, time);
-    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.3);
-    
-    osc.start(time);
-    osc.stop(time + 0.3);
+    console.log(`🎵 Playing: ${track.name} (${track.bpm} BPM)`);
   }
 
   stopMusic() {
-    // La musique s'arrêtera naturellement quand enabled = false
+    // Arrêter la musique
+    if (this.currentMusic) {
+      this.currentMusic.pause();
+      this.currentMusic.currentTime = 0;
+      this.currentMusic = null;
+    }
+  }
+  
+  /**
+   * Passer à la musique suivante
+   */
+  nextTrack() {
+    if (!this.enabled || !this.musicEnabled) return;
+    
+    this.currentMusicIndex = (this.currentMusicIndex + 1) % this.musicPlaylist.length;
+    this.startMusic();
   }
 
   // ==================== DUCKING (baisse musique pour voix) ====================
 
   duckMusic(duration = 0.5) {
-    if (!this.musicGain) return;
+    if (!this.currentMusic) return;
     
-    const now = this.audioContext.currentTime;
-    const currentVolume = this.musicVolume;
+    const originalVolume = this.musicVolume;
     
     // Baisser la musique
-    this.musicGain.gain.cancelScheduledValues(now);
-    this.musicGain.gain.setValueAtTime(this.musicGain.gain.value, now);
-    this.musicGain.gain.linearRampToValueAtTime(currentVolume * 0.3, now + 0.1);
+    this.currentMusic.volume = originalVolume * 0.3;
     
     // Remonter après
-    this.musicGain.gain.linearRampToValueAtTime(currentVolume, now + duration);
+    setTimeout(() => {
+      if (this.currentMusic) {
+        this.currentMusic.volume = originalVolume;
+      }
+    }, duration * 1000);
   }
 
   // ==================== ANNONCES VOCALES ====================
