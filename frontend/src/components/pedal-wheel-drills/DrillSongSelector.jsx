@@ -122,6 +122,41 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
     <div className="drill-song-selector">
       <label className="drill-song-selector-label">Mode de Drill:</label>
       
+      {/* Détails du drill sélectionné (au-dessus) */}
+      {selectedMode.startsWith('random-') && (
+        <div className="drill-song-details">
+          <div className="drill-song-detail-item">
+            <span className="drill-song-detail-label">Mode:</span>
+            <span className="drill-song-detail-value">Génération continue</span>
+          </div>
+          <div className="drill-song-detail-item">
+            <span className="drill-song-detail-label">Difficulté:</span>
+            <span className="drill-song-detail-value">
+              {DIFFICULTY_LABELS[selectedMode.split('-')[1]]}
+            </span>
+          </div>
+          <div className="drill-song-detail-item">
+            <span className="drill-song-detail-label">Vitesse:</span>
+            <span className="drill-song-detail-value">
+              {selectedMode.split('-')[1] === 'medium' ? 'Modérée' : selectedMode.split('-')[1] === 'hard' ? 'Rapide' : 'Très Rapide'}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {selectedSong && (
+        <div className="drill-song-details">
+          <div className="drill-song-detail-item">
+            <span className="drill-song-detail-label">Durée:</span>
+            <span className="drill-song-detail-value">{selectedSong.duration.toFixed(1)}s</span>
+          </div>
+          <div className="drill-song-detail-item">
+            <span className="drill-song-detail-label">Cibles:</span>
+            <span className="drill-song-detail-value">{selectedSong.targets.length}</span>
+          </div>
+        </div>
+      )}
+
       <div className="drill-songs-list">
         {/* Options Random par difficulté */}
         <div className="drill-song-section">
@@ -166,40 +201,6 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
           </div>
         )}
       </div>
-      
-      {selectedMode.startsWith('random-') && (
-        <div className="drill-song-details">
-          <div className="drill-song-detail-item">
-            <span className="drill-song-detail-label">Mode:</span>
-            <span className="drill-song-detail-value">Génération continue</span>
-          </div>
-          <div className="drill-song-detail-item">
-            <span className="drill-song-detail-label">Difficulté:</span>
-            <span className="drill-song-detail-value">
-              {DIFFICULTY_LABELS[selectedMode.split('-')[1]]}
-            </span>
-          </div>
-          <div className="drill-song-detail-item">
-            <span className="drill-song-detail-label">Vitesse:</span>
-            <span className="drill-song-detail-value">
-              {selectedMode.split('-')[1] === 'medium' ? 'Modérée' : selectedMode.split('-')[1] === 'hard' ? 'Rapide' : 'Très Rapide'}
-            </span>
-          </div>
-        </div>
-      )}
-
-      {selectedSong && (
-        <div className="drill-song-details">
-          <div className="drill-song-detail-item">
-            <span className="drill-song-detail-label">Durée:</span>
-            <span className="drill-song-detail-value">{selectedSong.duration.toFixed(1)}s</span>
-          </div>
-          <div className="drill-song-detail-item">
-            <span className="drill-song-detail-label">Cibles:</span>
-            <span className="drill-song-detail-value">{selectedSong.targets.length}</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

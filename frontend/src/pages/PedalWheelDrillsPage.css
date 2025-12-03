@@ -1,13 +1,26 @@
 .pedal-wheel-drills-page {
   width: 100%;
   min-height: 100vh;
-  padding: 2rem;
+  padding: 0.5rem 2rem 2rem;
 }
 
 .page-header {
   max-width: 1200px;
   margin: 0 auto 3rem;
   text-align: center;
+}
+
+.page-header-compact {
+  margin: 0 auto 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.page-title-compact {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary, #fff);
+  opacity: 0.9;
 }
 
 .page-header h1 {

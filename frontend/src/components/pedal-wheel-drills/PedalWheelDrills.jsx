@@ -55,6 +55,26 @@ export function PedalWheelDrills() {
   // On peut utiliser les drills si on a des gamepads OU du clavier assigné
   const hasAssignedDevices = hasGamepadAssignments || hasKeyboardAssignments;
 
+  // Si un drill est sélectionné, afficher en pleine page
+  if (selectedDrill) {
+    return (
+      <div className="pedal-wheel-drills pedal-wheel-drills-fullpage">
+        {selectedDrill === DRILL_TYPES.PERCENTAGE && (
+          <PercentageDrill
+            acceleratorValue={accelerator}
+            brakeValue={brake}
+            wheelValue={wheel}
+            shiftUp={shiftUp}
+            shiftDown={shiftDown}
+            onBack={handleDrillBack}
+          />
+        )}
+        {/* Autres types de drills à ajouter plus tard */}
+      </div>
+    );
+  }
+
+  // Sinon, afficher la sélection
   return (
     <div className="pedal-wheel-drills">
       <div className="drills-container">
@@ -81,47 +101,10 @@ export function PedalWheelDrills() {
         {/* Section 2: Sélection du Drill */}
         <section className="drills-section">
           <h2 className="section-title">🎮 Sélection du Drill</h2>
-          {!selectedDrill ? (
-            <>
-              {!hasAssignedDevices && (
-                <div className="drill-setup-message" style={{ padding: '1rem', marginBottom: '1rem', backgroundColor: 'rgba(255, 193, 7, 0.1)', border: '1px solid rgba(255, 193, 7, 0.3)' }}>
-                  <p style={{ fontSize: '0.9rem', margin: '0 0 0.5rem 0' }}>
-                    💡 <strong>Astuce:</strong> Configurez vos périphériques ou touches clavier pour utiliser les drills.
-                  </p>
-                  <p style={{ fontSize: '0.85rem', margin: 0, opacity: 0.8 }}>
-                    Cliquez sur "Afficher" dans Configuration, puis assignez des touches (ex: W = accélérateur, S = frein, ←→ = volant)
-                  </p>
-                </div>
-              )}
-              
-              {hasKeyboardAssignments && !hasGamepadAssignments && (
-                <div className="drill-setup-message" style={{ padding: '1rem', marginBottom: '1rem', backgroundColor: 'rgba(33, 150, 243, 0.1)', border: '1px solid rgba(33, 150, 243, 0.3)' }}>
-                  <p style={{ fontSize: '0.9rem', margin: 0 }}>
-                    ⌨️ Mode clavier activé - Vous pouvez tester les drills avec le clavier !
-                  </p>
-                </div>
-              )}
-              
-              <DrillSelector 
-                onSelectDrill={handleDrillSelect}
-                selectedDrill={selectedDrill}
-              />
-            </>
-          ) : (
-            <>
-                {selectedDrill === DRILL_TYPES.PERCENTAGE && (
-                  <PercentageDrill
-                    acceleratorValue={accelerator}
-                    brakeValue={brake}
-                    wheelValue={wheel}
-                    shiftUp={shiftUp}
-                    shiftDown={shiftDown}
-                    onBack={handleDrillBack}
-                  />
-                )}
-              {/* Autres types de drills à ajouter plus tard */}
-            </>
-          )}
+          <DrillSelector 
+            onSelectDrill={handleDrillSelect}
+            selectedDrill={selectedDrill}
+          />
         </section>
       </div>
     </div>
