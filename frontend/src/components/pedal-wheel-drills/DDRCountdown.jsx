@@ -13,11 +13,13 @@ export function DDRCountdown({ onComplete }) {
 
   useEffect(() => {
     if (count === 0) {
-      // Afficher GO! pendant 500ms puis terminer
+      // Afficher GO! pendant 300ms puis terminer
       setTimeout(() => {
         setShow(false);
-        if (onComplete) onComplete();
-      }, 500);
+        if (onComplete) {
+          onComplete();
+        }
+      }, 300);
       return;
     }
 
