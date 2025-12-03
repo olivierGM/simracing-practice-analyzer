@@ -134,7 +134,8 @@ export function DeviceMappingConfig({ onConfigChange }) {
       if (connected.length === 0) return;
       
       // Pour chaque gamepad connecté
-      connected.forEach((gamepad, deviceIndex) => {
+      connected.forEach((gamepad) => {
+        const deviceIndex = gamepad.index; // Utiliser l'index du gamepad, pas l'index du tableau
         const currentAxes = Array.from(gamepad.axes);
         const previousAxes = previousAxesValuesRef.current[deviceIndex] || Array(currentAxes.length).fill(0);
         
@@ -298,7 +299,8 @@ export function DeviceMappingConfig({ onConfigChange }) {
       const connected = getConnectedGamepads();
       if (connected.length === 0) return;
       
-      connected.forEach((gamepad, deviceIndex) => {
+      connected.forEach((gamepad) => {
+        const deviceIndex = gamepad.index; // Utiliser l'index du gamepad, pas l'index du tableau
         const currentButtons = Array.from(gamepad.buttons);
         const previousButtons = previousAxesValuesRef.current[`${deviceIndex}_buttons`] || Array(currentButtons.length).fill({ pressed: false });
         
@@ -357,9 +359,10 @@ export function DeviceMappingConfig({ onConfigChange }) {
     if (assigningFunction) {
       const connected = getConnectedGamepads();
       const currentValues = {};
-      connected.forEach((gamepad, deviceIndex) => {
+      connected.forEach((gamepad) => {
+        const deviceIndex = gamepad.index; // Utiliser l'index du gamepad
         currentValues[deviceIndex] = Array.from(gamepad.axes);
-        currentValues[`${gamepad.index}_buttons`] = Array.from(gamepad.buttons);
+        currentValues[`${deviceIndex}_buttons`] = Array.from(gamepad.buttons);
       });
       previousAxesValuesRef.current = currentValues;
     }
@@ -372,9 +375,10 @@ export function DeviceMappingConfig({ onConfigChange }) {
     // Sauvegarder les valeurs actuelles des axes comme référence
     const connected = getConnectedGamepads();
     const currentValues = {};
-    connected.forEach((gamepad, deviceIndex) => {
+    connected.forEach((gamepad) => {
+      const deviceIndex = gamepad.index; // Utiliser l'index du gamepad
       currentValues[deviceIndex] = Array.from(gamepad.axes);
-      currentValues[`${gamepad.index}_buttons`] = Array.from(gamepad.buttons);
+      currentValues[`${deviceIndex}_buttons`] = Array.from(gamepad.buttons);
     });
     previousAxesValuesRef.current = currentValues;
   };
