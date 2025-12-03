@@ -32,7 +32,7 @@ export function PercentageDrill({
   const [difficulty, setDifficulty] = useState('MEDIUM'); // Difficulté pour les modes Random (vitesse, durée, etc.)
   const [drillSong, setDrillSong] = useState(null); // Drill song sélectionné ou { type: 'random', difficulty: 'medium' }
   const [audioEnabled, setAudioEnabled] = useState(true); // Sons activés
-  const [musicEnabled, setMusicEnabled] = useState(true); // Musique de fond
+  const [musicEnabled, setMusicEnabled] = useState(false); // Musique de fond (désactivée par défaut)
   const [blindMode, setBlindMode] = useState(false); // Mode blind (cacher barre verticale)
   
   // État de jeu
@@ -61,18 +61,22 @@ export function PercentageDrill({
 
   const handleStart = () => {
     setShowConfig(false);
+    setShowResults(false);
     reset();
     
-    // Jouer le countdown APRÈS le switch de vue, avant de démarrer le jeu
+    // NE PAS activer le jeu tout de suite
+    // Attendre le countdown
     if (audioEnabled) {
       // Petit délai pour que la vue se charge
       setTimeout(() => {
         enhancedDrillAudioService.playCountdown(() => {
+          // MAINTENANT on active le jeu
           setIsActive(true);
           setIsPaused(false);
         });
       }, 100);
     } else {
+      // Sans audio, démarrer immédiatement
       setIsActive(true);
       setIsPaused(false);
     }
@@ -85,6 +89,16 @@ export function PercentageDrill({
   const handleStop = () => {
     setIsActive(false);
     setIsPaused(false);
+    
+    // Annuler le countdown s'il est en cours
+    enhancedDrillAudioService.cancelCountdown();
+    
+    // Si on arrête pendant le countdown (avant que le jeu démarre vraiment)
+    // Ne pas afficher les résultats
+    if (!isActive) {
+      setShowConfig(true);
+      return;
+    }
     
     // Jouer le son de fin
     if (audioEnabled) {

@@ -93,6 +93,9 @@ class EnhancedDrillAudioService {
     this.currentCombo = 0;
     this.maxCombo = 0;
     
+    // Countdown
+    this.countdownInProgress = false;
+    
     // Cache des sons synthétisés
     this.soundCache = new Map();
   }
@@ -351,17 +354,26 @@ class EnhancedDrillAudioService {
       return;
     }
     
+    // Marquer qu'un countdown est en cours
+    this.countdownInProgress = true;
+    
     const counts = ['3', '2', '1', 'GO!'];
     let index = 0;
     
     const speakNext = () => {
+      // Si le countdown a été annulé, arrêter
+      if (!this.countdownInProgress) {
+        return;
+      }
+      
       if (index >= counts.length) {
+        this.countdownInProgress = false;
         if (callback) callback();
         return;
       }
       
       const utterance = new SpeechSynthesisUtterance(counts[index]);
-      utterance.rate = 1.0;
+      utterance.rate = 1.3; // Plus rapide
       utterance.pitch = index === 3 ? 1.4 : 1.0;
       utterance.volume = this.voiceVolume;
       utterance.lang = 'en-US';
@@ -369,23 +381,31 @@ class EnhancedDrillAudioService {
       utterance.onend = () => {
         index++;
         if (index < counts.length) {
-          setTimeout(speakNext, index === 3 ? 200 : 800);
+          setTimeout(speakNext, index === 3 ? 100 : 500); // Réduit de 800ms à 500ms
         } else if (callback) {
+          this.countdownInProgress = false;
           callback();
         }
       };
       
       // Son de beep pour chaque compte
       if (index < 3) {
-        this.playBeep(800, 0.1);
+        this.playBeep(800, 0.08);
       } else {
-        this.playBeep(1200, 0.15);
+        this.playBeep(1200, 0.12);
       }
       
       window.speechSynthesis.speak(utterance);
     };
     
     speakNext();
+  }
+  
+  cancelCountdown() {
+    this.countdownInProgress = false;
+    if (this.speechAvailable) {
+      window.speechSynthesis.cancel();
+    }
   }
 
   // ==================== SONS DE JUGEMENT AMÉLIORÉS ====================
