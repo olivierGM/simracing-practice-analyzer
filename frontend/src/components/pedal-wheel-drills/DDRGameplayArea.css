@@ -71,9 +71,10 @@
   pointer-events: none;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end; /* Aligner à droite de la ligne = à gauche visuellement */
   justify-content: flex-start;
   padding-top: 1rem;
+  padding-right: 1rem; /* Espace entre la ligne et les textes */
   gap: 0.5rem;
 }
 
@@ -194,15 +195,14 @@
   }
 }
 
-/* Progress bar verticale - 16px de large */
+/* Progress bar verticale - 16px de large, alignée à gauche de la ligne de jugement */
 .ddr-progress-bar-vertical {
   position: absolute;
   bottom: 0;
   width: 16px;
   height: 100%;
-  -webkit-transform: translateX(-50%);
-  -ms-transform: translateX(-50%);
-  transform: translateX(-50%);
+  /* Pas de transform - aligné directement à gauche */
+  margin-left: -8px; /* Centrer la ligne de jugement (4px) dans la barre (16px) */
   z-index: 15;
   pointer-events: none;
   background-color: rgba(0, 0, 0, 0.5);
