@@ -120,44 +120,32 @@
   }
 }
 
-/* Progress bar verticale simplifiée - 8px de large */
+/* Progress bar verticale - 16px de large */
 .ddr-progress-bar-vertical {
   position: absolute;
   bottom: 0;
-  width: 8px;
+  width: 16px;
   height: 100%;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
   transform: translateX(-50%);
   z-index: 15;
   pointer-events: none;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 4px;
-  overflow: visible;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .ddr-progress-fill {
   position: absolute;
   bottom: 0;
   width: 100%;
+  -webkit-transition: height 0.05s linear, background-color 0.2s ease;
+  -ms-transition: height 0.05s linear, background-color 0.2s ease;
   transition: height 0.05s linear, background-color 0.2s ease;
-  border-radius: 4px;
+  border-radius: 4px 4px 0 0;
+  -webkit-box-shadow: 0 0 8px currentColor;
   box-shadow: 0 0 8px currentColor;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-}
-
-.ddr-progress-label {
-  position: absolute;
-  top: -25px;
-  background-color: rgba(0, 0, 0, 0.9);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: white;
-  white-space: nowrap;
-  font-family: monospace;
-  border: 1px solid currentColor;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 

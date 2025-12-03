@@ -252,7 +252,7 @@ export function DDRGameplayArea({
         </div>
       </div>
 
-      {/* Progress bar verticale simple - 8px de large */}
+      {/* Progress bar verticale - 16px de large */}
       <div 
         className="ddr-progress-bar-vertical"
         style={{
@@ -265,12 +265,7 @@ export function DDRGameplayArea({
             height: `${currentValue * 100}%`,
             backgroundColor: getColorForPercent(currentValue * 100)
           }}
-        >
-          {/* Label du pourcentage en haut de la barre */}
-          <div className="ddr-progress-label">
-            {Math.round(currentValue * 100)}%
-          </div>
-        </div>
+        />
       </div>
     </div>
   );
