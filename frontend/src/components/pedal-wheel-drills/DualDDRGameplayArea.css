@@ -81,12 +81,14 @@
   gap: 0.5rem;
 }
 
-.ddr-judgment-line-brake {
-  border: 2px solid rgba(219, 68, 55, 0.5);
-}
-
-.ddr-judgment-line-throttle {
-  border: 2px solid rgba(15, 157, 88, 0.5);
+/* Fill de la progress bar */
+.ddr-progress-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 4px;
+  transition: height 0.05s linear;
 }
 
 /* Barre de progression verticale */
@@ -96,14 +98,12 @@
   left: 50%;
   transform: translateX(-50%);
   width: 20px;
-  min-height: 2px;
+  height: 100%;
   background-color: transparent;
   border-radius: 4px;
-  transition: height 0.05s linear;
-  z-index: 5;
-  box-shadow: 
-    0 0 10px rgba(255, 255, 255, 0.3),
-    inset 0 -2px 4px rgba(255, 255, 255, 0.2);
+  z-index: 15; /* Au-dessus de la judgment line (z-index: 10) */
+  pointer-events: none;
+  overflow: hidden;
 }
 
 .ddr-progress-bar-brake {

@@ -391,16 +391,18 @@ export function DualDDRGameplayArea({
           
           {/* Progress bar */}
           {!blindMode && (
-            <div 
-              className="ddr-progress-bar-vertical ddr-progress-bar-brake"
-              style={{
-                height: (brakeValue * 100) + '%',
-                backgroundColor: (function() {
-                  var color = getColorForPercent(brakeValue * 100);
-                  return 'rgb(' + Math.round(color.r) + ',' + Math.round(color.g) + ',' + Math.round(color.b) + ')';
-                })()
-              }}
-            />
+            <div className="ddr-progress-bar-vertical ddr-progress-bar-brake">
+              <div 
+                className="ddr-progress-fill"
+                style={{
+                  height: (brakeValue * 100) + '%',
+                  backgroundColor: (function() {
+                    var color = getColorForPercent(brakeValue * 100);
+                    return 'rgb(' + Math.round(color.r) + ',' + Math.round(color.g) + ',' + Math.round(color.b) + ')';
+                  })()
+                }}
+              />
+            </div>
           )}
           
           {/* Targets scrolling */}
@@ -439,16 +441,18 @@ export function DualDDRGameplayArea({
           
           {/* Progress bar */}
           {!blindMode && (
-            <div 
-              className="ddr-progress-bar-vertical ddr-progress-bar-throttle"
-              style={{
-                height: (throttleValue * 100) + '%',
-                backgroundColor: (function() {
-                  var color = getColorForPercent(throttleValue * 100);
-                  return 'rgb(' + Math.round(color.r) + ',' + Math.round(color.g) + ',' + Math.round(color.b) + ')';
-                })()
-              }}
-            />
+            <div className="ddr-progress-bar-vertical ddr-progress-bar-throttle">
+              <div 
+                className="ddr-progress-fill"
+                style={{
+                  height: (throttleValue * 100) + '%',
+                  backgroundColor: (function() {
+                    var color = getColorForPercent(throttleValue * 100);
+                    return 'rgb(' + Math.round(color.r) + ',' + Math.round(color.g) + ',' + Math.round(color.b) + ')';
+                  })()
+                }}
+              />
+            </div>
           )}
           
           {/* Targets scrolling */}
