@@ -48,6 +48,45 @@
   letter-spacing: 1px;
 }
 
+/* Affichage du combo */
+.ddr-stat-combo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ddr-combo-current {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.ddr-combo-current.ddr-combo-active {
+  color: #FFD700;
+  text-shadow: 
+    0 0 10px #FFD700,
+    0 0 20px #FFA500,
+    0 2px 4px rgba(0, 0, 0, 0.8);
+  animation: comboPulse 0.5s ease infinite;
+}
+
+.ddr-combo-max {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+@keyframes comboPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
 @media (max-width: 768px) {
   .ddr-stats-bar {
     grid-template-columns: repeat(2, 1fr);

@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useDDRTargets } from '../../hooks/useDDRTargets';
-import drillAudioService from '../../services/drillAudioService';
+import enhancedDrillAudioService from '../../services/enhancedDrillAudioService';
 import './DDRGameplayArea.css';
 
 // Vitesse de défilement (pixels par seconde)
@@ -26,6 +26,7 @@ export function DDRGameplayArea({
   duration = null,
   difficulty = 'medium',
   audioEnabled = true,
+  musicEnabled = true,
   blindMode = false,
   onComplete = null
 }) {
@@ -65,8 +66,39 @@ export function DDRGameplayArea({
   
   // Activer/désactiver l'audio
   useEffect(() => {
-    drillAudioService.setEnabled(audioEnabled);
+    enhancedDrillAudioService.setEnabled(audioEnabled);
   }, [audioEnabled]);
+  
+  // Activer/désactiver la musique
+  useEffect(() => {
+    enhancedDrillAudioService.setMusicEnabled(musicEnabled);
+  }, [musicEnabled]);
+  
+  // Démarrer/arrêter la musique selon l'état du jeu
+  useEffect(() => {
+    if (isActive && musicEnabled) {
+      // Initialiser l'audio context au premier clic
+      enhancedDrillAudioService.initialize();
+      
+      // Démarrer la musique avec tempo selon difficulté
+      const tempo = difficulty === 'easy' ? 'slow' : 
+                    (difficulty === 'medium' || difficulty === 'hard') ? 'medium' : 'fast';
+      enhancedDrillAudioService.startMusic(tempo);
+    } else {
+      enhancedDrillAudioService.stopMusic();
+    }
+    
+    return () => {
+      enhancedDrillAudioService.stopMusic();
+    };
+  }, [isActive, musicEnabled, difficulty]);
+  
+  // Reset combo quand le jeu s'arrête
+  useEffect(() => {
+    if (!isActive) {
+      enhancedDrillAudioService.resetCombo();
+    }
+  }, [isActive]);
 
   // Animer les barres qui défilent
   useEffect(() => {
@@ -132,7 +164,7 @@ export function DDRGameplayArea({
                 
                 // Jouer le son de jugement
                 if (audioEnabled) {
-                  drillAudioService.playJudgmentSound(judgment);
+                  enhancedDrillAudioService.playJudgmentSound(judgment);
                 }
               }
             }

@@ -13,6 +13,7 @@ import { DDRStatsBar } from './DDRStatsBar';
 import { DDRGameplayArea } from './DDRGameplayArea';
 import { DDRInputsBar } from './DDRInputsBar';
 import { usePercentageDrill, ZONE_STATUS } from '../../hooks/useDrillEngine';
+import enhancedDrillAudioService from '../../services/enhancedDrillAudioService';
 import './PercentageDrill.css';
 
 export function PercentageDrill({ 
@@ -30,6 +31,7 @@ export function PercentageDrill({
   const [difficulty, setDifficulty] = useState('EASY'); // Difficulté pour les modes Random (vitesse, durée, etc.)
   const [drillSong, setDrillSong] = useState(null); // Drill song sélectionné ou { type: 'random', difficulty: 'easy' }
   const [audioEnabled, setAudioEnabled] = useState(true); // Sons activés
+  const [musicEnabled, setMusicEnabled] = useState(true); // Musique de fond
   const [blindMode, setBlindMode] = useState(false); // Mode blind (cacher barre verticale)
   
   // État de jeu
@@ -56,9 +58,19 @@ export function PercentageDrill({
 
   const handleStart = () => {
     setShowConfig(false);
-    reset();
-    setIsActive(true);
-    setIsPaused(false);
+    
+    // Jouer le countdown avant de démarrer
+    if (audioEnabled) {
+      enhancedDrillAudioService.playCountdown(() => {
+        reset();
+        setIsActive(true);
+        setIsPaused(false);
+      });
+    } else {
+      reset();
+      setIsActive(true);
+      setIsPaused(false);
+    }
   };
 
   const handlePause = () => {
@@ -68,6 +80,14 @@ export function PercentageDrill({
   const handleStop = () => {
     setIsActive(false);
     setIsPaused(false);
+    
+    // Jouer le son de fin
+    if (audioEnabled) {
+      const comboInfo = enhancedDrillAudioService.getComboInfo();
+      const success = accuracy > 70; // Considérer comme succès si >70% de précision
+      enhancedDrillAudioService.playCompletionSound(success);
+    }
+    
     reset();
     setShowConfig(true);
   };
@@ -105,6 +125,8 @@ export function PercentageDrill({
           onDifficultyChange={setDifficulty}
           audioEnabled={audioEnabled}
           onAudioEnabledChange={setAudioEnabled}
+          musicEnabled={musicEnabled}
+          onMusicEnabledChange={setMusicEnabled}
           blindMode={blindMode}
           onBlindModeChange={setBlindMode}
           onStart={handleStart}
@@ -149,6 +171,7 @@ export function PercentageDrill({
           duration={drillSong && drillSong.duration ? drillSong.duration : null}
           difficulty={drillSong && drillSong.type === 'random' ? drillSong.difficulty : (drillSong && drillSong.difficulty ? drillSong.difficulty : 'medium')}
           audioEnabled={audioEnabled}
+          musicEnabled={musicEnabled}
           blindMode={blindMode}
           onComplete={() => {
             // Le drill song est terminé, arrêter automatiquement

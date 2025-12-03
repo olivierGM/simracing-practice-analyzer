@@ -5,9 +5,21 @@
  */
 
 import { formatTime } from '../../hooks/useDrillEngine';
+import { useState, useEffect } from 'react';
+import enhancedDrillAudioService from '../../services/enhancedDrillAudioService';
 import './DDRStatsBar.css';
 
 export function DDRStatsBar({ totalTime, zoneStatus, accuracy, score }) {
+  const [comboInfo, setComboInfo] = useState({ current: 0, max: 0 });
+  
+  // Mettre à jour le combo toutes les 100ms
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setComboInfo(enhancedDrillAudioService.getComboInfo());
+    }, 100);
+    
+    return () => clearInterval(interval);
+  }, []);
   const getZoneEmoji = () => {
     if (zoneStatus === 'in_target') return '🟢';
     if (zoneStatus === 'close') return '🟡';
@@ -27,10 +39,14 @@ export function DDRStatsBar({ totalTime, zoneStatus, accuracy, score }) {
         <div className="ddr-stat-value">{formatTime(totalTime)}</div>
       </div>
       <div className="ddr-stat-item">
-        <div className="ddr-stat-label">Zone</div>
-        <div className="ddr-stat-value">
-          <span className="ddr-stat-zone-emoji">{getZoneEmoji()}</span>
-          <span className="ddr-stat-zone-text">{getZoneText()}</span>
+        <div className="ddr-stat-label">Combo</div>
+        <div className="ddr-stat-value ddr-stat-combo">
+          <span className={`ddr-combo-current ${comboInfo.current >= 5 ? 'ddr-combo-active' : ''}`}>
+            {comboInfo.current}x
+          </span>
+          {comboInfo.max > 0 && (
+            <span className="ddr-combo-max">(Max: {comboInfo.max})</span>
+          )}
         </div>
       </div>
       <div className="ddr-stat-item">

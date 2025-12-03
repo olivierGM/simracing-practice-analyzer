@@ -34,6 +34,8 @@ export function DDRConfig({
   onDifficultyChange,
   audioEnabled,
   onAudioEnabledChange,
+  musicEnabled,
+  onMusicEnabledChange,
   blindMode,
   onBlindModeChange,
   onStart,
@@ -92,7 +94,7 @@ export function DDRConfig({
         </div>
 
         <div className="ddr-config-section">
-          <label className="ddr-config-label">Options</label>
+          <label className="ddr-config-label">Options Audio</label>
           <div className="ddr-config-options-vertical">
             <label className="ddr-config-checkbox">
               <input
@@ -100,8 +102,26 @@ export function DDRConfig({
                 checked={audioEnabled}
                 onChange={(e) => onAudioEnabledChange(e.target.checked)}
               />
-              <span>🔊 Sons activés (annonces + jugements)</span>
+              <span>🔊 Effets sonores (annonces + jugements + combos)</span>
             </label>
+            <label className="ddr-config-checkbox">
+              <input
+                type="checkbox"
+                checked={musicEnabled}
+                onChange={(e) => onMusicEnabledChange(e.target.checked)}
+                disabled={!audioEnabled}
+              />
+              <span>🎵 Musique de fond</span>
+            </label>
+          </div>
+          <p className="ddr-config-hint">
+            Sons: Annonces vocales, beeps de jugement, encouragements, combos
+          </p>
+        </div>
+
+        <div className="ddr-config-section">
+          <label className="ddr-config-label">Options Visuelles</label>
+          <div className="ddr-config-options-vertical">
             <label className="ddr-config-checkbox">
               <input
                 type="checkbox"
