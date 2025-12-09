@@ -13,6 +13,7 @@ import { PilotePage } from './pages/PilotePage';
 import { AdminPage } from './pages/AdminPage';
 import { AngleMeasurementPage } from './pages/AngleMeasurementPage';
 import { PedalWheelDrillsPage } from './pages/PedalWheelDrillsPage';
+import { GamepadDebugPage } from './pages/GamepadDebugPage';
 import NotFound from './pages/NotFound';
 import { AnalyticsTracker } from './components/layout/AnalyticsTracker';
 import { useFirebaseData } from './hooks/useFirebaseData';
@@ -59,6 +60,7 @@ function AppContent() {
                   <Route path="/admin" element={<AdminPage />} />
                   <Route path="/angle-measurement" element={<AngleMeasurementPage />} />
                   <Route path="/pedal-wheel-drills" element={<PedalWheelDrillsPage />} />
+                  <Route path="/gamepad-debug" element={<GamepadDebugPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
         </main>

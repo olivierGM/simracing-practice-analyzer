@@ -395,15 +395,29 @@ export function DeviceMappingConfig({ onConfigChange }) {
     <div className="device-mapping-config">
       <div className="config-header">
         <h3>⚙️ Configuration du Mapping</h3>
-        <button className="reset-button" onClick={handleReset}>
-          🔄 Réinitialiser
-        </button>
+        <div className="config-header-buttons">
+          <a 
+            href="/gamepad-debug" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="debug-link-button"
+            title="Ouvre une page pour diagnostiquer les problèmes de détection"
+          >
+            🔍 Debug Gamepads
+          </a>
+          <button className="reset-button" onClick={handleReset}>
+            🔄 Réinitialiser
+          </button>
+        </div>
       </div>
 
       <div className="config-content">
         {gamepads.length === 0 && (
           <div className="config-message-inline">
             <p>⚠️ Aucun périphérique détecté. Connectez vos périphériques pour assigner les contrôles.</p>
+            <p style={{ fontSize: '0.9rem', marginTop: '0.5rem', color: '#888' }}>
+              💡 Si vos devices sont connectés mais n'apparaissent pas, utilisez le bouton <strong>"🔍 Debug Gamepads"</strong> ci-dessus pour diagnostiquer le problème.
+            </p>
           </div>
         )}
           {/* Liste des fonctions à assigner */}
