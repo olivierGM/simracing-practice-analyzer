@@ -62,8 +62,12 @@ export function DeviceMappingConfig({ onConfigChange }) {
       ASSIGNABLE_FUNCTIONS.forEach(func => {
         // Vérifier si la fonction est assignée dans la config
         let isAssigned = false;
-        for (const [deviceIndex, axisMappings] of Object.entries(currentConfig.axisMappings || {})) {
-          for (const [axisIndex, mapping] of Object.entries(axisMappings)) {
+        for (const [deviceId, deviceMapping] of Object.entries(currentConfig.axisMappings || {})) {
+          const axes = deviceMapping.axes || deviceMapping;  // Compatibilité v1/v2
+          
+          for (const [axisIndex, mapping] of Object.entries(axes)) {
+            if (axisIndex.startsWith('_')) continue;  // Skip metadata
+            
             if (mapping && mapping.type === func.type) {
               isAssigned = true;
               break;
@@ -125,7 +129,7 @@ export function DeviceMappingConfig({ onConfigChange }) {
               const currentConfig = configRef.current;
               // Pour les boutons, on utilise un index négatif pour les différencier des axes
               const newConfig = mapAxis(
-                deviceIndex,
+                gamepad,  // Gamepad complet (pas juste l'index)
                 -buttonIndex - 1, // Index négatif pour les boutons
                 assigningFunction,
                 false, // Pas d'inversion pour les boutons
@@ -251,7 +255,7 @@ export function DeviceMappingConfig({ onConfigChange }) {
           // Assigner l'axe (utiliser configRef pour éviter les dépendances)
           const currentConfig = configRef.current;
           const newConfig = mapAxis(
-            deviceIndex,
+            gamepad,  // Gamepad complet (pas juste l'index)
             changedAxisIndex,
             assigningFunction,
             shouldInvert,
@@ -324,8 +328,12 @@ export function DeviceMappingConfig({ onConfigChange }) {
     
     // Trouver le mapping actuel et inverser l'inversion
     const newConfig = { ...config };
-    for (const [deviceIndex, axisMappings] of Object.entries(newConfig.axisMappings)) {
-      for (const [axisIndex, mapping] of Object.entries(axisMappings)) {
+    for (const [deviceId, deviceMapping] of Object.entries(newConfig.axisMappings)) {
+      const axes = deviceMapping.axes || deviceMapping;  // Compatibilité v1/v2
+      
+      for (const [axisIndex, mapping] of Object.entries(axes)) {
+        if (axisIndex.startsWith('_')) continue;  // Skip metadata
+        
         if (mapping.type === functionType) {
           mapping.invert = !mapping.invert;
           setConfig(newConfig);
@@ -360,30 +368,33 @@ export function DeviceMappingConfig({ onConfigChange }) {
 
   // Obtenir l'assignation actuelle pour une fonction
   const getCurrentAssignment = (functionType) => {
-    for (const [deviceIndex, axisMappings] of Object.entries(config.axisMappings)) {
-      for (const [axisIndex, mapping] of Object.entries(axisMappings)) {
+    for (const [deviceId, deviceMapping] of Object.entries(config.axisMappings)) {
+      const axes = deviceMapping.axes || deviceMapping;  // Compatibilité v1/v2
+      
+      for (const [axisIndex, mapping] of Object.entries(axes)) {
+        if (axisIndex.startsWith('_')) continue;  // Skip metadata
+        
         if (mapping.type === functionType) {
-          const gamepad = gamepads.find(gp => gp.index === parseInt(deviceIndex));
-          if (gamepad) {
-            const info = getGamepadInfo(gamepad);
-            const axisIdx = parseInt(axisIndex);
-            // Si l'index est négatif, c'est un bouton
-            if (axisIdx < 0) {
-              const buttonIndex = -axisIdx - 1;
-              return {
-                device: info.id,
-                button: buttonIndex,
-                invert: mapping.invert,
-                isButton: true
-              };
-            } else {
-              return {
-                device: info.id,
-                axis: axisIdx,
-                invert: mapping.invert,
-                isButton: false
-              };
-            }
+          // Trouver le gamepad avec cet ID
+          const gamepad = gamepads.find(gp => gp && gp.id === deviceId);
+          
+          const axisIdx = parseInt(axisIndex);
+          // Si l'index est négatif, c'est un bouton
+          if (axisIdx < 0) {
+            const buttonIndex = -axisIdx - 1;
+            return {
+              device: deviceId,
+              button: buttonIndex,
+              invert: mapping.invert,
+              isButton: true
+            };
+          } else {
+            return {
+              device: deviceId,
+              axis: axisIdx,
+              invert: mapping.invert,
+              isButton: false
+            };
           }
         }
       }

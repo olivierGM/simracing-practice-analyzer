@@ -29,9 +29,45 @@ export const AXIS_TYPES = {
  * Configuration par défaut
  */
 const DEFAULT_CONFIG = {
-  deviceAssignments: {}, // { deviceIndex: DEVICE_TYPES }
-  axisMappings: {}       // { deviceIndex: { axisIndex: AXIS_TYPES, invert: boolean } }
+  version: 2,  // Version 2 = ID-based mapping
+  deviceAssignments: {}, // { deviceIndex: DEVICE_TYPES } - Deprecated
+  axisMappings: {}       // { deviceId: { axes: { axisIndex: { type, invert } }, _lastKnownIndex } }
 };
+
+/**
+ * Migre l'ancienne config (index-based) vers la nouvelle (ID-based)
+ * @param {Object} oldConfig - Ancienne configuration
+ * @param {Array<Gamepad>} gamepads - Gamepads actuellement connectés
+ * @returns {Object} Nouvelle configuration migrée
+ */
+function migrateConfigToV2(oldConfig, gamepads) {
+  console.log('🔄 Migration de la config vers v2 (ID-based)...');
+  
+  const newConfig = {
+    version: 2,
+    deviceAssignments: {},
+    axisMappings: {}
+  };
+  
+  // Migrer axisMappings : index → deviceId
+  for (const [indexStr, axisMappings] of Object.entries(oldConfig.axisMappings || {})) {
+    const index = parseInt(indexStr);
+    const gamepad = gamepads.find(gp => gp && gp.index === index);
+    
+    if (gamepad) {
+      const deviceId = gamepad.id;
+      newConfig.axisMappings[deviceId] = {
+        axes: axisMappings,
+        _lastKnownIndex: index
+      };
+      console.log(`  ✅ Migré device index ${index} → "${deviceId}"`);
+    } else {
+      console.warn(`  ⚠️ Device à l'index ${index} non trouvé, ignoré`);
+    }
+  }
+  
+  return newConfig;
+}
 
 /**
  * Charge la configuration depuis localStorage
@@ -42,11 +78,24 @@ export function loadMappingConfig() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      // Fusionner avec la config par défaut
+      
+      // Vérifier si migration nécessaire (version 1 ou pas de version)
+      if (!parsed.version || parsed.version === 1) {
+        // Migration nécessaire - on la fera au premier appel de getMappedValue
+        // Pour l'instant, retourner la config telle quelle
+        return {
+          ...DEFAULT_CONFIG,
+          ...parsed,
+          version: parsed.version || 1,
+          deviceAssignments: parsed.deviceAssignments || {},
+          axisMappings: parsed.axisMappings || {}
+        };
+      }
+      
+      // Config v2, fusionner avec défaut
       return {
         ...DEFAULT_CONFIG,
         ...parsed,
-        deviceAssignments: parsed.deviceAssignments || {},
         axisMappings: parsed.axisMappings || {}
       };
     }
@@ -98,35 +147,51 @@ export function assignDevice(deviceIndex, deviceType, currentConfig) {
 }
 
 /**
- * Mappe un axe d'un device à un type d'axe
- * @param {number} deviceIndex - Index du device
+ * Mappe un axe d'un device à un type d'axe (Version 2: ID-based)
+ * @param {Gamepad} gamepad - Le gamepad complet
  * @param {number} axisIndex - Index de l'axe
  * @param {string} axisType - Type d'axe (AXIS_TYPES)
  * @param {boolean} invert - Si true, inverse la valeur
  * @param {Object} currentConfig - Configuration actuelle
  * @returns {Object} Nouvelle configuration
  */
-export function mapAxis(deviceIndex, axisIndex, axisType, invert = false, currentConfig) {
+export function mapAxis(gamepad, axisIndex, axisType, invert = false, currentConfig) {
   const newConfig = { ...currentConfig };
+  newConfig.version = 2;  // S'assurer qu'on est en v2
   
-  if (!newConfig.axisMappings[deviceIndex]) {
-    newConfig.axisMappings[deviceIndex] = {};
+  const deviceId = gamepad.id;
+  const deviceIndex = gamepad.index;
+  
+  // Initialiser la structure pour ce device si nécessaire
+  if (!newConfig.axisMappings[deviceId]) {
+    newConfig.axisMappings[deviceId] = {
+      axes: {},
+      _lastKnownIndex: deviceIndex
+    };
   }
   
+  // Mettre à jour le lastKnownIndex
+  newConfig.axisMappings[deviceId]._lastKnownIndex = deviceIndex;
+  
   // Retirer le mapping précédent si cet axe était déjà mappé ailleurs
-  Object.keys(newConfig.axisMappings).forEach(devIdx => {
-    Object.keys(newConfig.axisMappings[devIdx]).forEach(axIdx => {
-      if (newConfig.axisMappings[devIdx][axIdx]?.type === axisType && 
-          (parseInt(devIdx) !== deviceIndex || parseInt(axIdx) !== axisIndex)) {
-        delete newConfig.axisMappings[devIdx][axIdx];
+  Object.keys(newConfig.axisMappings).forEach(devId => {
+    const deviceMapping = newConfig.axisMappings[devId];
+    const axes = deviceMapping.axes || deviceMapping;  // Compatibilité v1
+    
+    Object.keys(axes).forEach(axIdx => {
+      if (axIdx.startsWith('_')) return;  // Skip metadata
+      
+      if (axes[axIdx]?.type === axisType && 
+          (devId !== deviceId || parseInt(axIdx) !== axisIndex)) {
+        delete axes[axIdx];
       }
     });
   });
   
   if (axisType === null || axisType === 'none') {
-    delete newConfig.axisMappings[deviceIndex][axisIndex];
+    delete newConfig.axisMappings[deviceId].axes[axisIndex];
   } else {
-    newConfig.axisMappings[deviceIndex][axisIndex] = {
+    newConfig.axisMappings[deviceId].axes[axisIndex] = {
       type: axisType,
       invert: invert
     };
@@ -152,26 +217,36 @@ export function getDeviceForType(deviceType, config) {
 }
 
 /**
- * Obtient le mapping d'un axe
- * @param {number} deviceIndex - Index du device
+ * Obtient le mapping d'un axe (Compatible v1 et v2)
+ * @param {string|number} deviceIdOrIndex - ID ou index du device
  * @param {number} axisIndex - Index de l'axe
  * @param {Object} config - Configuration
  * @returns {Object|null} Mapping ou null
  */
-export function getAxisMapping(deviceIndex, axisIndex, config) {
-  return config.axisMappings[deviceIndex]?.[axisIndex] || null;
+export function getAxisMapping(deviceIdOrIndex, axisIndex, config) {
+  // V2: deviceId est une string
+  if (typeof deviceIdOrIndex === 'string') {
+    const deviceMapping = config.axisMappings[deviceIdOrIndex];
+    if (!deviceMapping) return null;
+    
+    const axes = deviceMapping.axes || {};
+    return axes[axisIndex] || null;
+  }
+  
+  // V1: deviceIndex est un number (compatibilité)
+  return config.axisMappings[deviceIdOrIndex]?.[axisIndex] || null;
 }
 
 /**
- * Applique le mapping à une valeur d'axe
- * @param {number} deviceIndex - Index du device
+ * Applique le mapping à une valeur d'axe (Compatible v1 et v2)
+ * @param {string|number} deviceIdOrIndex - ID ou index du device
  * @param {number} axisIndex - Index de l'axe
  * @param {number} rawValue - Valeur brute de l'axe
  * @param {Object} config - Configuration
  * @returns {Object|null} { type, value } ou null
  */
-export function applyAxisMapping(deviceIndex, axisIndex, rawValue, config) {
-  const mapping = getAxisMapping(deviceIndex, axisIndex, config);
+export function applyAxisMapping(deviceIdOrIndex, axisIndex, rawValue, config) {
+  const mapping = getAxisMapping(deviceIdOrIndex, axisIndex, config);
   if (!mapping) return null;
   
   let value = rawValue;
@@ -201,42 +276,71 @@ export function applyAxisMapping(deviceIndex, axisIndex, rawValue, config) {
 }
 
 /**
- * Obtient toutes les valeurs mappées pour un type d'axe
+ * Obtient toutes les valeurs mappées pour un type d'axe (Version 2: ID-based)
  * @param {string} axisType - Type d'axe (AXIS_TYPES)
  * @param {Array<Gamepad>} gamepads - Liste des gamepads
  * @param {Object} config - Configuration
  * @returns {number} Valeur mappée (0 si non trouvé)
  */
 export function getMappedValue(axisType, gamepads, config) {
-  for (const gamepad of gamepads) {
-    if (!gamepad) continue;
+  // Migration automatique si nécessaire
+  if (!config.version || config.version === 1) {
+    const migratedConfig = migrateConfigToV2(config, gamepads);
+    saveMappingConfig(migratedConfig);
+    config = migratedConfig;
+    console.log('✅ Config migrée automatiquement vers v2');
+  }
+  
+  // Parcourir les devices par leur ID
+  for (const [deviceId, deviceMapping] of Object.entries(config.axisMappings)) {
+    // Trouver le gamepad avec cet ID
+    const gamepad = gamepads.find(gp => gp && gp.id === deviceId);
     
-    const deviceIndex = gamepad.index;
-    
-    // Vérifier les axes
-    if (gamepad.axes) {
-      const axes = gamepad.axes;
-      for (let i = 0; i < axes.length; i++) {
-        const mapping = applyAxisMapping(deviceIndex, i, axes[i], config);
-        if (mapping && mapping.type === axisType) {
-          return mapping.value;
-        }
-      }
+    if (!gamepad) {
+      // Device pas connecté ou index a changé
+      continue;
     }
     
-    // Vérifier les boutons (pour SHIFT_UP/DOWN)
-    if (gamepad.buttons && (axisType === AXIS_TYPES.SHIFT_UP || axisType === AXIS_TYPES.SHIFT_DOWN)) {
-      const buttons = gamepad.buttons;
-      const axisMappings = config.axisMappings[deviceIndex] || {};
+    const axes = deviceMapping.axes || {};
+    
+    // Chercher dans les axes
+    for (const [axisIndexStr, mapping] of Object.entries(axes)) {
+      if (axisIndexStr.startsWith('_')) continue;  // Skip metadata
       
-      // Chercher un mapping avec index négatif (bouton)
-      for (const [axisIndexStr, mapping] of Object.entries(axisMappings)) {
-        const axisIndex = parseInt(axisIndexStr);
-        if (axisIndex < 0 && mapping.type === axisType) {
-          // Index négatif = bouton, convertir en index de bouton
+      const axisIndex = parseInt(axisIndexStr);
+      
+      // Gérer les boutons (index négatif)
+      if (axisIndex < 0) {
+        if (mapping.type === axisType && gamepad.buttons) {
           const buttonIndex = -axisIndex - 1;
-          if (buttonIndex < buttons.length) {
-            return buttons[buttonIndex].pressed ? 1 : 0;
+          if (buttonIndex < gamepad.buttons.length) {
+            return gamepad.buttons[buttonIndex].pressed ? 1 : 0;
+          }
+        }
+      } else {
+        // Gérer les axes
+        if (mapping.type === axisType && gamepad.axes) {
+          const rawValue = gamepad.axes[axisIndex];
+          if (rawValue !== undefined) {
+            let value = rawValue;
+            
+            // Normaliser selon le type
+            if (mapping.type === AXIS_TYPES.WHEEL) {
+              value = value;  // Garder [-1, 1]
+            } else {
+              value = (value + 1) / 2;  // Normaliser vers [0, 1]
+            }
+            
+            // Inverser si nécessaire
+            if (mapping.invert) {
+              if (mapping.type === AXIS_TYPES.WHEEL) {
+                value = -value;
+              } else {
+                value = 1 - value;
+              }
+            }
+            
+            return value;
           }
         }
       }
