@@ -127,13 +127,15 @@ export function DeviceMappingConfig({ onConfigChange }) {
             // Si un bouton vient d'être pressé, l'assigner
             if (isPressed && !wasPressed) {
               const currentConfig = configRef.current;
+              const allGamepads = getConnectedGamepads();
               // Pour les boutons, on utilise un index négatif pour les différencier des axes
               const newConfig = mapAxis(
                 gamepad,  // Gamepad complet (pas juste l'index)
                 -buttonIndex - 1, // Index négatif pour les boutons
                 assigningFunction,
                 false, // Pas d'inversion pour les boutons
-                currentConfig
+                currentConfig,
+                allGamepads  // Pour détecter les collisions
               );
               setConfig(newConfig);
               setAssigningFunction(null);
@@ -254,12 +256,14 @@ export function DeviceMappingConfig({ onConfigChange }) {
 
           // Assigner l'axe (utiliser configRef pour éviter les dépendances)
           const currentConfig = configRef.current;
+          const allGamepads = getConnectedGamepads();
           const newConfig = mapAxis(
             gamepad,  // Gamepad complet (pas juste l'index)
             changedAxisIndex,
             assigningFunction,
             shouldInvert,
-            currentConfig
+            currentConfig,
+            allGamepads  // Pour détecter les collisions
           );
           setConfig(newConfig);
           setAssigningFunction(null);
@@ -368,29 +372,26 @@ export function DeviceMappingConfig({ onConfigChange }) {
 
   // Obtenir l'assignation actuelle pour une fonction
   const getCurrentAssignment = (functionType) => {
-    for (const [deviceId, deviceMapping] of Object.entries(config.axisMappings)) {
+    for (const [deviceKey, deviceMapping] of Object.entries(config.axisMappings)) {
       const axes = deviceMapping.axes || deviceMapping;  // Compatibilité v1/v2
       
       for (const [axisIndex, mapping] of Object.entries(axes)) {
         if (axisIndex.startsWith('_')) continue;  // Skip metadata
         
         if (mapping.type === functionType) {
-          // Trouver le gamepad avec cet ID
-          const gamepad = gamepads.find(gp => gp && gp.id === deviceId);
-          
           const axisIdx = parseInt(axisIndex);
           // Si l'index est négatif, c'est un bouton
           if (axisIdx < 0) {
             const buttonIndex = -axisIdx - 1;
             return {
-              device: deviceId,
+              device: deviceKey,  // Utilise deviceKey (peut contenir #N)
               button: buttonIndex,
               invert: mapping.invert,
               isButton: true
             };
           } else {
             return {
-              device: deviceId,
+              device: deviceKey,  // Utilise deviceKey (peut contenir #N)
               axis: axisIdx,
               invert: mapping.invert,
               isButton: false

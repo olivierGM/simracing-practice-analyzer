@@ -147,53 +147,90 @@ export function assignDevice(deviceIndex, deviceType, currentConfig) {
 }
 
 /**
- * Mappe un axe d'un device à un type d'axe (Version 2: ID-based)
+ * Détecte les collisions d'ID et génère une clé unique avec slot si nécessaire
+ * @param {Gamepad} gamepad - Le gamepad à assigner
+ * @param {Array<Gamepad>} allGamepads - Tous les gamepads connectés
+ * @param {Object} config - Configuration actuelle
+ * @returns {string} Clé unique (deviceId ou deviceId #N)
+ */
+function getUniqueDeviceKey(gamepad, allGamepads, config) {
+  const baseId = gamepad.id;
+  
+  // Compter combien de devices ont le même ID
+  const sameIdDevices = allGamepads.filter(gp => gp && gp.id === baseId);
+  
+  if (sameIdDevices.length === 1) {
+    // Pas de collision, utiliser l'ID tel quel
+    return baseId;
+  }
+  
+  // Collision détectée ! Trouver le slot number de ce device
+  const slotNumber = sameIdDevices.findIndex(gp => gp.index === gamepad.index) + 1;
+  return `${baseId} #${slotNumber}`;
+}
+
+/**
+ * Mappe un axe d'un device à un type d'axe (Version 2: ID-based avec slots)
  * @param {Gamepad} gamepad - Le gamepad complet
  * @param {number} axisIndex - Index de l'axe
  * @param {string} axisType - Type d'axe (AXIS_TYPES)
  * @param {boolean} invert - Si true, inverse la valeur
  * @param {Object} currentConfig - Configuration actuelle
+ * @param {Array<Gamepad>} allGamepads - Tous les gamepads (pour détecter collisions)
  * @returns {Object} Nouvelle configuration
  */
-export function mapAxis(gamepad, axisIndex, axisType, invert = false, currentConfig) {
+export function mapAxis(gamepad, axisIndex, axisType, invert = false, currentConfig, allGamepads = []) {
   const newConfig = { ...currentConfig };
   newConfig.version = 2;  // S'assurer qu'on est en v2
   
-  const deviceId = gamepad.id;
   const deviceIndex = gamepad.index;
   
+  // Générer la clé unique (avec slot si collision)
+  const deviceKey = getUniqueDeviceKey(gamepad, allGamepads, newConfig);
+  
   // Initialiser la structure pour ce device si nécessaire
-  if (!newConfig.axisMappings[deviceId]) {
-    newConfig.axisMappings[deviceId] = {
+  if (!newConfig.axisMappings[deviceKey]) {
+    newConfig.axisMappings[deviceKey] = {
       axes: {},
-      _lastKnownIndex: deviceIndex
+      _lastKnownIndex: deviceIndex,
+      _baseId: gamepad.id  // Sauvegarder l'ID de base pour recherche
     };
   }
   
   // Mettre à jour le lastKnownIndex
-  newConfig.axisMappings[deviceId]._lastKnownIndex = deviceIndex;
+  newConfig.axisMappings[deviceKey]._lastKnownIndex = deviceIndex;
   
   // Retirer le mapping précédent si cet axe était déjà mappé ailleurs
-  Object.keys(newConfig.axisMappings).forEach(devId => {
-    const deviceMapping = newConfig.axisMappings[devId];
+  Object.keys(newConfig.axisMappings).forEach(devKey => {
+    const deviceMapping = newConfig.axisMappings[devKey];
     const axes = deviceMapping.axes || deviceMapping;  // Compatibilité v1
     
     Object.keys(axes).forEach(axIdx => {
       if (axIdx.startsWith('_')) return;  // Skip metadata
       
       if (axes[axIdx]?.type === axisType && 
-          (devId !== deviceId || parseInt(axIdx) !== axisIndex)) {
+          (devKey !== deviceKey || parseInt(axIdx) !== axisIndex)) {
         delete axes[axIdx];
       }
     });
   });
   
   if (axisType === null || axisType === 'none') {
-    delete newConfig.axisMappings[deviceId].axes[axisIndex];
+    delete newConfig.axisMappings[deviceKey].axes[axisIndex];
   } else {
-    newConfig.axisMappings[deviceId].axes[axisIndex] = {
+    newConfig.axisMappings[deviceKey].axes[axisIndex] = {
       type: axisType,
       invert: invert
+    };
+    
+    // Créer un fingerprint des axes pour aider à différencier les devices identiques
+    const usedAxes = Object.keys(newConfig.axisMappings[deviceKey].axes)
+      .filter(key => !key.startsWith('_'))
+      .map(key => parseInt(key));
+    newConfig.axisMappings[deviceKey]._fingerprint = {
+      axisCount: gamepad.axes?.length || 0,
+      buttonCount: gamepad.buttons?.length || 0,
+      usedAxes: usedAxes
     };
   }
   
@@ -276,7 +313,53 @@ export function applyAxisMapping(deviceIdOrIndex, axisIndex, rawValue, config) {
 }
 
 /**
- * Obtient toutes les valeurs mappées pour un type d'axe (Version 2: ID-based)
+ * Trouve un gamepad par sa clé (avec support des slots)
+ * @param {string} deviceKey - Clé du device (ID ou ID #N)
+ * @param {Array<Gamepad>} gamepads - Liste des gamepads
+ * @param {Object} deviceMapping - Mapping du device (avec fingerprint)
+ * @returns {Gamepad|null} Le gamepad trouvé ou null
+ */
+function findGamepadByKey(deviceKey, gamepads, deviceMapping) {
+  // Extraire l'ID de base et le slot number (si présent)
+  const match = deviceKey.match(/^(.+?)(?: #(\d+))?$/);
+  const baseId = match[1];
+  const slotNumber = match[2] ? parseInt(match[2]) : null;
+  
+  if (slotNumber === null) {
+    // Pas de slot, chercher par ID simple
+    return gamepads.find(gp => gp && gp.id === baseId) || null;
+  }
+  
+  // Avec slot, trouver le Nième device avec cet ID
+  const sameIdDevices = gamepads.filter(gp => gp && gp.id === baseId);
+  
+  if (sameIdDevices.length < slotNumber) {
+    // Le device à ce slot n'existe plus
+    return null;
+  }
+  
+  // Utiliser le fingerprint pour matcher le bon device
+  if (deviceMapping._fingerprint) {
+    const fingerprint = deviceMapping._fingerprint;
+    
+    // Chercher un device qui match le fingerprint
+    for (const device of sameIdDevices) {
+      const matchesFingerprint = 
+        device.axes?.length === fingerprint.axisCount &&
+        device.buttons?.length === fingerprint.buttonCount;
+      
+      if (matchesFingerprint) {
+        return device;
+      }
+    }
+  }
+  
+  // Fallback : Prendre le Nième device (slot number)
+  return sameIdDevices[slotNumber - 1] || null;
+}
+
+/**
+ * Obtient toutes les valeurs mappées pour un type d'axe (Version 2: ID-based avec slots)
  * @param {string} axisType - Type d'axe (AXIS_TYPES)
  * @param {Array<Gamepad>} gamepads - Liste des gamepads
  * @param {Object} config - Configuration
@@ -291,13 +374,13 @@ export function getMappedValue(axisType, gamepads, config) {
     console.log('✅ Config migrée automatiquement vers v2');
   }
   
-  // Parcourir les devices par leur ID
-  for (const [deviceId, deviceMapping] of Object.entries(config.axisMappings)) {
-    // Trouver le gamepad avec cet ID
-    const gamepad = gamepads.find(gp => gp && gp.id === deviceId);
+  // Parcourir les devices par leur clé (avec slots)
+  for (const [deviceKey, deviceMapping] of Object.entries(config.axisMappings)) {
+    // Trouver le gamepad avec cette clé (gère les slots automatiquement)
+    const gamepad = findGamepadByKey(deviceKey, gamepads, deviceMapping);
     
     if (!gamepad) {
-      // Device pas connecté ou index a changé
+      // Device pas connecté
       continue;
     }
     
