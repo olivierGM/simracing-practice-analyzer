@@ -11,33 +11,61 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { DURATIONS } from '../utils/constants';
+import { extractAvailableSeasons, addSeasonToSessions, filterSessionsBySeason } from '../services/seasonService';
 
 export function useFilters(drivers = [], sessions = []) {
   const [periodFilter, setPeriodFilter] = useState('all');
   const [trackFilter, setTrackFilter] = useState('');
   const [groupByClass, setGroupByClass] = useState(false);
+  const [seasonFilter, setSeasonFilter] = useState(''); // Nouvelle state pour la saison
 
-  // Extraction des pistes uniques disponibles (DEPUIS LES SESSIONS, pas les drivers!)
+  // Ajouter le champ season à toutes les sessions
+  const sessionsWithSeasons = useMemo(() => {
+    return addSeasonToSessions(sessions);
+  }, [sessions]);
+
+  // Extraire les saisons disponibles
+  const availableSeasons = useMemo(() => {
+    return extractAvailableSeasons(sessions);
+  }, [sessions]);
+
+  // Sélectionner automatiquement la saison la plus élevée (la plus récente) UNE SEULE FOIS
+  useEffect(() => {
+    if (availableSeasons.length > 0 && seasonFilter === '') {
+      const mostRecentSeason = availableSeasons[0]; // Déjà trié par ordre décroissant
+      setSeasonFilter(mostRecentSeason.toString());
+    }
+  }, [availableSeasons]); // Ne pas inclure seasonFilter dans les dépendances
+
+  // Filtrer les sessions par saison
+  const filteredSessionsBySeason = useMemo(() => {
+    if (seasonFilter === 'all' || !seasonFilter) {
+      return sessionsWithSeasons;
+    }
+    return filterSessionsBySeason(sessionsWithSeasons, parseInt(seasonFilter));
+  }, [sessionsWithSeasons, seasonFilter]);
+
+  // Extraction des pistes uniques disponibles (DEPUIS LES SESSIONS FILTRÉES par saison!)
   const availableTracks = useMemo(() => {
     const tracks = new Set();
     
-    sessions.forEach(session => {
+    filteredSessionsBySeason.forEach(session => {
       if (session.trackName) {
         tracks.add(session.trackName);
       }
     });
     
     return Array.from(tracks).sort();
-  }, [sessions]);
+  }, [filteredSessionsBySeason]);
   
-  // Trouver la piste avec la session la plus récente (COPIE de getMostRecentTrack() ligne 1506)
+  // Trouver la piste avec la session la plus récente (depuis les sessions filtrées par saison)
   const mostRecentTrack = useMemo(() => {
-    if (!sessions || sessions.length === 0) return null;
+    if (!filteredSessionsBySeason || filteredSessionsBySeason.length === 0) return null;
     
     let mostRecentTrack = null;
     let mostRecentDate = new Date(0); // Date très ancienne
     
-    sessions.forEach(session => {
+    filteredSessionsBySeason.forEach(session => {
       if (session.Date && session.trackName) {
         const sessionDate = new Date(session.Date);
         if (sessionDate > mostRecentDate) {
@@ -48,20 +76,22 @@ export function useFilters(drivers = [], sessions = []) {
     });
     
     return mostRecentTrack;
-  }, [sessions]);
+  }, [filteredSessionsBySeason]);
   
-  // Initialiser trackFilter avec la piste la plus récente (COPIE de updateSessionSelect() ligne 1570)
+  // Initialiser trackFilter avec la piste la plus récente
+  // IMPORTANT: Cet effet ne doit PAS se déclencher à chaque changement de saison
+  // sinon ça cause un re-render qui réinitialise la saison
   useEffect(() => {
     if (availableTracks.length > 0 && !trackFilter) {
-      // Sélectionner automatiquement la piste avec la session la plus récente
+      // Sélectionner automatiquement seulement si aucun track n'est sélectionné
       const defaultTrack = mostRecentTrack && availableTracks.includes(mostRecentTrack)
         ? mostRecentTrack
-        : availableTracks[0]; // Fallback sur la première si pas trouvée
+        : availableTracks[0];
       
       console.log(`🏁 Piste sélectionnée automatiquement: ${defaultTrack}`);
       setTrackFilter(defaultTrack);
     }
-  }, [availableTracks, trackFilter, mostRecentTrack]);
+  }, [availableTracks, mostRecentTrack, trackFilter]); // Ajouter trackFilter pour éviter de réinitialiser
 
   // PROBLÈME: Les pilotes sont déjà regroupés toutes pistes confondues
   // Il faut retraiter les sessions pour la piste sélectionnée uniquement
@@ -111,15 +141,19 @@ export function useFilters(drivers = [], sessions = []) {
     periodFilter,
     trackFilter,
     groupByClass,
+    seasonFilter,
     
     // Setters
     setPeriodFilter,
     setTrackFilter,
     setGroupByClass,
+    setSeasonFilter,
     
     // Données calculées
     availableTracks,
+    availableSeasons,
     filteredDrivers,
+    filteredSessionsBySeason, // Sessions filtrées par saison
     
     // Actions
     resetFilters

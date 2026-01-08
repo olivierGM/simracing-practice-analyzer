@@ -7,12 +7,16 @@
  * - Toggle groupement par classe
  */
 
+import { SeasonFilter } from './SeasonFilter';
 import { PeriodFilter } from './PeriodFilter';
 import { TrackFilter } from './TrackFilter';
 import { GroupByClassToggle } from './GroupByClassToggle';
 import './FiltersBar.css';
 
 export function FiltersBar({
+  seasonFilter,
+  onSeasonChange,
+  availableSeasons,
   periodFilter,
   onPeriodChange,
   trackFilter,
@@ -24,6 +28,11 @@ export function FiltersBar({
   return (
     <div className="filters-bar">
       <div className="filters-container">
+        <SeasonFilter 
+          value={seasonFilter} 
+          onChange={onSeasonChange}
+          availableSeasons={availableSeasons}
+        />
         <PeriodFilter value={periodFilter} onChange={onPeriodChange} />
         <TrackFilter 
           value={trackFilter} 

@@ -23,6 +23,9 @@ export function HomePage({ drivers, sessions = [] }) {
 
   // Hooks pour filtres et tri
   const {
+    seasonFilter,
+    setSeasonFilter,
+    availableSeasons,
     periodFilter,
     setPeriodFilter,
     trackFilter,
@@ -30,7 +33,8 @@ export function HomePage({ drivers, sessions = [] }) {
     groupByClass,
     setGroupByClass,
     availableTracks,
-    filteredDrivers
+    filteredDrivers,
+    filteredSessionsBySeason // Sessions déjà filtrées par saison
   } = useFilters(drivers, sessions);
   
   // Mettre à jour le contexte quand trackFilter change
@@ -53,8 +57,9 @@ export function HomePage({ drivers, sessions = [] }) {
   }, [groupByClass]);
   
   // COPIE DE LA PROD ligne 1164-1182: Filtrer les sessions par période AVANT retraitement
+  // Note: filteredSessionsBySeason contient déjà les sessions filtrées par saison
   const filteredSessions = useMemo(() => {
-    let result = [...sessions];
+    let result = [...filteredSessionsBySeason]; // Utiliser les sessions déjà filtrées par saison
     
     // Filtrer par piste
     if (trackFilter) {
@@ -80,7 +85,7 @@ export function HomePage({ drivers, sessions = [] }) {
     }
     
     return result;
-  }, [sessions, trackFilter, periodFilter]);
+  }, [filteredSessionsBySeason, trackFilter, periodFilter]);
   
   // Retraiter les sessions FILTRÉES (COMME LA PROD ligne 1185-1186)
   const processedDrivers = useProcessedData(filteredSessions, trackFilter);
@@ -122,12 +127,17 @@ export function HomePage({ drivers, sessions = [] }) {
           .replace(/^-+|-+$/g, '') // Enlever - au début/fin
       : 'circuit';
     
-    navigate(`/circuit/${circuitSlug}/pilote/${driver.id}`);
+    // Ajouter le paramètre season dans l'URL si une saison est sélectionnée
+    const seasonParam = seasonFilter && seasonFilter !== 'all' ? `?season=${seasonFilter}` : '';
+    navigate(`/circuit/${circuitSlug}/pilote/${driver.id}${seasonParam}`);
   };
 
   return (
     <div className="container">
       <FiltersBar
+        seasonFilter={seasonFilter}
+        onSeasonChange={setSeasonFilter}
+        availableSeasons={availableSeasons}
         periodFilter={periodFilter}
         onPeriodChange={setPeriodFilter}
         trackFilter={trackFilter}

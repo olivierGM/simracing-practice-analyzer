@@ -4,7 +4,7 @@
  * Fiche détaillée d'un pilote (route séparée)
  */
 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useMemo } from 'react';
 import { PilotStats } from '../components/pilot/PilotStats';
 import { SegmentComparator } from '../components/pilot/SegmentComparator';
@@ -12,11 +12,16 @@ import { ProgressionChart } from '../components/pilot/ProgressionChart';
 import { LapsTable } from '../components/pilot/LapsTable';
 import { useProcessedData } from '../hooks/useProcessedData';
 import { getCategoryName, getCategoryClass } from '../services/calculations';
+import { addSeasonToSessions, filterSessionsBySeason } from '../services/seasonService';
 import './PilotePage.css';
 
 export function PilotePage({ drivers, sessions = [] }) {
   const { circuitId, pilotId } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  
+  // Récupérer le paramètre season de l'URL
+  const seasonFromUrl = searchParams.get('season');
 
   // Décoder le nom du circuit depuis l'URL pour déterminer la piste
   // CRITIQUE: Utiliser circuitId de l'URL, pas le track global du pilote
@@ -31,12 +36,22 @@ export function PilotePage({ drivers, sessions = [] }) {
       .map(word => word.charAt(0).toLowerCase() + word.slice(1))
       .join(' ');
     
-    console.log('🔍 PilotePage DEBUG - circuitId:', circuitId, '-> track:', track);
     return track;
   }, [circuitId]);
 
-  // Reprocesser les données pour la piste spécifique du pilote
-  const driversForTrack = useProcessedData(sessions, trackName);
+  // Filtrer les sessions par saison si un paramètre season est présent dans l'URL
+  const filteredSessions = useMemo(() => {
+    if (!seasonFromUrl || seasonFromUrl === 'all') {
+      return sessions;
+    }
+    
+    // Ajouter le champ season aux sessions et filtrer
+    const sessionsWithSeasons = addSeasonToSessions(sessions);
+    return filterSessionsBySeason(sessionsWithSeasons, parseInt(seasonFromUrl));
+  }, [sessions, seasonFromUrl]);
+
+  // Reprocesser les données pour la piste spécifique du pilote (avec sessions filtrées par saison)
+  const driversForTrack = useProcessedData(filteredSessions, trackName);
 
   // Trouver le pilote dans les données retraitées (données correctes pour cette piste)
   const pilot = useMemo(() => {
