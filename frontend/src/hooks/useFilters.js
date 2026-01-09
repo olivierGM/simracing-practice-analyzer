@@ -31,11 +31,11 @@ export function useFilters(drivers = [], sessions = []) {
 
   // Sélectionner automatiquement la saison la plus élevée (la plus récente) UNE SEULE FOIS
   useEffect(() => {
-    if (availableSeasons.length > 0 && seasonFilter === '') {
+    if (availableSeasons.length > 0 && !seasonFilter) {
       const mostRecentSeason = availableSeasons[0]; // Déjà trié par ordre décroissant
       setSeasonFilter(mostRecentSeason.toString());
     }
-  }, [availableSeasons]); // Ne pas inclure seasonFilter dans les dépendances
+  }, [availableSeasons, seasonFilter]); // IMPORTANT: Inclure seasonFilter pour détecter quand il est vide
 
   // Filtrer les sessions par saison
   const filteredSessionsBySeason = useMemo(() => {

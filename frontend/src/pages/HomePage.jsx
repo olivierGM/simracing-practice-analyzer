@@ -129,6 +129,7 @@ export function HomePage({ drivers, sessions = [] }) {
     
     // Ajouter le paramètre season dans l'URL si une saison est sélectionnée
     const seasonParam = seasonFilter && seasonFilter !== 'all' ? `?season=${seasonFilter}` : '';
+    console.log(`🔗 Navigation: seasonFilter=${seasonFilter}, seasonParam=${seasonParam}`);
     navigate(`/circuit/${circuitSlug}/pilote/${driver.id}${seasonParam}`);
   };
 
