@@ -7,6 +7,7 @@
 
 import { formatTime } from '../../utils/formatters';
 import { getCategoryName, getCategoryClass } from '../../services/calculations';
+import { getManufacturerIcon, getManufacturerName } from '../../services/carManufacturerService';
 import './DriverRow.css';
 
 export function DriverRow({ driver, position, onClick, hasWetTimes = false }) {
@@ -22,6 +23,14 @@ export function DriverRow({ driver, position, onClick, hasWetTimes = false }) {
   const cells = [
     { key: 'position', content: position },
     { key: 'name', content: driver.name },
+    { 
+      key: 'manufacturer', 
+      content: (
+        <span className="manufacturer-icon" title={driver.carModel ? getManufacturerName(driver.carModel) : 'Marque inconnue'}>
+          {getManufacturerIcon(driver.carModel)}
+        </span>
+      )
+    },
     { 
       key: 'category', 
       content: (

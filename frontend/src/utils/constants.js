@@ -17,6 +17,7 @@ export const PERIOD_FILTERS = [
 export const TABLE_COLUMNS = [
   { key: 'position', label: 'Pos', sortable: false },
   { key: 'name', label: 'Pilote', sortable: true, dataType: 'text' },
+  { key: 'manufacturer', label: '', sortable: false, iconOnly: true }, // Colonne icône marque sans label
   { key: 'category', label: 'Classe', sortable: true, dataType: 'text' },
   { key: 'totalLaps', label: 'Tours', sortable: true, dataType: 'number' },
   { key: 'validLaps', label: 'Tours Valides', sortable: true, dataType: 'number' },

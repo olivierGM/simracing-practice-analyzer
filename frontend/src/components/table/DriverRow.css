@@ -19,6 +19,13 @@
   color: var(--text-primary);
 }
 
+/* Centrer l'icône de marque dans la cellule (3e colonne après position et name) */
+.driver-row td:nth-child(3) {
+  text-align: center;
+  padding: 14px 8px;
+  width: 40px;
+}
+
 /* Styles spécifiques par colonne */
 .cell-position {
   text-align: center;
@@ -49,6 +56,15 @@
 .cell-date {
   color: var(--text-tertiary);
   font-size: 13px;
+}
+
+/* Icône marque */
+.manufacturer-icon {
+  display: inline-block;
+  font-size: 18px;
+  line-height: 1;
+  text-align: center;
+  vertical-align: middle;
 }
 
 /* Highlight meilleur temps */
