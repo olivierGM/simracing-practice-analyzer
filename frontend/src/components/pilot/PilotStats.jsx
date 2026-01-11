@@ -6,6 +6,7 @@
 
 import { formatTime, formatDelta } from '../../utils/formatters';
 import { getCategoryName, calculatePilotSegmentStats } from '../../services/calculations';
+import { getCarFullName } from '../../services/carManufacturerService';
 import './PilotStats.css';
 
 export function PilotStats({ driver, allDrivers = [] }) {
@@ -53,7 +54,13 @@ export function PilotStats({ driver, allDrivers = [] }) {
       <h3>📊 Informations du Pilote</h3>
       
       <div className="pilot-stats-grid">
-        {/* Ligne 1 */}
+        {/* Ligne 1 - Nouvelle première ligne avec Auto */}
+        <div className="stat-item stat-item-full">
+          <span className="stat-label">🏎️ Auto:</span>
+          <span className="stat-value">{getCarFullName(driver.carModel)}</span>
+        </div>
+        
+        {/* Ligne 2 */}
         <div className="stat-item">
           <span className="stat-label">Total tours:</span>
           <span className="stat-value">{driver.totalLaps || 0}</span>
@@ -79,7 +86,7 @@ export function PilotStats({ driver, allDrivers = [] }) {
           <span className="stat-value">{formatTime(potentialTime)}</span>
         </div>
         
-        {/* Ligne 2 */}
+        {/* Ligne 3 */}
         <div className="stat-item">
           <span className="stat-label">Moyenne:</span>
           <span className="stat-value">{formatTime(driver.averageValidTime)}</span>
