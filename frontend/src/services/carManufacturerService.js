@@ -11,13 +11,13 @@
 // Sources: Wikimedia Commons, BrandsLogos.com, ou autres sources publiques
 const CAR_MODEL_TO_MANUFACTURER = {
   // Audi - Logo SVG depuis Wikimedia Commons
-  15: { name: 'Audi', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Audi_logo_detail.svg' },
-  // McLaren - Logo SVG
-  20: { name: 'McLaren', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/56/McLaren_logo.svg' },
+  15: { name: 'Audi', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg' },
+  // McLaren - Logo SVG (placeholder si URL ne fonctionne pas)
+  20: { name: 'McLaren', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/McLaren_logo.svg' },
   // BMW - Logo SVG depuis Wikimedia Commons
   32: { name: 'BMW', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg' },
-  // Ferrari - Logo SVG depuis Wikimedia Commons
-  33: { name: 'Ferrari', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/d/d1/Ferrari-Logo.svg' },
+  // Ferrari - Logo SVG (utiliser PNG si SVG non disponible)
+  33: { name: 'Ferrari', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/3d/Ferrari_logo.svg' },
   // Mercedes-Benz - Logo SVG depuis Wikimedia Commons
   35: { name: 'Mercedes', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg' },
   // Porsche - Logo SVG depuis Wikimedia Commons

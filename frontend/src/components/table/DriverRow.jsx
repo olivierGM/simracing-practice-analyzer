@@ -32,6 +32,16 @@ export function DriverRow({ driver, position, onClick, hasWetTimes = false }) {
             alt={getManufacturerName(driver.carModel)}
             className="manufacturer-logo"
             loading="lazy"
+            onError={(e) => {
+              // Fallback: remplacer par une icône texte si le logo ne charge pas
+              e.target.style.display = 'none';
+              if (!e.target.nextSibling) {
+                const fallback = document.createElement('span');
+                fallback.className = 'manufacturer-fallback';
+                fallback.textContent = getManufacturerName(driver.carModel).charAt(0).toUpperCase();
+                e.target.parentNode.appendChild(fallback);
+              }
+            }}
           />
         </span>
       )

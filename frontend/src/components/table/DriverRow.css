@@ -74,6 +74,19 @@
   display: block;
 }
 
+.manufacturer-fallback {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  background: var(--border-color);
+  border-radius: 4px;
+  color: var(--text-primary);
+}
+
 /* Highlight meilleur temps */
 .driver-row:first-child .cell-time {
   color: var(--success-color);
