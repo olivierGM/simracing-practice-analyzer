@@ -1,0 +1,413 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - heading "🏁 Analyseur de Temps EGT S12" [level=1] [ref=e7] [cursor=pointer]
+        - paragraph [ref=e8]: Analysez les performances par classe et pilote
+      - generic [ref=e9]:
+        - generic [ref=e10] [cursor=pointer]:
+          - generic [ref=e11]: "Dernière session :"
+          - 'generic "Dernière session: • Début: 2026-01-10 18 h 33 min 06 s • Durée estimée: 2945min • Fin estimée: 2026-01-12 19 h 38 min 06 s • Nombre de sessions: 571" [ref=e12]': Il y a 4h
+        - button "Outils" [ref=e14] [cursor=pointer]: 🔧 Outils
+        - 'button "Actuellement: Mode sombre • Cliquer pour: Suivre le système" [ref=e15] [cursor=pointer]': 🌙
+        - button "Connexion admin" [ref=e16] [cursor=pointer]: ⚙️
+  - main [ref=e17]:
+    - generic [ref=e18]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: "🗓️ Saison :"
+          - combobox "🗓️ Saison :" [ref=e23] [cursor=pointer]:
+            - option "Toutes les saisons"
+            - option "Saison 13" [selected]
+            - option "Saison 12"
+        - generic [ref=e24]:
+          - generic [ref=e25]: "📅 Période :"
+          - combobox "📅 Période :" [ref=e26] [cursor=pointer]:
+            - option "À tout moment" [selected]
+            - option "Dernière semaine"
+            - option "Dernière journée"
+        - generic [ref=e27]:
+          - generic [ref=e28]: "🏁 Piste :"
+          - combobox "🏁 Piste :" [ref=e29] [cursor=pointer]:
+            - option "nurburgring" [selected]
+        - generic [ref=e31] [cursor=pointer]:
+          - checkbox "📊 Grouper par classe" [ref=e32]
+          - generic [ref=e33]: 📊 Grouper par classe
+      - generic [ref=e34]:
+        - generic [ref=e35]: 🎮
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - generic [ref=e39]: Gran Tocino | GT3 Ra
+            - generic [ref=e40]: 🏎️ 16/16
+            - generic [ref=e43]: P10'
+          - generic [ref=e44]:
+            - generic [ref=e45]: US - WEST / WRTeknic
+            - generic [ref=e46]: 🏎️ 9/10
+            - generic [ref=e49]: R20'
+          - generic [ref=e50]:
+            - generic [ref=e51]: Xurupita - Nürburgri
+            - generic [ref=e52]: 🏎️ 2/10
+            - generic [ref=e55]: R20'
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - heading "🏁 Total Tours" [level=3] [ref=e58]
+          - generic [ref=e59]: "265"
+        - generic [ref=e60]:
+          - heading "✅ Tours Valides" [level=3] [ref=e61]
+          - generic [ref=e62]: "246"
+        - generic [ref=e63]:
+          - heading "🏆 Meilleur Temps" [level=3] [ref=e64]
+          - generic [ref=e65]: 01:54.352
+        - generic [ref=e66]:
+          - heading "📊 Moyenne" [level=3] [ref=e67]
+          - generic [ref=e68]: 01:56.661
+        - generic [ref=e69]:
+          - heading "🌧️ Tours Wet" [level=3] [ref=e70]
+          - generic [ref=e71]: "0"
+        - generic [ref=e72]:
+          - heading "👥 Pilotes" [level=3] [ref=e73]
+          - generic [ref=e74]: "19"
+      - table [ref=e76]:
+        - rowgroup [ref=e77]:
+          - row "Pos Pilote ↕ Classe ↕ Tours ↕ Tours Valides ↕ Meilleur valide ↕ Moyenne valide ↕ Const. valide ↕ Meilleur total ↕ Moyenne total ↕ Const. total ↕" [ref=e78]:
+            - cell "Pos" [ref=e79]
+            - cell "Pilote ↕" [ref=e80] [cursor=pointer]:
+              - text: Pilote
+              - generic [ref=e81]: ↕
+            - cell [ref=e82]
+            - cell "Classe ↕" [ref=e83] [cursor=pointer]:
+              - text: Classe
+              - generic [ref=e84]: ↕
+            - cell "Tours ↕" [ref=e85] [cursor=pointer]:
+              - text: Tours
+              - generic [ref=e86]: ↕
+            - cell "Tours Valides ↕" [ref=e87] [cursor=pointer]:
+              - text: Tours Valides
+              - generic [ref=e88]: ↕
+            - cell "Meilleur valide ↕" [ref=e89] [cursor=pointer]:
+              - text: Meilleur valide
+              - generic [ref=e90]: ↕
+            - cell "Moyenne valide ↕" [ref=e91] [cursor=pointer]:
+              - text: Moyenne valide
+              - generic [ref=e92]: ↕
+            - cell "Const. valide ↕" [ref=e93] [cursor=pointer]:
+              - text: Const. valide
+              - generic [ref=e94]: ↕
+            - cell "Meilleur total ↕" [ref=e95] [cursor=pointer]:
+              - text: Meilleur total
+              - generic [ref=e96]: ↕
+            - cell "Moyenne total ↕" [ref=e97] [cursor=pointer]:
+              - text: Moyenne total
+              - generic [ref=e98]: ↕
+            - cell "Const. total ↕" [ref=e99] [cursor=pointer]:
+              - text: Const. total
+              - generic [ref=e100]: ↕
+        - rowgroup [ref=e101]:
+          - row "1 Jean-Luc Marchand | RF Mercedes PRO 13 12 01:54.352 01:54.765 99.61% 01:54.352 01:54.832 99.45%" [ref=e102] [cursor=pointer]:
+            - cell "1" [ref=e103]
+            - cell "Jean-Luc Marchand | RF" [ref=e104]
+            - cell "Mercedes" [ref=e105]:
+              - generic "Mercedes" [ref=e106]:
+                - img "Mercedes" [ref=e107]
+            - cell "PRO" [ref=e108]:
+              - generic [ref=e109]: PRO
+            - cell "13" [ref=e110]
+            - cell "12" [ref=e111]
+            - cell "01:54.352" [ref=e112]
+            - cell "01:54.765" [ref=e113]
+            - cell "99.61%" [ref=e114]
+            - cell "01:54.352" [ref=e115]
+            - cell "01:54.832" [ref=e116]
+            - cell "99.45%" [ref=e117]
+          - row "2 Guillaume Madore A PRO 14 13 01:54.535 01:55.049 99.42% 01:54.535 01:55.052 99.44%" [ref=e118] [cursor=pointer]:
+            - cell "2" [ref=e119]
+            - cell "Guillaume Madore" [ref=e120]
+            - cell "A" [ref=e121]:
+              - generic "Aston Martin" [ref=e122]:
+                - generic [ref=e123]: A
+            - cell "PRO" [ref=e124]:
+              - generic [ref=e125]: PRO
+            - cell "14" [ref=e126]
+            - cell "13" [ref=e127]
+            - cell "01:54.535" [ref=e128]
+            - cell "01:55.049" [ref=e129]
+            - cell "99.42%" [ref=e130]
+            - cell "01:54.535" [ref=e131]
+            - cell "01:55.052" [ref=e132]
+            - cell "99.44%" [ref=e133]
+          - row "3 Tommy Landry Mercedes PRO 12 12 01:54.747 01:55.094 99.64% 01:54.747 01:55.094 99.64%" [ref=e134] [cursor=pointer]:
+            - cell "3" [ref=e135]
+            - cell "Tommy Landry" [ref=e136]
+            - cell "Mercedes" [ref=e137]:
+              - generic "Mercedes" [ref=e138]:
+                - img "Mercedes" [ref=e139]
+            - cell "PRO" [ref=e140]:
+              - generic [ref=e141]: PRO
+            - cell "12" [ref=e142]
+            - cell "12" [ref=e143]
+            - cell "01:54.747" [ref=e144]
+            - cell "01:55.094" [ref=e145]
+            - cell "99.64%" [ref=e146]
+            - cell "01:54.747" [ref=e147]
+            - cell "01:55.094" [ref=e148]
+            - cell "99.64%" [ref=e149]
+          - row "4 Steve Potvin (EGT) A PRO 12 11 01:55.045 01:56.070 98.39% 01:55.045 01:56.985 94.59%" [ref=e150] [cursor=pointer]:
+            - cell "4" [ref=e151]
+            - cell "Steve Potvin (EGT)" [ref=e152]
+            - cell "A" [ref=e153]:
+              - generic "Aston Martin" [ref=e154]:
+                - generic [ref=e155]: A
+            - cell "PRO" [ref=e156]:
+              - generic [ref=e157]: PRO
+            - cell "12" [ref=e158]
+            - cell "11" [ref=e159]
+            - cell "01:55.045" [ref=e160]
+            - cell "01:56.070" [ref=e161]
+            - cell "98.39%" [ref=e162]
+            - cell "01:55.045" [ref=e163]
+            - cell "01:56.985" [ref=e164]
+            - cell "94.59%" [ref=e165]
+          - row "5 C Couturier [EGT] BMW PRO 14 14 01:55.152 01:56.065 99.25% 01:55.152 01:56.065 99.25%" [ref=e166] [cursor=pointer]:
+            - cell "5" [ref=e167]
+            - cell "C Couturier [EGT]" [ref=e168]
+            - cell "BMW" [ref=e169]:
+              - generic "BMW" [ref=e170]:
+                - img "BMW" [ref=e171]
+            - cell "PRO" [ref=e172]:
+              - generic [ref=e173]: PRO
+            - cell "14" [ref=e174]
+            - cell "14" [ref=e175]
+            - cell "01:55.152" [ref=e176]
+            - cell "01:56.065" [ref=e177]
+            - cell "99.25%" [ref=e178]
+            - cell "01:55.152" [ref=e179]
+            - cell "01:56.065" [ref=e180]
+            - cell "99.25%" [ref=e181]
+          - row "6 Claude Labrecque [EGT] Mercedes PRO 13 13 01:55.205 01:55.902 99.5% 01:55.205 01:55.902 99.5%" [ref=e182] [cursor=pointer]:
+            - cell "6" [ref=e183]
+            - cell "Claude Labrecque [EGT]" [ref=e184]
+            - cell "Mercedes" [ref=e185]:
+              - generic "Mercedes" [ref=e186]:
+                - img "Mercedes" [ref=e187]
+            - cell "PRO" [ref=e188]:
+              - generic [ref=e189]: PRO
+            - cell "13" [ref=e190]
+            - cell "13" [ref=e191]
+            - cell "01:55.205" [ref=e192]
+            - cell "01:55.902" [ref=e193]
+            - cell "99.5%" [ref=e194]
+            - cell "01:55.205" [ref=e195]
+            - cell "01:55.902" [ref=e196]
+            - cell "99.5%" [ref=e197]
+          - row "7 Nicolas Gaudreault BMW PRO 14 12 01:55.402 01:56.332 99.22% 01:55.402 01:56.358 99.18%" [ref=e198] [cursor=pointer]:
+            - cell "7" [ref=e199]
+            - cell "Nicolas Gaudreault" [ref=e200]
+            - cell "BMW" [ref=e201]:
+              - generic "BMW" [ref=e202]:
+                - img "BMW" [ref=e203]
+            - cell "PRO" [ref=e204]:
+              - generic [ref=e205]: PRO
+            - cell "14" [ref=e206]
+            - cell "12" [ref=e207]
+            - cell "01:55.402" [ref=e208]
+            - cell "01:56.332" [ref=e209]
+            - cell "99.22%" [ref=e210]
+            - cell "01:55.402" [ref=e211]
+            - cell "01:56.358" [ref=e212]
+            - cell "99.18%" [ref=e213]
+          - row "8 Marc-Andre Hamel M PRO 14 14 01:55.462 01:55.874 99.56% 01:55.462 01:55.874 99.56%" [ref=e214] [cursor=pointer]:
+            - cell "8" [ref=e215]
+            - cell "Marc-Andre Hamel" [ref=e216]
+            - cell "M" [ref=e217]:
+              - generic "McLaren" [ref=e218]:
+                - generic [ref=e219]: M
+            - cell "PRO" [ref=e220]:
+              - generic [ref=e221]: PRO
+            - cell "14" [ref=e222]
+            - cell "14" [ref=e223]
+            - cell "01:55.462" [ref=e224]
+            - cell "01:55.874" [ref=e225]
+            - cell "99.56%" [ref=e226]
+            - cell "01:55.462" [ref=e227]
+            - cell "01:55.874" [ref=e228]
+            - cell "99.56%" [ref=e229]
+          - row "9 David Boucher F PRO 13 11 01:55.472 01:56.086 99.34% 01:55.472 01:56.340 98.53%" [ref=e230] [cursor=pointer]:
+            - cell "9" [ref=e231]
+            - cell "David Boucher" [ref=e232]
+            - cell "F" [ref=e233]:
+              - generic "Ferrari" [ref=e234]:
+                - generic [ref=e235]: F
+            - cell "PRO" [ref=e236]:
+              - generic [ref=e237]: PRO
+            - cell "13" [ref=e238]
+            - cell "11" [ref=e239]
+            - cell "01:55.472" [ref=e240]
+            - cell "01:56.086" [ref=e241]
+            - cell "99.34%" [ref=e242]
+            - cell "01:55.472" [ref=e243]
+            - cell "01:56.340" [ref=e244]
+            - cell "98.53%" [ref=e245]
+          - row "10 PE Longuez |EGT| Mercedes PRO 13 12 01:55.725 01:56.466 99.38% 01:55.725 01:56.484 99.4%" [ref=e246] [cursor=pointer]:
+            - cell "10" [ref=e247]
+            - cell "PE Longuez |EGT|" [ref=e248]
+            - cell "Mercedes" [ref=e249]:
+              - generic "Mercedes" [ref=e250]:
+                - img "Mercedes" [ref=e251]
+            - cell "PRO" [ref=e252]:
+              - generic [ref=e253]: PRO
+            - cell "13" [ref=e254]
+            - cell "12" [ref=e255]
+            - cell "01:55.725" [ref=e256]
+            - cell "01:56.466" [ref=e257]
+            - cell "99.38%" [ref=e258]
+            - cell "01:55.725" [ref=e259]
+            - cell "01:56.484" [ref=e260]
+            - cell "99.4%" [ref=e261]
+          - row "11 Daniel Dubé BMW PRO 14 14 01:55.867 01:56.479 99.29% 01:55.867 01:56.479 99.29%" [ref=e262] [cursor=pointer]:
+            - cell "11" [ref=e263]
+            - cell "Daniel Dubé" [ref=e264]
+            - cell "BMW" [ref=e265]:
+              - generic "BMW" [ref=e266]:
+                - img "BMW" [ref=e267]
+            - cell "PRO" [ref=e268]:
+              - generic [ref=e269]: PRO
+            - cell "14" [ref=e270]
+            - cell "14" [ref=e271]
+            - cell "01:55.867" [ref=e272]
+            - cell "01:56.479" [ref=e273]
+            - cell "99.29%" [ref=e274]
+            - cell "01:55.867" [ref=e275]
+            - cell "01:56.479" [ref=e276]
+            - cell "99.29%" [ref=e277]
+          - row "12 Vincent Dubuc [EGT] Mercedes PRO 11 11 01:56.045 01:56.631 99.23% 01:56.045 01:56.631 99.23%" [ref=e278] [cursor=pointer]:
+            - cell "12" [ref=e279]
+            - cell "Vincent Dubuc [EGT]" [ref=e280]
+            - cell "Mercedes" [ref=e281]:
+              - generic "Mercedes" [ref=e282]:
+                - img "Mercedes" [ref=e283]
+            - cell "PRO" [ref=e284]:
+              - generic [ref=e285]: PRO
+            - cell "11" [ref=e286]
+            - cell "11" [ref=e287]
+            - cell "01:56.045" [ref=e288]
+            - cell "01:56.631" [ref=e289]
+            - cell "99.23%" [ref=e290]
+            - cell "01:56.045" [ref=e291]
+            - cell "01:56.631" [ref=e292]
+            - cell "99.23%" [ref=e293]
+          - row "13 Francis Plante [EGT] Mercedes PRO 14 14 01:56.177 01:57.525 95.61% 01:56.177 01:57.525 95.61%" [ref=e294] [cursor=pointer]:
+            - cell "13" [ref=e295]
+            - cell "Francis Plante [EGT]" [ref=e296]
+            - cell "Mercedes" [ref=e297]:
+              - generic "Mercedes" [ref=e298]:
+                - img "Mercedes" [ref=e299]
+            - cell "PRO" [ref=e300]:
+              - generic [ref=e301]: PRO
+            - cell "14" [ref=e302]
+            - cell "14" [ref=e303]
+            - cell "01:56.177" [ref=e304]
+            - cell "01:57.525" [ref=e305]
+            - cell "95.61%" [ref=e306]
+            - cell "01:56.177" [ref=e307]
+            - cell "01:57.525" [ref=e308]
+            - cell "95.61%" [ref=e309]
+          - row "14 Kevin Godin U PRO 11 11 01:56.272 01:57.257 98.52% 01:56.272 01:57.257 98.52%" [ref=e310] [cursor=pointer]:
+            - cell "14" [ref=e311]
+            - cell "Kevin Godin" [ref=e312]
+            - cell "U" [ref=e313]:
+              - generic "Unknown" [ref=e314]:
+                - generic [ref=e315]: U
+            - cell "PRO" [ref=e316]:
+              - generic [ref=e317]: PRO
+            - cell "11" [ref=e318]
+            - cell "11" [ref=e319]
+            - cell "01:56.272" [ref=e320]
+            - cell "01:57.257" [ref=e321]
+            - cell "98.52%" [ref=e322]
+            - cell "01:56.272" [ref=e323]
+            - cell "01:57.257" [ref=e324]
+            - cell "98.52%" [ref=e325]
+          - row "15 Martin Lesage [EGT] BMW PRO 22 18 01:56.315 01:56.604 99.66% 01:56.315 01:56.696 99.52%" [ref=e326] [cursor=pointer]:
+            - cell "15" [ref=e327]
+            - cell "Martin Lesage [EGT]" [ref=e328]
+            - cell "BMW" [ref=e329]:
+              - generic "BMW" [ref=e330]:
+                - img "BMW" [ref=e331]
+            - cell "PRO" [ref=e332]:
+              - generic [ref=e333]: PRO
+            - cell "22" [ref=e334]
+            - cell "18" [ref=e335]
+            - cell "01:56.315" [ref=e336]
+            - cell "01:56.604" [ref=e337]
+            - cell "99.66%" [ref=e338]
+            - cell "01:56.315" [ref=e339]
+            - cell "01:56.696" [ref=e340]
+            - cell "99.52%" [ref=e341]
+          - row "16 Martin Fafard(EGT) Mercedes PRO 13 13 01:56.715 01:57.376 99.26% 01:56.715 01:57.376 99.26%" [ref=e342] [cursor=pointer]:
+            - cell "16" [ref=e343]
+            - cell "Martin Fafard(EGT)" [ref=e344]
+            - cell "Mercedes" [ref=e345]:
+              - generic "Mercedes" [ref=e346]:
+                - img "Mercedes" [ref=e347]
+            - cell "PRO" [ref=e348]:
+              - generic [ref=e349]: PRO
+            - cell "13" [ref=e350]
+            - cell "13" [ref=e351]
+            - cell "01:56.715" [ref=e352]
+            - cell "01:57.376" [ref=e353]
+            - cell "99.26%" [ref=e354]
+            - cell "01:56.715" [ref=e355]
+            - cell "01:57.376" [ref=e356]
+            - cell "99.26%" [ref=e357]
+          - row "17 Jonathan Hamel [EGT] B SILVER 11 11 01:57.177 01:58.178 98.43% 01:57.177 01:58.178 98.43%" [ref=e358] [cursor=pointer]:
+            - cell "17" [ref=e359]
+            - cell "Jonathan Hamel [EGT]" [ref=e360]
+            - cell "B" [ref=e361]:
+              - generic "Bentley" [ref=e362]:
+                - generic [ref=e363]: B
+            - cell "SILVER" [ref=e364]:
+              - generic [ref=e365]: SILVER
+            - cell "11" [ref=e366]
+            - cell "11" [ref=e367]
+            - cell "01:57.177" [ref=e368]
+            - cell "01:58.178" [ref=e369]
+            - cell "98.43%" [ref=e370]
+            - cell "01:57.177" [ref=e371]
+            - cell "01:58.178" [ref=e372]
+            - cell "98.43%" [ref=e373]
+          - row "18 Serge Fortin A PRO 26 22 01:57.460 01:59.140 95.95% 01:57.460 02:00.139 94.25%" [ref=e374] [cursor=pointer]:
+            - cell "18" [ref=e375]
+            - cell "Serge Fortin" [ref=e376]
+            - cell "A" [ref=e377]:
+              - generic "Aston Martin" [ref=e378]:
+                - generic [ref=e379]: A
+            - cell "PRO" [ref=e380]:
+              - generic [ref=e381]: PRO
+            - cell "26" [ref=e382]
+            - cell "22" [ref=e383]
+            - cell "01:57.460" [ref=e384]
+            - cell "01:59.140" [ref=e385]
+            - cell "95.95%" [ref=e386]
+            - cell "01:57.460" [ref=e387]
+            - cell "02:00.139" [ref=e388]
+            - cell "94.25%" [ref=e389]
+          - row "19 eric fillion P PRO 11 8 01:57.887 01:58.604 98.98% 01:57.887 01:59.110 98.3%" [ref=e390] [cursor=pointer]:
+            - cell "19" [ref=e391]
+            - cell "eric fillion" [ref=e392]
+            - cell "P" [ref=e393]:
+              - generic "Porsche" [ref=e394]:
+                - generic [ref=e395]: P
+            - cell "PRO" [ref=e396]:
+              - generic [ref=e397]: PRO
+            - cell "11" [ref=e398]
+            - cell "8" [ref=e399]
+            - cell "01:57.887" [ref=e400]
+            - cell "01:58.604" [ref=e401]
+            - cell "98.98%" [ref=e402]
+            - cell "01:57.887" [ref=e403]
+            - cell "01:59.110" [ref=e404]
+            - cell "98.3%" [ref=e405]
+```
