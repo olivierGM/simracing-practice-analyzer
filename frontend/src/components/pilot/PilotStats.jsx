@@ -54,13 +54,12 @@ export function PilotStats({ driver, allDrivers = [] }) {
       <h3>📊 Informations du Pilote</h3>
       
       <div className="pilot-stats-grid">
-        {/* Ligne 1 - Nouvelle première ligne avec Auto */}
-        <div className="stat-item stat-item-full">
-          <span className="stat-label">🏎️ Auto:</span>
+        {/* Ligne 1 */}
+        <div className="stat-item">
+          <span className="stat-label">Auto:</span>
           <span className="stat-value">{getCarFullName(driver.carModel)}</span>
         </div>
         
-        {/* Ligne 2 */}
         <div className="stat-item">
           <span className="stat-label">Total tours:</span>
           <span className="stat-value">{driver.totalLaps || 0}</span>
@@ -81,12 +80,12 @@ export function PilotStats({ driver, allDrivers = [] }) {
           <span className="stat-value">{formatTime(driver.bestValidTime)}</span>
         </div>
         
+        {/* Ligne 2 */}
         <div className="stat-item">
           <span className="stat-label">Temps potentiel:</span>
           <span className="stat-value">{formatTime(potentialTime)}</span>
         </div>
         
-        {/* Ligne 3 */}
         <div className="stat-item">
           <span className="stat-label">Moyenne:</span>
           <span className="stat-value">{formatTime(driver.averageValidTime)}</span>
