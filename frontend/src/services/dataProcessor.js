@@ -74,6 +74,10 @@ export function processSessionData(sessions) {
                             allLapTimes: [],
                             lapTimes: []
                         };
+                    } else {
+                        // Mettre à jour le carModel si le pilote change de voiture
+                        // (Pour les saisons, c'est une auto par saison, donc on utilise le carModel le plus récent)
+                        result.byDriver[driverId].carModel = driverInfo.carModel;
                     }
                     
                     // Utiliser isWetSession pour déterminer si le tour est wet
