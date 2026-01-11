@@ -31,7 +31,7 @@ export function Header({ metadata, trackName }) {
             style={{ cursor: 'pointer' }}
             title="Retour à l'accueil"
           >
-            🏁 Analyseur de Temps EGT S12
+            🏁 Analyseur de Temps EGT
           </h1>
           <p>Analysez les performances par classe et pilote</p>
         </div>
