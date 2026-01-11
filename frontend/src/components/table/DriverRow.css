@@ -36,7 +36,7 @@
 }
 
 .cell-name {
-  font-weight: 600;
+  font-weight: normal;
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
