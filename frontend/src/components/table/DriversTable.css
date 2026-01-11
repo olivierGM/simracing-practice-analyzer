@@ -140,6 +140,11 @@
   color: var(--text-primary);
 }
 
+/* Centrer la colonne manufacturer (3e colonne) */
+.driver-table td:nth-child(3) {
+  text-align: center;
+}
+
 /* Headers du tableau - gradient violet magnifique */
 .driver-table th {
   background: linear-gradient(45deg, #667eea, #764ba2);
