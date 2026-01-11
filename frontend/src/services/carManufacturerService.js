@@ -10,29 +10,38 @@
 // Utilise des logos SVG hébergés publiquement
 // Sources: Wikimedia Commons, BrandsLogos.com, ou autres sources publiques
 const CAR_MODEL_TO_MANUFACTURER = {
-  // Audi - Logo SVG depuis Wikimedia Commons
+  // Audi
+  8: { name: 'Audi', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg' },
   15: { name: 'Audi', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg' },
-  // McLaren - Logo SVG (placeholder si URL ne fonctionne pas)
+  // McLaren
   20: { name: 'McLaren', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/McLaren_logo.svg' },
-  // BMW - Logo SVG depuis Wikimedia Commons
+  // Bentley
+  25: { name: 'Bentley', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Car_icon.svg' },
+  // Porsche
+  30: { name: 'Porsche', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/1f/Porsche_logo.svg' },
+  // Ferrari
+  31: { name: 'Ferrari', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/3d/Ferrari_logo.svg' },
+  // BMW
   32: { name: 'BMW', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg' },
-  // Ferrari - Logo SVG (utiliser PNG si SVG non disponible)
+  // Ferrari (autre modèle)
   33: { name: 'Ferrari', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/3d/Ferrari_logo.svg' },
-  // Mercedes-Benz - Logo SVG depuis Wikimedia Commons
+  // Aston Martin
+  34: { name: 'Aston Martin', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/6a/Aston_Martin_Lagonda_logo.svg' },
+  // Mercedes-Benz
   35: { name: 'Mercedes', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg' },
-  // Porsche - Logo SVG depuis Wikimedia Commons
+  // Porsche (autre modèle)
   39: { name: 'Porsche', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/1f/Porsche_logo.svg' },
-  // Lamborghini - Logo SVG
+  // Lamborghini
   40: { name: 'Lamborghini', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/15/Lamborghini_logo.svg' },
-  // Aston Martin - Logo SVG
+  // Aston Martin (autre modèle)
   41: { name: 'Aston Martin', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/6a/Aston_Martin_Lagonda_logo.svg' },
-  // Lexus - Logo SVG
+  // Lexus
   42: { name: 'Lexus', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Lexus_logo.svg' },
-  // Honda - Logo SVG depuis Wikimedia Commons
+  // Honda
   43: { name: 'Honda', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/79/Honda_Logo.svg' },
-  // Nissan - Logo SVG depuis Wikimedia Commons
+  // Nissan
   44: { name: 'Nissan', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/23/Nissan_logo.svg' },
-  // Jaguar - Logo SVG
+  // Jaguar
   45: { name: 'Jaguar', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/1/11/Jaguar_logo.svg' }
 };
 
