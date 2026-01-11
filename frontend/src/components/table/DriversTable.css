@@ -141,8 +141,13 @@
 }
 
 /* Centrer la colonne manufacturer (3e colonne) */
-.driver-table td:nth-child(3) {
+.driver-table td:nth-child(3),
+.driver-table th:nth-child(3) {
   text-align: center;
+  width: 34px;
+  min-width: 34px;
+  max-width: 34px;
+  padding: 3px 4px !important;
 }
 
 /* Headers du tableau - gradient violet magnifique */
@@ -260,6 +265,23 @@
     padding: 3px 4px;
   }
   
+  /* Colonne nom de pilote en mobile */
+  .driver-table td:nth-child(2) {
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Logo encore plus petit en mobile */
+  .driver-table td:nth-child(3),
+  .driver-table th:nth-child(3) {
+    width: 28px;
+    min-width: 28px;
+    max-width: 28px;
+    padding: 2px 3px !important;
+  }
+  
   /* Cacher certaines colonnes en mobile */
   .cell-consistency,
   .cell-date {
@@ -285,6 +307,20 @@
 @media (max-width: 480px) {
   .driver-table {
     font-size: 0.7rem;
+  }
+  
+  /* Nom encore plus court sur petits écrans */
+  .driver-table td:nth-child(2) {
+    max-width: 100px;
+  }
+  
+  /* Logo minimal sur petits écrans */
+  .driver-table td:nth-child(3),
+  .driver-table th:nth-child(3) {
+    width: 24px;
+    min-width: 24px;
+    max-width: 24px;
+    padding: 2px !important;
   }
   
   .cell-number,

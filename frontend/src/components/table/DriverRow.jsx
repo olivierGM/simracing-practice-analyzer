@@ -82,6 +82,7 @@ export function DriverRow({ driver, position, onClick, hasWetTimes = false }) {
         <td 
           key={cell.key} 
           data-value={cell.dataValue !== undefined ? cell.dataValue : undefined}
+          className={cell.key === 'name' ? 'cell-name' : undefined}
         >
           {cell.content}
         </td>
