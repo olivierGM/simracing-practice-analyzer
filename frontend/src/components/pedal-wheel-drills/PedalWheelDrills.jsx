@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { DeviceMappingConfig } from './DeviceMappingConfig';
 import { DrillSelector, DRILL_TYPES } from './DrillSelector';
 import { PercentageDrill } from './PercentageDrill';
+import { BrakeAccelDrill } from './BrakeAccelDrill';
 import { useMappedGamepads } from '../../hooks/useMappedGamepads';
 import { loadMappingConfig } from '../../services/deviceMappingService';
 import { getAssignedKeys } from '../../services/keyboardService';
@@ -61,6 +62,16 @@ export function PedalWheelDrills() {
       <div className="pedal-wheel-drills pedal-wheel-drills-fullpage">
         {selectedDrill === DRILL_TYPES.PERCENTAGE && (
           <PercentageDrill
+            acceleratorValue={accelerator}
+            brakeValue={brake}
+            wheelValue={wheel}
+            shiftUp={shiftUp}
+            shiftDown={shiftDown}
+            onBack={handleDrillBack}
+          />
+        )}
+        {selectedDrill === DRILL_TYPES.BRAKE_ACCEL && (
+          <BrakeAccelDrill
             acceleratorValue={accelerator}
             brakeValue={brake}
             wheelValue={wheel}

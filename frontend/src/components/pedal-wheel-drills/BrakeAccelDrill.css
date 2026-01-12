@@ -1,0 +1,39 @@
+/**
+ * Styles pour BrakeAccelDrill
+ * Similaire à PercentageDrill mais avec adaptations pour 2 rangées
+ */
+
+.brake-accel-drill {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #0a0e27 0%, #1a1f3a 100%);
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+
+.brake-accel-drill-ddr {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Container pour les 2 rangées */
+.ddr-dual-gameplay-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+  padding: 8px;
+  min-height: 0;
+}
+
+/* Chaque rangée prend la moitié de l'espace */
+.ddr-dual-gameplay-container > * {
+  flex: 1;
+  min-height: 0;
+}

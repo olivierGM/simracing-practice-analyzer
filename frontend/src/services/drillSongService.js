@@ -69,9 +69,17 @@ export function validateDrillSong(drillSong) {
     if (typeof target.duration !== 'number' || target.duration <= 0) {
       throw new Error(`Target ${index}: duration must be a positive number`);
     }
+    
+    // Si le drill a des cibles avec type (brake/accel), valider le type
+    if (target.type && target.type !== 'brake' && target.type !== 'accel') {
+      throw new Error(`Target ${index}: type must be 'brake' or 'accel'`);
+    }
   });
   
-  // Vérifier que les temps sont croissants et que les cibles ne se chevauchent pas
+  // Vérifier que les temps sont croissants
+  // Pour les drills brake+accel, on ne vérifie pas le chevauchement car les 2 lanes sont indépendantes
+  const hasDualLanes = drillSong.targets.some(t => t.type);
+  
   for (let i = 1; i < drillSong.targets.length; i++) {
     const prev = drillSong.targets[i - 1];
     const curr = drillSong.targets[i];
@@ -80,8 +88,11 @@ export function validateDrillSong(drillSong) {
       throw new Error(`Targets must be in chronological order (target ${i} starts before ${i - 1})`);
     }
     
-    if (prev.time + prev.duration > curr.time) {
-      throw new Error(`Targets cannot overlap (target ${i - 1} overlaps with ${i})`);
+    // Vérifier le chevauchement seulement si même type ou pas de type (drills classiques)
+    if (!hasDualLanes || (prev.type === curr.type)) {
+      if (prev.time + prev.duration > curr.time) {
+        throw new Error(`Targets cannot overlap (target ${i - 1} overlaps with ${i})`);
+      }
     }
   }
 }
@@ -101,11 +112,32 @@ export function calculateDuration(targets) {
 /**
  * Liste les drill songs disponibles par difficulté
  * @param {string} difficulty - Difficulté ('easy', 'medium', 'hard')
+ * @param {string} drillType - Type de drill ('percentage', 'brakeaccel', etc.)
  * @returns {Promise<Array>} Liste des noms de fichiers
  */
-export async function listDrillSongs(difficulty = null) {
+export async function listDrillSongs(difficulty = null, drillType = 'percentage') {
   // Pour l'instant, on retourne une liste hardcodée
   // Plus tard, on pourra faire une requête au serveur pour lister les fichiers
+  
+  if (drillType === 'brakeaccel') {
+    const brakeAccelDrills = {
+      easy: [
+        { path: 'brakeaccel/trail-braking-easy.json', name: 'Trail Braking - Facile' }
+      ],
+      medium: [
+        { path: 'brakeaccel/trail-braking-medium.json', name: 'Trail Braking - Moyen' }
+      ],
+      hard: []
+    };
+    
+    if (difficulty) {
+      return brakeAccelDrills[difficulty] || [];
+    }
+    
+    return [...brakeAccelDrills.easy, ...brakeAccelDrills.medium, ...brakeAccelDrills.hard];
+  }
+  
+  // Drills de pourcentages par défaut
   const drills = {
     easy: [
       { path: 'easy/test-succession.json', name: 'Test - Succession Basique' },

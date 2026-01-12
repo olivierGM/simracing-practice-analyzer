@@ -30,6 +30,29 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  max-height: 1650px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.5rem;
+}
+
+/* Scrollbar styling */
+.drill-songs-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.drill-songs-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.drill-songs-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.drill-songs-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .drill-song-empty {

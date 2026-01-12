@@ -4,7 +4,7 @@
  * Point d'entrée de l'application React avec routing
  */
 
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Header } from './components/layout/Header';
 import { LoadingSpinner } from './components/common/LoadingSpinner';
@@ -12,13 +12,15 @@ import { HomePage } from './pages/HomePage';
 import { PilotePage } from './pages/PilotePage';
 import { AdminPage } from './pages/AdminPage';
 import { AngleMeasurementPage } from './pages/AngleMeasurementPage';
-import { PedalWheelDrillsPage } from './pages/PedalWheelDrillsPage';
 import { GamepadDebugPage } from './pages/GamepadDebugPage';
 import NotFound from './pages/NotFound';
 import { AnalyticsTracker } from './components/layout/AnalyticsTracker';
 import { useFirebaseData } from './hooks/useFirebaseData';
 import { TrackProvider, useTrackContext } from './contexts/TrackContext';
 import './App.css';
+
+// Lazy load PedalWheelDrillsPage pour optimiser le bundle initial
+const PedalWheelDrillsPage = lazy(() => import('./pages/PedalWheelDrillsPage'));
 
 function AppContent() {
   // ⚠️ IMPORTANT: Tous les hooks doivent être appelés AVANT tout return conditionnel
@@ -59,7 +61,14 @@ function AppContent() {
                   <Route path="/circuit/:circuitId/pilote/:pilotId" element={<PilotePage drivers={drivers} sessions={sessions} />} />
                   <Route path="/admin" element={<AdminPage />} />
                   <Route path="/angle-measurement" element={<AngleMeasurementPage />} />
-                  <Route path="/pedal-wheel-drills" element={<PedalWheelDrillsPage />} />
+                  <Route 
+                    path="/pedal-wheel-drills" 
+                    element={
+                      <Suspense fallback={<LoadingSpinner message="Chargement des drills..." />}>
+                        <PedalWheelDrillsPage />
+                      </Suspense>
+                    } 
+                  />
                   <Route path="/gamepad-debug" element={<GamepadDebugPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>

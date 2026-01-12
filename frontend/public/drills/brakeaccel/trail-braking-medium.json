@@ -1,0 +1,362 @@
+{
+  "name": "Trail Braking - Moyen",
+  "difficulty": "medium",
+  "description": "Trail braking intermédiaire avec transitions plus rapides et chevauchements. Travaille la coordination fine entre freinage et accélération pour des courbes réalistes.",
+  "duration": 45,
+  "targets": [
+    {
+      "time": 1.5,
+      "type": "brake",
+      "percent": 100,
+      "duration": 0.4
+    },
+    {
+      "time": 2.1,
+      "type": "brake",
+      "percent": 80,
+      "duration": 0.4
+    },
+    {
+      "time": 2.7,
+      "type": "brake",
+      "percent": 50,
+      "duration": 0.3
+    },
+    {
+      "time": 3.2,
+      "type": "accel",
+      "percent": 20,
+      "duration": 0.3
+    },
+    {
+      "time": 3.7,
+      "type": "accel",
+      "percent": 50,
+      "duration": 0.4
+    },
+    {
+      "time": 4.3,
+      "type": "accel",
+      "percent": 80,
+      "duration": 0.5
+    },
+    {
+      "time": 5.1,
+      "type": "accel",
+      "percent": 100,
+      "duration": 0.6
+    },
+    {
+      "time": 6.5,
+      "type": "brake",
+      "percent": 100,
+      "duration": 0.3
+    },
+    {
+      "time": 7.0,
+      "type": "brake",
+      "percent": 70,
+      "duration": 0.4
+    },
+    {
+      "time": 7.6,
+      "type": "brake",
+      "percent": 40,
+      "duration": 0.3
+    },
+    {
+      "time": 8.1,
+      "type": "accel",
+      "percent": 30,
+      "duration": 0.3
+    },
+    {
+      "time": 8.6,
+      "type": "accel",
+      "percent": 60,
+      "duration": 0.4
+    },
+    {
+      "time": 9.2,
+      "type": "accel",
+      "percent": 90,
+      "duration": 0.5
+    },
+    {
+      "time": 10.5,
+      "type": "brake",
+      "percent": 100,
+      "duration": 0.3
+    },
+    {
+      "time": 11.0,
+      "type": "brake",
+      "percent": 80,
+      "duration": 0.4
+    },
+    {
+      "time": 11.6,
+      "type": "brake",
+      "percent": 60,
+      "duration": 0.3
+    },
+    {
+      "time": 12.1,
+      "type": "brake",
+      "percent": 30,
+      "duration": 0.2
+    },
+    {
+      "time": 12.5,
+      "type": "accel",
+      "percent": 25,
+      "duration": 0.3
+    },
+    {
+      "time": 13.0,
+      "type": "accel",
+      "percent": 55,
+      "duration": 0.4
+    },
+    {
+      "time": 13.6,
+      "type": "accel",
+      "percent": 85,
+      "duration": 0.5
+    },
+    {
+      "time": 14.4,
+      "type": "accel",
+      "percent": 100,
+      "duration": 0.6
+    },
+    {
+      "time": 16.0,
+      "type": "brake",
+      "percent": 100,
+      "duration": 0.4
+    },
+    {
+      "time": 16.6,
+      "type": "brake",
+      "percent": 75,
+      "duration": 0.4
+    },
+    {
+      "time": 17.2,
+      "type": "brake",
+      "percent": 45,
+      "duration": 0.3
+    },
+    {
+      "time": 17.7,
+      "type": "accel",
+      "percent": 35,
+      "duration": 0.3
+    },
+    {
+      "time": 18.2,
+      "type": "accel",
+      "percent": 70,
+      "duration": 0.4
+    },
+    {
+      "time": 18.8,
+      "type": "accel",
+      "percent": 95,
+      "duration": 0.5
+    },
+    {
+      "time": 20.0,
+      "type": "brake",
+      "percent": 100,
+      "duration": 0.3
+    },
+    {
+      "time": 20.5,
+      "type": "brake",
+      "percent": 65,
+      "duration": 0.4
+    },
+    {
+      "time": 21.1,
+      "type": "brake",
+      "percent": 35,
+      "duration": 0.3
+    },
+    {
+      "time": 21.6,
+      "type": "accel",
+      "percent": 40,
+      "duration": 0.3
+    },
+    {
+      "time": 22.1,
+      "type": "accel",
+      "percent": 75,
+      "duration": 0.4
+    },
+    {
+      "time": 22.7,
+      "type": "accel",
+      "percent": 100,
+      "duration": 0.5
+    },
+    {
+      "time": 24.5,
+      "type": "brake",
+      "percent": 100,
+      "duration": 0.4
+    },
+    {
+      "time": 25.1,
+      "type": "brake",
+      "percent": 80,
+      "duration": 0.4
+    },
+    {
+      "time": 25.7,
+      "type": "brake",
+      "percent": 55,
+      "duration": 0.3
+    },
+    {
+      "time": 26.2,
+      "type": "accel",
+      "percent": 30,
+      "duration": 0.3
+    },
+    {
+      "time": 26.7,
+      "type": "accel",
+      "percent": 65,
+      "duration": 0.4
+    },
+    {
+      "time": 27.3,
+      "type": "accel",
+      "percent": 90,
+      "duration": 0.5
+    },
+    {
+      "time": 28.1,
+      "type": "accel",
+      "percent": 100,
+      "duration": 0.6
+    },
+    {
+      "time": 30.0,
+      "type": "brake",
+      "percent": 100,
+      "duration": 0.3
+    },
+    {
+      "time": 30.5,
+      "type": "brake",
+      "percent": 70,
+      "duration": 0.4
+    },
+    {
+      "time": 31.1,
+      "type": "brake",
+      "percent": 40,
+      "duration": 0.3
+    },
+    {
+      "time": 31.6,
+      "type": "accel",
+      "percent": 35,
+      "duration": 0.3
+    },
+    {
+      "time": 32.1,
+      "type": "accel",
+      "percent": 70,
+      "duration": 0.4
+    },
+    {
+      "time": 32.7,
+      "type": "accel",
+      "percent": 95,
+      "duration": 0.5
+    },
+    {
+      "time": 34.5,
+      "type": "brake",
+      "percent": 100,
+      "duration": 0.4
+    },
+    {
+      "time": 35.1,
+      "type": "brake",
+      "percent": 75,
+      "duration": 0.4
+    },
+    {
+      "time": 35.7,
+      "type": "brake",
+      "percent": 50,
+      "duration": 0.3
+    },
+    {
+      "time": 36.2,
+      "type": "accel",
+      "percent": 25,
+      "duration": 0.3
+    },
+    {
+      "time": 36.7,
+      "type": "accel",
+      "percent": 60,
+      "duration": 0.4
+    },
+    {
+      "time": 37.3,
+      "type": "accel",
+      "percent": 85,
+      "duration": 0.5
+    },
+    {
+      "time": 38.1,
+      "type": "accel",
+      "percent": 100,
+      "duration": 0.6
+    },
+    {
+      "time": 40.0,
+      "type": "brake",
+      "percent": 100,
+      "duration": 0.3
+    },
+    {
+      "time": 40.5,
+      "type": "brake",
+      "percent": 65,
+      "duration": 0.4
+    },
+    {
+      "time": 41.1,
+      "type": "brake",
+      "percent": 35,
+      "duration": 0.3
+    },
+    {
+      "time": 41.6,
+      "type": "accel",
+      "percent": 45,
+      "duration": 0.3
+    },
+    {
+      "time": 42.1,
+      "type": "accel",
+      "percent": 80,
+      "duration": 0.4
+    },
+    {
+      "time": 42.7,
+      "type": "accel",
+      "percent": 100,
+      "duration": 0.5
+    }
+  ]
+}

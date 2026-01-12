@@ -1,0 +1,288 @@
+{
+  "testStartTime": 1768186539033,
+  "drillCrashed": false,
+  "crashedAt": 28000,
+  "totalRunTime": 35000,
+  "consoleErrors": [],
+  "consoleWarnings": [
+    {
+      "time": 1768186541062,
+      "text": "No metadata found in Firestore (non-critique)"
+    },
+    {
+      "time": 1768186541090,
+      "text": "No metadata found in Firestore (non-critique)"
+    },
+    {
+      "time": 1768186541323,
+      "text": "No metadata found in Firestore (non-critique)"
+    },
+    {
+      "time": 1768186541354,
+      "text": "No metadata found in Firestore (non-critique)"
+    },
+    {
+      "time": 1768186541405,
+      "text": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
+    },
+    {
+      "time": 1768186541405,
+      "text": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
+    }
+  ],
+  "pageErrors": [],
+  "debugSnapshots": [
+    {
+      "elapsed": 0,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 1000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 2000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 3000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 4000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 5000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 6000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 7000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 8000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 9000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 10000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 11000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 12000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 13000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 14000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 15000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 16000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 17000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 18000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 19000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 20000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 21000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 22000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 23000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 24000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 25000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 26000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    },
+    {
+      "elapsed": 27000,
+      "debugInfo": null,
+      "targetCounts": {
+        "accel": 0,
+        "brake": 0
+      },
+      "hasErrors": false
+    }
+  ]
+}

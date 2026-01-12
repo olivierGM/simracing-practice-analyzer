@@ -8,6 +8,7 @@ import './DrillSelector.css';
 
 export const DRILL_TYPES = {
   PERCENTAGE: 'percentage',
+  BRAKE_ACCEL: 'brakeaccel',
   TURNING: 'turning',
   ACCELERATION: 'acceleration',
   COMBINED: 'combined'
@@ -19,6 +20,13 @@ const DRILL_OPTIONS = [
     label: '📊 Drill de Pourcentages',
     description: 'Maintenir un pourcentage précis (20%, 40%, 60%, 80%)',
     icon: '📊',
+    available: true
+  },
+  {
+    type: DRILL_TYPES.BRAKE_ACCEL,
+    label: '🚦 Frein + Accélérateur',
+    description: 'Trail braking : combiner freinage et accélération',
+    icon: '🚦',
     available: true
   },
   {

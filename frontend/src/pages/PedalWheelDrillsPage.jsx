@@ -7,7 +7,7 @@
 import { PedalWheelDrills } from '../components/pedal-wheel-drills/PedalWheelDrills';
 import './PedalWheelDrillsPage.css';
 
-export function PedalWheelDrillsPage() {
+export default function PedalWheelDrillsPage() {
   return (
     <div className="pedal-wheel-drills-page">
       <div className="page-header page-header-compact">
