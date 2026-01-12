@@ -36,7 +36,7 @@ export function FullComboVerticalDrill({
   const [tolerance, setTolerance] = useState(5);
   const [difficulty, setDifficulty] = useState('MEDIUM'); 
   const [drillSong, setDrillSong] = useState(null);
-  const [audioEnabled, setAudioEnabled] = useState(true);
+  const [audioEnabled, setAudioEnabled] = useState(false); // Temporairement désactivé
   const [musicEnabled, setMusicEnabled] = useState(false);
   const [blindMode, setBlindMode] = useState(false);
   

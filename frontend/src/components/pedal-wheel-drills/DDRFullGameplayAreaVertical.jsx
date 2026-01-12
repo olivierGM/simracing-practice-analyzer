@@ -197,12 +197,16 @@ export function DDRFullGameplayAreaVertical({
               const yPos = getTargetPositionY(target);
               if (yPos < -100 || yPos > 500) return null;
               
+              // Hauteur proportionnelle à la valeur (20% à 100% = 40px à 200px)
+              const height = 40 + (target.percent * 1.6);
+              
               return (
                 <div
                   key={target.id}
                   className={`ddr-target-vertical ddr-target-brake-vertical ${target.hit ? 'ddr-target-hit' : ''} ${target.missed ? 'ddr-target-missed' : ''} ${blindMode ? 'ddr-target-blind' : ''}`}
                   style={{
-                    top: `${yPos}px`
+                    top: `${yPos}px`,
+                    height: `${height}px`
                   }}
                 >
                   {!blindMode && <span className="ddr-target-value">{target.percent}%</span>}
@@ -229,12 +233,16 @@ export function DDRFullGameplayAreaVertical({
               const yPos = getTargetPositionY(target);
               if (yPos < -100 || yPos > 500) return null;
               
+              // Hauteur proportionnelle à l'angle absolu (0° à 175° = 40px à 200px)
+              const height = 40 + (Math.abs(target.angle) / 175 * 160);
+              
               return (
                 <div
                   key={target.id}
                   className={`ddr-target-vertical ddr-target-wheel-vertical ${target.hit ? 'ddr-target-hit' : ''} ${target.missed ? 'ddr-target-missed' : ''} ${blindMode ? 'ddr-target-blind' : ''}`}
                   style={{
-                    top: `${yPos}px`
+                    top: `${yPos}px`,
+                    height: `${height}px`
                   }}
                 >
                   {!blindMode && <span className="ddr-target-value">{target.angle}°</span>}
@@ -261,12 +269,16 @@ export function DDRFullGameplayAreaVertical({
               const yPos = getTargetPositionY(target);
               if (yPos < -100 || yPos > 500) return null;
               
+              // Hauteur proportionnelle à la valeur
+              const height = 40 + (target.percent * 1.6);
+              
               return (
                 <div
                   key={target.id}
                   className={`ddr-target-vertical ddr-target-accel-vertical ${target.hit ? 'ddr-target-hit' : ''} ${target.missed ? 'ddr-target-missed' : ''} ${blindMode ? 'ddr-target-blind' : ''}`}
                   style={{
-                    top: `${yPos}px`
+                    top: `${yPos}px`,
+                    height: `${height}px`
                   }}
                 >
                   {!blindMode && <span className="ddr-target-value">{target.percent}%</span>}

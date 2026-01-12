@@ -35,6 +35,29 @@
   font-weight: 300;
 }
 
+/* Mode vertical pour les sidebars */
+.ddr-inputs-bar-vertical {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  height: 100%;
+  max-height: none;
+  padding: 1rem;
+  border-top: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+}
+
+.ddr-inputs-bar-vertical .ddr-input-separator {
+  display: none;
+}
+
+.ddr-inputs-bar-vertical .ddr-input-item {
+  width: 100%;
+  justify-content: space-between;
+}
+
 @media (max-width: 768px) {
   .ddr-inputs-bar {
     font-size: 0.75rem;

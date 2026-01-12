@@ -93,13 +93,15 @@
   z-index: 10;
 }
 
-/* Cibles (défilent verticalement) */
+/* Cibles (défilent verticalement) avec hauteur proportionnelle */
 .ddr-target-vertical {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   width: 80px;
-  height: 60px;
+  /* Hauteur sera définie par style inline selon la valeur */
+  min-height: 40px;
+  max-height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
