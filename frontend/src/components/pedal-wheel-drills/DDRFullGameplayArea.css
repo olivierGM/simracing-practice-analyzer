@@ -70,6 +70,28 @@
   overflow: hidden;
 }
 
+/* Lane content avec centre pour le volant */
+.ddr-lane-content-centered {
+  display: flex;
+  align-items: center;
+}
+
+/* Ligne centrale pour le volant (0°) */
+.ddr-wheel-center-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  z-index: 5;
+}
+
 .ddr-judgment-zone {
   position: absolute;
   left: 300px;
@@ -118,6 +140,40 @@
   color: white;
 }
 
+/* Barre de volant (part du centre) */
+.ddr-target-wheel-bar {
+  position: absolute;
+  width: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, #5dade2 0%, #3498db 50%, #2980b9 100%);
+  color: white;
+  border-radius: 6px;
+  transition: transform 0.1s ease, opacity 0.2s ease;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  min-height: 25px;
+  max-height: 50%;
+  z-index: 8;
+}
+
+.ddr-target-wheel-bar .ddr-target-value-wheel {
+  writing-mode: horizontal-tb;
+  text-orientation: mixed;
+}
+
+/* Ajuster la position pour les angles négatifs */
+.ddr-target-wheel-bar[style*="top: 50%"] {
+  transform-origin: top center;
+}
+
+.ddr-target-wheel-bar[style*="bottom: 50%"] {
+  transform-origin: bottom center;
+}
+
 .ddr-target-accel {
   background: linear-gradient(135deg, #28a745 0%, #218838 100%);
   color: white;
@@ -135,7 +191,17 @@
   transform: translateY(-50%) scale(0.8);
 }
 
+.ddr-target-wheel-bar.ddr-target-hit {
+  opacity: 0.3;
+  transform: scale(0.8);
+}
+
 .ddr-target-missed {
+  opacity: 0.2;
+  filter: grayscale(100%);
+}
+
+.ddr-target-wheel-bar.ddr-target-missed {
   opacity: 0.2;
   filter: grayscale(100%);
 }
@@ -145,8 +211,14 @@
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+.ddr-target-wheel-bar.ddr-target-blind {
+  background: rgba(100, 100, 100, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
 .ddr-target-blind .ddr-target-value,
-.ddr-target-blind .ddr-target-icon {
+.ddr-target-blind .ddr-target-icon,
+.ddr-target-blind .ddr-target-value-wheel {
   display: none;
 }
 

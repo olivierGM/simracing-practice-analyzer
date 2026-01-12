@@ -474,24 +474,34 @@ export function DDRFullGameplayArea({
         {/* Lane 2: Volant */}
         <div className="ddr-lane ddr-lane-wheel">
           <div className="ddr-lane-header">🎮 Volant</div>
-          <div className="ddr-lane-content">
+          <div className="ddr-lane-content ddr-lane-content-centered">
+            {/* Ligne centrale (0°) */}
+            <div className="ddr-wheel-center-line"></div>
+            
             {/* Zone de judgment */}
             <div className="ddr-judgment-zone"></div>
             
-            {/* Cibles de volant */}
+            {/* Cibles de volant (barres partant du centre) */}
             {wheelTargets.map(target => {
               const xPos = getTargetPosition(target);
               if (xPos < -100 || xPos > 600) return null;
               
+              // Calculer la hauteur de la barre (proportionnelle à l'angle)
+              // 175° = 50% (la moitié de la lane)
+              const heightPercent = Math.abs(target.angle) / 175 * 50;
+              const isPositive = target.angle >= 0;
+              
               return (
                 <div
                   key={target.id}
-                  className={`ddr-target ddr-target-wheel ${target.hit ? 'ddr-target-hit' : ''} ${target.missed ? 'ddr-target-missed' : ''} ${blindMode ? 'ddr-target-blind' : ''}`}
+                  className={`ddr-target ddr-target-wheel-bar ${target.hit ? 'ddr-target-hit' : ''} ${target.missed ? 'ddr-target-missed' : ''} ${blindMode ? 'ddr-target-blind' : ''}`}
                   style={{
-                    left: `${xPos}px`
+                    left: `${xPos}px`,
+                    height: `${heightPercent}%`,
+                    [isPositive ? 'bottom' : 'top']: '50%'
                   }}
                 >
-                  {!blindMode && <span className="ddr-target-value">{target.angle}°</span>}
+                  {!blindMode && <span className="ddr-target-value ddr-target-value-wheel">{target.angle}°</span>}
                   {target.judgment && (
                     <span className={`ddr-judgment-label ddr-judgment-${target.judgment.toLowerCase()}`}>
                       {target.judgment}
