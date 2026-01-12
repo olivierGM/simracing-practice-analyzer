@@ -32,7 +32,7 @@ export function BrakeAccelDrill({
   const [tolerance, setTolerance] = useState(5); // Tolérance en %
   const [difficulty, setDifficulty] = useState('MEDIUM'); 
   const [drillSong, setDrillSong] = useState(null); // Drill song combiné
-  const [audioEnabled, setAudioEnabled] = useState(true);
+  const [audioEnabled, setAudioEnabled] = useState(false); // Désactivé par défaut
   const [musicEnabled, setMusicEnabled] = useState(false);
   const [blindMode, setBlindMode] = useState(false);
   

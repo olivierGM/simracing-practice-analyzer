@@ -31,7 +31,7 @@ export function PercentageDrill({
   const [tolerance, setTolerance] = useState(5); // Tolérance en % (champ séparé pour tester)
   const [difficulty, setDifficulty] = useState('MEDIUM'); // Difficulté pour les modes Random (vitesse, durée, etc.)
   const [drillSong, setDrillSong] = useState(null); // Drill song sélectionné ou { type: 'random', difficulty: 'medium' }
-  const [audioEnabled, setAudioEnabled] = useState(true); // Sons activés
+  const [audioEnabled, setAudioEnabled] = useState(false); // Désactivé par défaut
   const [musicEnabled, setMusicEnabled] = useState(false); // Musique de fond (désactivée par défaut)
   const [blindMode, setBlindMode] = useState(false); // Mode blind (cacher barre verticale)
   

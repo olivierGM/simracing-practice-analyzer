@@ -33,7 +33,7 @@ export function FullComboDrill({
   const [tolerance, setTolerance] = useState(5); // Tolérance en % (et degrés pour le volant)
   const [difficulty, setDifficulty] = useState('MEDIUM'); 
   const [drillSong, setDrillSong] = useState(null);
-  const [audioEnabled, setAudioEnabled] = useState(true);
+  const [audioEnabled, setAudioEnabled] = useState(false); // Désactivé par défaut
   const [musicEnabled, setMusicEnabled] = useState(false);
   const [blindMode, setBlindMode] = useState(false);
   
