@@ -26,12 +26,12 @@
   min-height: 0;
 }
 
-/* Sidebars (gauche et droite) */
+/* Sidebars (gauche et droite) - Plus étroites pour donner plus de place aux lanes */
 .full-combo-vertical-sidebar {
   display: flex;
   flex-direction: column;
-  width: 180px;
-  min-width: 180px;
+  width: 140px;
+  min-width: 140px;
 }
 
 .full-combo-vertical-left {

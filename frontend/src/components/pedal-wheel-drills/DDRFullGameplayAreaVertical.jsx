@@ -197,8 +197,14 @@ export function DDRFullGameplayAreaVertical({
               const yPos = getTargetPositionY(target);
               if (yPos < -100 || yPos > 500) return null;
               
-              // Hauteur proportionnelle à la valeur (20% à 100% = 40px à 200px)
-              const height = 40 + (target.percent * 1.6);
+              // Largeur proportionnelle à la valeur (0% à 100% = 40px à 100%)
+              const widthPercent = 40 + (target.percent * 0.6); // 40% à 100% de la lane
+              
+              // Couleur plus intense pour les valeurs plus élevées (rouge)
+              const intensity = target.percent / 100; // 0.0 à 1.0
+              const redValue = Math.round(231 - (intensity * 40)); // 231 à 191
+              const greenValue = Math.round(76 - (intensity * 76)); // 76 à 0
+              const blueValue = Math.round(60 - (intensity * 60)); // 60 à 0
               
               return (
                 <div
@@ -206,7 +212,10 @@ export function DDRFullGameplayAreaVertical({
                   className={`ddr-target-vertical ddr-target-brake-vertical ${target.hit ? 'ddr-target-hit' : ''} ${target.missed ? 'ddr-target-missed' : ''} ${blindMode ? 'ddr-target-blind' : ''}`}
                   style={{
                     top: `${yPos}px`,
-                    height: `${height}px`
+                    left: '0',
+                    width: `${widthPercent}%`,
+                    backgroundColor: `rgb(${redValue}, ${greenValue}, ${blueValue})`,
+                    background: `rgb(${redValue}, ${greenValue}, ${blueValue})`
                   }}
                 >
                   {!blindMode && <span className="ddr-target-value">{target.percent}%</span>}
@@ -233,8 +242,11 @@ export function DDRFullGameplayAreaVertical({
               const yPos = getTargetPositionY(target);
               if (yPos < -100 || yPos > 500) return null;
               
-              // Hauteur proportionnelle à l'angle absolu (0° à 175° = 40px à 200px)
-              const height = 40 + (Math.abs(target.angle) / 175 * 160);
+              // Largeur proportionnelle à l'angle absolu (0° à 175° = 40% à 100%)
+              const widthPercent = 40 + (Math.abs(target.angle) / 175 * 60); // 40% à 100% de la lane
+              
+              // Position : part du centre, va vers la droite (positif) ou gauche (négatif)
+              const isPositive = target.angle >= 0;
               
               return (
                 <div
@@ -242,10 +254,24 @@ export function DDRFullGameplayAreaVertical({
                   className={`ddr-target-vertical ddr-target-wheel-vertical ${target.hit ? 'ddr-target-hit' : ''} ${target.missed ? 'ddr-target-missed' : ''} ${blindMode ? 'ddr-target-blind' : ''}`}
                   style={{
                     top: `${yPos}px`,
-                    height: `${height}px`
+                    width: `${widthPercent}%`,
+                    left: isPositive ? '50%' : 'auto',
+                    right: isPositive ? 'auto' : '50%',
+                    transform: isPositive ? 'none' : 'translateX(-100%)',
+                    justifyContent: isPositive ? 'flex-start' : 'flex-end',
+                    backgroundColor: '#3498db',
+                    background: '#3498db'
                   }}
                 >
-                  {!blindMode && <span className="ddr-target-value">{target.angle}°</span>}
+                  {!blindMode && (
+                    <span className="ddr-target-value" style={{ 
+                      textAlign: isPositive ? 'left' : 'right',
+                      paddingLeft: isPositive ? '8px' : '0',
+                      paddingRight: isPositive ? '0' : '8px'
+                    }}>
+                      {target.angle}°
+                    </span>
+                  )}
                   {target.judgment && (
                     <span className={`ddr-judgment-label ddr-judgment-${target.judgment.toLowerCase()}`}>
                       {target.judgment}
@@ -269,8 +295,14 @@ export function DDRFullGameplayAreaVertical({
               const yPos = getTargetPositionY(target);
               if (yPos < -100 || yPos > 500) return null;
               
-              // Hauteur proportionnelle à la valeur
-              const height = 40 + (target.percent * 1.6);
+              // Largeur proportionnelle à la valeur (0% à 100% = 40px à 100%)
+              const widthPercent = 40 + (target.percent * 0.6); // 40% à 100% de la lane
+              
+              // Couleur plus intense pour les valeurs plus élevées (vert)
+              const intensity = target.percent / 100; // 0.0 à 1.0
+              const redValue = Math.round(46 - (intensity * 46)); // 46 à 0
+              const greenValue = Math.round(204 - (intensity * 50)); // 204 à 154
+              const blueValue = Math.round(113 - (intensity * 113)); // 113 à 0
               
               return (
                 <div
@@ -278,7 +310,10 @@ export function DDRFullGameplayAreaVertical({
                   className={`ddr-target-vertical ddr-target-accel-vertical ${target.hit ? 'ddr-target-hit' : ''} ${target.missed ? 'ddr-target-missed' : ''} ${blindMode ? 'ddr-target-blind' : ''}`}
                   style={{
                     top: `${yPos}px`,
-                    height: `${height}px`
+                    left: '0',
+                    width: `${widthPercent}%`,
+                    backgroundColor: `rgb(${redValue}, ${greenValue}, ${blueValue})`,
+                    background: `rgb(${redValue}, ${greenValue}, ${blueValue})`
                   }}
                 >
                   {!blindMode && <span className="ddr-target-value">{target.percent}%</span>}

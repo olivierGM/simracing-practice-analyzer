@@ -93,20 +93,19 @@
   z-index: 10;
 }
 
-/* Cibles (défilent verticalement) avec hauteur proportionnelle */
+/* Cibles (défilent verticalement) avec largeur proportionnelle */
 .ddr-target-vertical {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  /* Hauteur sera définie par style inline selon la valeur */
-  min-height: 40px;
-  max-height: 200px;
+  /* left sera défini par style inline */
+  height: 60px;
+  /* Largeur sera définie par style inline selon la valeur */
+  min-width: 40px;
+  max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  transition: transform 0.1s ease, opacity 0.2s ease;
+  transition: opacity 0.2s ease;
   font-weight: 700;
   font-size: 1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -114,19 +113,19 @@
   z-index: 5;
 }
 
-/* Couleurs des cibles */
+/* Couleurs des cibles - Background sera défini par style inline */
 .ddr-target-brake-vertical {
-  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  /* Background défini par style inline selon la valeur */
   color: white;
 }
 
 .ddr-target-wheel-vertical {
-  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  /* Background défini par style inline selon la valeur */
   color: white;
 }
 
 .ddr-target-accel-vertical {
-  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  /* Background défini par style inline selon la valeur */
   color: white;
 }
 
