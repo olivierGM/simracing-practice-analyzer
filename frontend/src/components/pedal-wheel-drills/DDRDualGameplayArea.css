@@ -1,0 +1,291 @@
+/**
+ * Styles pour DDRDualGameplayArea
+ * 2 rangées superposées avec couleurs distinctes
+ */
+
+.ddr-dual-gameplay {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Chaque rangée (lane) */
+.ddr-lane {
+  flex: 1;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.ddr-lane-accel {
+  background: linear-gradient(180deg, rgba(34, 139, 34, 0.1) 0%, rgba(34, 139, 34, 0.05) 100%);
+  border: 2px solid rgba(34, 139, 34, 0.3);
+}
+
+.ddr-lane-brake {
+  background: linear-gradient(180deg, rgba(220, 20, 60, 0.1) 0%, rgba(220, 20, 60, 0.05) 100%);
+  border: 2px solid rgba(220, 20, 60, 0.3);
+}
+
+/* Label de la lane */
+.ddr-lane-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  z-index: 10;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+}
+
+/* Track (zone de défilement) */
+.ddr-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Zone d'approche */
+.ddr-approach-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  pointer-events: none;
+  border-right: 2px dashed rgba(255, 255, 255, 0.2);
+}
+
+/* Barre de jugement */
+.ddr-judgment-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  z-index: 5;
+}
+
+.ddr-judgment-line-accel {
+  background: linear-gradient(180deg, 
+    rgba(34, 139, 34, 0.8) 0%,
+    rgba(34, 139, 34, 0.4) 100%
+  );
+  box-shadow: 0 0 10px rgba(34, 139, 34, 0.6);
+}
+
+.ddr-judgment-line-brake {
+  background: linear-gradient(180deg, 
+    rgba(220, 20, 60, 0.8) 0%,
+    rgba(220, 20, 60, 0.4) 100%
+  );
+  box-shadow: 0 0 10px rgba(220, 20, 60, 0.6);
+}
+
+/* Barre de valeur actuelle */
+.ddr-current-value-bar {
+  position: absolute;
+  bottom: 0;
+  left: -4px;
+  width: 12px;
+  transition: height 0.05s linear;
+  border-radius: 4px 4px 0 0;
+}
+
+.ddr-current-value-bar-accel {
+  background: linear-gradient(180deg, 
+    rgba(50, 205, 50, 0.9) 0%,
+    rgba(34, 139, 34, 0.9) 100%
+  );
+  box-shadow: 0 0 8px rgba(50, 205, 50, 0.6);
+}
+
+.ddr-current-value-bar-brake {
+  background: linear-gradient(180deg, 
+    rgba(255, 69, 0, 0.9) 0%,
+    rgba(220, 20, 60, 0.9) 100%
+  );
+  box-shadow: 0 0 8px rgba(255, 69, 0, 0.6);
+}
+
+/* Cibles */
+.ddr-target {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: opacity 0.2s;
+  border-radius: 4px 4px 0 0;
+  border: 2px solid;
+}
+
+.ddr-target-accel {
+  background: linear-gradient(180deg, 
+    rgba(50, 205, 50, 0.6) 0%,
+    rgba(34, 139, 34, 0.8) 100%
+  );
+  border-color: rgba(50, 205, 50, 0.8);
+  box-shadow: 0 0 8px rgba(50, 205, 50, 0.4);
+}
+
+.ddr-target-brake {
+  background: linear-gradient(180deg, 
+    rgba(255, 69, 0, 0.6) 0%,
+    rgba(220, 20, 60, 0.8) 100%
+  );
+  border-color: rgba(255, 69, 0, 0.8);
+  box-shadow: 0 0 8px rgba(255, 69, 0, 0.4);
+}
+
+.ddr-target.hit {
+  opacity: 0.3;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.ddr-target.missed {
+  opacity: 0.2;
+  border-color: rgba(255, 0, 0, 0.5);
+}
+
+/* Pourcentage affiché sur la cible */
+.target-percent {
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  padding: 2px 4px;
+}
+
+/* Affichage des judgments */
+.ddr-judgments-display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.ddr-judgment-popup {
+  font-size: 28px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+  animation: judgmentPopup 0.8s ease-out;
+}
+
+.ddr-judgment-perfect {
+  color: #FFD700;
+  text-shadow: 0 0 12px #FFD700;
+}
+
+.ddr-judgment-great {
+  color: #00FF00;
+  text-shadow: 0 0 10px #00FF00;
+}
+
+.ddr-judgment-good {
+  color: #00BFFF;
+  text-shadow: 0 0 8px #00BFFF;
+}
+
+.ddr-judgment-ok {
+  color: #FFA500;
+  text-shadow: 0 0 6px #FFA500;
+}
+
+.ddr-judgment-miss {
+  color: #FF0000;
+  text-shadow: 0 0 10px #FF0000;
+}
+
+@keyframes judgmentPopup {
+  0% {
+    transform: scale(1.5) translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1) translateY(-10px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8) translateY(-20px);
+    opacity: 0;
+  }
+}
+
+/* Affichage du combo */
+.ddr-combo-display {
+  position: absolute;
+  top: 40%;
+  right: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.combo-number {
+  font-size: 48px;
+  font-weight: bold;
+  color: #FFD700;
+  text-shadow: 0 0 16px #FFD700, 0 0 32px #FF8C00;
+  animation: comboGlow 1s ease-in-out infinite;
+}
+
+.combo-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+}
+
+@keyframes comboGlow {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ddr-lane-label {
+    font-size: 12px;
+    padding: 2px 6px;
+  }
+  
+  .target-percent {
+    font-size: 10px;
+  }
+  
+  .ddr-judgment-popup {
+    font-size: 20px;
+  }
+  
+  .combo-number {
+    font-size: 36px;
+  }
+  
+  .combo-label {
+    font-size: 14px;
+  }
+}

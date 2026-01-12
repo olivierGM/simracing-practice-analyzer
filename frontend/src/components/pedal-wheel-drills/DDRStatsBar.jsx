@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import enhancedDrillAudioService from '../../services/enhancedDrillAudioService';
 import './DDRStatsBar.css';
 
-export function DDRStatsBar({ totalTime, zoneStatus, accuracy, score }) {
+export function DDRStatsBar({ totalTime, zoneStatus, accuracy, score, vertical = false }) {
   const [comboInfo, setComboInfo] = useState({ current: 0, max: 0 });
   
   // Mettre à jour le combo toutes les 100ms
@@ -33,7 +33,7 @@ export function DDRStatsBar({ totalTime, zoneStatus, accuracy, score }) {
   };
 
   return (
-    <div className="ddr-stats-bar">
+    <div className={`ddr-stats-bar ${vertical ? 'ddr-stats-bar-vertical' : ''}`}>
       <div className="ddr-stat-item">
         <div className="ddr-stat-label">Temps</div>
         <div className="ddr-stat-value">{formatTime(totalTime)}</div>

@@ -16,6 +16,7 @@ let keyValues = {
   // Par défaut, certaines touches pour tester
   'KeyW': { type: 'accelerator', value: 0, targetValue: 1, speed: 0.04 }, // W = Accélérateur
   'KeyS': { type: 'brake', value: 0, targetValue: 1, speed: 0.04 },       // S = Frein
+  'Space': { type: 'clutch', value: 0, targetValue: 1, speed: 0.04 },     // Espace = Embrayage
   'ArrowLeft': { type: 'wheel', value: -1, targetValue: -1, speed: 0.05 }, // Flèche gauche
   'ArrowRight': { type: 'wheel', value: 1, targetValue: 1, speed: 0.05 }, // Flèche droite
   'ArrowUp': { type: 'shift_up', value: 0, targetValue: 1, speed: 1 },    // Shift Up (instantané)
@@ -98,8 +99,8 @@ function updateProgressiveValues() {
           keyInfo.value = 0;
         }
       }
-    } else if (type === 'accelerator' || type === 'brake') {
-      // Pédales : montée/descente progressive
+    } else if (type === 'accelerator' || type === 'brake' || type === 'clutch') {
+      // Pédales (accélérateur, frein, embrayage) : montée/descente progressive
       if (isPressed) {
         // Appui progressif
         if (keyInfo.value < keyInfo.targetValue) {
@@ -186,8 +187,8 @@ function updateKeyValue(keyCode, isPressed) {
   if (keyInfo.type === 'wheel') {
     // Pour le volant, utiliser la targetValue
     keyInfo.value = isPressed ? keyInfo.targetValue : 0;
-  } else if (keyInfo.type === 'accelerator' || keyInfo.type === 'brake') {
-    // Pour les pédales, 1 si pressé, 0 sinon
+  } else if (keyInfo.type === 'accelerator' || keyInfo.type === 'brake' || keyInfo.type === 'clutch') {
+    // Pour les pédales (accélérateur, frein, embrayage), 1 si pressé, 0 sinon
     keyInfo.value = isPressed ? 1 : 0;
   } else {
     // Pour les boutons (shift), 1 si pressé, 0 sinon

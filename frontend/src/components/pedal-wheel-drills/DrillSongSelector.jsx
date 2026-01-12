@@ -27,7 +27,7 @@ const TOLERANCE_BY_DIFFICULTY = {
   insane_plus_2: 5
 };
 
-export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
+export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty, drillType = 'percentage' }) {
   const [allDrillSongs, setAllDrillSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMode, setSelectedMode] = useState('random-medium'); // ID du mode/song sélectionné
@@ -35,15 +35,15 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
 
   useEffect(() => {
     loadAllDrillSongs();
-  }, []);
+  }, [drillType]);
 
   const loadAllDrillSongs = async () => {
     setLoading(true);
     try {
       // Charger les drill songs de toutes les difficultés
-      const easySongs = await listDrillSongs('easy');
-      const mediumSongs = await listDrillSongs('medium');
-      const hardSongs = await listDrillSongs('hard');
+      const easySongs = await listDrillSongs('easy', drillType);
+      const mediumSongs = await listDrillSongs('medium', drillType);
+      const hardSongs = await listDrillSongs('hard', drillType);
       
       // Combiner tous les songs avec leur difficulté
       const allSongs = [
@@ -81,7 +81,11 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty }) {
     }
     
     if (onSelectDrillSong) {
-      onSelectDrillSong({ type: 'random', difficulty: difficultyKey });
+      onSelectDrillSong({ 
+        type: 'random', 
+        difficulty: difficultyKey,
+        duration: 60 // 60 secondes par défaut pour le mode random
+      });
     }
   };
 

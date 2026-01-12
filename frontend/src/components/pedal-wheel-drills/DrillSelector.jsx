@@ -8,9 +8,11 @@ import './DrillSelector.css';
 
 export const DRILL_TYPES = {
   PERCENTAGE: 'percentage',
+  BRAKE_ACCEL: 'brakeaccel',
   TURNING: 'turning',
   ACCELERATION: 'acceleration',
-  COMBINED: 'combined'
+  COMBINED: 'combined',
+  COMBINED_VERTICAL: 'combined_vertical'
 };
 
 const DRILL_OPTIONS = [
@@ -19,6 +21,13 @@ const DRILL_OPTIONS = [
     label: '📊 Drill de Pourcentages',
     description: 'Maintenir un pourcentage précis (20%, 40%, 60%, 80%)',
     icon: '📊',
+    available: true
+  },
+  {
+    type: DRILL_TYPES.BRAKE_ACCEL,
+    label: '🚦 Frein + Accélérateur',
+    description: 'Trail braking : combiner freinage et accélération',
+    icon: '🚦',
     available: true
   },
   {
@@ -37,10 +46,17 @@ const DRILL_OPTIONS = [
   },
   {
     type: DRILL_TYPES.COMBINED,
-    label: '🎯 Drill Combiné',
-    description: 'Combiner pédales et volant simultanément',
+    label: '🎯 Drill Complet',
+    description: 'Frein, volant, accélérateur et shifter simultanément',
     icon: '🎯',
-    available: false // À implémenter plus tard
+    available: true
+  },
+  {
+    type: DRILL_TYPES.COMBINED_VERTICAL,
+    label: '📊 Drill Complet Vertical',
+    description: 'Drill complet avec lanes en colonnes et scroll vertical',
+    icon: '📊',
+    available: true
   }
 ];
 

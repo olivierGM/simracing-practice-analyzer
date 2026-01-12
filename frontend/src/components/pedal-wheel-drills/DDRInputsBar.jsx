@@ -6,13 +6,13 @@
 
 import './DDRInputsBar.css';
 
-export function DDRInputsBar({ accelerator, brake, wheel, shiftUp, shiftDown }) {
+export function DDRInputsBar({ accelerator, brake, wheel, shiftUp, shiftDown, vertical = false }) {
   const acceleratorPercent = Math.round(accelerator * 100);
   const brakePercent = Math.round(brake * 100);
   const wheelDegrees = Math.round(wheel * 900);
 
   return (
-    <div className="ddr-inputs-bar">
+    <div className={`ddr-inputs-bar ${vertical ? 'ddr-inputs-bar-vertical' : ''}`}>
       <div className="ddr-input-item">
         <span className="ddr-input-icon">⚡</span>
         <span className="ddr-input-value">{acceleratorPercent}%</span>

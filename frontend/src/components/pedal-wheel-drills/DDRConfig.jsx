@@ -38,7 +38,9 @@ export function DDRConfig({
   blindMode,
   onBlindModeChange,
   onStart,
-  onBack
+  onBack,
+  showInputTypeSelector = true, // Nouveau prop pour cacher le sélecteur d'input
+  drillType = 'percentage' // Nouveau prop pour définir le type de drill
 }) {
   return (
     <div className="ddr-config">
@@ -52,23 +54,25 @@ export function DDRConfig({
       <div className="ddr-config-content">
         {/* Colonne gauche : Settings */}
         <div className="ddr-config-settings">
-          <div className="ddr-config-section">
-            <label className="ddr-config-label">Pédale</label>
-            <div className="ddr-config-options">
-              <button
-                className={`ddr-config-option ${inputType === 'accelerator' ? 'ddr-config-option-selected' : ''}`}
-                onClick={() => onInputTypeChange('accelerator')}
-              >
-                ⚡ Accélérateur
-              </button>
-              <button
-                className={`ddr-config-option ${inputType === 'brake' ? 'ddr-config-option-selected' : ''}`}
-                onClick={() => onInputTypeChange('brake')}
-              >
-                🛑 Frein
-              </button>
+          {showInputTypeSelector && (
+            <div className="ddr-config-section">
+              <label className="ddr-config-label">Pédale</label>
+              <div className="ddr-config-options">
+                <button
+                  className={`ddr-config-option ${inputType === 'accelerator' ? 'ddr-config-option-selected' : ''}`}
+                  onClick={() => onInputTypeChange('accelerator')}
+                >
+                  ⚡ Accélérateur
+                </button>
+                <button
+                  className={`ddr-config-option ${inputType === 'brake' ? 'ddr-config-option-selected' : ''}`}
+                  onClick={() => onInputTypeChange('brake')}
+                >
+                  🛑 Frein
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="ddr-config-section">
             <label className="ddr-config-label">Options Audio</label>
@@ -116,6 +120,7 @@ export function DDRConfig({
           <DrillSongSelector 
             onSelectDrillSong={onDrillSongChange}
             onSelectDifficulty={onDifficultyChange}
+            drillType={drillType}
           />
         </div>
       </div>

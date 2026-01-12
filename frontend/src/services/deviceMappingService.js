@@ -21,6 +21,7 @@ export const AXIS_TYPES = {
   WHEEL: 'wheel',           // Volant (gauche/droite)
   ACCELERATOR: 'accelerator', // Accélérateur
   BRAKE: 'brake',            // Frein
+  CLUTCH: 'clutch',          // Embrayage
   SHIFT_UP: 'shift_up',      // Shift Up (bouton)
   SHIFT_DOWN: 'shift_down'   // Shift Down (bouton)
 };

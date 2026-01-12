@@ -23,6 +23,7 @@ import './DeviceMappingConfig.css';
 const ASSIGNABLE_FUNCTIONS = [
   { type: AXIS_TYPES.ACCELERATOR, label: '⚡ Accélérateur', icon: '⚡' },
   { type: AXIS_TYPES.BRAKE, label: '🛑 Frein', icon: '🛑' },
+  { type: AXIS_TYPES.CLUTCH, label: '🔄 Embrayage', icon: '🔄' },
   { type: AXIS_TYPES.WHEEL, label: '🎮 Volant', icon: '🎮' },
   { type: AXIS_TYPES.SHIFT_UP, label: '⬆️ Shift Up', icon: '⬆️' },
   { type: AXIS_TYPES.SHIFT_DOWN, label: '⬇️ Shift Down', icon: '⬇️' }
@@ -546,7 +547,7 @@ export function DeviceMappingConfig({ onConfigChange }) {
                           {currentAssignment ? 'Réassigner' : 'Assigner'}
                         </button>
                         {currentAssignment && 
-                         (func.type === AXIS_TYPES.ACCELERATOR || func.type === AXIS_TYPES.BRAKE) && (
+                         (func.type === AXIS_TYPES.ACCELERATOR || func.type === AXIS_TYPES.BRAKE || func.type === AXIS_TYPES.CLUTCH) && (
                           <button
                             className="invert-button"
                             onClick={() => handleToggleInvert(func.type)}
