@@ -15,7 +15,9 @@ import {
 import {
   initializeKeyboardListeners,
   cleanupKeyboardListeners,
-  getKeyboardValue
+  getKeyboardValue,
+  setProgressiveMode,
+  isProgressiveModeEnabled
 } from '../services/keyboardService';
 
 /**
@@ -71,6 +73,15 @@ export function useMappedGamepads(config = null) {
 
     const connected = getConnectedGamepads();
     setGamepads(connected);
+
+    // Auto-activer le mode progressif si aucun gamepad connecté
+    const hasGamepads = connected.length > 0;
+    if (!hasGamepads && !isProgressiveModeEnabled()) {
+      setProgressiveMode(true);
+    } else if (hasGamepads && isProgressiveModeEnabled()) {
+      // Désactiver le mode progressif si un gamepad est connecté
+      setProgressiveMode(false);
+    }
 
     // Appliquer le mapping pour obtenir les valeurs depuis les gamepads
     let wheel = getMappedValue(AXIS_TYPES.WHEEL, connected, currentConfigRef.current);
