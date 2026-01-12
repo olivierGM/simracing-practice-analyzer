@@ -423,50 +423,21 @@ export function DDRFullGameplayArea({
     });
   }, [currentTime, shiftUp, shiftDown, isActive, audioEnabled, onJudgmentUpdate, markTargetHit, markTargetMiss]);
 
-  // Rendu des 4 lanes
+  // Debug dans la console (toutes les 2 secondes)
+  useEffect(() => {
+    if (!isActive) return;
+    
+    const debugInterval = setInterval(() => {
+      console.log(`[Drill Complet Debug] Time: ${currentTime.toFixed(2)}s | Brake: ${brakeTargets.length} | Wheel: ${wheelTargets.length} | Accel: ${accelTargets.length} | Shift: ${shiftTargets.length} | Judgments: P:${judgmentCounts.PERFECT} G:${judgmentCounts.GREAT} M:${judgmentCounts.MISS}`);
+    }, 2000);
+    
+    return () => clearInterval(debugInterval);
+  }, [isActive, currentTime, brakeTargets.length, wheelTargets.length, accelTargets.length, shiftTargets.length, judgmentCounts]);
+
+  // Rendu des 4 lanes empilées verticalement
   return (
     <div className="ddr-full-gameplay">
-      {/* Debug panel */}
-      <div className="ddr-debug-panel">
-        <div className="debug-section">
-          <div className="debug-label">Time:</div>
-          <div className="debug-value">{currentTime.toFixed(2)}s</div>
-        </div>
-        
-        <div className="debug-section">
-          <div className="debug-label">Active:</div>
-          <div className="debug-value">{isActive ? '✅' : '❌'}</div>
-        </div>
-        
-        <div className="debug-section">
-          <div className="debug-label">Brake Targets:</div>
-          <div className="debug-value">{brakeTargets.length}</div>
-        </div>
-        
-        <div className="debug-section">
-          <div className="debug-label">Wheel Targets:</div>
-          <div className="debug-value">{wheelTargets.length}</div>
-        </div>
-        
-        <div className="debug-section">
-          <div className="debug-label">Accel Targets:</div>
-          <div className="debug-value">{accelTargets.length}</div>
-        </div>
-        
-        <div className="debug-section">
-          <div className="debug-label">Shift Targets:</div>
-          <div className="debug-value">{shiftTargets.length}</div>
-        </div>
-        
-        <div className="debug-section">
-          <div className="debug-label">Judgments:</div>
-          <div className="debug-value">
-            P:{judgmentCounts.PERFECT} G:{judgmentCounts.GREAT} M:{judgmentCounts.MISS}
-          </div>
-        </div>
-      </div>
-      
-      {/* Les 4 lanes côte à côte */}
+      {/* Les 4 lanes empilées verticalement */}
       <div className="ddr-full-lanes">
         {/* Lane 1: Frein */}
         <div className="ddr-lane ddr-lane-brake">

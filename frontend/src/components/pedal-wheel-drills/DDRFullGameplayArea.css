@@ -11,13 +11,16 @@
 .ddr-full-lanes {
   flex: 1;
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
   padding: 1rem;
   min-height: 0;
+  overflow-y: auto;
 }
 
 .ddr-lane {
   flex: 1;
+  min-height: 150px;
   display: flex;
   flex-direction: column;
   background: rgba(0, 0, 0, 0.3);
