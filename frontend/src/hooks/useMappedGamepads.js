@@ -31,6 +31,7 @@ export function useMappedGamepads(config = null) {
     wheel: 0,
     accelerator: 0,
     brake: 0,
+    clutch: 0,
     shiftUp: false,
     shiftDown: false
   });
@@ -87,6 +88,7 @@ export function useMappedGamepads(config = null) {
     let wheel = getMappedValue(AXIS_TYPES.WHEEL, connected, currentConfigRef.current);
     let accelerator = getMappedValue(AXIS_TYPES.ACCELERATOR, connected, currentConfigRef.current);
     let brake = getMappedValue(AXIS_TYPES.BRAKE, connected, currentConfigRef.current);
+    let clutch = getMappedValue(AXIS_TYPES.CLUTCH, connected, currentConfigRef.current);
     let shiftUp = getMappedValue(AXIS_TYPES.SHIFT_UP, connected, currentConfigRef.current) > 0.5;
     let shiftDown = getMappedValue(AXIS_TYPES.SHIFT_DOWN, connected, currentConfigRef.current) > 0.5;
 
@@ -94,6 +96,7 @@ export function useMappedGamepads(config = null) {
     const keyboardWheel = getKeyboardValue('wheel');
     const keyboardAccel = getKeyboardValue('accelerator');
     const keyboardBrake = getKeyboardValue('brake');
+    const keyboardClutch = getKeyboardValue('clutch');
     const keyboardShiftUp = getKeyboardValue('shift_up') > 0.5;
     const keyboardShiftDown = getKeyboardValue('shift_down') > 0.5;
 
@@ -101,6 +104,7 @@ export function useMappedGamepads(config = null) {
     wheel = Math.abs(wheel) > 0.1 ? wheel : keyboardWheel;
     accelerator = accelerator > 0.1 ? accelerator : keyboardAccel;
     brake = brake > 0.1 ? brake : keyboardBrake;
+    clutch = clutch > 0.1 ? clutch : keyboardClutch;
     shiftUp = shiftUp || keyboardShiftUp;
     shiftDown = shiftDown || keyboardShiftDown;
 
@@ -108,6 +112,7 @@ export function useMappedGamepads(config = null) {
       wheel,
       accelerator,
       brake,
+      clutch,
       shiftUp,
       shiftDown
     });
@@ -143,6 +148,7 @@ export function useMappedGamepads(config = null) {
     wheel: mappedValues.wheel,
     accelerator: mappedValues.accelerator,
     brake: mappedValues.brake,
+    clutch: mappedValues.clutch,
     shiftUp: mappedValues.shiftUp,
     shiftDown: mappedValues.shiftDown,
     
