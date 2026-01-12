@@ -3,7 +3,10 @@
  * 
  * Logos hébergés localement dans /public/logos/
  * - SVG : Aston Martin, BMW, Honda, Lamborghini, Mercedes
- * - PNG : Porsche, Ferrari, Audi, McLaren, Nissan, Bentley, Jaguar, Lexus
+ * - PNG : Porsche, Ferrari, McLaren, Nissan, Bentley, Jaguar, Lexus
+ * 
+ * Logos hébergés sur Wikimedia Commons
+ * - Audi, Alpine, Chevrolet, Ginetta, KTM, Maserati
  */
 
 // Mapping des IDs de carModel aux marques
@@ -13,7 +16,7 @@ const CAR_MODEL_TO_MANUFACTURER = {
   0: { name: 'Porsche', logoUrl: '/logos/porsche.png', fullName: 'Porsche 991 GT3 R' },
   1: { name: 'Mercedes', logoUrl: '/logos/mercedes.svg', fullName: 'Mercedes-AMG GT3' },
   2: { name: 'Ferrari', logoUrl: '/logos/ferrari.png', fullName: 'Ferrari 488 GT3' },
-  3: { name: 'Audi', logoUrl: '/logos/audi.png', fullName: 'Audi R8 LMS' },
+  3: { name: 'Audi', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Audi_logo.svg/1280px-Audi_logo.svg.png', fullName: 'Audi R8 LMS' },
   4: { name: 'Lamborghini', logoUrl: '/logos/lamborghini.svg', fullName: 'Lamborghini Huracan GT3' },
   5: { name: 'McLaren', logoUrl: '/logos/mclaren.png', fullName: 'McLaren 650S GT3' },
   6: { name: 'Nissan', logoUrl: '/logos/nissan.svg', fullName: 'Nissan GT-R Nismo GT3 2018' },
@@ -29,7 +32,7 @@ const CAR_MODEL_TO_MANUFACTURER = {
   16: { name: 'Lamborghini', logoUrl: '/logos/lamborghini.svg', fullName: 'Lamborghini Huracan Evo (2019)' },
   17: { name: 'Honda', logoUrl: '/logos/honda.svg', fullName: 'Honda NSX GT3' },
   18: { name: 'Lamborghini', logoUrl: '/logos/lamborghini.svg', fullName: 'Lamborghini Huracan SuperTrofeo' },
-  19: { name: 'Audi', logoUrl: '/logos/audi.png', fullName: 'Audi R8 LMS Evo (2019)' },
+  19: { name: 'Audi', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Audi_logo.svg/1280px-Audi_logo.svg.png', fullName: 'Audi R8 LMS Evo (2019)' },
   20: { name: 'Aston Martin', logoUrl: '/logos/aston-martin.svg', fullName: 'AMR V8 Vantage (2019)' },
   21: { name: 'Honda', logoUrl: '/logos/honda.svg', fullName: 'Honda NSX Evo (2019)' },
   22: { name: 'McLaren', logoUrl: '/logos/mclaren.png', fullName: 'McLaren 720S GT3 (2019)' },
@@ -41,7 +44,7 @@ const CAR_MODEL_TO_MANUFACTURER = {
   28: { name: 'Porsche', logoUrl: '/logos/porsche.png', fullName: 'Porsche 911 GT3 Cup (Type 992)' },
   29: { name: 'Lamborghini', logoUrl: '/logos/lamborghini.svg', fullName: 'Lamborghini Huracán Super Trofeo EVO2' },
   30: { name: 'BMW', logoUrl: '/logos/bmw.svg', fullName: 'BMW M4 GT3' },
-  31: { name: 'Audi', logoUrl: '/logos/audi.png', fullName: 'Audi R8 LMS GT3 evo II' },
+  31: { name: 'Audi', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Audi_logo.svg/1280px-Audi_logo.svg.png', fullName: 'Audi R8 LMS GT3 evo II' },
   32: { name: 'Ferrari', logoUrl: '/logos/ferrari.png', fullName: 'Ferrari 296 GT3' },
   33: { name: 'Lamborghini', logoUrl: '/logos/lamborghini.svg', fullName: 'Lamborghini Huracan Evo2' },
   34: { name: 'Porsche', logoUrl: '/logos/porsche.png', fullName: 'Porsche 992 GT3 R' },
@@ -49,7 +52,7 @@ const CAR_MODEL_TO_MANUFACTURER = {
   // GT4 Cars
   50: { name: 'Alpine', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Alpine_logo.svg/1280px-Alpine_logo.svg.png', fullName: 'Alpine A110 GT4' },
   51: { name: 'Aston Martin', logoUrl: '/logos/aston-martin.svg', fullName: 'AMR V8 Vantage GT4' },
-  52: { name: 'Audi', logoUrl: '/logos/audi.png', fullName: 'Audi R8 LMS GT4' },
+  52: { name: 'Audi', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Audi_logo.svg/1280px-Audi_logo.svg.png', fullName: 'Audi R8 LMS GT4' },
   53: { name: 'BMW', logoUrl: '/logos/bmw.svg', fullName: 'BMW M4 GT4' },
   55: { name: 'Chevrolet', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Chevrolet_logo.svg/1280px-Chevrolet_logo.svg.png', fullName: 'Chevrolet Camaro GT4' },
   56: { name: 'Ginetta', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/Ginetta_Logo.svg/1280px-Ginetta_Logo.svg.png', fullName: 'Ginetta G55 GT4' },
@@ -59,7 +62,7 @@ const CAR_MODEL_TO_MANUFACTURER = {
   60: { name: 'Mercedes', logoUrl: '/logos/mercedes.svg', fullName: 'Mercedes-AMG GT4' },
   61: { name: 'Porsche', logoUrl: '/logos/porsche.png', fullName: 'Porsche 718 Cayman GT4' },
   // GT2 Cars
-  80: { name: 'Audi', logoUrl: '/logos/audi.png', fullName: 'Audi R8 LMS GT2' },
+  80: { name: 'Audi', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Audi_logo.svg/1280px-Audi_logo.svg.png', fullName: 'Audi R8 LMS GT2' },
   82: { name: 'KTM', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/KTM_logo.svg/1280px-KTM_logo.svg.png', fullName: 'KTM XBOW GT2' },
   83: { name: 'Maserati', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Maserati_logo.svg/1280px-Maserati_logo.svg.png', fullName: 'Maserati MC20 GT2' },
   84: { name: 'Mercedes', logoUrl: '/logos/mercedes.svg', fullName: 'Mercedes AMG GT2' },
