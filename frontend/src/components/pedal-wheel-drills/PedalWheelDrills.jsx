@@ -11,6 +11,7 @@ import { DeviceMappingConfig } from './DeviceMappingConfig';
 import { DrillSelector, DRILL_TYPES } from './DrillSelector';
 import { PercentageDrill } from './PercentageDrill';
 import { BrakeAccelDrill } from './BrakeAccelDrill';
+import { FullComboDrill } from './FullComboDrill';
 import { useMappedGamepads } from '../../hooks/useMappedGamepads';
 import { loadMappingConfig } from '../../services/deviceMappingService';
 import { getAssignedKeys } from '../../services/keyboardService';
@@ -72,6 +73,16 @@ export function PedalWheelDrills() {
         )}
         {selectedDrill === DRILL_TYPES.BRAKE_ACCEL && (
           <BrakeAccelDrill
+            acceleratorValue={accelerator}
+            brakeValue={brake}
+            wheelValue={wheel}
+            shiftUp={shiftUp}
+            shiftDown={shiftDown}
+            onBack={handleDrillBack}
+          />
+        )}
+        {selectedDrill === DRILL_TYPES.COMBINED && (
+          <FullComboDrill
             acceleratorValue={accelerator}
             brakeValue={brake}
             wheelValue={wheel}

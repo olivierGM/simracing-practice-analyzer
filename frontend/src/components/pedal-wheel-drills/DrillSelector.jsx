@@ -45,10 +45,10 @@ const DRILL_OPTIONS = [
   },
   {
     type: DRILL_TYPES.COMBINED,
-    label: '🎯 Drill Combiné',
-    description: 'Combiner pédales et volant simultanément',
+    label: '🎯 Drill Complet',
+    description: 'Frein, volant, accélérateur et shifter simultanément',
     icon: '🎯',
-    available: false // À implémenter plus tard
+    available: true
   }
 ];
 
