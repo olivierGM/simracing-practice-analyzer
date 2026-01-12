@@ -11,7 +11,8 @@ export const DRILL_TYPES = {
   BRAKE_ACCEL: 'brakeaccel',
   TURNING: 'turning',
   ACCELERATION: 'acceleration',
-  COMBINED: 'combined'
+  COMBINED: 'combined',
+  COMBINED_VERTICAL: 'combined_vertical'
 };
 
 const DRILL_OPTIONS = [
@@ -48,6 +49,13 @@ const DRILL_OPTIONS = [
     label: '🎯 Drill Complet',
     description: 'Frein, volant, accélérateur et shifter simultanément',
     icon: '🎯',
+    available: true
+  },
+  {
+    type: DRILL_TYPES.COMBINED_VERTICAL,
+    label: '📊 Drill Complet Vertical',
+    description: 'Drill complet avec lanes en colonnes et scroll vertical',
+    icon: '📊',
     available: true
   }
 ];

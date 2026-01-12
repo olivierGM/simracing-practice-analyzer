@@ -1,0 +1,54 @@
+/**
+ * Styles pour FullComboVerticalDrill
+ * Layout vertical avec lanes en colonnes
+ */
+
+.full-combo-vertical-drill {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.full-combo-vertical-drill-ddr {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* Container principal : Stats | Gameplay | Inputs */
+.full-combo-vertical-container {
+  flex: 1;
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem;
+  min-height: 0;
+}
+
+/* Sidebars (gauche et droite) */
+.full-combo-vertical-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  min-width: 180px;
+}
+
+.full-combo-vertical-left {
+  justify-content: flex-start;
+}
+
+.full-combo-vertical-right {
+  justify-content: flex-start;
+}
+
+/* Zone de gameplay au centre (prend tout l'espace restant) */
+.full-combo-vertical-gameplay {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+}
