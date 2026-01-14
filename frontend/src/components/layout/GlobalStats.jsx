@@ -11,6 +11,7 @@ import { getManufacturerName, getManufacturerLogoUrl } from '../../services/carM
 import './GlobalStats.css';
 
 export function GlobalStats({ drivers }) {
+
   // Calculer les statistiques globales (comme dans script-public.js)
   const overall = {
     totalLaps: 0,
@@ -47,7 +48,7 @@ export function GlobalStats({ drivers }) {
     overall.bestValidTime = 0;
   }
 
-  // Calculer les statistiques de marques
+  // Calculer les statistiques de marques (seulement celles avec 2+ pilotes)
   const manufacturerStats = useMemo(() => {
     const counts = {};
     const manufacturerToCarModel = {}; // Mapping pour obtenir le carModel représentatif de chaque marque
@@ -63,16 +64,20 @@ export function GlobalStats({ drivers }) {
       }
     });
 
-    // Trier par nombre décroissant et prendre les top 4
+    // Filtrer pour ne garder que les marques avec 2+ pilotes, puis trier par nombre décroissant
     return Object.entries(counts)
+      .filter(([_, count]) => count >= 2) // Seulement les marques avec 2+ pilotes
       .map(([name, count]) => ({
         name,
         count,
         logoUrl: getManufacturerLogoUrl(manufacturerToCarModel[name])
       }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 4);
+      .sort((a, b) => b.count - a.count);
   }, [drivers]);
+
+  // Afficher jusqu'à 6 marques sur toutes les tailles d'écran
+  const maxDisplayed = 6;
+  const displayedManufacturers = manufacturerStats.slice(0, maxDisplayed);
 
   return (
     <div className="compact-stats-grid">
@@ -92,19 +97,21 @@ export function GlobalStats({ drivers }) {
         <h3>📊 Moyenne</h3>
         <div className="stat-value">{formatTime(overall.averageValidTime)}</div>
       </div>
-      <div className="compact-stat-card">
-        <h3>🌧️ Tours Wet</h3>
-        <div className="stat-value">{overall.wetLaps}</div>
-      </div>
+      {overall.wetLaps > 0 && (
+        <div className="compact-stat-card">
+          <h3>🌧️ Tours Wet</h3>
+          <div className="stat-value">{overall.wetLaps}</div>
+        </div>
+      )}
       <div className="compact-stat-card">
         <h3>👥 Pilotes</h3>
         <div className="stat-value">{overall.pilotCount}</div>
       </div>
-      {manufacturerStats.length > 0 && (
+      {displayedManufacturers.length > 0 && (
         <div className="compact-stat-card manufacturer-stats-card">
           <h3>🚗 Marques</h3>
           <div className="manufacturer-stats-list">
-            {manufacturerStats.map(({ name, count, logoUrl }) => (
+            {displayedManufacturers.map(({ name, count, logoUrl }) => (
               <div key={name} className="manufacturer-stat-item" title={`${name}: ${count} pilote${count > 1 ? 's' : ''}`}>
                 <img 
                   src={logoUrl} 
