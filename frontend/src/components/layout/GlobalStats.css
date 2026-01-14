@@ -38,6 +38,55 @@
     margin: 0;
 }
 
+/* Styles pour la carte des marques */
+.manufacturer-stats-card {
+    padding: 8px 12px;
+}
+
+.manufacturer-stats-card h3 {
+    margin-bottom: 6px;
+    font-size: 0.8rem;
+}
+
+.manufacturer-stats-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+}
+
+.manufacturer-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.manufacturer-stat-item:hover {
+    background: var(--bg-hover);
+    transform: scale(1.05);
+}
+
+.manufacturer-stat-logo {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.manufacturer-stat-count {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    min-width: 14px;
+    text-align: center;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .compact-stats-grid {
@@ -63,6 +112,35 @@
     .compact-stat-card .stat-value {
         font-size: 0.95rem;
         margin-left: 8px;
+    }
+
+    /* Styles responsive pour la carte des marques */
+    .manufacturer-stats-card {
+        padding: 6px 8px;
+    }
+
+    .manufacturer-stats-card h3 {
+        margin-bottom: 4px;
+        font-size: 0.7rem;
+    }
+
+    .manufacturer-stats-list {
+        gap: 4px;
+        margin-top: 0;
+    }
+
+    .manufacturer-stat-item {
+        padding: 2px 4px;
+        gap: 2px;
+    }
+
+    .manufacturer-stat-logo {
+        width: 14px;
+        height: 14px;
+    }
+
+    .manufacturer-stat-count {
+        font-size: 0.75rem;
     }
 }
 
