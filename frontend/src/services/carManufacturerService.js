@@ -6,7 +6,10 @@
  * - PNG : Porsche, Ferrari, McLaren, Nissan, Bentley, Jaguar, Lexus
  * 
  * Logos hébergés sur Wikimedia Commons
- * - Audi, Alpine, Chevrolet, Ford, Ginetta, KTM, Maserati
+ * - Audi, Alpine, Chevrolet, Ginetta, KTM, Maserati
+ * 
+ * Logos hébergés localement (téléchargés depuis Wikimedia)
+ * - Ford
  */
 
 // Mapping des IDs de carModel aux marques
@@ -49,7 +52,7 @@ const CAR_MODEL_TO_MANUFACTURER = {
   33: { name: 'Lamborghini', logoUrl: '/logos/lamborghini.svg', fullName: 'Lamborghini Huracan Evo2' },
   34: { name: 'Porsche', logoUrl: '/logos/porsche.png', fullName: 'Porsche 992 GT3 R' },
   35: { name: 'McLaren', logoUrl: '/logos/mclaren.png', fullName: 'McLaren 720S GT3 Evo 2023' },
-  36: { name: 'Ford', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ford_logo_flat.svg/1280px-Ford_logo_flat.svg.png', fullName: 'Ford Mustang GT3' },
+  36: { name: 'Ford', logoUrl: '/logos/ford.png', fullName: 'Ford Mustang GT3' },
   // GT4 Cars
   50: { name: 'Alpine', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Alpine_logo.svg/1280px-Alpine_logo.svg.png', fullName: 'Alpine A110 GT4' },
   51: { name: 'Aston Martin', logoUrl: '/logos/aston-martin.svg', fullName: 'AMR V8 Vantage GT4' },
