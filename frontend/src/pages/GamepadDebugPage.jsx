@@ -84,20 +84,28 @@ export function GamepadDebugPage() {
   useEffect(() => {
     const pollGamepads = () => {
       // Essayer de "réveiller" les devices en lisant tous les slots
-      const allGamepads = navigator.getGamepads();
-      if (allGamepads) {
-        // Lire chaque slot pour forcer l'activation (même si null)
-        for (let i = 0; i < allGamepads.length; i++) {
-          const gp = allGamepads[i];
-          if (gp) {
-            // Lire les axes pour "réveiller" le device
-            gp.axes?.forEach((val, idx) => {
-              // Juste lire la valeur pour activer le device
-              if (val !== undefined) {
-                // Device actif
+      if (typeof navigator !== 'undefined' && typeof navigator.getGamepads === 'function') {
+        try {
+          const allGamepads = navigator.getGamepads();
+          if (allGamepads) {
+            // Lire chaque slot pour forcer l'activation (même si null)
+            for (let i = 0; i < allGamepads.length; i++) {
+              const gp = allGamepads[i];
+              if (gp) {
+                // Lire les axes pour "réveiller" le device
+                if (gp.axes) {
+                  gp.axes.forEach((val, idx) => {
+                    // Juste lire la valeur pour activer le device
+                    if (val !== undefined) {
+                      // Device actif
+                    }
+                  });
+                }
               }
-            });
+            }
           }
+        } catch (error) {
+          console.warn('Erreur lors de la lecture des gamepads:', error);
         }
       }
       
@@ -266,21 +274,32 @@ export function GamepadDebugPage() {
           </button>
           <button 
             onClick={() => {
-              // Forcer la détection en lisant tous les gamepads (même null)
-              const allGamepads = navigator.getGamepads();
-              const nullSlots = [];
-              for (let i = 0; i < allGamepads.length; i++) {
-                if (allGamepads[i] === null) {
-                  nullSlots.push(i);
+              try {
+                // Forcer la détection en lisant tous les gamepads (même null)
+                if (typeof navigator !== 'undefined' && typeof navigator.getGamepads === 'function') {
+                  const allGamepads = navigator.getGamepads();
+                  const nullSlots = [];
+                  if (allGamepads) {
+                    for (let i = 0; i < allGamepads.length; i++) {
+                      if (allGamepads[i] === null) {
+                        nullSlots.push(i);
+                      }
+                    }
+                  }
+                  console.log('🔍 Forçage de la détection...');
+                  console.log(`Gamepads détectés: ${gamepads.length}`);
+                  console.log(`Slots null: ${nullSlots.join(', ')}`);
+                  // Forcer un refresh
+                  const connected = getConnectedGamepads();
+                  setGamepads(connected);
+                  alert(`Détection forcée.\nGamepads trouvés: ${connected.length}\nSlots null: ${nullSlots.length}\n\n💡 Si vos pédales ne sont toujours pas détectées, bougez-les pendant que cette page est ouverte.`);
+                } else {
+                  alert('Gamepad API non supporté dans ce navigateur.');
                 }
+              } catch (error) {
+                console.error('Erreur lors du forçage de la détection:', error);
+                alert('Erreur lors du forçage de la détection. Vérifiez la console pour plus de détails.');
               }
-              console.log('🔍 Forçage de la détection...');
-              console.log(`Gamepads détectés: ${gamepads.length}`);
-              console.log(`Slots null: ${nullSlots.join(', ')}`);
-              // Forcer un refresh
-              const connected = getConnectedGamepads();
-              setGamepads(connected);
-              alert(`Détection forcée.\nGamepads trouvés: ${connected.length}\nSlots null: ${nullSlots.length}\n\n💡 Si vos pédales ne sont toujours pas détectées, bougez-les pendant que cette page est ouverte.`);
             }} 
             className="force-detect-button"
           >
