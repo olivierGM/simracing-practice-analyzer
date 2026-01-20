@@ -339,23 +339,26 @@ export function GamepadDebugPage() {
         {/* Avertissement si des devices sont dans la config mais pas détectés */}
         {config && config.axisMappings && Object.keys(config.axisMappings).length > 0 && (
           (() => {
-            const missingDevices = matchingInfo.filter(m => !m.isConnected && m.axesMapped && m.axesMapped.length > 0);
+            const missingDevices = (matchingInfo || []).filter(m => m && !m.isConnected && m.axesMapped && m.axesMapped.length > 0);
             if (missingDevices && missingDevices.length > 0) {
               return (
                 <div className="missing-devices-warning">
                   <h3>⚠️ Devices mappés mais non détectés</h3>
                   <p>Les devices suivants sont dans votre configuration mais ne sont pas détectés par le navigateur :</p>
                   <ul>
-                    {missingDevices.map((m, idx) => (
-                      <li key={idx}>
-                        <strong>{m.deviceKey}</strong>
-                        <br />
-                        <small>
-                          Fingerprint: {m.fingerprint.axisCount} axes, {m.fingerprint.buttonCount} boutons
-                          {m.fingerprint.usedAxes && m.fingerprint.usedAxes.length > 0 && `, axes utilisés: [${m.fingerprint.usedAxes.join(', ')}]`}
-                        </small>
-                      </li>
-                    ))}
+                    {missingDevices.map((m, idx) => {
+                      const fingerprint = m.fingerprint || {};
+                      return (
+                        <li key={idx}>
+                          <strong>{m.deviceKey}</strong>
+                          <br />
+                          <small>
+                            Fingerprint: {fingerprint.axisCount || 0} axes, {fingerprint.buttonCount || 0} boutons
+                            {fingerprint.usedAxes && fingerprint.usedAxes.length > 0 && `, axes utilisés: [${fingerprint.usedAxes.join(', ')}]`}
+                          </small>
+                        </li>
+                      );
+                    })}
                   </ul>
                   <div className="missing-devices-help">
                     <strong>💡 Solutions :</strong>
@@ -505,14 +508,18 @@ export function GamepadDebugPage() {
                           </li>
                         ))}
                       </ul>
-                      {matchingInfo.find(m => m.deviceKey === deviceKey) && (
-                        <p className={matchingInfo.find(m => m.deviceKey === deviceKey).isConnected ? 'match-success' : 'match-error'}>
-                          <strong>Status:</strong> {matchingInfo.find(m => m.deviceKey === deviceKey).isConnected ? '✅ Connecté' : '❌ Non connecté'}
-                          {matchingInfo.find(m => m.deviceKey === deviceKey).matchedGamepad && (
-                            <> (Index: {matchingInfo.find(m => m.deviceKey === deviceKey).matchedGamepad.index})</>
-                          )}
-                        </p>
-                      )}
+                      {(() => {
+                        const match = matchingInfo.find(m => m && m.deviceKey === deviceKey);
+                        if (!match) return null;
+                        return (
+                          <p className={match.isConnected ? 'match-success' : 'match-error'}>
+                            <strong>Status:</strong> {match.isConnected ? '✅ Connecté' : '❌ Non connecté'}
+                            {match.matchedGamepad && (
+                              <> (Index: {match.matchedGamepad.index})</>
+                            )}
+                          </p>
+                        );
+                      })()}
                     </div>
                   ))}
                 </div>
