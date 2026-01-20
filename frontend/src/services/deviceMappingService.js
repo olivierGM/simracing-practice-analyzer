@@ -149,6 +149,7 @@ export function assignDevice(deviceIndex, deviceType, currentConfig) {
 
 /**
  * Détecte les collisions d'ID et génère une clé unique avec slot si nécessaire
+ * Essaie d'abord de réutiliser une clé existante si le device est déjà mappé
  * @param {Gamepad} gamepad - Le gamepad à assigner
  * @param {Array<Gamepad>} allGamepads - Tous les gamepads connectés
  * @param {Object} config - Configuration actuelle
@@ -157,6 +158,50 @@ export function assignDevice(deviceIndex, deviceType, currentConfig) {
 function getUniqueDeviceKey(gamepad, allGamepads, config) {
   const baseId = gamepad.id;
   
+  // D'abord, essayer de trouver si ce device est déjà mappé dans la config
+  // en utilisant le fingerprint ou lastKnownIndex
+  for (const [existingKey, deviceMapping] of Object.entries(config.axisMappings || {})) {
+    // Extraire l'ID de base de la clé existante
+    const existingMatch = existingKey.match(/^(.+?)(?: #(\d+))?$/);
+    const existingBaseId = existingMatch ? existingMatch[1] : existingKey;
+    
+    // Si l'ID de base correspond
+    if (existingBaseId === baseId) {
+      // Vérifier si le fingerprint correspond
+      if (deviceMapping._fingerprint) {
+        const fingerprint = deviceMapping._fingerprint;
+        const matchesFingerprint = 
+          gamepad.axes?.length === fingerprint.axisCount &&
+          gamepad.buttons?.length === fingerprint.buttonCount;
+        
+        if (matchesFingerprint) {
+          // Vérifier aussi les axes utilisés si disponibles
+          if (fingerprint.usedAxes && fingerprint.usedAxes.length > 0) {
+            const deviceHasUsedAxes = fingerprint.usedAxes.every(axisIdx => 
+              gamepad.axes && axisIdx < gamepad.axes.length
+            );
+            if (deviceHasUsedAxes) {
+              console.log(`✅ Réutilisation de la clé existante: "${existingKey}"`);
+              return existingKey;
+            }
+          } else {
+            // Pas d'axes utilisés encore, mais le fingerprint de base correspond
+            console.log(`✅ Réutilisation de la clé existante: "${existingKey}"`);
+            return existingKey;
+          }
+        }
+      }
+      
+      // Vérifier aussi par lastKnownIndex si disponible
+      if (deviceMapping._lastKnownIndex !== undefined && 
+          deviceMapping._lastKnownIndex === gamepad.index) {
+        console.log(`✅ Réutilisation de la clé existante (par index): "${existingKey}"`);
+        return existingKey;
+      }
+    }
+  }
+  
+  // Aucune clé existante trouvée, générer une nouvelle clé
   // Compter combien de devices ont le même ID
   const sameIdDevices = allGamepads.filter(gp => gp && gp.id === baseId);
   
@@ -167,7 +212,9 @@ function getUniqueDeviceKey(gamepad, allGamepads, config) {
   
   // Collision détectée ! Trouver le slot number de ce device
   const slotNumber = sameIdDevices.findIndex(gp => gp.index === gamepad.index) + 1;
-  return `${baseId} #${slotNumber}`;
+  const newKey = `${baseId} #${slotNumber}`;
+  console.log(`🆕 Nouvelle clé générée: "${newKey}"`);
+  return newKey;
 }
 
 /**
@@ -218,13 +265,20 @@ export function mapAxis(gamepad, axisIndex, axisType, invert = false, currentCon
   
   if (axisType === null || axisType === 'none') {
     delete newConfig.axisMappings[deviceKey].axes[axisIndex];
+    // Mettre à jour le fingerprint même après suppression
+    const usedAxes = Object.keys(newConfig.axisMappings[deviceKey].axes)
+      .filter(key => !key.startsWith('_'))
+      .map(key => parseInt(key));
+    if (newConfig.axisMappings[deviceKey]._fingerprint) {
+      newConfig.axisMappings[deviceKey]._fingerprint.usedAxes = usedAxes;
+    }
   } else {
     newConfig.axisMappings[deviceKey].axes[axisIndex] = {
       type: axisType,
       invert: invert
     };
     
-    // Créer un fingerprint des axes pour aider à différencier les devices identiques
+    // Créer/mettre à jour le fingerprint des axes pour aider à différencier les devices identiques
     const usedAxes = Object.keys(newConfig.axisMappings[deviceKey].axes)
       .filter(key => !key.startsWith('_'))
       .map(key => parseInt(key));
@@ -328,35 +382,95 @@ function findGamepadByKey(deviceKey, gamepads, deviceMapping) {
   
   if (slotNumber === null) {
     // Pas de slot, chercher par ID simple
-    return gamepads.find(gp => gp && gp.id === baseId) || null;
+    const found = gamepads.find(gp => gp && gp.id === baseId);
+    
+    // Si on trouve un seul device avec cet ID, vérifier le fingerprint pour être sûr
+    if (found && deviceMapping._fingerprint) {
+      const fingerprint = deviceMapping._fingerprint;
+      const matchesFingerprint = 
+        found.axes?.length === fingerprint.axisCount &&
+        found.buttons?.length === fingerprint.buttonCount;
+      
+      if (matchesFingerprint) {
+        return found;
+      }
+      // Si le fingerprint ne match pas, il y a peut-être eu un changement de device
+      // On retourne quand même le device trouvé (comportement original)
+    }
+    
+    return found || null;
   }
   
   // Avec slot, trouver le Nième device avec cet ID
   const sameIdDevices = gamepads.filter(gp => gp && gp.id === baseId);
   
-  if (sameIdDevices.length < slotNumber) {
-    // Le device à ce slot n'existe plus
+  if (sameIdDevices.length === 0) {
     return null;
+  }
+  
+  if (sameIdDevices.length < slotNumber) {
+    // Le device à ce slot n'existe plus, mais on peut essayer de le retrouver par fingerprint
+    console.warn(`⚠️ Device au slot ${slotNumber} non trouvé, tentative de matching par fingerprint...`);
   }
   
   // Utiliser le fingerprint pour matcher le bon device
   if (deviceMapping._fingerprint) {
     const fingerprint = deviceMapping._fingerprint;
+    const lastKnownIndex = deviceMapping._lastKnownIndex;
     
-    // Chercher un device qui match le fingerprint
-    for (const device of sameIdDevices) {
-      const matchesFingerprint = 
-        device.axes?.length === fingerprint.axisCount &&
-        device.buttons?.length === fingerprint.buttonCount;
+    // Calculer un score pour chaque device candidat
+    const candidates = sameIdDevices.map(device => {
+      let score = 0;
       
-      if (matchesFingerprint) {
-        return device;
+      // Score de base : match des counts
+      if (device.axes?.length === fingerprint.axisCount) {
+        score += 10;
       }
+      if (device.buttons?.length === fingerprint.buttonCount) {
+        score += 10;
+      }
+      
+      // Score bonus : match des axes utilisés (plus spécifique)
+      if (fingerprint.usedAxes && fingerprint.usedAxes.length > 0) {
+        const deviceHasUsedAxes = fingerprint.usedAxes.every(axisIdx => 
+          device.axes && axisIdx < device.axes.length
+        );
+        if (deviceHasUsedAxes) {
+          score += 20; // Bonus important pour les axes utilisés
+        }
+      }
+      
+      // Score bonus : match du lastKnownIndex (hint de persistance)
+      if (lastKnownIndex !== undefined && device.index === lastKnownIndex) {
+        score += 15; // Bonus pour l'index connu
+      }
+      
+      return { device, score };
+    });
+    
+    // Trier par score décroissant
+    candidates.sort((a, b) => b.score - a.score);
+    
+    // Prendre le meilleur match si le score est suffisant
+    const bestMatch = candidates[0];
+    if (bestMatch && bestMatch.score >= 10) { // Au moins un match de base
+      console.log(`✅ Device matché avec score ${bestMatch.score} (slot ${slotNumber}, index ${bestMatch.device.index})`);
+      return bestMatch.device;
+    }
+    
+    // Si aucun match par fingerprint, essayer quand même le slot number
+    if (sameIdDevices.length >= slotNumber) {
+      console.warn(`⚠️ Aucun match par fingerprint, utilisation du slot ${slotNumber} comme fallback`);
+      return sameIdDevices[slotNumber - 1];
     }
   }
   
   // Fallback : Prendre le Nième device (slot number)
-  return sameIdDevices[slotNumber - 1] || null;
+  if (sameIdDevices.length >= slotNumber) {
+    return sameIdDevices[slotNumber - 1];
+  }
+  
+  return null;
 }
 
 /**
