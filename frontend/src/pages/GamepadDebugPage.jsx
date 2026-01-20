@@ -217,27 +217,33 @@ export function GamepadDebugPage() {
   const copyDebugInfo = () => {
     const debugInfo = {
       timestamp: new Date().toISOString(),
-      gamepads: gamepads.map(gp => ({
-        index: gp.index,
-        id: gp.id,
-        axes: gp.axes?.length || 0,
-        buttons: gp.buttons?.length || 0,
-        axesValues: Array.from(gp.axes || []),
-        buttonsValues: Array.from(gp.buttons || []).map(b => ({ pressed: b.pressed, value: b.value }))
-      })),
+      gamepads: (gamepads || []).map(gp => {
+        if (!gp) return null;
+        return {
+          index: gp.index,
+          id: gp.id,
+          axes: (gp.axes && gp.axes.length !== undefined) ? gp.axes.length : 0,
+          buttons: (gp.buttons && gp.buttons.length !== undefined) ? gp.buttons.length : 0,
+          axesValues: Array.from(gp.axes || []),
+          buttonsValues: Array.from(gp.buttons || []).map(b => ({ pressed: b.pressed, value: b.value }))
+        };
+      }).filter(gp => gp !== null),
       config: config ? {
         version: config.version,
         axisMappings: config.axisMappings
       } : null,
-      matchingInfo: matchingInfo.map(m => ({
-        deviceKey: m.deviceKey,
-        matchedIndex: m.matchedGamepad?.index ?? null,
-        matchedId: m.matchedGamepad?.id ?? null,
-        isConnected: m.isConnected,
-        fingerprint: m.deviceMapping._fingerprint,
-        lastKnownIndex: m.deviceMapping._lastKnownIndex,
-        axesMapped: Object.keys(m.deviceMapping.axes || {}).filter(k => !k.startsWith('_'))
-      })),
+      matchingInfo: (matchingInfo || []).map(m => {
+        if (!m || !m.deviceMapping) return null;
+        return {
+          deviceKey: m.deviceKey,
+          matchedIndex: m.matchedGamepad?.index ?? null,
+          matchedId: m.matchedGamepad?.id ?? null,
+          isConnected: m.isConnected,
+          fingerprint: m.deviceMapping._fingerprint || {},
+          lastKnownIndex: m.deviceMapping._lastKnownIndex,
+          axesMapped: Object.keys(m.deviceMapping.axes || {}).filter(k => !k.startsWith('_'))
+        };
+      }).filter(m => m !== null),
       mappedValues,
       consoleLogs: consoleLogRef.current.slice(-20) // Derniers 20 logs
     };
@@ -333,8 +339,8 @@ export function GamepadDebugPage() {
         {/* Avertissement si des devices sont dans la config mais pas détectés */}
         {config && config.axisMappings && Object.keys(config.axisMappings).length > 0 && (
           (() => {
-            const missingDevices = matchingInfo.filter(m => !m.isConnected && m.axesMapped.length > 0);
-            if (missingDevices.length > 0) {
+            const missingDevices = matchingInfo.filter(m => !m.isConnected && m.axesMapped && m.axesMapped.length > 0);
+            if (missingDevices && missingDevices.length > 0) {
               return (
                 <div className="missing-devices-warning">
                   <h3>⚠️ Devices mappés mais non détectés</h3>
@@ -346,7 +352,7 @@ export function GamepadDebugPage() {
                         <br />
                         <small>
                           Fingerprint: {m.fingerprint.axisCount} axes, {m.fingerprint.buttonCount} boutons
-                          {m.fingerprint.usedAxes.length > 0 && `, axes utilisés: [${m.fingerprint.usedAxes.join(', ')}]`}
+                          {m.fingerprint.usedAxes && m.fingerprint.usedAxes.length > 0 && `, axes utilisés: [${m.fingerprint.usedAxes.join(', ')}]`}
                         </small>
                       </li>
                     ))}
