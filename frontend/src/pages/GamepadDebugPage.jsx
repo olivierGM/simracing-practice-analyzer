@@ -5,16 +5,60 @@
  * Affiche tous les gamepads connectés avec leurs axes et boutons en temps réel
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getConnectedGamepads, getGamepadInfo } from '../services/gamepadService';
+import { loadMappingConfig, getMappedValue, AXIS_TYPES } from '../services/deviceMappingService';
 import './GamepadDebugPage.css';
 
 export function GamepadDebugPage() {
   const [gamepads, setGamepads] = useState([]);
   const [axesValues, setAxesValues] = useState({});
   const [buttonValues, setButtonValues] = useState({});
+  const [config, setConfig] = useState(null);
+  const [mappedValues, setMappedValues] = useState({});
+  const [matchingInfo, setMatchingInfo] = useState([]);
+  const consoleLogRef = useRef([]);
 
-  // Polling des gamepads
+  // Intercepter les console.log pour capturer les logs de matching
+  useEffect(() => {
+    const originalLog = console.log;
+    const originalWarn = console.warn;
+    
+    console.log = (...args) => {
+      const message = args.join(' ');
+      if (message.includes('Device') || message.includes('matché') || message.includes('clé')) {
+        consoleLogRef.current.push({ type: 'log', message, timestamp: Date.now() });
+        if (consoleLogRef.current.length > 50) {
+          consoleLogRef.current.shift();
+        }
+      }
+      originalLog.apply(console, args);
+    };
+    
+    console.warn = (...args) => {
+      const message = args.join(' ');
+      if (message.includes('Device') || message.includes('slot') || message.includes('fingerprint')) {
+        consoleLogRef.current.push({ type: 'warn', message, timestamp: Date.now() });
+        if (consoleLogRef.current.length > 50) {
+          consoleLogRef.current.shift();
+        }
+      }
+      originalWarn.apply(console, args);
+    };
+    
+    return () => {
+      console.log = originalLog;
+      console.warn = originalWarn;
+    };
+  }, []);
+
+  // Charger la config
+  useEffect(() => {
+    const loadedConfig = loadMappingConfig();
+    setConfig(loadedConfig);
+  }, []);
+
+  // Polling des gamepads et calcul des valeurs mappées
   useEffect(() => {
     const pollGamepads = () => {
       const connected = getConnectedGamepads();
@@ -36,13 +80,114 @@ export function GamepadDebugPage() {
       
       setAxesValues(axes);
       setButtonValues(buttons);
+
+      // Calculer les valeurs mappées si config disponible
+      if (config) {
+        const mapped = {
+          wheel: getMappedValue(AXIS_TYPES.WHEEL, connected, config),
+          accelerator: getMappedValue(AXIS_TYPES.ACCELERATOR, connected, config),
+          brake: getMappedValue(AXIS_TYPES.BRAKE, connected, config),
+          clutch: getMappedValue(AXIS_TYPES.CLUTCH, connected, config),
+          shiftUp: getMappedValue(AXIS_TYPES.SHIFT_UP, connected, config) > 0.5,
+          shiftDown: getMappedValue(AXIS_TYPES.SHIFT_DOWN, connected, config) > 0.5
+        };
+        setMappedValues(mapped);
+
+        // Calculer les infos de matching
+        const matching = [];
+        if (config.axisMappings) {
+          for (const [deviceKey, deviceMapping] of Object.entries(config.axisMappings)) {
+            // Trouver le gamepad correspondant (simulation de findGamepadByKey)
+            const match = deviceKey.match(/^(.+?)(?: #(\d+))?$/);
+            const baseId = match[1];
+            const slotNumber = match[2] ? parseInt(match[2]) : null;
+            
+            const sameIdDevices = connected.filter(gp => gp && gp.id === baseId);
+            let matchedGamepad = null;
+            
+            if (slotNumber === null) {
+              matchedGamepad = sameIdDevices.find(gp => gp.id === baseId) || null;
+            } else {
+              if (deviceMapping._fingerprint) {
+                const fingerprint = deviceMapping._fingerprint;
+                for (const device of sameIdDevices) {
+                  const matchesFingerprint = 
+                    device.axes?.length === fingerprint.axisCount &&
+                    device.buttons?.length === fingerprint.buttonCount;
+                  if (matchesFingerprint) {
+                    matchedGamepad = device;
+                    break;
+                  }
+                }
+              }
+              if (!matchedGamepad && sameIdDevices.length >= slotNumber) {
+                matchedGamepad = sameIdDevices[slotNumber - 1];
+              }
+            }
+
+            matching.push({
+              deviceKey,
+              deviceMapping,
+              matchedGamepad,
+              isConnected: matchedGamepad !== null,
+              sameIdCount: sameIdDevices.length
+            });
+          }
+        }
+        setMatchingInfo(matching);
+      }
     };
 
     pollGamepads();
-    const interval = setInterval(pollGamepads, 50);
+    const interval = setInterval(pollGamepads, 100);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [config]);
+
+  // Fonction pour copier toutes les infos de debug
+  const copyDebugInfo = () => {
+    const debugInfo = {
+      timestamp: new Date().toISOString(),
+      gamepads: gamepads.map(gp => ({
+        index: gp.index,
+        id: gp.id,
+        axes: gp.axes?.length || 0,
+        buttons: gp.buttons?.length || 0,
+        axesValues: Array.from(gp.axes || []),
+        buttonsValues: Array.from(gp.buttons || []).map(b => ({ pressed: b.pressed, value: b.value }))
+      })),
+      config: config ? {
+        version: config.version,
+        axisMappings: config.axisMappings
+      } : null,
+      matchingInfo: matchingInfo.map(m => ({
+        deviceKey: m.deviceKey,
+        matchedIndex: m.matchedGamepad?.index ?? null,
+        matchedId: m.matchedGamepad?.id ?? null,
+        isConnected: m.isConnected,
+        fingerprint: m.deviceMapping._fingerprint,
+        lastKnownIndex: m.deviceMapping._lastKnownIndex,
+        axesMapped: Object.keys(m.deviceMapping.axes || {}).filter(k => !k.startsWith('_'))
+      })),
+      mappedValues,
+      consoleLogs: consoleLogRef.current.slice(-20) // Derniers 20 logs
+    };
+
+    const text = JSON.stringify(debugInfo, null, 2);
+    navigator.clipboard.writeText(text).then(() => {
+      alert('✅ Informations de debug copiées dans le presse-papier !\n\nColle-les dans un message pour me les envoyer.');
+    }).catch(err => {
+      console.error('Erreur lors de la copie:', err);
+      // Fallback: afficher dans une textarea
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      alert('✅ Informations de debug copiées dans le presse-papier !');
+    });
+  };
 
   // Fonction pour afficher une barre de progression d'axe
   const renderAxisBar = (value) => {
@@ -75,6 +220,9 @@ export function GamepadDebugPage() {
           <br />
           <strong>Instructions :</strong> Bougez vos pédales, volant, shifter pour voir quel device correspond à quoi.
         </p>
+        <button onClick={copyDebugInfo} className="copy-debug-button">
+          📋 Copier toutes les infos de debug
+        </button>
       </div>
 
       <div className="debug-content">
@@ -164,6 +312,81 @@ export function GamepadDebugPage() {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* Config et Matching */}
+        {config && (
+          <div className="debug-section">
+            <h2>⚙️ Configuration Sauvegardée</h2>
+            <div className="config-info">
+              <p><strong>Version:</strong> {config.version || 'Non spécifiée'}</p>
+              <p><strong>Nombre de devices mappés:</strong> {Object.keys(config.axisMappings || {}).length}</p>
+              
+              {Object.keys(config.axisMappings || {}).length > 0 && (
+                <div className="mappings-list">
+                  <h3>Mappings:</h3>
+                  {Object.entries(config.axisMappings).map(([deviceKey, deviceMapping]) => (
+                    <div key={deviceKey} className="mapping-item">
+                      <h4>Device: <code>{deviceKey}</code></h4>
+                      <p><strong>Last Known Index:</strong> {deviceMapping._lastKnownIndex ?? 'N/A'}</p>
+                      {deviceMapping._fingerprint && (
+                        <p><strong>Fingerprint:</strong> {deviceMapping._fingerprint.axisCount} axes, {deviceMapping._fingerprint.buttonCount} boutons, axes utilisés: [{deviceMapping._fingerprint.usedAxes?.join(', ') || 'aucun'}]</p>
+                      )}
+                      <p><strong>Axes mappés:</strong></p>
+                      <ul>
+                        {Object.entries(deviceMapping.axes || {}).filter(([k]) => !k.startsWith('_')).map(([axisIndex, mapping]) => (
+                          <li key={axisIndex}>
+                            Axe {axisIndex}: <strong>{mapping.type}</strong> {mapping.invert ? '(inversé)' : ''}
+                          </li>
+                        ))}
+                      </ul>
+                      {matchingInfo.find(m => m.deviceKey === deviceKey) && (
+                        <p className={matchingInfo.find(m => m.deviceKey === deviceKey).isConnected ? 'match-success' : 'match-error'}>
+                          <strong>Status:</strong> {matchingInfo.find(m => m.deviceKey === deviceKey).isConnected ? '✅ Connecté' : '❌ Non connecté'}
+                          {matchingInfo.find(m => m.deviceKey === deviceKey).matchedGamepad && (
+                            <> (Index: {matchingInfo.find(m => m.deviceKey === deviceKey).matchedGamepad.index})</>
+                          )}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Valeurs Mappées */}
+        {Object.keys(mappedValues).length > 0 && (
+          <div className="debug-section">
+            <h2>📊 Valeurs Mappées (Temps Réel)</h2>
+            <div className="mapped-values">
+              <div className="mapped-value-item">
+                <span className="mapped-label">Volant:</span>
+                <span className="mapped-value">{mappedValues.wheel.toFixed(3)}</span>
+              </div>
+              <div className="mapped-value-item">
+                <span className="mapped-label">Accélérateur:</span>
+                <span className="mapped-value">{mappedValues.accelerator.toFixed(3)}</span>
+              </div>
+              <div className="mapped-value-item">
+                <span className="mapped-label">Frein:</span>
+                <span className="mapped-value">{mappedValues.brake.toFixed(3)}</span>
+              </div>
+              <div className="mapped-value-item">
+                <span className="mapped-label">Embrayage:</span>
+                <span className="mapped-value">{mappedValues.clutch.toFixed(3)}</span>
+              </div>
+              <div className="mapped-value-item">
+                <span className="mapped-label">Shift Up:</span>
+                <span className="mapped-value">{mappedValues.shiftUp ? '✅' : '⬜'}</span>
+              </div>
+              <div className="mapped-value-item">
+                <span className="mapped-label">Shift Down:</span>
+                <span className="mapped-value">{mappedValues.shiftDown ? '✅' : '⬜'}</span>
+              </div>
+            </div>
           </div>
         )}
 
