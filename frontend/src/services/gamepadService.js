@@ -14,8 +14,16 @@ export function getConnectedGamepads() {
     return [];
   }
   
-  const gamepads = navigator.getGamepads();
-  return Array.from(gamepads).filter(gp => gp !== null);
+  try {
+    const gamepads = navigator.getGamepads();
+    if (!gamepads) {
+      return [];
+    }
+    return Array.from(gamepads).filter(gp => gp !== null);
+  } catch (error) {
+    console.warn('Erreur lors de la récupération des gamepads:', error);
+    return [];
+  }
 }
 
 /**

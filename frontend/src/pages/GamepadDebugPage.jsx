@@ -87,13 +87,13 @@ export function GamepadDebugPage() {
       if (typeof navigator !== 'undefined' && typeof navigator.getGamepads === 'function') {
         try {
           const allGamepads = navigator.getGamepads();
-          if (allGamepads) {
+          if (allGamepads && Array.isArray(allGamepads)) {
             // Lire chaque slot pour forcer l'activation (même si null)
             for (let i = 0; i < allGamepads.length; i++) {
               const gp = allGamepads[i];
               if (gp) {
                 // Lire les axes pour "réveiller" le device
-                if (gp.axes) {
+                if (gp.axes && Array.isArray(gp.axes)) {
                   gp.axes.forEach((val, idx) => {
                     // Juste lire la valeur pour activer le device
                     if (val !== undefined) {
