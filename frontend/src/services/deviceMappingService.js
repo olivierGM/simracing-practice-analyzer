@@ -148,8 +148,27 @@ export function assignDevice(deviceIndex, deviceType, currentConfig) {
 }
 
 /**
+ * Extrait le Vendor ID et Product ID d'un ID de gamepad
+ * @param {string} gamepadId - ID du gamepad (ex: "Simjack Pedals (Vendor: 7864 Product: 5801)")
+ * @returns {Object|null} { vendorId, productId } ou null si non trouvé
+ */
+function extractVendorProductId(gamepadId) {
+  const vendorMatch = gamepadId.match(/Vendor:\s*([0-9a-fA-F]+)/i);
+  const productMatch = gamepadId.match(/Product:\s*([0-9a-fA-F]+)/i);
+  
+  if (vendorMatch && productMatch) {
+    return {
+      vendorId: vendorMatch[1].toLowerCase(),
+      productId: productMatch[1].toLowerCase()
+    };
+  }
+  return null;
+}
+
+/**
  * Détecte les collisions d'ID et génère une clé unique avec slot si nécessaire
  * Essaie d'abord de réutiliser une clé existante si le device est déjà mappé
+ * Utilise maintenant le Vendor/Product ID pour matcher même si le nom change
  * @param {Gamepad} gamepad - Le gamepad à assigner
  * @param {Array<Gamepad>} allGamepads - Tous les gamepads connectés
  * @param {Object} config - Configuration actuelle
@@ -157,15 +176,16 @@ export function assignDevice(deviceIndex, deviceType, currentConfig) {
  */
 function getUniqueDeviceKey(gamepad, allGamepads, config) {
   const baseId = gamepad.id;
+  const currentVendorProduct = extractVendorProductId(baseId);
   
   // D'abord, essayer de trouver si ce device est déjà mappé dans la config
-  // en utilisant le fingerprint ou lastKnownIndex
+  // en utilisant le Vendor/Product ID, fingerprint ou lastKnownIndex
   for (const [existingKey, deviceMapping] of Object.entries(config.axisMappings || {})) {
     // Extraire l'ID de base de la clé existante
     const existingMatch = existingKey.match(/^(.+?)(?: #(\d+))?$/);
     const existingBaseId = existingMatch ? existingMatch[1] : existingKey;
     
-    // Si l'ID de base correspond
+    // 1. Match par ID exact (comportement original)
     if (existingBaseId === baseId) {
       // Vérifier si le fingerprint correspond
       if (deviceMapping._fingerprint) {
@@ -178,15 +198,15 @@ function getUniqueDeviceKey(gamepad, allGamepads, config) {
           // Vérifier aussi les axes utilisés si disponibles
           if (fingerprint.usedAxes && fingerprint.usedAxes.length > 0) {
             const deviceHasUsedAxes = fingerprint.usedAxes.every(axisIdx => 
-              gamepad.axes && axisIdx < gamepad.axes.length
+              gamepad.axes && Math.abs(axisIdx) < gamepad.axes.length
             );
             if (deviceHasUsedAxes) {
-              console.log(`✅ Réutilisation de la clé existante: "${existingKey}"`);
+              console.log(`✅ Réutilisation de la clé existante (ID exact): "${existingKey}"`);
               return existingKey;
             }
           } else {
             // Pas d'axes utilisés encore, mais le fingerprint de base correspond
-            console.log(`✅ Réutilisation de la clé existante: "${existingKey}"`);
+            console.log(`✅ Réutilisation de la clé existante (ID exact): "${existingKey}"`);
             return existingKey;
           }
         }
@@ -197,6 +217,39 @@ function getUniqueDeviceKey(gamepad, allGamepads, config) {
           deviceMapping._lastKnownIndex === gamepad.index) {
         console.log(`✅ Réutilisation de la clé existante (par index): "${existingKey}"`);
         return existingKey;
+      }
+    }
+    
+    // 2. Match par Vendor/Product ID (nouveau - pour gérer les changements de nom)
+    if (currentVendorProduct) {
+      const existingVendorProduct = extractVendorProductId(existingBaseId);
+      if (existingVendorProduct && 
+          existingVendorProduct.vendorId === currentVendorProduct.vendorId &&
+          existingVendorProduct.productId === currentVendorProduct.productId) {
+        // Même Vendor/Product ID ! Vérifier le fingerprint pour confirmer
+        if (deviceMapping._fingerprint) {
+          const fingerprint = deviceMapping._fingerprint;
+          const matchesFingerprint = 
+            gamepad.axes?.length === fingerprint.axisCount &&
+            gamepad.buttons?.length === fingerprint.buttonCount;
+          
+          if (matchesFingerprint) {
+            // Vérifier aussi les axes utilisés si disponibles
+            if (fingerprint.usedAxes && fingerprint.usedAxes.length > 0) {
+              const deviceHasUsedAxes = fingerprint.usedAxes.every(axisIdx => 
+                gamepad.axes && Math.abs(axisIdx) < gamepad.axes.length
+              );
+              if (deviceHasUsedAxes) {
+                console.log(`✅ Réutilisation de la clé existante (Vendor/Product ID): "${existingKey}" (nom changé: "${baseId}")`);
+                return existingKey;
+              }
+            } else {
+              // Pas d'axes utilisés encore, mais le fingerprint de base correspond
+              console.log(`✅ Réutilisation de la clé existante (Vendor/Product ID): "${existingKey}" (nom changé: "${baseId}")`);
+              return existingKey;
+            }
+          }
+        }
       }
     }
   }
@@ -379,12 +432,13 @@ function findGamepadByKey(deviceKey, gamepads, deviceMapping) {
   const match = deviceKey.match(/^(.+?)(?: #(\d+))?$/);
   const baseId = match[1];
   const slotNumber = match[2] ? parseInt(match[2]) : null;
+  const baseVendorProduct = extractVendorProductId(baseId);
   
   if (slotNumber === null) {
     // Pas de slot, chercher par ID simple
-    const found = gamepads.find(gp => gp && gp.id === baseId);
+    let found = gamepads.find(gp => gp && gp.id === baseId);
     
-    // Si on trouve un seul device avec cet ID, vérifier le fingerprint pour être sûr
+    // Si trouvé par ID exact, vérifier le fingerprint
     if (found && deviceMapping._fingerprint) {
       const fingerprint = deviceMapping._fingerprint;
       const matchesFingerprint = 
@@ -394,15 +448,71 @@ function findGamepadByKey(deviceKey, gamepads, deviceMapping) {
       if (matchesFingerprint) {
         return found;
       }
-      // Si le fingerprint ne match pas, il y a peut-être eu un changement de device
-      // On retourne quand même le device trouvé (comportement original)
+    }
+    
+    // Si pas trouvé par ID exact, essayer par Vendor/Product ID
+    if (!found && baseVendorProduct) {
+      const candidates = gamepads.filter(gp => {
+        if (!gp) return false;
+        const gpVendorProduct = extractVendorProductId(gp.id);
+        return gpVendorProduct && 
+               gpVendorProduct.vendorId === baseVendorProduct.vendorId &&
+               gpVendorProduct.productId === baseVendorProduct.productId;
+      });
+      
+      // Si on trouve des candidats, utiliser le fingerprint pour choisir le bon
+      if (candidates.length > 0 && deviceMapping._fingerprint) {
+        const fingerprint = deviceMapping._fingerprint;
+        for (const candidate of candidates) {
+          const matchesFingerprint = 
+            candidate.axes?.length === fingerprint.axisCount &&
+            candidate.buttons?.length === fingerprint.buttonCount;
+          
+          if (matchesFingerprint) {
+            // Vérifier aussi les axes utilisés si disponibles
+            if (fingerprint.usedAxes && fingerprint.usedAxes.length > 0) {
+              const deviceHasUsedAxes = fingerprint.usedAxes.every(axisIdx => 
+                candidate.axes && Math.abs(axisIdx) < candidate.axes.length
+              );
+              if (deviceHasUsedAxes) {
+                console.log(`✅ Device trouvé par Vendor/Product ID (nom changé: "${candidate.id}")`);
+                return candidate;
+              }
+            } else {
+              console.log(`✅ Device trouvé par Vendor/Product ID (nom changé: "${candidate.id}")`);
+              return candidate;
+            }
+          }
+        }
+        
+        // Si plusieurs candidats mais aucun ne match le fingerprint, prendre le premier
+        if (candidates.length === 1) {
+          console.log(`⚠️ Device trouvé par Vendor/Product ID mais fingerprint ne match pas exactement`);
+          return candidates[0];
+        }
+      }
     }
     
     return found || null;
   }
   
   // Avec slot, trouver le Nième device avec cet ID
-  const sameIdDevices = gamepads.filter(gp => gp && gp.id === baseId);
+  let sameIdDevices = gamepads.filter(gp => gp && gp.id === baseId);
+  
+  // Si aucun device avec le même ID, essayer par Vendor/Product ID
+  if (sameIdDevices.length === 0 && baseVendorProduct) {
+    sameIdDevices = gamepads.filter(gp => {
+      if (!gp) return false;
+      const gpVendorProduct = extractVendorProductId(gp.id);
+      return gpVendorProduct && 
+             gpVendorProduct.vendorId === baseVendorProduct.vendorId &&
+             gpVendorProduct.productId === baseVendorProduct.productId;
+    });
+    
+    if (sameIdDevices.length > 0) {
+      console.log(`⚠️ Device avec slot trouvé par Vendor/Product ID (nom changé)`);
+    }
+  }
   
   if (sameIdDevices.length === 0) {
     return null;
