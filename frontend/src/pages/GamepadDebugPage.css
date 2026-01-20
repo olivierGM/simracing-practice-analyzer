@@ -30,7 +30,16 @@
   color: #00ff88;
 }
 
-.copy-debug-button {
+.debug-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.copy-debug-button,
+.force-detect-button {
   background: #00ff88;
   color: #000;
   border: none;
@@ -39,17 +48,27 @@
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 1rem;
   transition: all 0.3s;
 }
 
-.copy-debug-button:hover {
+.copy-debug-button:hover,
+.force-detect-button:hover {
   background: #00cc66;
   transform: scale(1.05);
 }
 
-.copy-debug-button:active {
+.copy-debug-button:active,
+.force-detect-button:active {
   transform: scale(0.95);
+}
+
+.force-detect-button {
+  background: #ffaa00;
+  color: #000;
+}
+
+.force-detect-button:hover {
+  background: #ff8800;
 }
 
 .debug-content {

@@ -83,6 +83,24 @@ export function GamepadDebugPage() {
   // Polling des gamepads et calcul des valeurs mappées
   useEffect(() => {
     const pollGamepads = () => {
+      // Essayer de "réveiller" les devices en lisant tous les slots
+      const allGamepads = navigator.getGamepads();
+      if (allGamepads) {
+        // Lire chaque slot pour forcer l'activation (même si null)
+        for (let i = 0; i < allGamepads.length; i++) {
+          const gp = allGamepads[i];
+          if (gp) {
+            // Lire les axes pour "réveiller" le device
+            gp.axes?.forEach((val, idx) => {
+              // Juste lire la valeur pour activer le device
+              if (val !== undefined) {
+                // Device actif
+              }
+            });
+          }
+        }
+      }
+      
       const connected = getConnectedGamepads();
       setGamepads(connected);
 
@@ -242,9 +260,33 @@ export function GamepadDebugPage() {
           <br />
           <strong>Instructions :</strong> Bougez vos pédales, volant, shifter pour voir quel device correspond à quoi.
         </p>
-        <button onClick={copyDebugInfo} className="copy-debug-button">
-          📋 Copier toutes les infos de debug
-        </button>
+        <div className="debug-actions">
+          <button onClick={copyDebugInfo} className="copy-debug-button">
+            📋 Copier toutes les infos de debug
+          </button>
+          <button 
+            onClick={() => {
+              // Forcer la détection en lisant tous les gamepads (même null)
+              const allGamepads = navigator.getGamepads();
+              const nullSlots = [];
+              for (let i = 0; i < allGamepads.length; i++) {
+                if (allGamepads[i] === null) {
+                  nullSlots.push(i);
+                }
+              }
+              console.log('🔍 Forçage de la détection...');
+              console.log(`Gamepads détectés: ${gamepads.length}`);
+              console.log(`Slots null: ${nullSlots.join(', ')}`);
+              // Forcer un refresh
+              const connected = getConnectedGamepads();
+              setGamepads(connected);
+              alert(`Détection forcée.\nGamepads trouvés: ${connected.length}\nSlots null: ${nullSlots.length}\n\n💡 Si vos pédales ne sont toujours pas détectées, bougez-les pendant que cette page est ouverte.`);
+            }} 
+            className="force-detect-button"
+          >
+            🔍 Forcer la détection
+          </button>
+        </div>
       </div>
 
       <div className="debug-content">
