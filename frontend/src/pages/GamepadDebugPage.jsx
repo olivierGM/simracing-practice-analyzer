@@ -87,19 +87,24 @@ export function GamepadDebugPage() {
       if (typeof navigator !== 'undefined' && typeof navigator.getGamepads === 'function') {
         try {
           const allGamepads = navigator.getGamepads();
-          if (allGamepads && Array.isArray(allGamepads)) {
+          // GamepadList est array-like, pas un vrai Array
+          if (allGamepads && allGamepads.length !== undefined) {
             // Lire chaque slot pour forcer l'activation (même si null)
             for (let i = 0; i < allGamepads.length; i++) {
               const gp = allGamepads[i];
               if (gp) {
                 // Lire les axes pour "réveiller" le device
-                if (gp.axes && Array.isArray(gp.axes)) {
-                  gp.axes.forEach((val, idx) => {
-                    // Juste lire la valeur pour activer le device
-                    if (val !== undefined) {
-                      // Device actif
-                    }
-                  });
+                if (gp.axes && gp.axes.length !== undefined) {
+                  try {
+                    gp.axes.forEach((val, idx) => {
+                      // Juste lire la valeur pour activer le device
+                      if (val !== undefined) {
+                        // Device actif
+                      }
+                    });
+                  } catch (e) {
+                    // Ignorer les erreurs de lecture d'axes
+                  }
                 }
               }
             }
@@ -131,58 +136,74 @@ export function GamepadDebugPage() {
 
       // Calculer les valeurs mappées si config disponible
       if (config) {
-        const mapped = {
-          wheel: getMappedValue(AXIS_TYPES.WHEEL, connected, config),
-          accelerator: getMappedValue(AXIS_TYPES.ACCELERATOR, connected, config),
-          brake: getMappedValue(AXIS_TYPES.BRAKE, connected, config),
-          clutch: getMappedValue(AXIS_TYPES.CLUTCH, connected, config),
-          shiftUp: getMappedValue(AXIS_TYPES.SHIFT_UP, connected, config) > 0.5,
-          shiftDown: getMappedValue(AXIS_TYPES.SHIFT_DOWN, connected, config) > 0.5
-        };
-        setMappedValues(mapped);
+        try {
+          const mapped = {
+            wheel: getMappedValue(AXIS_TYPES.WHEEL, connected, config),
+            accelerator: getMappedValue(AXIS_TYPES.ACCELERATOR, connected, config),
+            brake: getMappedValue(AXIS_TYPES.BRAKE, connected, config),
+            clutch: getMappedValue(AXIS_TYPES.CLUTCH, connected, config),
+            shiftUp: getMappedValue(AXIS_TYPES.SHIFT_UP, connected, config) > 0.5,
+            shiftDown: getMappedValue(AXIS_TYPES.SHIFT_DOWN, connected, config) > 0.5
+          };
+          setMappedValues(mapped);
+        } catch (error) {
+          console.warn('Erreur lors du calcul des valeurs mappées:', error);
+          setMappedValues({});
+        }
 
         // Calculer les infos de matching
-        const matching = [];
-        if (config.axisMappings) {
-          for (const [deviceKey, deviceMapping] of Object.entries(config.axisMappings)) {
-            // Trouver le gamepad correspondant (simulation de findGamepadByKey)
-            const match = deviceKey.match(/^(.+?)(?: #(\d+))?$/);
-            const baseId = match[1];
-            const slotNumber = match[2] ? parseInt(match[2]) : null;
-            
-            const sameIdDevices = connected.filter(gp => gp && gp.id === baseId);
-            let matchedGamepad = null;
-            
-            if (slotNumber === null) {
-              matchedGamepad = sameIdDevices.find(gp => gp.id === baseId) || null;
-            } else {
-              if (deviceMapping._fingerprint) {
-                const fingerprint = deviceMapping._fingerprint;
-                for (const device of sameIdDevices) {
-                  const matchesFingerprint = 
-                    device.axes?.length === fingerprint.axisCount &&
-                    device.buttons?.length === fingerprint.buttonCount;
-                  if (matchesFingerprint) {
-                    matchedGamepad = device;
-                    break;
+        try {
+          const matching = [];
+          if (config.axisMappings) {
+            for (const [deviceKey, deviceMapping] of Object.entries(config.axisMappings)) {
+              try {
+                // Trouver le gamepad correspondant (simulation de findGamepadByKey)
+                const match = deviceKey.match(/^(.+?)(?: #(\d+))?$/);
+                if (!match) continue;
+                
+                const baseId = match[1];
+                const slotNumber = match[2] ? parseInt(match[2]) : null;
+                
+                const sameIdDevices = connected.filter(gp => gp && gp.id === baseId);
+                let matchedGamepad = null;
+                
+                if (slotNumber === null) {
+                  matchedGamepad = sameIdDevices.find(gp => gp.id === baseId) || null;
+                } else {
+                  if (deviceMapping._fingerprint) {
+                    const fingerprint = deviceMapping._fingerprint;
+                    for (const device of sameIdDevices) {
+                      const matchesFingerprint = 
+                        device.axes?.length === fingerprint.axisCount &&
+                        device.buttons?.length === fingerprint.buttonCount;
+                      if (matchesFingerprint) {
+                        matchedGamepad = device;
+                        break;
+                      }
+                    }
+                  }
+                  if (!matchedGamepad && sameIdDevices.length >= slotNumber) {
+                    matchedGamepad = sameIdDevices[slotNumber - 1];
                   }
                 }
-              }
-              if (!matchedGamepad && sameIdDevices.length >= slotNumber) {
-                matchedGamepad = sameIdDevices[slotNumber - 1];
+
+                matching.push({
+                  deviceKey,
+                  deviceMapping,
+                  matchedGamepad,
+                  isConnected: matchedGamepad !== null,
+                  sameIdCount: sameIdDevices.length
+                });
+              } catch (error) {
+                console.warn(`Erreur lors du matching pour ${deviceKey}:`, error);
               }
             }
-
-            matching.push({
-              deviceKey,
-              deviceMapping,
-              matchedGamepad,
-              isConnected: matchedGamepad !== null,
-              sameIdCount: sameIdDevices.length
-            });
           }
+          setMatchingInfo(matching);
+        } catch (error) {
+          console.warn('Erreur lors du calcul du matching:', error);
+          setMatchingInfo([]);
         }
-        setMatchingInfo(matching);
       }
     };
 
@@ -279,7 +300,7 @@ export function GamepadDebugPage() {
                 if (typeof navigator !== 'undefined' && typeof navigator.getGamepads === 'function') {
                   const allGamepads = navigator.getGamepads();
                   const nullSlots = [];
-                  if (allGamepads) {
+                  if (allGamepads && allGamepads.length !== undefined) {
                     for (let i = 0; i < allGamepads.length; i++) {
                       if (allGamepads[i] === null) {
                         nullSlots.push(i);
