@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { getConnectedGamepads, getGamepadInfo } from '../services/gamepadService';
+import { getConnectedGamepads, getGamepadInfo, listenToGamepadEvents } from '../services/gamepadService';
 import { loadMappingConfig, getMappedValue, AXIS_TYPES } from '../services/deviceMappingService';
 import './GamepadDebugPage.css';
 
@@ -17,6 +17,7 @@ export function GamepadDebugPage() {
   const [config, setConfig] = useState(null);
   const [mappedValues, setMappedValues] = useState({});
   const [matchingInfo, setMatchingInfo] = useState([]);
+  const [recentConnections, setRecentConnections] = useState([]);
   const consoleLogRef = useRef([]);
 
   // Intercepter les console.log pour capturer les logs de matching
@@ -56,6 +57,27 @@ export function GamepadDebugPage() {
   useEffect(() => {
     const loadedConfig = loadMappingConfig();
     setConfig(loadedConfig);
+  }, []);
+
+  // Écouter les événements de connexion/déconnexion
+  useEffect(() => {
+    const cleanup = listenToGamepadEvents(
+      (gamepad) => {
+        console.log('🎮 Gamepad connecté:', gamepad.id);
+        setRecentConnections(prev => [
+          ...prev.slice(-4), // Garder seulement les 5 derniers
+          { type: 'connect', gamepad, timestamp: Date.now() }
+        ]);
+      },
+      (gamepad) => {
+        console.log('🎮 Gamepad déconnecté:', gamepad.id);
+        setRecentConnections(prev => [
+          ...prev.slice(-4),
+          { type: 'disconnect', gamepad, timestamp: Date.now() }
+        ]);
+      }
+    );
+    return cleanup;
   }, []);
 
   // Polling des gamepads et calcul des valeurs mappées
@@ -226,11 +248,65 @@ export function GamepadDebugPage() {
       </div>
 
       <div className="debug-content">
+        {/* Avertissement si des devices sont dans la config mais pas détectés */}
+        {config && config.axisMappings && Object.keys(config.axisMappings).length > 0 && (
+          (() => {
+            const missingDevices = matchingInfo.filter(m => !m.isConnected && m.axesMapped.length > 0);
+            if (missingDevices.length > 0) {
+              return (
+                <div className="missing-devices-warning">
+                  <h3>⚠️ Devices mappés mais non détectés</h3>
+                  <p>Les devices suivants sont dans votre configuration mais ne sont pas détectés par le navigateur :</p>
+                  <ul>
+                    {missingDevices.map((m, idx) => (
+                      <li key={idx}>
+                        <strong>{m.deviceKey}</strong>
+                        <br />
+                        <small>
+                          Fingerprint: {m.fingerprint.axisCount} axes, {m.fingerprint.buttonCount} boutons
+                          {m.fingerprint.usedAxes.length > 0 && `, axes utilisés: [${m.fingerprint.usedAxes.join(', ')}]`}
+                        </small>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="missing-devices-help">
+                    <strong>💡 Solutions :</strong>
+                    <ol>
+                      <li><strong>Bougez les pédales/volant</strong> - Certains devices nécessitent une interaction utilisateur pour être détectés</li>
+                      <li><strong>Vérifiez dans le Gestionnaire de périphériques Windows</strong> - Les devices doivent apparaître sans erreur</li>
+                      <li><strong>Débranchez et rebranchez</strong> les devices USB</li>
+                      <li><strong>Rafraîchissez la page</strong> après avoir bougé les devices</li>
+                    </ol>
+                  </div>
+                </div>
+              );
+            }
+            return null;
+          })()
+        )}
+
+        {/* Événements récents de connexion/déconnexion */}
+        {recentConnections.length > 0 && (
+          <div className="recent-connections">
+            <h3>📡 Événements récents</h3>
+            <ul>
+              {recentConnections.map((event, idx) => (
+                <li key={idx} className={event.type === 'connect' ? 'event-connect' : 'event-disconnect'}>
+                  {event.type === 'connect' ? '✅ Connecté' : '❌ Déconnecté'}: <strong>{event.gamepad.id}</strong>
+                  <br />
+                  <small>Index: {event.gamepad.index}, {event.gamepad.axes?.length || 0} axes, {event.gamepad.buttons?.length || 0} boutons</small>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {gamepads.length === 0 ? (
           <div className="no-gamepads">
             <h2>❌ Aucun gamepad détecté</h2>
             <p>Vérifiez que vos périphériques sont connectés et reconnus par votre ordinateur.</p>
             <ul>
+              <li><strong>Important :</strong> Bougez vos pédales/volant - certains devices nécessitent une interaction utilisateur pour être détectés</li>
               <li>Vérifiez les câbles USB</li>
               <li>Redémarrez vos devices</li>
               <li>Testez sur <a href="https://gamepad-tester.com/" target="_blank" rel="noopener noreferrer">gamepad-tester.com</a></li>

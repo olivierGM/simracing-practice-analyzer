@@ -434,6 +434,108 @@
   font-weight: bold;
 }
 
+/* Missing devices warning */
+.missing-devices-warning {
+  background: #2a1a00;
+  border: 2px solid #ffaa00;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.missing-devices-warning h3 {
+  color: #ffaa00;
+  margin-bottom: 1rem;
+}
+
+.missing-devices-warning ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 1rem 0;
+}
+
+.missing-devices-warning li {
+  background: #1a0a00;
+  border-left: 4px solid #ffaa00;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+}
+
+.missing-devices-warning li strong {
+  color: #ffcc66;
+}
+
+.missing-devices-warning li small {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.missing-devices-help {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #444;
+}
+
+.missing-devices-help strong {
+  color: #ffaa00;
+}
+
+.missing-devices-help ol {
+  margin-top: 1rem;
+  padding-left: 1.5rem;
+}
+
+.missing-devices-help li {
+  margin-bottom: 0.75rem;
+  color: #b0b0b0;
+}
+
+/* Recent connections */
+.recent-connections {
+  background: #1a1a1a;
+  border: 2px solid #333;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.recent-connections h3 {
+  color: #00ff88;
+  margin-bottom: 1rem;
+}
+
+.recent-connections ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.recent-connections li {
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  border-left: 4px solid;
+}
+
+.recent-connections li.event-connect {
+  background: #0a2a0a;
+  border-left-color: #00ff88;
+}
+
+.recent-connections li.event-disconnect {
+  background: #2a0a0a;
+  border-left-color: #ff4444;
+}
+
+.recent-connections li strong {
+  color: #fff;
+}
+
+.recent-connections li small {
+  color: #888;
+  font-size: 0.85rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .gamepad-debug-page {
