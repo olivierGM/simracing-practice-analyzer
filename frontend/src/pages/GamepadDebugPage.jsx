@@ -336,6 +336,49 @@ export function GamepadDebugPage() {
       </div>
 
       <div className="debug-content">
+        {/* Info sur les slots disponibles */}
+        {(() => {
+          try {
+            if (typeof navigator !== 'undefined' && typeof navigator.getGamepads === 'function') {
+              const allGamepads = navigator.getGamepads();
+              if (allGamepads && allGamepads.length !== undefined) {
+                const totalSlots = allGamepads.length;
+                const usedSlots = gamepads.length;
+                const nullSlots = [];
+                for (let i = 0; i < totalSlots; i++) {
+                  if (allGamepads[i] === null) {
+                    nullSlots.push(i);
+                  }
+                }
+                
+                if (totalSlots > 0) {
+                  return (
+                    <div className="slots-info">
+                      <h3>📊 Informations sur les Slots</h3>
+                      <p>
+                        <strong>Slots utilisés:</strong> {usedSlots} / {totalSlots} maximum
+                        {nullSlots.length > 0 && (
+                          <> (Slots vides: {nullSlots.join(', ')})</>
+                        )}
+                      </p>
+                      {totalSlots >= 4 && usedSlots >= 4 && (
+                        <div className="slots-warning">
+                          <strong>⚠️ Attention:</strong> La WebGamepad API limite généralement à 4 devices.
+                          Si vous avez plus de 4 devices connectés, certains peuvent ne pas être détectés.
+                          Essayez de débrancher temporairement certains devices pour voir si d'autres apparaissent.
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+              }
+            }
+          } catch (error) {
+            console.warn('Erreur lors de la lecture des slots:', error);
+          }
+          return null;
+        })()}
+
         {/* Avertissement si des devices sont dans la config mais pas détectés */}
         {config && config.axisMappings && Object.keys(config.axisMappings).length > 0 && (
           (() => {

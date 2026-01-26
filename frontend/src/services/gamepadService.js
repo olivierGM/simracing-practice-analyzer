@@ -19,7 +19,25 @@ export function getConnectedGamepads() {
     if (!gamepads) {
       return [];
     }
-    return Array.from(gamepads).filter(gp => gp !== null);
+    
+    // Convertir en Array et filtrer les null
+    const connected = Array.from(gamepads).filter(gp => gp !== null);
+    
+    // Log pour debug : afficher tous les slots (même null)
+    if (connected.length > 0) {
+      const allSlots = [];
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] === null) {
+          allSlots.push(`Slot ${i}: null`);
+        } else {
+          allSlots.push(`Slot ${i}: ${gamepads[i].id}`);
+        }
+      }
+      console.log(`🎮 Gamepads détectés: ${connected.length}/${gamepads.length} slots utilisés`);
+      console.log(`📋 Slots:`, allSlots.join(', '));
+    }
+    
+    return connected;
   } catch (error) {
     console.warn('Erreur lors de la récupération des gamepads:', error);
     return [];
