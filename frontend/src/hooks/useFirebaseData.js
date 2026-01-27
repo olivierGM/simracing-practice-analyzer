@@ -51,12 +51,13 @@ export function useFirebaseData() {
           console.log(`👥 ${Object.keys(processedData.byDriver).length} pilotes trouvés`);
           
           // Créer un mapping pilote -> piste(s) depuis les sessions
+          // Utiliser le même ID sans cupCategory que dans processSessionData
           const driverTrackMap = {};
           sessions.forEach(session => {
             if (session.sessionResult && session.sessionResult.leaderBoardLines) {
               session.sessionResult.leaderBoardLines.forEach(line => {
                 const driver = line.car.drivers[0];
-                const driverId = `${driver.firstName}_${driver.lastName}_${line.car.cupCategory}`;
+                const driverId = `${driver.firstName}_${driver.lastName}`;
                 
                 if (!driverTrackMap[driverId]) {
                   driverTrackMap[driverId] = session.trackName;

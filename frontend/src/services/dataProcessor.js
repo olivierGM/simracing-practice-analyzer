@@ -18,10 +18,18 @@ export function processSessionData(sessions) {
         byDriver: {}
     };
     
-    sessions.forEach(session => {
+    // Trier les sessions par date (plus récente en premier) pour utiliser la catégorie la plus récente
+    const sortedSessions = [...sessions].sort((a, b) => {
+        const dateA = a.Date ? new Date(a.Date).getTime() : 0;
+        const dateB = b.Date ? new Date(b.Date).getTime() : 0;
+        return dateB - dateA; // Plus récent en premier
+    });
+    
+    sortedSessions.forEach(session => {
         if (session.laps && session.sessionResult && session.sessionResult.leaderBoardLines) {
             // Préserver le fileName pour la modal pilote
             const sessionFileName = session.fileName || session.SessionFile || 'Unknown';
+            const sessionDate = session.Date ? new Date(session.Date) : null;
             
             // Créer un mapping carId -> pilote
             const driverMap = {};
@@ -32,7 +40,8 @@ export function processSessionData(sessions) {
                     firstName: driver.firstName,
                     lastName: driver.lastName,
                     cupCategory: car.cupCategory,
-                    carModel: car.carModel
+                    carModel: car.carModel,
+                    sessionDate: sessionDate // Stocker la date de session
                 };
             });
             
@@ -47,14 +56,15 @@ export function processSessionData(sessions) {
             session.laps.forEach(lap => {
                 const driverInfo = driverMap[lap.carId];
                 if (driverInfo) {
-                    const driverId = `${driverInfo.firstName}_${driverInfo.lastName}_${driverInfo.cupCategory}`;
+                    // ID sans cupCategory pour regrouper toutes les sessions d'un même pilote
+                    const driverId = `${driverInfo.firstName}_${driverInfo.lastName}`;
                     
                     // Initialiser le pilote
                     if (!result.byDriver[driverId]) {
                         result.byDriver[driverId] = {
                             firstName: driverInfo.firstName,
                             lastName: driverInfo.lastName,
-                            cupCategory: driverInfo.cupCategory,
+                            cupCategory: driverInfo.cupCategory, // Catégorie de la session la plus récente (car trié)
                             carModel: driverInfo.carModel,
                             bestValidTime: 0,
                             averageValidTime: 0,
@@ -72,12 +82,22 @@ export function processSessionData(sessions) {
                             validLapTimes: [],
                             wetLapTimes: [],
                             allLapTimes: [],
-                            lapTimes: []
+                            lapTimes: [],
+                            // Stocker la date de la session la plus récente pour ce pilote
+                            mostRecentSessionDate: driverInfo.sessionDate
                         };
                     } else {
                         // Mettre à jour le carModel si le pilote change de voiture
                         // (Pour les saisons, c'est une auto par saison, donc on utilise le carModel le plus récent)
                         result.byDriver[driverId].carModel = driverInfo.carModel;
+                        
+                        // Mettre à jour la catégorie si cette session est plus récente
+                        if (driverInfo.sessionDate && 
+                            (!result.byDriver[driverId].mostRecentSessionDate || 
+                             driverInfo.sessionDate > result.byDriver[driverId].mostRecentSessionDate)) {
+                            result.byDriver[driverId].cupCategory = driverInfo.cupCategory;
+                            result.byDriver[driverId].mostRecentSessionDate = driverInfo.sessionDate;
+                        }
                     }
                     
                     // Utiliser isWetSession pour déterminer si le tour est wet
