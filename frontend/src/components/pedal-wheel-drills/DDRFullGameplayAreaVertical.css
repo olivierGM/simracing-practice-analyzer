@@ -68,21 +68,30 @@
   color: #e67e22;
 }
 
-/* Contenu de la lane (zone de jeu) - hauteur fixe pour aligner cibles et ligne de judgment */
+/* Contenu de la lane (zone de jeu) — prend l’espace dispo pour que la barre puisse être au 4/5 en bas. */
 .ddr-lane-content-vertical {
   flex: 1;
+  width: 100%;
   min-height: 400px;
-  height: 400px;
-  position: relative;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
-/* Zone de judgment : alignée avec la fenêtre de jugement (JUDGMENT_ZONE_Y = 310, bande 300–320) */
+/* Wrapper INNER : remplit la hauteur du contenu ; la barre est à 80 % (4/5) via JS. */
+.ddr-lane-content-inner {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 400px;
+  overflow: hidden;
+}
+
+/* Position top est définie en inline (JUDGMENT_BAR_TOP) pour rester synchro avec la logique hit/miss. */
 .ddr-judgment-zone-vertical {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 80px;
   height: 20px;
   background: linear-gradient(
     to bottom,

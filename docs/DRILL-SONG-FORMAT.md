@@ -178,20 +178,73 @@ Si `duration` n'est pas spécifiée au niveau racine, elle est calculée automat
 duration = Math.max(...targets.map(t => t.time + t.duration)) + 1
 ```
 
+## 🎚️ Types de drill et compatibilité (`drillTypes`)
+
+L’app propose trois types de drill. Un drill custom ne fonctionne que pour les types avec lesquels il est compatible.
+
+| Type interne      | Mode dans l’UI              | Description |
+|-------------------|-----------------------------|-------------|
+| `single_pedal`    | Drill une pédale            | Une seule pédale (frein ou accélérateur), cibles en `percent` uniquement. |
+| `brake_accel`     | Frein + Accélérateur        | Deux lanes (frein + accélérateur), cibles avec `type: "brake"` ou `type: "accel"`. |
+| `full_combo`      | Drill Complet               | Frein, accélérateur, volant, shifter ; cibles avec `type` et éventuellement `wheelPercent`, etc. |
+
+**Compatibilité :**
+
+- Chaque fichier drill est associé à **un ou plusieurs** de ces types dans le **manifest** de l’app (`drillSongService.js` → `CUSTOM_DRILL_MANIFEST`). Seuls les drills dont `drillTypes` contient le mode actuel sont proposés dans le sélecteur.
+- Tu peux aussi ajouter une propriété **`drillTypes`** (optionnelle) dans le JSON pour documenter ou valider la compatibilité :
+  - **`drillTypes`** (array de strings, optionnel) : `["single_pedal"]`, `["brake_accel"]`, `["full_combo"]`, ou une combinaison (ex. `["single_pedal", "brake_accel"]` si le même JSON convient à plusieurs modes).
+
+Valeurs autorisées : `single_pedal`, `brake_accel`, `full_combo`.
+
+Exemple pour un drill « une pédale » uniquement :
+```json
+{
+  "name": "Freinage progressif",
+  "difficulty": "easy",
+  "drillTypes": ["single_pedal"],
+  "targets": [ ... ]
+}
+```
+
+Exemple pour un drill Frein + Accélérateur (avec `type` sur les cibles) :
+```json
+{
+  "name": "Épingles",
+  "difficulty": "easy",
+  "drillTypes": ["brake_accel"],
+  "targets": [
+    { "time": 1.0, "percent": 80, "duration": 1.0, "type": "brake" },
+    { "time": 2.5, "percent": 20, "duration": 1.0, "type": "accel" }
+  ]
+}
+```
+
 ## 📁 Organisation des Fichiers
 
-Les drill songs seront stockés dans :
+Les drill songs sont stockés sous `frontend/public/drills/`. Par convention :
+- **Drill une pédale** : `easy/`, `medium/`, `hard/` (cibles sans `type` ou percent seul).
+- **Frein + Accélérateur** : `brakeaccel/` (cibles avec `type: "brake"` ou `"accel"`).
+- **Drill Complet** : `fullcombo/` (cibles avec type + volant/shifter si besoin).
+
 ```
 frontend/public/drills/
   ├── easy/
   │   ├── test-succession.json
-  │   ├── progression-20-80.json
+  │   ├── progressive-braking.json
   │   └── ...
   ├── medium/
   │   └── ...
-  └── hard/
+  ├── hard/
+  │   └── ...
+  ├── brakeaccel/
+  │   ├── hairpin.json
+  │   ├── chicane.json
+  │   └── ...
+  └── fullcombo/
       └── ...
 ```
+
+L’affichage dans le sélecteur (quels drills sont proposés pour quel mode) est piloté par le **manifest** dans `drillSongService.js` ; le champ `drillTypes` dans le JSON est optionnel (documentation / cohérence).
 
 ## 🔄 Métadonnées Additionnelles (Futur)
 

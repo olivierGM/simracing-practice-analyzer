@@ -344,20 +344,20 @@ export function useDDRFullTargets({
   // Réinitialiser les cibles quand le jeu s'arrête
   useEffect(() => {
     if (!isActive) {
-      setBrakeTargets(prev => prev.map(t => ({ ...t, hit: false, missed: false, judgment: null })));
-      setWheelTargets(prev => prev.map(t => ({ ...t, hit: false, missed: false, judgment: null })));
-      setAccelTargets(prev => prev.map(t => ({ ...t, hit: false, missed: false, judgment: null })));
-      setShiftTargets(prev => prev.map(t => ({ ...t, hit: false, missed: false, judgment: null })));
+      setBrakeTargets(prev => prev.map(t => ({ ...t, hit: false, missed: false, judgment: null, judgedAtY: undefined })));
+      setWheelTargets(prev => prev.map(t => ({ ...t, hit: false, missed: false, judgment: null, judgedAtY: undefined })));
+      setAccelTargets(prev => prev.map(t => ({ ...t, hit: false, missed: false, judgment: null, judgedAtY: undefined })));
+      setShiftTargets(prev => prev.map(t => ({ ...t, hit: false, missed: false, judgment: null, judgedAtY: undefined })));
     }
   }, [isActive]);
 
-  // Marquer une cible comme hit
-  const markTargetHit = (targetId, type, judgment) => {
+  // judgedAtY = position Y (px) au moment du jugement — on la stocke pour figer l’affichage à la barre
+  const markTargetHit = (targetId, type, judgment, judgedAtY = null) => {
     if (type === 'brake') {
       setBrakeTargets(prev =>
         prev.map(target =>
           target.id === targetId
-            ? { ...target, hit: true, judgment }
+            ? { ...target, hit: true, judgment, judgedAtY: judgedAtY ?? target.judgedAtY }
             : target
         )
       );
@@ -365,7 +365,7 @@ export function useDDRFullTargets({
       setWheelTargets(prev =>
         prev.map(target =>
           target.id === targetId
-            ? { ...target, hit: true, judgment }
+            ? { ...target, hit: true, judgment, judgedAtY: judgedAtY ?? target.judgedAtY }
             : target
         )
       );
@@ -373,7 +373,7 @@ export function useDDRFullTargets({
       setAccelTargets(prev =>
         prev.map(target =>
           target.id === targetId
-            ? { ...target, hit: true, judgment }
+            ? { ...target, hit: true, judgment, judgedAtY: judgedAtY ?? target.judgedAtY }
             : target
         )
       );
@@ -381,20 +381,19 @@ export function useDDRFullTargets({
       setShiftTargets(prev =>
         prev.map(target =>
           target.id === targetId
-            ? { ...target, hit: true, judgment }
+            ? { ...target, hit: true, judgment, judgedAtY: judgedAtY ?? target.judgedAtY }
             : target
         )
       );
     }
   };
 
-  // Marquer une cible comme missed
-  const markTargetMiss = (targetId, type) => {
+  const markTargetMiss = (targetId, type, judgedAtY = null) => {
     if (type === 'brake') {
       setBrakeTargets(prev =>
         prev.map(target =>
           target.id === targetId
-            ? { ...target, missed: true }
+            ? { ...target, missed: true, judgment: 'MISS', judgedAtY: judgedAtY ?? target.judgedAtY }
             : target
         )
       );
@@ -402,7 +401,7 @@ export function useDDRFullTargets({
       setWheelTargets(prev =>
         prev.map(target =>
           target.id === targetId
-            ? { ...target, missed: true }
+            ? { ...target, missed: true, judgment: 'MISS', judgedAtY: judgedAtY ?? target.judgedAtY }
             : target
         )
       );
@@ -410,7 +409,7 @@ export function useDDRFullTargets({
       setAccelTargets(prev =>
         prev.map(target =>
           target.id === targetId
-            ? { ...target, missed: true }
+            ? { ...target, missed: true, judgment: 'MISS', judgedAtY: judgedAtY ?? target.judgedAtY }
             : target
         )
       );
@@ -418,7 +417,7 @@ export function useDDRFullTargets({
       setShiftTargets(prev =>
         prev.map(target =>
           target.id === targetId
-            ? { ...target, missed: true }
+            ? { ...target, missed: true, judgment: 'MISS', judgedAtY: judgedAtY ?? target.judgedAtY }
             : target
         )
       );

@@ -40,6 +40,20 @@ export function DDRFullGameplayAreaVertical({
     MISS: 0
   });
 
+  // Hauteur réelle de la lane (inner) pour placer la barre au 4/5 — mesurée par ResizeObserver
+  const laneInnerRef = useRef(null);
+  const [laneHeightPx, setLaneHeightPx] = useState(400);
+
+  useEffect(() => {
+    const el = laneInnerRef.current;
+    if (!el) return;
+    const update = () => setLaneHeightPx(el.offsetHeight);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   // Générer les cibles pour les 4 lanes
   const {
     brakeTargets,
@@ -69,13 +83,17 @@ export function DDRFullGameplayAreaVertical({
     return () => clearInterval(debugInterval);
   }, [isActive, currentTime, brakeTargets.length, wheelTargets.length, accelTargets.length, shiftTargets.length, judgmentCounts]);
 
-  // Calcul de la position verticale (du haut vers le bas)
-  // Zone judgment CSS: bottom: 80px, height: 20px → bande 300–320px du haut
+  // Barre au 4/5 (80 %) de la hauteur réelle de la lane — une seule référence : laneHeightPx (mesuré sur l’inner).
+  const BAR_RATIO = 0.8; // 4/5 depuis le haut
+  const JUDGMENT_BAR_TOP = Math.round(BAR_RATIO * laneHeightPx);
+  const JUDGMENT_ZONE_TOP = JUDGMENT_BAR_TOP;
+  const JUDGMENT_ZONE_BOTTOM = JUDGMENT_BAR_TOP + 20;
+  const JUDGMENT_ZONE_Y = JUDGMENT_BAR_TOP + 10;
+  const MISS_THRESHOLD_Y = JUDGMENT_BAR_TOP + 35;
+  const OFFSCREEN_BOTTOM = laneHeightPx + 80; // Cibles disparaissent en glissant sous la lane
   const getTargetPositionY = (target) => {
     const timeUntilTarget = target.time - currentTime;
     const SCROLL_SPEED = 150; // pixels par seconde
-    const JUDGMENT_ZONE_Y = 310; // Centre de la bande (300 + 20/2)
-    
     return JUDGMENT_ZONE_Y - (timeUntilTarget * SCROLL_SPEED);
   };
 
@@ -120,18 +138,18 @@ export function DDRFullGameplayAreaVertical({
   useEffect(() => {
     if (!isActive) return;
 
-    // Frein
+    // Frein — hit quand la boîte est sur la barre (300–320), miss seulement quand elle a dépassé (y > 330)
     brakeTargets.filter(t => !t.hit && !t.missed).forEach(target => {
       const yPos = getTargetPositionY(target);
-      if (yPos >= 300 && yPos <= 320) {
+      if (yPos >= JUDGMENT_ZONE_TOP && yPos <= JUDGMENT_ZONE_BOTTOM) {
         const judgment = checkJudgment(target.percent, effectiveBrake, tolerance);
-        markTargetHit(target.id, 'brake', judgment);
+        markTargetHit(target.id, 'brake', judgment, yPos);
         if (drillDebug.isActive()) drillDebug.logJudgment(judgment, 'brake', currentTime, { targetPercent: target.percent });
         if (audioEnabled) enhancedDrillAudioService.playJudgmentSound(judgment);
         onJudgmentUpdate(judgment);
         setJudgmentCounts(prev => ({ ...prev, [judgment]: prev[judgment] + 1 }));
-      } else if (yPos > 320) {
-        markTargetMiss(target.id, 'brake');
+      } else if (yPos > MISS_THRESHOLD_Y) {
+        markTargetMiss(target.id, 'brake', yPos);
         if (drillDebug.isActive()) drillDebug.logJudgment('MISS', 'brake', currentTime);
         if (audioEnabled) enhancedDrillAudioService.playJudgmentSound('MISS');
         onJudgmentUpdate('MISS');
@@ -139,19 +157,19 @@ export function DDRFullGameplayAreaVertical({
       }
     });
 
-    // Volant (effectiveWheel -1..1 → degrés pour comparaison avec target.angle)
+    // Volant
     wheelTargets.filter(t => !t.hit && !t.missed).forEach(target => {
       const yPos = getTargetPositionY(target);
-      if (yPos >= 300 && yPos <= 320) {
+      if (yPos >= JUDGMENT_ZONE_TOP && yPos <= JUDGMENT_ZONE_BOTTOM) {
         const wheelDegrees = drillDebug.isActive() ? (effectiveWheel ?? 0) : wheelValueToDegrees(effectiveWheel);
         const judgment = checkJudgment(target.angle, wheelDegrees, WHEEL_TOLERANCE_DEGREES);
-        markTargetHit(target.id, 'wheel', judgment);
+        markTargetHit(target.id, 'wheel', judgment, yPos);
         if (drillDebug.isActive()) drillDebug.logJudgment(judgment, 'wheel', currentTime, { targetAngle: target.angle });
         if (audioEnabled) enhancedDrillAudioService.playJudgmentSound(judgment);
         onJudgmentUpdate(judgment);
         setJudgmentCounts(prev => ({ ...prev, [judgment]: prev[judgment] + 1 }));
-      } else if (yPos > 320) {
-        markTargetMiss(target.id, 'wheel');
+      } else if (yPos > MISS_THRESHOLD_Y) {
+        markTargetMiss(target.id, 'wheel', yPos);
         if (drillDebug.isActive()) drillDebug.logJudgment('MISS', 'wheel', currentTime);
         if (audioEnabled) enhancedDrillAudioService.playJudgmentSound('MISS');
         onJudgmentUpdate('MISS');
@@ -162,15 +180,15 @@ export function DDRFullGameplayAreaVertical({
     // Accélérateur
     accelTargets.filter(t => !t.hit && !t.missed).forEach(target => {
       const yPos = getTargetPositionY(target);
-      if (yPos >= 300 && yPos <= 320) {
+      if (yPos >= JUDGMENT_ZONE_TOP && yPos <= JUDGMENT_ZONE_BOTTOM) {
         const judgment = checkJudgment(target.percent, effectiveAccel, tolerance);
-        markTargetHit(target.id, 'accel', judgment);
+        markTargetHit(target.id, 'accel', judgment, yPos);
         if (drillDebug.isActive()) drillDebug.logJudgment(judgment, 'accel', currentTime, { targetPercent: target.percent });
         if (audioEnabled) enhancedDrillAudioService.playJudgmentSound(judgment);
         onJudgmentUpdate(judgment);
         setJudgmentCounts(prev => ({ ...prev, [judgment]: prev[judgment] + 1 }));
-      } else if (yPos > 320) {
-        markTargetMiss(target.id, 'accel');
+      } else if (yPos > MISS_THRESHOLD_Y) {
+        markTargetMiss(target.id, 'accel', yPos);
         if (drillDebug.isActive()) drillDebug.logJudgment('MISS', 'accel', currentTime);
         if (audioEnabled) enhancedDrillAudioService.playJudgmentSound('MISS');
         onJudgmentUpdate('MISS');
@@ -178,21 +196,21 @@ export function DDRFullGameplayAreaVertical({
       }
     });
 
-    // Shifter (shift_up et shift_down combinés)
+    // Shifter
     shiftTargets.filter(t => !t.hit && !t.missed).forEach(target => {
       const yPos = getTargetPositionY(target);
-      if (yPos >= 300 && yPos <= 320) {
+      if (yPos >= JUDGMENT_ZONE_TOP && yPos <= JUDGMENT_ZONE_BOTTOM) {
         const correctButton = (target.type === 'shift_up' && effectiveShiftUp) || (target.type === 'shift_down' && effectiveShiftDown);
         if (correctButton) {
           const judgment = checkShifterJudgment(target, effectiveShiftUp, effectiveShiftDown, currentTime);
-          markTargetHit(target.id, 'shift', judgment);
+          markTargetHit(target.id, 'shift', judgment, yPos);
           if (drillDebug.isActive()) drillDebug.logJudgment(judgment, 'shift', currentTime);
           if (audioEnabled) enhancedDrillAudioService.playJudgmentSound(judgment);
           onJudgmentUpdate(judgment);
           setJudgmentCounts(prev => ({ ...prev, [judgment]: prev[judgment] + 1 }));
         }
-      } else if (yPos > 320) {
-        markTargetMiss(target.id, 'shift');
+      } else if (yPos > MISS_THRESHOLD_Y) {
+        markTargetMiss(target.id, 'shift', yPos);
         if (drillDebug.isActive()) drillDebug.logJudgment('MISS', 'shift', currentTime);
         if (audioEnabled) enhancedDrillAudioService.playJudgmentSound('MISS');
         onJudgmentUpdate('MISS');
@@ -210,13 +228,11 @@ export function DDRFullGameplayAreaVertical({
         <div className="ddr-lane-vertical ddr-lane-brake-vertical">
           <div className="ddr-lane-header-vertical">🛑 Frein</div>
           <div className="ddr-lane-content-vertical">
-            {/* Zone de judgment en bas */}
-            <div className="ddr-judgment-zone-vertical"></div>
-            
-            {/* Cibles de frein */}
-            {brakeTargets.map(target => {
+            <div className="ddr-lane-content-inner" ref={laneInnerRef}>
+              <div className="ddr-judgment-zone-vertical" style={{ top: `${JUDGMENT_BAR_TOP}px` }} />
+              {brakeTargets.map(target => {
               const yPos = getTargetPositionY(target);
-              if (yPos < -100 || yPos > 500) return null;
+              if (yPos < -100 || yPos > OFFSCREEN_BOTTOM) return null;
               
               // Largeur proportionnelle à la valeur (0% à 100% = 40px à 100%)
               const widthPercent = 40 + (target.percent * 0.6);
@@ -242,6 +258,7 @@ export function DDRFullGameplayAreaVertical({
                 </div>
               );
             })}
+            </div>
           </div>
         </div>
 
@@ -249,13 +266,11 @@ export function DDRFullGameplayAreaVertical({
         <div className="ddr-lane-vertical ddr-lane-wheel-vertical">
           <div className="ddr-lane-header-vertical">🎮 Volant</div>
           <div className="ddr-lane-content-vertical ddr-lane-content-centered-vertical">
-            {/* Zone de judgment en bas */}
-            <div className="ddr-judgment-zone-vertical"></div>
-            
-            {/* Cibles de volant */}
-            {wheelTargets.map(target => {
+            <div className="ddr-lane-content-inner">
+              <div className="ddr-judgment-zone-vertical" style={{ top: `${JUDGMENT_BAR_TOP}px` }} />
+              {wheelTargets.map(target => {
               const yPos = getTargetPositionY(target);
-              if (yPos < -100 || yPos > 500) return null;
+              if (yPos < -100 || yPos > OFFSCREEN_BOTTOM) return null;
               
               // Largeur proportionnelle à l'angle absolu (0° à 175° = 40% à 100%)
               const widthPercent = 40 + (Math.abs(target.angle) / 175 * 60);
@@ -289,6 +304,7 @@ export function DDRFullGameplayAreaVertical({
                 </div>
               );
             })}
+            </div>
           </div>
         </div>
 
@@ -296,13 +312,11 @@ export function DDRFullGameplayAreaVertical({
         <div className="ddr-lane-vertical ddr-lane-accel-vertical">
           <div className="ddr-lane-header-vertical">⚡ Accél</div>
           <div className="ddr-lane-content-vertical">
-            {/* Zone de judgment en bas */}
-            <div className="ddr-judgment-zone-vertical"></div>
-            
-            {/* Cibles d'accélérateur */}
-            {accelTargets.map(target => {
+            <div className="ddr-lane-content-inner">
+              <div className="ddr-judgment-zone-vertical" style={{ top: `${JUDGMENT_BAR_TOP}px` }} />
+              {accelTargets.map(target => {
               const yPos = getTargetPositionY(target);
-              if (yPos < -100 || yPos > 500) return null;
+              if (yPos < -100 || yPos > OFFSCREEN_BOTTOM) return null;
               
               // Largeur proportionnelle à la valeur (0% à 100% = 40px à 100%)
               const widthPercent = 40 + (target.percent * 0.6);
@@ -328,6 +342,7 @@ export function DDRFullGameplayAreaVertical({
                 </div>
               );
             })}
+            </div>
           </div>
         </div>
 
@@ -335,13 +350,11 @@ export function DDRFullGameplayAreaVertical({
         <div className="ddr-lane-vertical ddr-lane-shift-vertical">
           <div className="ddr-lane-header-vertical">🔀 Shifter</div>
           <div className="ddr-lane-content-vertical">
-            {/* Zone de judgment en bas */}
-            <div className="ddr-judgment-zone-vertical"></div>
-            
-            {/* Cibles de shifter */}
-            {shiftTargets.map(target => {
+            <div className="ddr-lane-content-inner">
+              <div className="ddr-judgment-zone-vertical" style={{ top: `${JUDGMENT_BAR_TOP}px` }} />
+              {shiftTargets.map(target => {
               const yPos = getTargetPositionY(target);
-              if (yPos < -100 || yPos > 500) return null;
+              if (yPos < -100 || yPos > OFFSCREEN_BOTTOM) return null;
               
               const icon = target.type === 'shift_up' ? '⬆️' : '⬇️';
               
@@ -362,6 +375,7 @@ export function DDRFullGameplayAreaVertical({
                 </div>
               );
             })}
+            </div>
           </div>
         </div>
       </div>

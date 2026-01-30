@@ -1,10 +1,40 @@
 /**
  * Service Drill Song
  * 
- * Gère le chargement et la validation des drill songs
+ * Gère le chargement et la validation des drill songs.
+ * Chaque drill custom a une propriété drillTypes (dans le JSON ou le manifest)
+ * pour indiquer avec quels types de drill il est compatible.
  */
 
 const DRILLS_BASE_PATH = '/drills';
+
+/** Types de drill : un fichier custom est associé à un ou plusieurs. */
+export const DRILL_TYPES = {
+  SINGLE_PEDAL: 'single_pedal',   // Drill une pédale (percent seulement)
+  BRAKE_ACCEL: 'brake_accel',     // Frein + Accélérateur (type brake/accel)
+  FULL_COMBO: 'full_combo'        // Drill Complet (brake, accel, wheel, shift_up/shift_down)
+};
+
+/** Manifeste de tous les drills customs : path, name, difficulty, drillTypes. */
+const CUSTOM_DRILL_MANIFEST = [
+  // Drill une pédale
+  { path: 'easy/progressive-braking.json', name: 'Progressive Braking - Freinage Progressif', difficulty: 'easy', drillTypes: [DRILL_TYPES.SINGLE_PEDAL] },
+  { path: 'easy/multi-threshold.json', name: 'Seuils Multiples', difficulty: 'easy', drillTypes: [DRILL_TYPES.SINGLE_PEDAL] },
+  { path: 'easy/test-succession.json', name: 'Test Succession', difficulty: 'easy', drillTypes: [DRILL_TYPES.SINGLE_PEDAL] },
+  { path: 'medium/brake-trailing.json', name: 'Brake Trailing - Dégraissage Progressif', difficulty: 'medium', drillTypes: [DRILL_TYPES.SINGLE_PEDAL] },
+  { path: 'medium/cadence-braking.json', name: 'Cadence Braking - Freinage en Cadence', difficulty: 'medium', drillTypes: [DRILL_TYPES.SINGLE_PEDAL] },
+  { path: 'hard/threshold-braking.json', name: 'Threshold Braking - Freinage à Seuil', difficulty: 'hard', drillTypes: [DRILL_TYPES.SINGLE_PEDAL] },
+  // Frein + Accélérateur
+  { path: 'brakeaccel/hairpin.json', name: 'Épingles', difficulty: 'easy', drillTypes: [DRILL_TYPES.BRAKE_ACCEL] },
+  { path: 'brakeaccel/chicane.json', name: 'Chicane', difficulty: 'medium', drillTypes: [DRILL_TYPES.BRAKE_ACCEL] },
+  { path: 'brakeaccel/trail-and-gradual-accel.json', name: 'Trail brake + accélération graduelle', difficulty: 'medium', drillTypes: [DRILL_TYPES.BRAKE_ACCEL] },
+  { path: 'brakeaccel/heavy-braking.json', name: 'Freinage intense', difficulty: 'hard', drillTypes: [DRILL_TYPES.BRAKE_ACCEL] },
+  { path: 'brakeaccel/double-chicane.json', name: 'Double chicane', difficulty: 'hard', drillTypes: [DRILL_TYPES.BRAKE_ACCEL] },
+  { path: 'brakeaccel/trail-braking-easy.json', name: 'Trail Braking (facile)', difficulty: 'easy', drillTypes: [DRILL_TYPES.BRAKE_ACCEL] },
+  { path: 'brakeaccel/trail-braking-medium.json', name: 'Trail Braking (moyen)', difficulty: 'medium', drillTypes: [DRILL_TYPES.BRAKE_ACCEL] },
+  // Drill Complet : ajouter ici les JSON full_combo quand tu en crées
+  // { path: 'fullcombo/example.json', name: 'Exemple Full Combo', difficulty: 'medium', drillTypes: [DRILL_TYPES.FULL_COMBO] },
+];
 
 /**
  * Charge un drill song depuis un fichier JSON
@@ -54,6 +84,18 @@ export function validateDrillSong(drillSong) {
   
   if (drillSong.targets.length === 0) {
     throw new Error('Drill song must have at least one target');
+  }
+  
+  // Si drillTypes est présent dans le JSON, valider (optionnel)
+  const allowedDrillTypes = [DRILL_TYPES.SINGLE_PEDAL, DRILL_TYPES.BRAKE_ACCEL, DRILL_TYPES.FULL_COMBO];
+  if (drillSong.drillTypes != null) {
+    if (!Array.isArray(drillSong.drillTypes)) {
+      throw new Error('drillTypes must be an array');
+    }
+    const invalid = drillSong.drillTypes.filter(t => !allowedDrillTypes.includes(t));
+    if (invalid.length > 0) {
+      throw new Error(`drillTypes contains invalid value(s): ${invalid.join(', ')}. Allowed: ${allowedDrillTypes.join(', ')}`);
+    }
   }
   
   // Valider chaque cible
@@ -110,56 +152,34 @@ export function calculateDuration(targets) {
 }
 
 /**
- * Liste les drill songs disponibles par difficulté
- * @param {string} difficulty - Difficulté ('easy', 'medium', 'hard')
- * @param {string} drillType - Type de drill ('percentage', 'brakeaccel', etc.)
- * @returns {Promise<Array>} Liste des noms de fichiers
+ * Mappe le type de drill de l’UI vers le type interne (drillTypes dans le manifest).
+ * @param {string} uiDrillType - 'percentage' | 'brakeaccel' | 'fullcombo'
+ * @returns {string} DRILL_TYPES.*
+ */
+function uiDrillTypeToInternal(uiDrillType) {
+  const map = {
+    percentage: DRILL_TYPES.SINGLE_PEDAL,
+    brakeaccel: DRILL_TYPES.BRAKE_ACCEL,
+    fullcombo: DRILL_TYPES.FULL_COMBO
+  };
+  return map[uiDrillType] || DRILL_TYPES.SINGLE_PEDAL;
+}
+
+/**
+ * Liste les drill songs disponibles pour un type de drill et optionnellement une difficulté.
+ * Seuls les drills dont drillTypes contient le type demandé sont retournés.
+ * @param {string} difficulty - 'easy' | 'medium' | 'hard' ou null pour toutes
+ * @param {string} drillType - Type UI : 'percentage', 'brakeaccel', 'fullcombo'
+ * @returns {Promise<Array<{path, name, difficulty}>>}
  */
 export async function listDrillSongs(difficulty = null, drillType = 'percentage') {
-  // Pour l'instant, on retourne une liste hardcodée
-  // Plus tard, on pourra faire une requête au serveur pour lister les fichiers
-  
-  if (drillType === 'brakeaccel') {
-    const brakeAccelDrills = {
-      easy: [
-        { path: 'brakeaccel/hairpin.json', name: 'Épingles' }
-      ],
-      medium: [
-        { path: 'brakeaccel/chicane.json', name: 'Chicane' },
-        { path: 'brakeaccel/trail-and-gradual-accel.json', name: 'Trail brake + accélération graduelle' }
-      ],
-      hard: [
-        { path: 'brakeaccel/heavy-braking.json', name: 'Freinage intense' },
-        { path: 'brakeaccel/double-chicane.json', name: 'Double chicane' }
-      ]
-    };
-
-    if (difficulty) {
-      return brakeAccelDrills[difficulty] || [];
-    }
-
-    return [...brakeAccelDrills.easy, ...brakeAccelDrills.medium, ...brakeAccelDrills.hard];
-  }
-  
-  // Drills de pourcentages par défaut
-  const drills = {
-    easy: [
-      { path: 'easy/progressive-braking.json', name: 'Progressive Braking - Freinage Progressif' },
-      { path: 'easy/multi-threshold.json', name: 'Seuils Multiples' }
-    ],
-    medium: [
-      { path: 'medium/brake-trailing.json', name: 'Brake Trailing - Dégraissage Progressif' },
-      { path: 'medium/cadence-braking.json', name: 'Cadence Braking - Freinage en Cadence' }
-    ],
-    hard: [
-      { path: 'hard/threshold-braking.json', name: 'Threshold Braking - Freinage à Seuil' }
-    ]
-  };
-  
+  const internalType = uiDrillTypeToInternal(drillType);
+  let list = CUSTOM_DRILL_MANIFEST.filter(
+    (entry) => entry.drillTypes && entry.drillTypes.includes(internalType)
+  );
   if (difficulty) {
-    return drills[difficulty] || [];
+    list = list.filter((entry) => entry.difficulty === difficulty);
   }
-  
-  return [...drills.easy, ...drills.medium, ...drills.hard];
+  return list.map(({ path, name, difficulty: d }) => ({ path, name, difficulty: d }));
 }
 
