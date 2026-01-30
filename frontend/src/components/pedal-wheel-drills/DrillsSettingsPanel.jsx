@@ -52,7 +52,7 @@ export function DrillsSettingsPanel({
           <span className="drills-settings-toggle-slider" />
           <span className="drills-settings-toggle-wrap">
             <span className="drills-settings-toggle-label">Mode aveugle</span>
-            <span className="drills-settings-toggle-desc">Cache la barre de jugement pendant le drill</span>
+            <span className="drills-settings-toggle-desc">Une fois maîtrisé, cachez la barre de % pour tester votre précision aux palliers</span>
           </span>
         </label>
       </div>

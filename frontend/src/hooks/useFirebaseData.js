@@ -102,30 +102,20 @@ export function useFirebaseData() {
             track: driverTrackMap[id] || 'Unknown' // Piste du pilote (pas toutes les sessions)
           }));
           
-          // Calculer lastUpdate depuis les sessions (COPIE de la prod ligne 650-706)
+          // Calculer lastUpdate depuis les sessions
+          // Utiliser la date brute (UTC) sans offset pour "Il y a X min" - évite le bug DST Québec
           const mostRecentSessionDate = sessions.reduce((latest, session) => {
             if (session.Date) {
-              const sessionDate = new Date(session.Date); // UTC
-              // IMPORTANT: Ajouter +3h d'offset (ligne 692 de la prod)
-              const adjustedUTC = new Date(sessionDate.getTime() + (3 * 60 * 60 * 1000));
-              
-              // CRITIQUE: Convertir en heure LOCALE comme la prod ligne 692
-              // new Date(year, month, day, hour, min, sec) crée en heure LOCALE
-              const localDate = new Date(
-                adjustedUTC.getUTCFullYear(),
-                adjustedUTC.getUTCMonth(),
-                adjustedUTC.getUTCDate(),
-                adjustedUTC.getUTCHours(),
-                adjustedUTC.getUTCMinutes(),
-                adjustedUTC.getUTCSeconds()
-              );
-              
-              return !latest || localDate > latest ? localDate : latest;
+              const sessionDate = typeof session.Date?.toDate === 'function'
+                ? session.Date.toDate()
+                : new Date(session.Date);
+              const ts = sessionDate.getTime();
+              if (isNaN(ts)) return latest;
+              return !latest || ts > latest.getTime() ? sessionDate : latest;
             }
             return latest;
           }, null);
           
-          // Créer les métadonnées calculées
           const calculatedMetadata = {
             lastUpdate: mostRecentSessionDate ? mostRecentSessionDate.getTime() : null,
             sessionCount: sessions.length
@@ -220,29 +210,19 @@ export function useFirebaseData() {
           track: driverTrackMap[id] || 'Unknown'
         }));
         
-        // Calculer lastUpdate depuis les sessions (COPIE de la prod ligne 650-706)
+        // Calculer lastUpdate depuis les sessions (même logique que loadData)
         const mostRecentSessionDate = sessions.reduce((latest, session) => {
           if (session.Date) {
-            const sessionDate = new Date(session.Date); // UTC
-            // IMPORTANT: Ajouter +3h d'offset (ligne 692 de la prod)
-            const adjustedUTC = new Date(sessionDate.getTime() + (3 * 60 * 60 * 1000));
-            
-            // CRITIQUE: Convertir en heure LOCALE comme la prod ligne 692
-            const localDate = new Date(
-              adjustedUTC.getUTCFullYear(),
-              adjustedUTC.getUTCMonth(),
-              adjustedUTC.getUTCDate(),
-              adjustedUTC.getUTCHours(),
-              adjustedUTC.getUTCMinutes(),
-              adjustedUTC.getUTCSeconds()
-            );
-            
-            return !latest || localDate > latest ? localDate : latest;
+            const sessionDate = typeof session.Date?.toDate === 'function'
+              ? session.Date.toDate()
+              : new Date(session.Date);
+            const ts = sessionDate.getTime();
+            if (isNaN(ts)) return latest;
+            return !latest || ts > latest.getTime() ? sessionDate : latest;
           }
           return latest;
         }, null);
         
-        // Créer les métadonnées calculées
         const calculatedMetadata = {
           lastUpdate: mostRecentSessionDate ? mostRecentSessionDate.getTime() : null,
           sessionCount: sessions.length
