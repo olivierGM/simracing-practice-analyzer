@@ -8,12 +8,12 @@ import { DrillSongSelector } from './DrillSongSelector';
 import './DDRConfig.css';
 
 const DIFFICULTY_MODES = {
-  MEDIUM: { label: 'Facile', tolerance: 5 },
-  HARD: { label: 'Moyen', tolerance: 5 },
-  EXTREME: { label: 'Difficile', tolerance: 5 },
-  INSANE: { label: 'Extreme', tolerance: 5 },
-  INSANE_PLUS_1: { label: 'Insane', tolerance: 5 },
-  INSANE_PLUS_2: { label: 'Nightmare', tolerance: 5 }
+  MEDIUM: { label: 'Facile', tolerance: 2 },
+  HARD: { label: 'Moyen', tolerance: 2 },
+  EXTREME: { label: 'Difficile', tolerance: 2 },
+  INSANE: { label: 'Extreme', tolerance: 2 },
+  INSANE_PLUS_1: { label: 'Insane', tolerance: 2 },
+  INSANE_PLUS_2: { label: 'Nightmare', tolerance: 2 }
 };
 
 const DURATION_OPTIONS = [

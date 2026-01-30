@@ -11,6 +11,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDDRDualTargets } from '../../hooks/useDDRDualTargets';
 import enhancedDrillAudioService from '../../services/enhancedDrillAudioService';
+import { getColorForPercent } from '../../utils/drillColors';
+import { drillDebug } from '../../utils/drillDebug';
 import './DDRDualGameplayArea.css';
 
 // Vitesse de défilement (pixels par seconde)
@@ -22,7 +24,7 @@ const APPROACH_ZONE_WIDTH = 300;
 export function DDRDualGameplayArea({ 
   acceleratorValue,
   brakeValue,
-  tolerance = 5,
+  tolerance = 2,
   isActive = false,
   drillSong = null,
   duration = null,
@@ -139,6 +141,9 @@ export function DDRDualGameplayArea({
     return 'MISS';
   };
 
+  const effectiveAccel = drillDebug.isActive() ? (drillDebug.getValue(currentTime, 'accelerator') ?? acceleratorValue) : acceleratorValue;
+  const effectiveBrake = drillDebug.isActive() ? (drillDebug.getValue(currentTime, 'brake') ?? brakeValue) : brakeValue;
+
   // Gestion des hits pour l'accélérateur
   useEffect(() => {
     if (!isActive) return;
@@ -150,10 +155,11 @@ export function DDRDualGameplayArea({
       const isInJudgmentZone = Math.abs(timeUntilTarget) <= 0.15;
 
       if (isInJudgmentZone) {
-        const judgment = checkTargetHit(target, acceleratorValue);
+        const judgment = checkTargetHit(target, effectiveAccel);
         
         if (judgment !== 'MISS') {
           markTargetHit(target.id, 'accel', judgment);
+          if (drillDebug.isActive()) drillDebug.logJudgment(judgment, 'accel', currentTime, { targetPercent: target.percent });
           
           if (audioEnabled) {
             enhancedDrillAudioService.playJudgmentSound(judgment);
@@ -180,6 +186,7 @@ export function DDRDualGameplayArea({
       } else if (timeUntilTarget < -0.2) {
         // Miss si on dépasse la zone
         markTargetMiss(target.id, 'accel');
+        if (drillDebug.isActive()) drillDebug.logJudgment('MISS', 'accel', currentTime, { targetPercent: target.percent });
         
         if (audioEnabled) {
           enhancedDrillAudioService.playJudgmentSound('MISS');
@@ -205,7 +212,7 @@ export function DDRDualGameplayArea({
         }
       }
     });
-  }, [currentTime, acceleratorValue, isActive, audioEnabled, tolerance]);
+  }, [currentTime, effectiveAccel, isActive, audioEnabled, tolerance]);
 
   // Gestion des hits pour le frein
   useEffect(() => {
@@ -218,10 +225,11 @@ export function DDRDualGameplayArea({
       const isInJudgmentZone = Math.abs(timeUntilTarget) <= 0.15;
 
       if (isInJudgmentZone) {
-        const judgment = checkTargetHit(target, brakeValue);
+        const judgment = checkTargetHit(target, effectiveBrake);
         
         if (judgment !== 'MISS') {
           markTargetHit(target.id, 'brake', judgment);
+          if (drillDebug.isActive()) drillDebug.logJudgment(judgment, 'brake', currentTime, { targetPercent: target.percent });
           
           if (audioEnabled) {
             enhancedDrillAudioService.playJudgmentSound(judgment);
@@ -247,6 +255,7 @@ export function DDRDualGameplayArea({
         }
       } else if (timeUntilTarget < -0.2) {
         markTargetMiss(target.id, 'brake');
+        if (drillDebug.isActive()) drillDebug.logJudgment('MISS', 'brake', currentTime, { targetPercent: target.percent });
         
         if (audioEnabled) {
           enhancedDrillAudioService.playJudgmentSound('MISS');
@@ -272,7 +281,7 @@ export function DDRDualGameplayArea({
         }
       }
     });
-  }, [currentTime, brakeValue, isActive, audioEnabled, tolerance]);
+  }, [currentTime, effectiveBrake, isActive, audioEnabled, tolerance]);
 
   // Rendu des cibles pour l'accélérateur
   const renderAccelTargets = () => {
@@ -286,6 +295,7 @@ export function DDRDualGameplayArea({
         const width = target.duration * SCROLL_SPEED;
         const height = `${target.percent}%`;
         
+        const color = getColorForPercent(target.percent);
         return (
           <div
             key={target.id}
@@ -294,7 +304,9 @@ export function DDRDualGameplayArea({
               left: `${position}px`,
               width: `${width}px`,
               height: height,
-              bottom: 0
+              bottom: 0,
+              backgroundColor: color,
+              borderColor: color
             }}
           >
             <div className="target-percent">{target.percent}%</div>
@@ -303,7 +315,7 @@ export function DDRDualGameplayArea({
       });
   };
 
-  // Rendu des cibles pour le frein
+  // Rendu des cibles pour le frein (même logique couleur par % que Drill une pédale)
   const renderBrakeTargets = () => {
     return brakeTargets
       .filter(target => {
@@ -314,7 +326,7 @@ export function DDRDualGameplayArea({
         const position = getTargetPosition(target);
         const width = target.duration * SCROLL_SPEED;
         const height = `${target.percent}%`;
-        
+        const color = getColorForPercent(target.percent);
         return (
           <div
             key={target.id}
@@ -323,7 +335,9 @@ export function DDRDualGameplayArea({
               left: `${position}px`,
               width: `${width}px`,
               height: height,
-              bottom: 0
+              bottom: 0,
+              backgroundColor: color,
+              borderColor: color
             }}
           >
             <div className="target-percent">{target.percent}%</div>
@@ -355,7 +369,10 @@ export function DDRDualGameplayArea({
             {!blindMode && (
               <div 
                 className="ddr-current-value-bar ddr-current-value-bar-accel"
-                style={{ height: `${acceleratorValue * 100}%` }}
+                style={{
+                  height: `${effectiveAccel * 100}%`,
+                  backgroundColor: getColorForPercent(effectiveAccel * 100)
+                }}
               />
             )}
           </div>
@@ -386,7 +403,10 @@ export function DDRDualGameplayArea({
             {!blindMode && (
               <div 
                 className="ddr-current-value-bar ddr-current-value-bar-brake"
-                style={{ height: `${brakeValue * 100}%` }}
+                style={{
+                  height: `${effectiveBrake * 100}%`,
+                  backgroundColor: getColorForPercent(effectiveBrake * 100)
+                }}
               />
             )}
           </div>

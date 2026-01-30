@@ -26,12 +26,12 @@ export const ZONE_STATUS = {
  * Hook pour gérer un drill de pourcentages
  * @param {Object} options - Options du drill
  * @param {number} options.targetPercent - Pourcentage cible (0-100)
- * @param {number} options.tolerance - Tolérance en pourcentage (défaut: 5)
+ * @param {number} options.tolerance - Tolérance en pourcentage (défaut: 2)
  * @param {number} options.currentValue - Valeur actuelle (0-1)
  * @param {boolean} options.isActive - Si le drill est actif
  * @returns {Object} État et statistiques du drill
  */
-export function usePercentageDrill({ targetPercent, tolerance = 5, currentValue, isActive }) {
+export function usePercentageDrill({ targetPercent, tolerance = 2, currentValue, isActive }) {
   const [score, setScore] = useState(0);
   const [timeInZone, setTimeInZone] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
@@ -133,6 +133,26 @@ export function usePercentageDrill({ targetPercent, tolerance = 5, currentValue,
     accuracy: Math.round(accuracy),
     reset
   };
+}
+
+/**
+ * Calcule précision et score à partir des jugements (PERFECT/GREAT/GOOD/OK/MISS).
+ * Utilisé pour les drills à cibles (Frein+Accél, Drill complet) pour l’écran de résultats.
+ */
+export function statsFromJudgmentCounts(judgmentCounts) {
+  const P = judgmentCounts.PERFECT || 0;
+  const G = judgmentCounts.GREAT || 0;
+  const Go = judgmentCounts.GOOD || 0;
+  const O = judgmentCounts.OK || 0;
+  const M = judgmentCounts.MISS || 0;
+  const total = P + G + Go + O + M;
+  if (total === 0) {
+    return { accuracy: 0, score: 0 };
+  }
+  const hits = P + G + Go + O;
+  const accuracy = Math.round((hits / total) * 100);
+  const score = Math.round((P * 100 + G * 90 + Go * 75 + O * 50 + M * 0) / total);
+  return { accuracy, score };
 }
 
 /**

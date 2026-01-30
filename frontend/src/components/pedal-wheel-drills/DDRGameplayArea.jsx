@@ -10,6 +10,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDDRTargets } from '../../hooks/useDDRTargets';
 import enhancedDrillAudioService from '../../services/enhancedDrillAudioService';
+import { getColorForPercent } from '../../utils/drillColors';
+import { drillDebug } from '../../utils/drillDebug';
 import './DDRGameplayArea.css';
 
 // Vitesse de défilement (pixels par seconde)
@@ -23,7 +25,8 @@ const HOLD_MS = 250;
 
 export function DDRGameplayArea({ 
   currentValue, 
-  tolerance = 5,
+  inputType = 'brake',
+  tolerance = 2,
   isActive = false,
   drillSong = null,
   duration = null,
@@ -125,6 +128,7 @@ export function DDRGameplayArea({
       if (!isActive) return;
 
       const elapsed = currentTime;
+      const effectiveValue = drillDebug.isActive() ? (drillDebug.getValue(elapsed, inputType) ?? currentValue) : currentValue;
 
       setRenderedTargets(() => {
         return targets.map(target => {
@@ -139,7 +143,7 @@ export function DDRGameplayArea({
             const now = performance.now();
             // Si la barre est dans la zone de jugement
             if (currentX <= judgmentLineX && barEndX >= judgmentLineX) {
-              const currentPercent = currentValue * 100;
+              const currentPercent = effectiveValue * 100;
               const diff = Math.abs(currentPercent - target.percent);
               
               if (diff <= tolerance) {
@@ -166,6 +170,9 @@ export function DDRGameplayArea({
                   }
                   markTargetHit(target.id, score);
                   delete holdStartByTargetRef.current[target.id];
+                  if (drillDebug.isActive()) {
+                    drillDebug.logJudgment(judgment, inputType, elapsed, { targetPercent: target.percent });
+                  }
                   setJudgmentCounts(prev => ({
                     ...prev,
                     [judgment]: (prev[judgment] || 0) + 1
@@ -190,6 +197,9 @@ export function DDRGameplayArea({
             // Miss si la barre est passée sans être touchée
             if (barEndX < judgmentLineX) {
               delete holdStartByTargetRef.current[target.id];
+              if (drillDebug.isActive()) {
+                drillDebug.logJudgment('MISS', inputType, elapsed, { targetPercent: target.percent });
+              }
               markTargetMiss(target.id);
               // Mettre à jour les compteurs de jugements
               setJudgmentCounts(prev => ({
@@ -232,72 +242,7 @@ export function DDRGameplayArea({
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [isActive, currentValue, tolerance, targets, currentTime, markTargetHit, markTargetMiss]);
-
-  // Code couleur par palier avec tolérance de ±5% et dégradés entre les paliers
-  // Fonction helper pour convertir hex en RGB (définie en premier pour Edge)
-  function hexToRgb(hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    if (!result) {
-      return { r: 0, g: 0, b: 0 };
-    }
-    return {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    };
-  }
-  
-  function getColorForPercent(percent) {
-    var tolerance = 5;
-    
-    // Paliers cibles avec couleurs Guitar Hero (distinctes et iconiques)
-    var targets = [
-      { percent: 0, color: '#666666', rgb: { r: 102, g: 102, b: 102 } },     // Gris foncé
-      { percent: 20, color: '#22B14C', rgb: { r: 34, g: 177, b: 76 } },      // Vert (GH)
-      { percent: 40, color: '#EF2B2D', rgb: { r: 239, g: 43, b: 45 } },      // Rouge (GH)
-      { percent: 60, color: '#FFC600', rgb: { r: 255, g: 198, b: 0 } },      // Jaune (GH)
-      { percent: 80, color: '#3E75C3', rgb: { r: 62, g: 117, b: 195 } },     // Bleu (GH)
-      { percent: 100, color: '#F66A00', rgb: { r: 246, g: 106, b: 0 } }      // Orange (GH)
-    ];
-    
-    // Trouver si on est dans une zone de tolérance d'un palier
-    for (var i = 0; i < targets.length; i++) {
-      if (Math.abs(percent - targets[i].percent) <= tolerance) {
-        return targets[i].color;
-      }
-    }
-    
-    // Sinon, faire un dégradé entre les deux paliers les plus proches
-    var lowerTarget = targets[0];
-    var upperTarget = targets[targets.length - 1];
-    
-    for (var j = 0; j < targets.length - 1; j++) {
-      if (percent >= targets[j].percent && percent <= targets[j + 1].percent) {
-        lowerTarget = targets[j];
-        upperTarget = targets[j + 1];
-        break;
-      }
-    }
-    
-    // Calculer la position relative entre les deux paliers
-    var range = upperTarget.percent - lowerTarget.percent;
-    var position = (percent - lowerTarget.percent) / range;
-    
-    // Interpoler entre les deux couleurs (utiliser RGB pré-calculés)
-    var color1 = lowerTarget.rgb;
-    var color2 = upperTarget.rgb;
-    
-    var r = Math.round(color1.r + (color2.r - color1.r) * position);
-    var g = Math.round(color1.g + (color2.g - color1.g) * position);
-    var b = Math.round(color1.b + (color2.b - color1.b) * position);
-    
-    return 'rgb(' + r + ', ' + g + ', ' + b + ')';
-  }
-
-  const getTargetColor = (percent) => {
-    return getColorForPercent(percent);
-  };
+  }, [isActive, currentValue, inputType, tolerance, targets, currentTime, markTargetHit, markTargetMiss]);
 
   return (
     <div className="ddr-gameplay-area" ref={containerRef}>
@@ -316,8 +261,8 @@ export function DDRGameplayArea({
                 left: `${target.currentX}px`,
                 height: barHeight,
                 width: `${target.barWidth}px`,
-                backgroundColor: getTargetColor(target.percent),
-                borderColor: getTargetColor(target.percent)
+                backgroundColor: getColorForPercent(target.percent),
+                borderColor: getColorForPercent(target.percent)
               }}
             >
               <span className="ddr-target-label">{target.percent}%</span>
@@ -366,8 +311,8 @@ export function DDRGameplayArea({
           <div 
             className="ddr-progress-fill"
             style={{
-              height: `${currentValue * 100}%`,
-              backgroundColor: getColorForPercent(currentValue * 100)
+              height: `${(drillDebug.isActive() ? (drillDebug.getValue(currentTime, inputType) ?? currentValue) : currentValue) * 100}%`,
+              backgroundColor: getColorForPercent(((drillDebug.isActive() ? (drillDebug.getValue(currentTime, inputType) ?? currentValue) : currentValue) * 100))
             }}
           />
         </div>

@@ -15,7 +15,7 @@ import { DDRStatsBar } from './DDRStatsBar';
 import { DDRDualGameplayArea } from './DDRDualGameplayArea';
 import { DDRInputsBar } from './DDRInputsBar';
 import { DDRResultsScreen } from './DDRResultsScreen';
-import { usePercentageDrill, ZONE_STATUS } from '../../hooks/useDrillEngine';
+import { usePercentageDrill, ZONE_STATUS, statsFromJudgmentCounts } from '../../hooks/useDrillEngine';
 import enhancedDrillAudioService from '../../services/enhancedDrillAudioService';
 import './BrakeAccelDrill.css';
 
@@ -29,7 +29,7 @@ export function BrakeAccelDrill({
 }) {
   // État de configuration
   const [showConfig, setShowConfig] = useState(true);
-  const [tolerance, setTolerance] = useState(5); // Tolérance en %
+  const [tolerance, setTolerance] = useState(2); // Tolérance en % (±2 %)
   const [difficulty, setDifficulty] = useState('MEDIUM'); 
   const [drillSong, setDrillSong] = useState(null); // Drill song combiné
   const [audioEnabled, setAudioEnabled] = useState(false); // Désactivé par défaut
@@ -72,15 +72,10 @@ export function BrakeAccelDrill({
   }, [isPaused]);
 
   const handleStop = useCallback(() => {
-    if (audioEnabled) {
-      const success = accuracy > 70;
-      enhancedDrillAudioService.playCompletionSound(success);
-    }
-    
     setIsActive(false);
     setIsPaused(false);
     setShowResults(true);
-  }, [audioEnabled, accuracy]);
+  }, []);
   
   const handleRestart = useCallback(() => {
     setShowResults(false);
@@ -102,6 +97,11 @@ export function BrakeAccelDrill({
       [judgment]: (prev[judgment] || 0) + 1
     }));
   }, []);
+
+  const resultsStats = (() => {
+    const { accuracy: acc, score: sc } = statsFromJudgmentCounts(finalJudgmentCounts);
+    return { accuracy: acc, score: sc, totalTime };
+  })();
 
   // Mode configuration
   if (showConfig) {
@@ -148,11 +148,11 @@ export function BrakeAccelDrill({
     );
   }
 
-  // Écran de résultats
+  // Écran de résultats (accuracy/score dérivés des jugements)
   if (showResults) {
     return (
       <DDRResultsScreen
-        stats={{ accuracy, score, totalTime }}
+        stats={resultsStats}
         judgmentCounts={finalJudgmentCounts}
         comboInfo={enhancedDrillAudioService.getComboInfo()}
         onRestart={handleRestart}

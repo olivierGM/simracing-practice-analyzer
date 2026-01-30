@@ -11,13 +11,13 @@
  * Stats bar à gauche, Inputs bar à droite.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { DDRConfig } from './DDRConfig';
 import { DDRStatsBar } from './DDRStatsBar';
 import { DDRFullGameplayAreaVertical } from './DDRFullGameplayAreaVertical';
 import { DDRInputsBar } from './DDRInputsBar';
 import { DDRResultsScreen } from './DDRResultsScreen';
-import { usePercentageDrill, ZONE_STATUS } from '../../hooks/useDrillEngine';
+import { usePercentageDrill, ZONE_STATUS, statsFromJudgmentCounts } from '../../hooks/useDrillEngine';
 import enhancedDrillAudioService from '../../services/enhancedDrillAudioService';
 import './FullComboVerticalDrill.css';
 
@@ -31,7 +31,7 @@ export function FullComboVerticalDrill({
 }) {
   // État de configuration
   const [showConfig, setShowConfig] = useState(true);
-  const [tolerance, setTolerance] = useState(5);
+  const [tolerance, setTolerance] = useState(2);
   const [difficulty, setDifficulty] = useState('MEDIUM'); 
   const [drillSong, setDrillSong] = useState(null);
   const [audioEnabled, setAudioEnabled] = useState(false); // Temporairement désactivé
@@ -74,15 +74,24 @@ export function FullComboVerticalDrill({
   }, [isPaused]);
 
   const handleStop = useCallback(() => {
-    if (audioEnabled) {
-      const success = accuracy > 70;
-      enhancedDrillAudioService.playCompletionSound(success);
-    }
-    
     setIsActive(false);
     setIsPaused(false);
     setShowResults(true);
-  }, [audioEnabled, accuracy]);
+  }, []);
+
+  const resultsStats = (() => {
+    const { accuracy: acc, score: sc } = statsFromJudgmentCounts(finalJudgmentCounts);
+    return { accuracy: acc, score: sc, totalTime };
+  })();
+
+  const playedCompletionSoundRef = useRef(false);
+  useEffect(() => {
+    if (showResults && audioEnabled && !playedCompletionSoundRef.current) {
+      playedCompletionSoundRef.current = true;
+      enhancedDrillAudioService.playCompletionSound(resultsStats.accuracy > 70);
+    }
+    if (!showResults) playedCompletionSoundRef.current = false;
+  }, [showResults, audioEnabled, resultsStats.accuracy]);
   
   const handleRestart = useCallback(() => {
     setShowResults(false);
@@ -150,11 +159,11 @@ export function FullComboVerticalDrill({
     );
   }
 
-  // Écran de résultats
+  // Écran de résultats (accuracy/score dérivés des jugements, pas du hook usePercentageDrill)
   if (showResults) {
     return (
       <DDRResultsScreen
-        stats={{ accuracy, score, totalTime }}
+        stats={resultsStats}
         judgmentCounts={finalJudgmentCounts}
         comboInfo={enhancedDrillAudioService.getComboInfo()}
         onRestart={handleRestart}

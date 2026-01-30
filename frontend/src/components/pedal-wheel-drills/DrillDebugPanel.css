@@ -1,0 +1,118 @@
+.drill-debug-panel {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  width: 320px;
+  max-height: 70vh;
+  background: var(--bg-secondary, #1e1e2e);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.drill-debug-panel-header {
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.drill-debug-panel-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+}
+
+.drill-debug-panel-body {
+  padding: 10px 12px;
+  overflow-y: auto;
+  font-size: 12px;
+}
+
+.drill-debug-label {
+  display: block;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.drill-debug-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: var(--text-primary, #fff);
+  font-family: monospace;
+  font-size: 11px;
+  resize: vertical;
+}
+
+.drill-debug-error {
+  margin-top: 4px;
+  color: #ff6b6b;
+  font-size: 11px;
+}
+
+.drill-debug-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.drill-debug-btn {
+  padding: 6px 12px;
+  background: var(--accent, #3e75c3);
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.drill-debug-btn-secondary {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.drill-debug-log {
+  margin-top: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  padding: 6px;
+}
+
+.drill-debug-log-empty {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.5));
+  font-style: italic;
+  padding: 8px;
+}
+
+.drill-debug-log-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.drill-debug-log-entry.drill-debug-log-perfect { background: rgba(34, 177, 76, 0.25); }
+.drill-debug-log-entry.drill-debug-log-great { background: rgba(62, 117, 195, 0.25); }
+.drill-debug-log-entry.drill-debug-log-good { background: rgba(255, 198, 0, 0.2); }
+.drill-debug-log-entry.drill-debug-log-ok { background: rgba(255, 106, 0, 0.2); }
+.drill-debug-log-entry.drill-debug-log-miss { background: rgba(239, 43, 45, 0.25); }
+
+.drill-debug-log-time { min-width: 48px; color: var(--text-secondary); }
+.drill-debug-log-lane { min-width: 48px; font-weight: 600; }
+.drill-debug-log-judgment { min-width: 56px; }

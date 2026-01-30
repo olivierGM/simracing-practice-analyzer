@@ -215,46 +215,44 @@ export function useDDRDualTargets({
       return;
     }
 
+    const applyTargetsFromData = (data) => {
+      const accel = [];
+      const brake = [];
+      (data.targets || []).forEach((target, index) => {
+        const targetWithId = {
+          ...target,
+          id: `${target.type}-${index}`,
+          hit: false,
+          missed: false,
+          judgment: null
+        };
+        if (target.type === 'accel') accel.push(targetWithId);
+        else if (target.type === 'brake') brake.push(targetWithId);
+      });
+      setAccelTargets(accel);
+      setBrakeTargets(brake);
+    };
+
+    // Mode drill song : déjà chargé (targets en mémoire)
+    if (drillSong && Array.isArray(drillSong.targets)) {
+      applyTargetsFromData(drillSong);
+    }
     // Mode drill song : charger depuis un fichier JSON
-    if (drillSong && drillSong.file) {
+    else if (drillSong && drillSong.file) {
       const loadDrillSong = async () => {
         try {
           const response = await fetch(drillSong.file);
           if (!response.ok) {
             throw new Error(`Failed to load drill song: ${response.statusText}`);
           }
-          
           const data = await response.json();
-          
-          // Séparer les cibles par type
-          const accel = [];
-          const brake = [];
-          
-          data.targets.forEach((target, index) => {
-            const targetWithId = {
-              ...target,
-              id: `${target.type}-${index}`,
-              hit: false,
-              missed: false,
-              judgment: null
-            };
-            
-            if (target.type === 'accel') {
-              accel.push(targetWithId);
-            } else if (target.type === 'brake') {
-              brake.push(targetWithId);
-            }
-          });
-          
-          setAccelTargets(accel);
-          setBrakeTargets(brake);
+          applyTargetsFromData(data);
         } catch (error) {
           console.error('Error loading drill song:', error);
         }
       };
-
       loadDrillSong();
-    } 
+    }
     // Mode random : générer des cibles aléatoires
     else if (drillSong && drillSong.type === 'random') {
       const totalDuration = drillSong.duration || duration || 120;

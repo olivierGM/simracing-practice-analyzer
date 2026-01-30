@@ -28,7 +28,7 @@ export function PercentageDrill({
   // État de configuration
   const [showConfig, setShowConfig] = useState(true);
   const [inputType, setInputType] = useState('brake'); // 'accelerator' ou 'brake' — défaut: frein
-  const [tolerance, setTolerance] = useState(5); // Tolérance en % (champ séparé pour tester)
+  const [tolerance, setTolerance] = useState(2); // Tolérance en % (±2 % au-dessus et en dessous)
   const [difficulty, setDifficulty] = useState('MEDIUM'); // Difficulté pour les modes Random (vitesse, durée, etc.)
   const [drillSong, setDrillSong] = useState(null); // Drill song sélectionné ou { type: 'random', difficulty: 'medium' }
   const [audioEnabled, setAudioEnabled] = useState(false); // Désactivé par défaut
@@ -191,6 +191,7 @@ export function PercentageDrill({
       <div className="ddr-gameplay-container">
         <DDRGameplayArea
           currentValue={currentValue}
+          inputType={inputType}
           tolerance={tolerance}
           isActive={isActive && !isPaused}
           drillSong={drillSong}

@@ -56,6 +56,35 @@ export function generateFullTargetSequence({
   const maxTime = duration || 120; // 2 minutes max pour le mode infini
   
   while (timeOffset < maxTime) {
+    const patternType = Math.random();
+
+    if (patternType < 0.25) {
+      // Pattern simultané : frein + volant au même moment (inputs en parallèle)
+      const brakePercent = 40 + Math.floor(Math.random() * 55);
+      const turnDirection = Math.random() > 0.5 ? 1 : -1;
+      const wheelAngle = turnDirection * (40 + Math.floor(Math.random() * 100));
+      const dur = params.minDuration * 0.8 + Math.random() * (params.maxDuration - params.minDuration) * 0.5;
+      brakeTargets.push({
+        id: `brake-${index}`,
+        time: timeOffset,
+        percent: brakePercent,
+        duration: dur,
+        hit: false,
+        missed: false
+      });
+      wheelTargets.push({
+        id: `wheel-${index}`,
+        time: timeOffset,
+        angle: wheelAngle,
+        duration: dur,
+        hit: false,
+        missed: false
+      });
+      index++;
+      timeOffset += dur + params.minSpacing;
+      continue;
+    }
+
     // Pattern de virage : freinage → tournage → accélération → shifter
     const turnDirection = Math.random() > 0.5 ? 1 : -1; // Gauche ou droite
     const turnIntensity = 30 + Math.floor(Math.random() * 145); // 30° à 175°

@@ -10,6 +10,7 @@ import { listDrillSongs, loadDrillSong } from '../../services/drillSongService';
 import './DrillSongSelector.css';
 
 const DIFFICULTY_LABELS = {
+  easy: 'Débutant',
   medium: 'Facile',
   hard: 'Moyen',
   extreme: 'Difficile',
@@ -26,6 +27,14 @@ const TOLERANCE_BY_DIFFICULTY = {
   insane_plus_1: 5,
   insane_plus_2: 5
 };
+
+/**
+ * Description générée (valeur pédagogique : contrôle, répétition ciblée).
+ * Le titre du drill est déjà affiché à côté, pas répété ici.
+ */
+function getCustomDrillDescription(difficultyLabel) {
+  return `Répétition ciblée pour le contrôle et la précision (${difficultyLabel}).`;
+}
 
 export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty, drillType = 'percentage' }) {
   const [allDrillSongs, setAllDrillSongs] = useState([]);
@@ -197,7 +206,7 @@ export function DrillSongSelector({ onSelectDrillSong, onSelectDifficulty, drill
                 <div className="drill-song-info">
                   <div className="drill-song-name">{song.name}</div>
                   <div className="drill-song-description">
-                    {DIFFICULTY_LABELS[song.difficulty]} - Drill song personnalisé
+                    {getCustomDrillDescription(DIFFICULTY_LABELS[song.difficulty] || song.difficulty)}
                   </div>
                 </div>
               </button>

@@ -103,20 +103,10 @@
   border-radius: 4px 4px 0 0;
 }
 
-.ddr-current-value-bar-accel {
-  background: linear-gradient(180deg, 
-    rgba(50, 205, 50, 0.9) 0%,
-    rgba(34, 139, 34, 0.9) 100%
-  );
-  box-shadow: 0 0 8px rgba(50, 205, 50, 0.6);
-}
-
+/* Couleur = table centralisée (drillColors.js) via style inline backgroundColor */
+.ddr-current-value-bar-accel,
 .ddr-current-value-bar-brake {
-  background: linear-gradient(180deg, 
-    rgba(255, 69, 0, 0.9) 0%,
-    rgba(220, 20, 60, 0.9) 100%
-  );
-  box-shadow: 0 0 8px rgba(255, 69, 0, 0.6);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
 }
 
 /* Cibles */
@@ -131,22 +121,10 @@
   border: 2px solid;
 }
 
-.ddr-target-accel {
-  background: linear-gradient(180deg, 
-    rgba(50, 205, 50, 0.6) 0%,
-    rgba(34, 139, 34, 0.8) 100%
-  );
-  border-color: rgba(50, 205, 50, 0.8);
-  box-shadow: 0 0 8px rgba(50, 205, 50, 0.4);
-}
-
+/* Couleur des cibles = table centralisée (drillColors.js) via style inline backgroundColor/borderColor */
+.ddr-target-accel,
 .ddr-target-brake {
-  background: linear-gradient(180deg, 
-    rgba(255, 69, 0, 0.6) 0%,
-    rgba(220, 20, 60, 0.8) 100%
-  );
-  border-color: rgba(255, 69, 0, 0.8);
-  box-shadow: 0 0 8px rgba(255, 69, 0, 0.4);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
 }
 
 .ddr-target.hit {

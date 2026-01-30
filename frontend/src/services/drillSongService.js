@@ -120,13 +120,24 @@ export async function listDrillSongs(difficulty = null, drillType = 'percentage'
   // Plus tard, on pourra faire une requête au serveur pour lister les fichiers
   
   if (drillType === 'brakeaccel') {
-    // Uniquement les modes random ; Trail Braking Facile/Moyen retirés (non fonctionnels)
-    const brakeAccelDrills = { easy: [], medium: [], hard: [] };
-    
+    const brakeAccelDrills = {
+      easy: [
+        { path: 'brakeaccel/hairpin.json', name: 'Épingles' }
+      ],
+      medium: [
+        { path: 'brakeaccel/chicane.json', name: 'Chicane' },
+        { path: 'brakeaccel/trail-and-gradual-accel.json', name: 'Trail brake + accélération graduelle' }
+      ],
+      hard: [
+        { path: 'brakeaccel/heavy-braking.json', name: 'Freinage intense' },
+        { path: 'brakeaccel/double-chicane.json', name: 'Double chicane' }
+      ]
+    };
+
     if (difficulty) {
       return brakeAccelDrills[difficulty] || [];
     }
-    
+
     return [...brakeAccelDrills.easy, ...brakeAccelDrills.medium, ...brakeAccelDrills.hard];
   }
   

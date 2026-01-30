@@ -12,6 +12,7 @@ import { DrillSelector, DRILL_TYPES } from './DrillSelector';
 import { PercentageDrill } from './PercentageDrill';
 import { BrakeAccelDrill } from './BrakeAccelDrill';
 import { FullComboVerticalDrill } from './FullComboVerticalDrill';
+import { DrillDebugPanel } from './DrillDebugPanel';
 import { useMappedGamepads } from '../../hooks/useMappedGamepads';
 import { loadMappingConfig } from '../../services/deviceMappingService';
 import { getAssignedKeys } from '../../services/keyboardService';
@@ -92,6 +93,7 @@ export function PedalWheelDrills() {
           />
         )}
         {/* Autres types de drills à ajouter plus tard */}
+        <DrillDebugPanel />
       </div>
     );
   }
@@ -129,6 +131,7 @@ export function PedalWheelDrills() {
           />
         </section>
       </div>
+      <DrillDebugPanel />
     </div>
   );
 }

@@ -68,19 +68,21 @@
   color: #e67e22;
 }
 
-/* Contenu de la lane (zone de jeu) */
+/* Contenu de la lane (zone de jeu) - hauteur fixe pour aligner cibles et ligne de judgment */
 .ddr-lane-content-vertical {
   flex: 1;
+  min-height: 400px;
+  height: 400px;
   position: relative;
   overflow: hidden;
 }
 
-/* Zone de judgment (en bas de chaque lane) */
+/* Zone de judgment : alignée avec la fenêtre de jugement (JUDGMENT_ZONE_Y = 310, bande 300–320) */
 .ddr-judgment-zone-vertical {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 50px;
+  bottom: 80px;
   height: 20px;
   background: linear-gradient(
     to bottom,

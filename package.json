@@ -5,7 +5,9 @@
   "main": "server-local.js",
   "scripts": {
     "start": "node server-local.js",
-    "dev": "nodemon server-local.js"
+    "dev": "nodemon server-local.js",
+    "test": "playwright test",
+    "test:report": "playwright show-report playwright-report"
   },
   "dependencies": {
     "cors": "^2.8.5",
