@@ -12,9 +12,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 
 export const DRILL_TYPES = {
   PERCENTAGE: 'percentage',
-  TURNING: 'turning',
-  ACCELERATION: 'acceleration',
-  COMBINED: 'combined'
+  BRAKE_ACCEL: 'brakeaccel',
+  COMBINED_VERTICAL: 'combined_vertical'
 };
 
 export const ZONE_STATUS = {

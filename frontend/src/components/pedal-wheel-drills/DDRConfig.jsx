@@ -13,7 +13,7 @@ const DIFFICULTY_MODES = {
   EXTREME: { label: 'Difficile', tolerance: 5 },
   INSANE: { label: 'Extreme', tolerance: 5 },
   INSANE_PLUS_1: { label: 'Insane', tolerance: 5 },
-  INSANE_PLUS_2: { label: 'Insane +1', tolerance: 5 }
+  INSANE_PLUS_2: { label: 'Nightmare', tolerance: 5 }
 };
 
 const DURATION_OPTIONS = [

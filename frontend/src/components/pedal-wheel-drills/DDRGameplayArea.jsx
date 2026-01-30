@@ -18,6 +18,9 @@ const SCROLL_SPEED = 360; // pixels/seconde (augmenté de 20%: 300 * 1.2 = 360)
 // Largeur de la zone d'approche (en pixels, correspond à ~1 seconde)
 const APPROACH_ZONE_WIDTH = 300;
 
+// Durée minimale à maintenir la pédale dans le seuil pour valider (ms)
+const HOLD_MS = 250;
+
 export function DDRGameplayArea({ 
   currentValue, 
   tolerance = 5,
@@ -36,6 +39,7 @@ export function DDRGameplayArea({
   const [judgmentCounts, setJudgmentCounts] = useState({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
   const [renderedTargets, setRenderedTargets] = useState([]);
   const announcedTargetsRef = useRef(new Set()); // Pour éviter d'annoncer plusieurs fois
+  const holdStartByTargetRef = useRef({}); // Pour Story 6 : maintien obligatoire dans le seuil
 
   // Utiliser le hook useDDRTargets pour gérer les cibles
   const {
@@ -64,6 +68,7 @@ export function DDRGameplayArea({
       setJudgmentCounts({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
       setRenderedTargets([]);
       announcedTargetsRef.current.clear();
+      holdStartByTargetRef.current = {};
     }
   }, [isActive]);
   
@@ -131,60 +136,60 @@ export function DDRGameplayArea({
 
           // Vérifier si la cible est en cours de jugement
           if (!target.hit && !target.miss) {
+            const now = performance.now();
             // Si la barre est dans la zone de jugement
             if (currentX <= judgmentLineX && barEndX >= judgmentLineX) {
               const currentPercent = currentValue * 100;
               const diff = Math.abs(currentPercent - target.percent);
               
               if (diff <= tolerance) {
-                // Hit! Calculer le niveau de précision style DDR
-                var judgment = 'MISS';
-                var score = 0;
-                
-                if (diff <= 1) {
-                  judgment = 'PERFECT';
-                  score = 100;
-                } else if (diff <= 2) {
-                  judgment = 'GREAT';
-                  score = 90;
-                } else if (diff <= 3.5) {
-                  judgment = 'GOOD';
-                  score = 75;
-                } else if (diff <= tolerance) {
-                  judgment = 'OK';
-                  score = 50;
+                // Maintien obligatoire : ne valider qu'après HOLD_MS dans le seuil
+                if (!holdStartByTargetRef.current[target.id]) {
+                  holdStartByTargetRef.current[target.id] = now;
                 }
-                
-                markTargetHit(target.id, score);
-                // Mettre à jour les compteurs de jugements
-                setJudgmentCounts(prev => ({
-                  ...prev,
-                  [judgment]: (prev[judgment] || 0) + 1
-                }));
-                
-                // Notifier le parent
-                if (onJudgmentUpdate) {
-                  onJudgmentUpdate(judgment);
+                const holdDuration = now - holdStartByTargetRef.current[target.id];
+                if (holdDuration >= HOLD_MS) {
+                  var judgment = 'MISS';
+                  var score = 0;
+                  if (diff <= 1) {
+                    judgment = 'PERFECT';
+                    score = 100;
+                  } else if (diff <= 2) {
+                    judgment = 'GREAT';
+                    score = 90;
+                  } else if (diff <= 3.5) {
+                    judgment = 'GOOD';
+                    score = 75;
+                  } else if (diff <= tolerance) {
+                    judgment = 'OK';
+                    score = 50;
+                  }
+                  markTargetHit(target.id, score);
+                  delete holdStartByTargetRef.current[target.id];
+                  setJudgmentCounts(prev => ({
+                    ...prev,
+                    [judgment]: (prev[judgment] || 0) + 1
+                  }));
+                  if (onJudgmentUpdate) {
+                    onJudgmentUpdate(judgment);
+                  }
+                  setJudgmentResults(prev => {
+                    const newResults = [...prev, { type: judgment, time: now, diff }];
+                    return newResults.slice(-10);
+                  });
+                  if (audioEnabled) {
+                    enhancedDrillAudioService.playJudgmentSound(judgment);
+                  }
                 }
-                
-                setJudgmentResults(prev => {
-                  const newResults = [...prev, { 
-                    type: judgment, 
-                    time: performance.now(),
-                    diff: diff 
-                  }];
-                  return newResults.slice(-10);
-                });
-                
-                // Jouer le son de jugement
-                if (audioEnabled) {
-                  enhancedDrillAudioService.playJudgmentSound(judgment);
-                }
+              } else {
+                // Sortie du seuil : annuler le maintien en cours
+                delete holdStartByTargetRef.current[target.id];
               }
             }
 
             // Miss si la barre est passée sans être touchée
             if (barEndX < judgmentLineX) {
+              delete holdStartByTargetRef.current[target.id];
               markTargetMiss(target.id);
               // Mettre à jour les compteurs de jugements
               setJudgmentCounts(prev => ({

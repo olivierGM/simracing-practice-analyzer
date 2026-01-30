@@ -61,10 +61,33 @@ export function generateDualTargetSequence({
   const maxTime = duration || 120; // 2 minutes max pour le mode infini
   
   while (timeOffset < maxTime) {
-    // Pattern de trail braking : freinage d'abord, puis accélération
+    // Trois types de patterns : classique (frein→accel), alterné, ou simultané (frein ET accel en même temps)
     const patternType = Math.random();
     
-    if (patternType < 0.7) {
+    if (patternType < 0.25) {
+      // Pattern simultané : frein ET accélérateur au même moment (gestion multi-inputs)
+      const percentBrake = 40 + Math.floor(Math.random() * 50);
+      const percentAccel = 40 + Math.floor(Math.random() * 50);
+      const dur = params.minDuration + Math.random() * (params.maxDuration - params.minDuration) * 0.6;
+      brakeTargets.push({
+        id: `brake-${index}`,
+        time: timeOffset,
+        percent: percentBrake,
+        duration: dur,
+        hit: false,
+        missed: false
+      });
+      accelTargets.push({
+        id: `accel-${index}`,
+        time: timeOffset,
+        percent: percentAccel,
+        duration: dur,
+        hit: false,
+        missed: false
+      });
+      index++;
+      timeOffset += dur + params.minSpacing;
+    } else if (patternType < 0.7) {
       // Pattern classique : freinage → accélération
       
       // Phase de freinage (100% → dégression)

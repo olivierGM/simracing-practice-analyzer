@@ -7,10 +7,8 @@
  * - Lane 3 : Accélérateur (vert)
  * - Lane 4 : Shifter (orange) - up/down
  * 
- * Différence avec FullComboDrill :
- * - Lanes côte à côte (colonnes) au lieu d'empilées (lignes)
- * - Cibles défilent du haut vers le bas
- * - Stats bar à gauche, Inputs bar à droite
+ * Lanes en colonnes, cibles défilent du haut vers le bas.
+ * Stats bar à gauche, Inputs bar à droite.
  */
 
 import { useState, useCallback } from 'react';
@@ -174,7 +172,7 @@ export function FullComboVerticalDrill({
           ⏹️
         </button>
         <h3 className="drill-title drill-title-compact">
-          📊 Drill Complet Vertical
+          🎯 Drill Complet
         </h3>
         <button 
           className="drill-button drill-button-pause" 

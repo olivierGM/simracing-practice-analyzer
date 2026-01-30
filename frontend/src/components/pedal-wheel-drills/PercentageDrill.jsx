@@ -27,7 +27,7 @@ export function PercentageDrill({
 }) {
   // État de configuration
   const [showConfig, setShowConfig] = useState(true);
-  const [inputType, setInputType] = useState('accelerator'); // 'accelerator' ou 'brake'
+  const [inputType, setInputType] = useState('brake'); // 'accelerator' ou 'brake' — défaut: frein
   const [tolerance, setTolerance] = useState(5); // Tolérance en % (champ séparé pour tester)
   const [difficulty, setDifficulty] = useState('MEDIUM'); // Difficulté pour les modes Random (vitesse, durée, etc.)
   const [drillSong, setDrillSong] = useState(null); // Drill song sélectionné ou { type: 'random', difficulty: 'medium' }

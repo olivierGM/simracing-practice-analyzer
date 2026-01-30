@@ -15,7 +15,7 @@ const DIFFICULTY_LABELS = {
   extreme: 'Difficile',
   insane: 'Extreme',
   insane_plus_1: 'Insane',
-  insane_plus_2: 'Insane +1'
+  insane_plus_2: 'Nightmare'
 };
 
 const TOLERANCE_BY_DIFFICULTY = {

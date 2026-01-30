@@ -120,15 +120,8 @@ export async function listDrillSongs(difficulty = null, drillType = 'percentage'
   // Plus tard, on pourra faire une requête au serveur pour lister les fichiers
   
   if (drillType === 'brakeaccel') {
-    const brakeAccelDrills = {
-      easy: [
-        { path: 'brakeaccel/trail-braking-easy.json', name: 'Trail Braking - Facile' }
-      ],
-      medium: [
-        { path: 'brakeaccel/trail-braking-medium.json', name: 'Trail Braking - Moyen' }
-      ],
-      hard: []
-    };
+    // Uniquement les modes random ; Trail Braking Facile/Moyen retirés (non fonctionnels)
+    const brakeAccelDrills = { easy: [], medium: [], hard: [] };
     
     if (difficulty) {
       return brakeAccelDrills[difficulty] || [];
@@ -140,8 +133,8 @@ export async function listDrillSongs(difficulty = null, drillType = 'percentage'
   // Drills de pourcentages par défaut
   const drills = {
     easy: [
-      { path: 'easy/test-succession.json', name: 'Test - Succession Basique' },
-      { path: 'easy/progressive-braking.json', name: 'Progressive Braking - Freinage Progressif' }
+      { path: 'easy/progressive-braking.json', name: 'Progressive Braking - Freinage Progressif' },
+      { path: 'easy/multi-threshold.json', name: 'Seuils Multiples' }
     ],
     medium: [
       { path: 'medium/brake-trailing.json', name: 'Brake Trailing - Dégraissage Progressif' },
