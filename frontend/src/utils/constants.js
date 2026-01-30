@@ -29,9 +29,7 @@ export const TABLE_COLUMNS = [
   { key: 'bestWetTime', label: 'Meilleur wet', sortable: true, dataType: 'time' },
   { key: 'averageWetTime', label: 'Moyenne wet', sortable: true, dataType: 'time' },
   { key: 'wetConsistency', label: 'Const. wet', sortable: true, dataType: 'percentage' },
-  { key: 'bestOverallTime', label: 'Meilleur total', sortable: true, dataType: 'time' },
-  { key: 'averageOverallTime', label: 'Moyenne total', sortable: true, dataType: 'time' },
-  { key: 'totalConsistency', label: 'Const. total', sortable: true, dataType: 'percentage' }
+  { key: 'bestOverallTime', label: 'Meilleur total', sortable: true, dataType: 'time' }
 ];
 
 // Colonnes de la liste des tours (dans la modal)

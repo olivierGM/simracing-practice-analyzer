@@ -63,9 +63,7 @@ export function DriverRow({ driver, position, onClick, hasWetTimes = false }) {
     { key: 'bestWetTime', content: formatTime(driver.bestWetTime || 0), dataValue: driver.bestWetTime || 0 },
     { key: 'averageWetTime', content: formatTime(driver.averageWetTime || 0), dataValue: driver.averageWetTime || 0 },
     { key: 'wetConsistency', content: formatConsistency(driver.wetConsistency), dataValue: driver.wetConsistency || 0 },
-    { key: 'bestOverallTime', content: formatTime(driver.bestOverallTime || 0), dataValue: driver.bestOverallTime || 0 },
-    { key: 'averageOverallTime', content: formatTime(driver.averageOverallTime || 0), dataValue: driver.averageOverallTime || 0 },
-    { key: 'totalConsistency', content: formatConsistency(driver.totalConsistency), dataValue: driver.totalConsistency || 0 },
+    { key: 'bestOverallTime', content: formatTime(driver.bestOverallTime || 0), dataValue: driver.bestOverallTime || 0 }
   ];
 
   // Filtrer les colonnes wet si aucun wet time n'existe
