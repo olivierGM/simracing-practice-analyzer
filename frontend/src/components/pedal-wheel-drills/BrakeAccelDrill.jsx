@@ -10,7 +10,6 @@
  */
 
 import { useState, useCallback } from 'react';
-import { DDRConfig } from './DDRConfig';
 import { DDRStatsBar } from './DDRStatsBar';
 import { DDRDualGameplayArea } from './DDRDualGameplayArea';
 import { DDRInputsBar } from './DDRInputsBar';
@@ -25,19 +24,18 @@ export function BrakeAccelDrill({
   wheelValue,
   shiftUp,
   shiftDown,
-  onBack 
+  onBack,
+  initialDrillSong = null,
+  initialAudioEnabled = false,
+  initialBlindMode = false
 }) {
-  // État de configuration
-  const [showConfig, setShowConfig] = useState(true);
-  const [tolerance, setTolerance] = useState(2); // Tolérance en % (±2 %)
+  const [tolerance, setTolerance] = useState(2);
   const [difficulty, setDifficulty] = useState('MEDIUM'); 
-  const [drillSong, setDrillSong] = useState(null); // Drill song combiné
-  const [audioEnabled, setAudioEnabled] = useState(false); // Désactivé par défaut
+  const [drillSong, setDrillSong] = useState(initialDrillSong);
+  const [audioEnabled, setAudioEnabled] = useState(initialAudioEnabled);
   const [musicEnabled, setMusicEnabled] = useState(false);
-  const [blindMode, setBlindMode] = useState(false);
-  
-  // État de jeu
-  const [isActive, setIsActive] = useState(false);
+  const [blindMode, setBlindMode] = useState(initialBlindMode);
+  const [isActive, setIsActive] = useState(!!initialDrillSong);
   const [isPaused, setIsPaused] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [finalJudgmentCounts, setFinalJudgmentCounts] = useState({ 
@@ -81,15 +79,13 @@ export function BrakeAccelDrill({
     setShowResults(false);
     reset();
     setFinalJudgmentCounts({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
-    handleStart();
-  }, [reset, handleStart]);
+    setIsActive(true);
+    setIsPaused(false);
+  }, [reset]);
   
   const handleBackToMenu = useCallback(() => {
-    setShowResults(false);
-    reset();
-    setFinalJudgmentCounts({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
-    setShowConfig(true);
-  }, [reset]);
+    onBack();
+  }, [onBack]);
 
   const handleJudgmentUpdate = useCallback((judgment) => {
     setFinalJudgmentCounts(prev => ({
@@ -103,52 +99,6 @@ export function BrakeAccelDrill({
     return { accuracy: acc, score: sc, totalTime };
   })();
 
-  // Mode configuration
-  if (showConfig) {
-    return (
-      <div className="brake-accel-drill">
-        <DDRConfig
-          inputType="brakeaccel" // Nouveau type pour le config
-          onInputTypeChange={() => {}} // Pas de changement d'input pour ce drill
-          tolerance={tolerance}
-          onToleranceChange={setTolerance}
-          drillSong={drillSong}
-          onDrillSongChange={(songOrMode) => {
-            setDrillSong(songOrMode);
-            if (songOrMode && songOrMode.type === 'random') {
-              const diffMap = {
-                easy: 'MEDIUM',
-                medium: 'MEDIUM',
-                hard: 'HARD',
-                extreme: 'EXTREME'
-              };
-              setDifficulty(diffMap[songOrMode.difficulty] || 'MEDIUM');
-            } else if (songOrMode && songOrMode.difficulty) {
-              const diffMap = {
-                easy: 'MEDIUM',
-                medium: 'MEDIUM',
-                hard: 'HARD'
-              };
-              setDifficulty(diffMap[songOrMode.difficulty] || 'MEDIUM');
-            }
-          }}
-          onDifficultyChange={setDifficulty}
-          audioEnabled={audioEnabled}
-          onAudioEnabledChange={setAudioEnabled}
-          musicEnabled={musicEnabled}
-          onMusicEnabledChange={setMusicEnabled}
-          blindMode={blindMode}
-          onBlindModeChange={setBlindMode}
-          onStart={handleStart}
-          onBack={onBack}
-          showInputTypeSelector={false} // Cacher le sélecteur d'input
-          drillType="brakeaccel" // Type de drill pour charger les bons JSON
-        />
-      </div>
-    );
-  }
-
-  // Écran de résultats (accuracy/score dérivés des jugements)
   if (showResults) {
     return (
       <DDRResultsScreen

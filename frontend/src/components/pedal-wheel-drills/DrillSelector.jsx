@@ -7,34 +7,17 @@
 import './DrillSelector.css';
 
 export const DRILL_TYPES = {
-  PERCENTAGE: 'percentage',
+  ACCELERATOR: 'accelerator',
+  BRAKE: 'brake',
   BRAKE_ACCEL: 'brakeaccel',
   COMBINED_VERTICAL: 'combined_vertical'
 };
 
 const DRILL_OPTIONS = [
-  {
-    type: DRILL_TYPES.PERCENTAGE,
-    label: 'Drill une pédale',
-    description: 'Maintenir un pourcentage précis (20%, 40%, 60%, 80%)',
-    icon: '📊',
-    available: true
-  },
-  {
-    type: DRILL_TYPES.BRAKE_ACCEL,
-    label: 'Frein + Accélérateur',
-    description: 'Trail braking : combiner freinage et accélération',
-    icon: '🚦',
-    available: true
-  },
-  {
-    type: DRILL_TYPES.COMBINED_VERTICAL,
-    label: 'Drill Complet',
-    description: 'Frein, volant, accélérateur et shifter (lanes verticales)',
-    icon: '🎯',
-    available: true,
-    tag: 'En construction'
-  }
+  { type: DRILL_TYPES.ACCELERATOR, label: 'Accélérateur', description: 'Contrôle en pourcentage (accélérateur)', icon: '⚡', available: true },
+  { type: DRILL_TYPES.BRAKE, label: 'Frein', description: 'Contrôle en pourcentage (frein)', icon: '🛑', available: true },
+  { type: DRILL_TYPES.BRAKE_ACCEL, label: 'Frein + Accélérateur', description: 'Pistes frein et accélération', icon: '🚦', available: true },
+  { type: DRILL_TYPES.COMBINED_VERTICAL, label: 'Drill Complet', description: 'Frein, volant, accélérateur et shifter', icon: '🎯', available: true, tag: 'En construction' }
 ];
 
 export function DrillSelector({ onSelectDrill, selectedDrill }) {

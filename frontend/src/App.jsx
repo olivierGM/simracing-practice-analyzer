@@ -5,7 +5,7 @@
  */
 
 import { useState, lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/layout/Header';
 import { LoadingSpinner } from './components/common/LoadingSpinner';
 import { HomePage } from './pages/HomePage';
@@ -21,6 +21,39 @@ import './App.css';
 
 // Lazy load PedalWheelDrillsPage pour optimiser le bundle initial
 const PedalWheelDrillsPage = lazy(() => import('./pages/PedalWheelDrillsPage'));
+
+/** Layout avec Header + main, utilise useLocation (doit être dans BrowserRouter). */
+function AppLayout({ metadata, trackFilter, drivers, sessions }) {
+  const location = useLocation();
+  const isDrillsPage = location.pathname === '/pedal-wheel-drills';
+
+  return (
+    <>
+      <AnalyticsTracker />
+      <div className={`app${isDrillsPage ? ' app--drills' : ''}`}>
+        <Header metadata={metadata} trackName={trackFilter} isDrillsPage={isDrillsPage} />
+        <main className={`main-content${isDrillsPage ? ' main-content--drills' : ''}`}>
+          <Routes>
+            <Route path="/" element={<HomePage drivers={drivers} sessions={sessions} />} />
+            <Route path="/circuit/:circuitId/pilote/:pilotId" element={<PilotePage drivers={drivers} sessions={sessions} />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/angle-measurement" element={<AngleMeasurementPage />} />
+            <Route
+              path="/pedal-wheel-drills"
+              element={
+                <Suspense fallback={<LoadingSpinner message="Chargement des drills..." />}>
+                  <PedalWheelDrillsPage />
+                </Suspense>
+              }
+            />
+            <Route path="/gamepad-debug" element={<GamepadDebugPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+      </div>
+    </>
+  );
+}
 
 function AppContent() {
   // ⚠️ IMPORTANT: Tous les hooks doivent être appelés AVANT tout return conditionnel
@@ -51,29 +84,7 @@ function AppContent() {
 
   return (
     <BrowserRouter>
-      <AnalyticsTracker />
-      <div className="app">
-        <Header metadata={metadata} trackName={trackFilter} />
-        
-        <main className="main-content">
-                <Routes>
-                  <Route path="/" element={<HomePage drivers={drivers} sessions={sessions} />} />
-                  <Route path="/circuit/:circuitId/pilote/:pilotId" element={<PilotePage drivers={drivers} sessions={sessions} />} />
-                  <Route path="/admin" element={<AdminPage />} />
-                  <Route path="/angle-measurement" element={<AngleMeasurementPage />} />
-                  <Route 
-                    path="/pedal-wheel-drills" 
-                    element={
-                      <Suspense fallback={<LoadingSpinner message="Chargement des drills..." />}>
-                        <PedalWheelDrillsPage />
-                      </Suspense>
-                    } 
-                  />
-                  <Route path="/gamepad-debug" element={<GamepadDebugPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-        </main>
-      </div>
+      <AppLayout metadata={metadata} trackFilter={trackFilter} drivers={drivers} sessions={sessions} />
     </BrowserRouter>
   );
 }

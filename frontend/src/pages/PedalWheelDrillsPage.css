@@ -1,7 +1,12 @@
 .pedal-wheel-drills-page {
   width: 100%;
-  min-height: 100vh;
   padding: 0 2rem 2rem;
+}
+
+/* Sidebar réglages ouvert : plus de gap, barre jusqu'en bas */
+.pedal-wheel-drills-page:has(.drills-settings-sidebar-open) {
+  padding-right: 0;
+  padding-bottom: 0;
 }
 
 .page-header {

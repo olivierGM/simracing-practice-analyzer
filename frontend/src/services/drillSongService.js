@@ -15,15 +15,20 @@ export const DRILL_TYPES = {
   FULL_COMBO: 'full_combo'        // Drill Complet (brake, accel, wheel, shift_up/shift_down)
 };
 
-/** Manifeste de tous les drills customs : path, name, difficulty, drillTypes. */
+/** targetInput : pour single_pedal, 'brake' | 'accelerator' | null = les deux */
 const CUSTOM_DRILL_MANIFEST = [
-  // Drill une pédale
-  { path: 'easy/progressive-braking.json', name: 'Progressive Braking - Freinage Progressif', difficulty: 'easy', drillTypes: [DRILL_TYPES.SINGLE_PEDAL] },
-  { path: 'easy/multi-threshold.json', name: 'Seuils Multiples', difficulty: 'easy', drillTypes: [DRILL_TYPES.SINGLE_PEDAL] },
-  { path: 'easy/test-succession.json', name: 'Test Succession', difficulty: 'easy', drillTypes: [DRILL_TYPES.SINGLE_PEDAL] },
-  { path: 'medium/brake-trailing.json', name: 'Brake Trailing - Dégraissage Progressif', difficulty: 'medium', drillTypes: [DRILL_TYPES.SINGLE_PEDAL] },
-  { path: 'medium/cadence-braking.json', name: 'Cadence Braking - Freinage en Cadence', difficulty: 'medium', drillTypes: [DRILL_TYPES.SINGLE_PEDAL] },
-  { path: 'hard/threshold-braking.json', name: 'Threshold Braking - Freinage à Seuil', difficulty: 'hard', drillTypes: [DRILL_TYPES.SINGLE_PEDAL] },
+  // Drill une pédale (frein)
+  { path: 'easy/progressive-braking.json', name: 'Progressive Braking - Freinage Progressif', difficulty: 'easy', drillTypes: [DRILL_TYPES.SINGLE_PEDAL], targetInput: 'brake' },
+  { path: 'easy/multi-threshold.json', name: 'Seuils Multiples', difficulty: 'easy', drillTypes: [DRILL_TYPES.SINGLE_PEDAL], targetInput: 'brake' },
+  { path: 'medium/brake-trailing.json', name: 'Brake Trailing - Dégraissage Progressif', difficulty: 'medium', drillTypes: [DRILL_TYPES.SINGLE_PEDAL], targetInput: 'brake' },
+  { path: 'medium/cadence-braking.json', name: 'Cadence Braking - Freinage en Cadence', difficulty: 'medium', drillTypes: [DRILL_TYPES.SINGLE_PEDAL], targetInput: 'brake' },
+  { path: 'hard/threshold-braking.json', name: 'Threshold Braking - Freinage à Seuil', difficulty: 'hard', drillTypes: [DRILL_TYPES.SINGLE_PEDAL], targetInput: 'brake' },
+  // Drill une pédale (accélérateur)
+  { path: 'easy/progressive-acceleration.json', name: 'Progressive Acceleration - Ouverture progressive', difficulty: 'easy', drillTypes: [DRILL_TYPES.SINGLE_PEDAL], targetInput: 'accelerator' },
+  { path: 'easy/throttle-modulation.json', name: 'Modulation d\'accélérateur', difficulty: 'easy', drillTypes: [DRILL_TYPES.SINGLE_PEDAL], targetInput: 'accelerator' },
+  { path: 'medium/partial-throttle.json', name: 'Accélérateur partiel - Tenue', difficulty: 'medium', drillTypes: [DRILL_TYPES.SINGLE_PEDAL], targetInput: 'accelerator' },
+  { path: 'medium/throttle-ramp.json', name: 'Rampe d\'accélération', difficulty: 'medium', drillTypes: [DRILL_TYPES.SINGLE_PEDAL], targetInput: 'accelerator' },
+  { path: 'hard/quick-throttle-transitions.json', name: 'Transitions rapides - Accélérateur', difficulty: 'hard', drillTypes: [DRILL_TYPES.SINGLE_PEDAL], targetInput: 'accelerator' },
   // Frein + Accélérateur
   { path: 'brakeaccel/hairpin.json', name: 'Épingles', difficulty: 'easy', drillTypes: [DRILL_TYPES.BRAKE_ACCEL] },
   { path: 'brakeaccel/chicane.json', name: 'Chicane', difficulty: 'medium', drillTypes: [DRILL_TYPES.BRAKE_ACCEL] },
@@ -38,7 +43,7 @@ const CUSTOM_DRILL_MANIFEST = [
 
 /**
  * Charge un drill song depuis un fichier JSON
- * @param {string} path - Chemin relatif depuis /drills (ex: 'easy/test-succession.json')
+ * @param {string} path - Chemin relatif depuis /drills (ex: 'easy/progressive-braking.json')
  * @returns {Promise<Object>} Drill song
  */
 export async function loadDrillSong(path) {
@@ -167,16 +172,20 @@ function uiDrillTypeToInternal(uiDrillType) {
 
 /**
  * Liste les drill songs disponibles pour un type de drill et optionnellement une difficulté.
- * Seuls les drills dont drillTypes contient le type demandé sont retournés.
+ * Pour percentage, inputType filtre par pédale : 'accelerator' | 'brake' (null = les deux).
  * @param {string} difficulty - 'easy' | 'medium' | 'hard' ou null pour toutes
  * @param {string} drillType - Type UI : 'percentage', 'brakeaccel', 'fullcombo'
+ * @param {string} [inputType] - Pour percentage : 'accelerator' | 'brake' (optionnel)
  * @returns {Promise<Array<{path, name, difficulty}>>}
  */
-export async function listDrillSongs(difficulty = null, drillType = 'percentage') {
+export async function listDrillSongs(difficulty = null, drillType = 'percentage', inputType = null) {
   const internalType = uiDrillTypeToInternal(drillType);
   let list = CUSTOM_DRILL_MANIFEST.filter(
     (entry) => entry.drillTypes && entry.drillTypes.includes(internalType)
   );
+  if (internalType === DRILL_TYPES.SINGLE_PEDAL && (inputType === 'accelerator' || inputType === 'brake')) {
+    list = list.filter((entry) => !entry.targetInput || entry.targetInput === inputType);
+  }
   if (difficulty) {
     list = list.filter((entry) => entry.difficulty === difficulty);
   }

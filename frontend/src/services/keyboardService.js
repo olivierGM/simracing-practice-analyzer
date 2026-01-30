@@ -200,23 +200,23 @@ function updateKeyValue(keyCode, isPressed) {
  * Assigne une touche à une fonction
  * @param {string} keyCode - Code de la touche (ex: 'KeyW')
  * @param {string} functionType - Type de fonction ('accelerator', 'brake', 'wheel', etc.)
+ * @param {{ wheelDirection?: number }} options - Pour 'wheel': -1 = gauche, 1 = droite
  */
-export function assignKeyToFunction(keyCode, functionType) {
+export function assignKeyToFunction(keyCode, functionType, options = {}) {
   if (!keyValues[keyCode]) {
     keyValues[keyCode] = { type: functionType, value: 0 };
   } else {
     keyValues[keyCode].type = functionType;
     keyValues[keyCode].value = 0;
   }
-  
-  // Si c'est un volant, déterminer la direction
+
   if (functionType === 'wheel') {
-    // Par défaut, on peut utiliser les flèches ou A/D
-    if (keyCode === 'ArrowLeft' || keyCode === 'KeyA') {
-      keyValues[keyCode].value = -1; // Gauche
-    } else if (keyCode === 'ArrowRight' || keyCode === 'KeyD') {
-      keyValues[keyCode].value = 1; // Droite
-    }
+    const direction = options.wheelDirection ?? (
+      (keyCode === 'ArrowLeft' || keyCode === 'KeyA') ? -1 :
+      (keyCode === 'ArrowRight' || keyCode === 'KeyD') ? 1 : 1
+    );
+    keyValues[keyCode].targetValue = direction;
+    keyValues[keyCode].value = 0;
   }
 }
 
@@ -299,6 +299,23 @@ export function getAssignedKeys() {
     }
   }
   return assigned;
+}
+
+/**
+ * Obtient les détails des assignations (inclut targetValue pour wheel)
+ * @returns {Object} { keyCode: { type, targetValue? } }
+ */
+export function getAssignmentDetails() {
+  const details = {};
+  for (const [keyCode, keyInfo] of Object.entries(keyValues)) {
+    if (keyInfo && keyInfo.type) {
+      details[keyCode] = {
+        type: keyInfo.type,
+        targetValue: keyInfo.targetValue
+      };
+    }
+  }
+  return details;
 }
 
 /**

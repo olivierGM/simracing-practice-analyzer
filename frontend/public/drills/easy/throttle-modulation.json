@@ -1,0 +1,18 @@
+{
+  "name": "Modulation d'accélérateur",
+  "difficulty": "easy",
+  "description": "Alterner entre bas et moyen régime d'accélération. Idéal pour le feeling de la pédale et les sorties de virage.",
+  "duration": 25,
+  "targets": [
+    { "time": 1.0, "percent": 30, "duration": 1.5 },
+    { "time": 3.5, "percent": 60, "duration": 1.5 },
+    { "time": 6.0, "percent": 30, "duration": 1.5 },
+    { "time": 8.5, "percent": 70, "duration": 1.5 },
+    { "time": 11.0, "percent": 40, "duration": 1.5 },
+    { "time": 13.5, "percent": 80, "duration": 1.0 },
+    { "time": 15.5, "percent": 25, "duration": 1.5 },
+    { "time": 18.0, "percent": 55, "duration": 1.5 },
+    { "time": 20.5, "percent": 35, "duration": 1.5 },
+    { "time": 23.0, "percent": 65, "duration": 1.5 }
+  ]
+}

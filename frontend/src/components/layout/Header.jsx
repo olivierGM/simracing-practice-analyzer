@@ -15,9 +15,9 @@ import { EGTPracticeServer } from './EGTPracticeServer';
 import { ToolsMenu } from './ToolsMenu';
 import './Header.css';
 
-export function Header({ metadata, trackName }) {
+export function Header({ metadata, trackName, isDrillsPage }) {
   const navigate = useNavigate();
-  
+
   const handleAdminClick = () => {
     navigate('/admin');
   };
@@ -26,14 +26,14 @@ export function Header({ metadata, trackName }) {
     <header className="app-header">
       <div className="header-content">
         <div className="header-titles">
-          <h1 
+          <h1
             onClick={() => navigate('/')}
             style={{ cursor: 'pointer' }}
             title="Retour à l'accueil"
           >
-            🏁 Analyseur de Temps EGT
+            🏁 Analyseur de Temps EGT{isDrillsPage ? ' - Training Drills' : ''}
           </h1>
-          <p>Analysez les performances par classe et pilote</p>
+          {!isDrillsPage && <p>Analysez les performances par classe et pilote</p>}
         </div>
         
         <div className="header-actions">

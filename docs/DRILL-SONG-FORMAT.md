@@ -8,7 +8,7 @@ Un drill song est un fichier JSON qui définit une séquence d'instructions pour
 
 ```json
 {
-  "name": "Drill Test - Succession Simple",
+  "name": "Drill Test - Séquence Simple",
   "difficulty": "easy",
   "description": "Premier drill pour tester la mécanique de base",
   "duration": 10,
@@ -229,8 +229,8 @@ Les drill songs sont stockés sous `frontend/public/drills/`. Par convention :
 ```
 frontend/public/drills/
   ├── easy/
-  │   ├── test-succession.json
   │   ├── progressive-braking.json
+  │   ├── progressive-acceleration.json
   │   └── ...
   ├── medium/
   │   └── ...

@@ -1,0 +1,169 @@
+.drills-settings-panel-inner {
+  width: min(420px, 95vw);
+  min-width: 320px;
+  height: 100%;
+  min-height: 100vh;
+  background: var(--card-bg, rgba(28, 32, 38, 0.98));
+  border-left: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.drills-settings-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+  flex-shrink: 0;
+}
+
+.drills-settings-panel-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+}
+
+.drills-settings-panel-close {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.drills-settings-panel-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary, #fff);
+}
+
+/* Barre du haut : Son puis Mode aveugle (empilés) */
+.drills-settings-top-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+  flex-shrink: 0;
+}
+
+.drills-settings-top-bar .drills-settings-toggle-label {
+  font-size: 0.9rem;
+}
+
+.drills-settings-toggle-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.drills-settings-toggle-desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.55));
+  font-weight: normal;
+}
+
+.drills-settings-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Device mapping compact */
+.drills-settings-section-devices {
+  flex: 1;
+  min-height: 0;
+}
+
+.drills-settings-device-mapping {
+  flex: 1;
+  min-height: 200px;
+  overflow-y: auto;
+}
+
+.drills-settings-section {
+  margin-bottom: 1.75rem;
+}
+
+.drills-settings-section:last-child {
+  margin-bottom: 0;
+}
+
+.drills-settings-section-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+.drills-settings-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.drills-settings-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.drills-settings-toggle-slider {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  transition: background 0.2s;
+}
+
+.drills-settings-toggle-slider::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.drills-settings-toggle input:checked + .drills-settings-toggle-slider {
+  background: rgba(255, 152, 0, 0.5);
+}
+
+.drills-settings-toggle input:checked + .drills-settings-toggle-slider::after {
+  transform: translateX(20px);
+}
+
+.drills-settings-toggle-label {
+  font-size: 0.9rem;
+  color: var(--text-primary, #fff);
+}
+
+.drills-settings-hint {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.55));
+  line-height: 1.4;
+}

@@ -1,0 +1,33 @@
+{
+  "name": "Rampe d'accélération",
+  "difficulty": "medium",
+  "description": "Monter et descendre progressivement le pourcentage d'accélération. Simule les sorties de virage et les relances.",
+  "duration": 45,
+  "targets": [
+    { "time": 1.0, "percent": 20, "duration": 1.0 },
+    { "time": 2.5, "percent": 35, "duration": 1.0 },
+    { "time": 4.0, "percent": 50, "duration": 1.0 },
+    { "time": 5.5, "percent": 65, "duration": 1.0 },
+    { "time": 7.0, "percent": 80, "duration": 1.0 },
+    { "time": 8.5, "percent": 65, "duration": 1.0 },
+    { "time": 10.0, "percent": 50, "duration": 1.0 },
+    { "time": 11.5, "percent": 35, "duration": 1.0 },
+    { "time": 13.0, "percent": 20, "duration": 1.0 },
+    { "time": 15.0, "percent": 30, "duration": 0.8 },
+    { "time": 16.5, "percent": 45, "duration": 0.8 },
+    { "time": 18.0, "percent": 60, "duration": 0.8 },
+    { "time": 19.5, "percent": 75, "duration": 0.8 },
+    { "time": 21.0, "percent": 90, "duration": 0.8 },
+    { "time": 22.5, "percent": 75, "duration": 0.8 },
+    { "time": 24.0, "percent": 60, "duration": 0.8 },
+    { "time": 25.5, "percent": 45, "duration": 0.8 },
+    { "time": 27.0, "percent": 30, "duration": 0.8 },
+    { "time": 29.0, "percent": 25, "duration": 1.0 },
+    { "time": 30.5, "percent": 50, "duration": 1.0 },
+    { "time": 32.0, "percent": 75, "duration": 1.0 },
+    { "time": 33.5, "percent": 50, "duration": 1.0 },
+    { "time": 35.0, "percent": 25, "duration": 1.0 },
+    { "time": 37.0, "percent": 40, "duration": 2.0 },
+    { "time": 40.0, "percent": 70, "duration": 2.0 }
+  ]
+}

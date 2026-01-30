@@ -7,12 +7,67 @@
 
 .app {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Page drills : verrouiller la hauteur pour supprimer tout scroll global */
+.app.app--drills {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+body:has(.app--drills) {
+  overflow: hidden;
+  height: 100vh;
 }
 
 .main-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   padding: 0;
   max-width: 1400px;
   margin: 0 auto;
+  width: 100%;
+}
+
+/* Page drills : pas de scroll global, tout l'espace pour le contenu */
+.main-content--drills {
+  overflow: hidden;
+  max-width: none;
+}
+
+.main-content--drills .pedal-wheel-drills-page {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Le wrapper .pedal-wheel-drills doit remplir la page, pas 100vh (évite le scroll global) */
+.main-content--drills .pedal-wheel-drills-page .pedal-wheel-drills {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.main-content--drills .pedal-wheel-drills-page .pedal-wheel-drills > .drills-home-layout {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Sidebar réglages ouvert : page drills en pleine largeur, plus de gap à droite */
+.main-content:has(.drills-settings-sidebar-open) {
+  max-width: none;
 }
 
 /* Container blanc sur gradient - exactement comme en prod */

@@ -46,6 +46,10 @@ node_modules/
 dist/
 build/
 
+# Test outputs
+test-results/
+playwright-report/
+
 # Fichiers de données sensibles (optionnel)
 # data.json
 # *.json

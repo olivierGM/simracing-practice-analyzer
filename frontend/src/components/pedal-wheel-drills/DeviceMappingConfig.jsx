@@ -9,32 +9,32 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   loadMappingConfig,
   saveMappingConfig,
-  assignDevice,
   mapAxis,
   resetMappingConfig,
-  DEVICE_TYPES,
   AXIS_TYPES
 } from '../../services/deviceMappingService';
 import { getConnectedGamepads, getGamepadInfo } from '../../services/gamepadService';
 import { getMappedValue } from '../../services/deviceMappingService';
+import { getKeyboardValue } from '../../services/keyboardService';
 import './DeviceMappingConfig.css';
 
-// Fonctions assignables avec leurs labels
+// Fonctions assignables avec leurs labels (emoji uniquement dans icon, pas dans label)
 const ASSIGNABLE_FUNCTIONS = [
-  { type: AXIS_TYPES.ACCELERATOR, label: '⚡ Accélérateur', icon: '⚡' },
-  { type: AXIS_TYPES.BRAKE, label: '🛑 Frein', icon: '🛑' },
-  { type: AXIS_TYPES.CLUTCH, label: '🔄 Embrayage', icon: '🔄' },
-  { type: AXIS_TYPES.WHEEL, label: '🎮 Volant', icon: '🎮' },
-  { type: AXIS_TYPES.SHIFT_UP, label: '⬆️ Shift Up', icon: '⬆️' },
-  { type: AXIS_TYPES.SHIFT_DOWN, label: '⬇️ Shift Down', icon: '⬇️' }
+  { type: AXIS_TYPES.ACCELERATOR, label: 'Accélérateur', icon: '⚡' },
+  { type: AXIS_TYPES.BRAKE, label: 'Frein', icon: '🛑' },
+  { type: AXIS_TYPES.CLUTCH, label: 'Embrayage', icon: '🔄' },
+  { type: AXIS_TYPES.WHEEL, label: 'Volant', icon: '🎮' },
+  { type: AXIS_TYPES.SHIFT_UP, label: 'Shift Up', icon: '⬆️' },
+  { type: AXIS_TYPES.SHIFT_DOWN, label: 'Shift Down', icon: '⬇️' }
 ];
 
-export function DeviceMappingConfig({ onConfigChange }) {
+export function DeviceMappingConfig({ onConfigChange, compact = false }) {
   const [config, setConfig] = useState(loadMappingConfig());
   const [gamepads, setGamepads] = useState([]);
-  const [assigningFunction, setAssigningFunction] = useState(null); // Fonction en cours d'assignation
-  const [debugInfo, setDebugInfo] = useState(null); // Info de debug
-  const [realtimeValues, setRealtimeValues] = useState({}); // Valeurs en temps réel pour les tests
+  const [assigningFunction, setAssigningFunction] = useState(null);
+  const [debugInfo, setDebugInfo] = useState(null);
+  const [realtimeValues, setRealtimeValues] = useState({});
+  const [showInfo, setShowInfo] = useState(false); // Panneau info / debug
   const assignmentTimeoutRef = useRef(null);
   const configRef = useRef(config); // Ref pour éviter les dépendances dans useEffect
   const debugUpdateTimeoutRef = useRef(null); // Pour limiter les mises à jour de debug
@@ -59,28 +59,14 @@ export function DeviceMappingConfig({ onConfigChange }) {
       const currentConfig = configRef.current;
       const values = {};
       
-      // Vérifier si chaque fonction est assignée et récupérer sa valeur
+      // Récupérer la valeur pour chaque fonction (gamepad + clavier)
+      const kbMap = { accelerator: 'accelerator', brake: 'brake', clutch: 'clutch', wheel: 'wheel', shift_up: 'shift_up', shift_down: 'shift_down' };
       ASSIGNABLE_FUNCTIONS.forEach(func => {
-        // Vérifier si la fonction est assignée dans la config
-        let isAssigned = false;
-        for (const [deviceId, deviceMapping] of Object.entries(currentConfig.axisMappings || {})) {
-          const axes = deviceMapping.axes || deviceMapping;  // Compatibilité v1/v2
-          
-          for (const [axisIndex, mapping] of Object.entries(axes)) {
-            if (axisIndex.startsWith('_')) continue;  // Skip metadata
-            
-            if (mapping && mapping.type === func.type) {
-              isAssigned = true;
-              break;
-            }
-          }
-          if (isAssigned) break;
-        }
-        
-        if (isAssigned) {
-          const rawValue = getMappedValue(func.type, connected, currentConfig);
-          values[func.type] = rawValue;
-        }
+        const gpVal = getMappedValue(func.type, connected, currentConfig);
+        const kbVal = getKeyboardValue(kbMap[func.type] || func.type);
+        values[func.type] = func.type === AXIS_TYPES.WHEEL
+          ? (Math.abs(gpVal) > 0.1 ? gpVal : kbVal)
+          : Math.max(gpVal, kbVal);
       });
       
       setRealtimeValues(values);
@@ -405,27 +391,76 @@ export function DeviceMappingConfig({ onConfigChange }) {
   };
 
   return (
-    <div className="device-mapping-config">
-      <div className="config-header">
-        <h3>⚙️ Configuration du Mapping</h3>
-        <div className="config-header-buttons">
-          <a 
-            href="/gamepad-debug" 
-            target="_blank"
-            rel="noopener noreferrer"
-            className="debug-link-button"
-            title="Ouvre une page pour diagnostiquer les problèmes de détection"
-          >
-            🔍 Debug Gamepads
-          </a>
-          <button className="reset-button" onClick={handleReset}>
-            🔄 Réinitialiser
-          </button>
+    <div className={`device-mapping-config ${compact ? 'device-mapping-config-compact' : ''}`}>
+      {!compact && (
+        <div className="config-header">
+          <h3>⚙️ Configuration du Mapping</h3>
+          <div className="config-header-buttons">
+            <a 
+              href="/gamepad-debug" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="debug-link-button"
+              title="Ouvre une page pour diagnostiquer les problèmes de détection"
+            >
+              🔍 Debug Gamepads
+            </a>
+            <button className="reset-button" onClick={handleReset}>
+              🔄 Réinitialiser
+            </button>
+          </div>
         </div>
-      </div>
-
+      )}
+      {compact && (
+        <div className="config-header-compact">
+          <h4 className="config-title-inline">Périphériques</h4>
+          <div className="config-header-buttons-inline">
+            <a
+              href="/gamepad-debug"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="config-btn-mini"
+              title="Debug Gamepads"
+            >
+              🔍
+            </a>
+            <button className="config-btn-mini" onClick={handleReset} title="Réinitialiser">
+              🔄
+            </button>
+            <button
+              className={`config-btn-mini config-btn-info ${showInfo ? 'active' : ''}`}
+              onClick={() => setShowInfo(!showInfo)}
+              title="Infos & diagnostic"
+            >
+              ℹ️
+            </button>
+          </div>
+        </div>
+      )}
+      {compact && showInfo && (
+        <div className="config-info-panel">
+          <p className="config-info-hint">
+            Si vos devices sont connectés mais n'apparaissent pas, ouvrez la page <a href="/gamepad-debug" target="_blank" rel="noopener noreferrer">Debug Gamepads</a> pour diagnostiquer.
+          </p>
+          <div className="config-devices-list">
+            {gamepads.length === 0 ? (
+              <p>Aucun périphérique détecté.</p>
+            ) : (
+              gamepads.map((gp) => {
+                const info = getGamepadInfo(gp);
+                return (
+                  <div key={gp.index} className="config-device-item">
+                    <span>{info.id}</span>
+                    <span className="config-device-meta">{info.axes} axes • {info.buttons} boutons</span>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      )}
       <div className="config-content">
-        {gamepads.length === 0 && (
+        {!compact && gamepads.length === 0 && (
           <div className="config-message-inline">
             <p>⚠️ Aucun périphérique détecté. Connectez vos périphériques pour assigner les contrôles.</p>
             <p style={{ fontSize: '0.9rem', marginTop: '0.5rem', color: '#888' }}>
@@ -433,12 +468,21 @@ export function DeviceMappingConfig({ onConfigChange }) {
             </p>
           </div>
         )}
-          {/* Liste des fonctions à assigner */}
+        {compact && (
+          <p className="config-device-status">
+            {gamepads.length === 0
+              ? 'Aucun périphérique détecté'
+              : `${gamepads.length} périphérique${gamepads.length > 1 ? 's' : ''} détecté${gamepads.length > 1 ? 's' : ''}`
+            }
+          </p>
+        )}
           <div className="functions-list">
-            <h4>Assigner les fonctions</h4>
-            <p className="config-instructions">
-              Cliquez sur une fonction, puis bougez/appuyez sur le contrôle correspondant pour l'assigner automatiquement.
-            </p>
+            {!compact && <h4>Assigner les fonctions</h4>}
+            {!compact && (
+              <p className="config-instructions">
+                Cliquez sur une fonction, puis bougez/appuyez sur le contrôle correspondant pour l'assigner automatiquement.
+              </p>
+            )}
             
             {ASSIGNABLE_FUNCTIONS.map(func => {
               const isAssigning = assigningFunction === func.type;
@@ -449,88 +493,24 @@ export function DeviceMappingConfig({ onConfigChange }) {
                   key={func.type}
                   className={`function-item ${isAssigning ? 'function-item-assigning' : ''} ${currentAssignment ? 'function-item-assigned' : ''}`}
                 >
-                  <div className="function-info">
-                    <span className="function-icon">{func.icon}</span>
-                    <div className="function-details">
-                      <span className="function-label">{func.label}</span>
-                      {currentAssignment && (
-                        <>
+                  <div className="function-item-header">
+                    <div className="function-info">
+                      <span className="function-icon">{func.icon}</span>
+                      <div className="function-details">
+                        <span className="function-label">{func.label}</span>
+                        {!compact && currentAssignment && (
                           <span className="function-assignment">
-                            Assigné: {currentAssignment.device} - {
+                            {currentAssignment.device} - {
                               currentAssignment.isButton 
-                                ? `Bouton ${currentAssignment.button}`
+                                ? `Btn ${currentAssignment.button}`
                                 : `Axe ${currentAssignment.axis}`
                             }
-                            {currentAssignment.invert && ' (inversé)'}
+                            {currentAssignment.invert && ' (↩)'}
                           </span>
-                          {/* Barre de test en temps réel */}
-                          <div className="function-test-bar">
-                            <div className="test-bar-container">
-                              {func.type === AXIS_TYPES.WHEEL ? (
-                                // Barre horizontale pour le volant (gauche/droite)
-                                <div className="test-bar test-bar-wheel">
-                                  <div
-                                    className="test-bar-fill test-bar-fill-wheel"
-                                    style={{
-                                      width: `${Math.abs(realtimeValues[func.type] || 0) * 50}%`,
-                                      left: (realtimeValues[func.type] || 0) < 0 ? '0' : 'auto',
-                                      right: (realtimeValues[func.type] || 0) >= 0 ? '0' : 'auto'
-                                    }}
-                                  />
-                                  <div
-                                    className="test-bar-indicator"
-                                    style={{
-                                      left: `${((realtimeValues[func.type] || 0) + 1) * 50}%`
-                                    }}
-                                  />
-                                </div>
-                              ) : func.type === AXIS_TYPES.SHIFT_UP || func.type === AXIS_TYPES.SHIFT_DOWN ? (
-                                // Barre pour les boutons (on/off)
-                                <div className="test-bar test-bar-button">
-                                  <div
-                                    className={`test-bar-fill test-bar-fill-button ${(realtimeValues[func.type] || 0) > 0.5 ? 'active' : ''}`}
-                                    style={{
-                                      width: `${(realtimeValues[func.type] || 0) > 0.5 ? 100 : 0}%`
-                                    }}
-                                  />
-                                </div>
-                              ) : (
-                                // Barre horizontale pour les pédales (0-100%)
-                                <div className="test-bar test-bar-pedal">
-                                  <div
-                                    className="test-bar-fill test-bar-fill-pedal"
-                                    style={{
-                                      width: `${(realtimeValues[func.type] || 0) * 100}%`
-                                    }}
-                                  />
-                                </div>
-                              )}
-                            </div>
-                            <span className="test-bar-value">
-                              {func.type === AXIS_TYPES.WHEEL 
-                                ? `${((realtimeValues[func.type] || 0) * 900).toFixed(0)}°`
-                                : func.type === AXIS_TYPES.SHIFT_UP || func.type === AXIS_TYPES.SHIFT_DOWN
-                                ? (realtimeValues[func.type] || 0) > 0.5 ? 'ON' : 'OFF'
-                                : `${((realtimeValues[func.type] || 0) * 100).toFixed(0)}%`
-                              }
-                            </span>
-                          </div>
-                        </>
-                      )}
-                       {isAssigning && (
-                         <div className="function-assigning-hint">
-                           <span>⏳ Bougez/appuyez sur le contrôle maintenant...</span>
-                           {debugInfo && (
-                             <span className="debug-info">
-                               Axe {debugInfo.axis}: {debugInfo.current.toFixed(3)} 
-                               (Changement: {debugInfo.maxChange.toFixed(3)}, Seuil: {debugInfo.threshold})
-                             </span>
-                           )}
-                         </div>
-                       )}
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <div className="function-actions">
+                    <div className="function-actions">
                     {isAssigning ? (
                       <button
                         className="cancel-button"
@@ -559,12 +539,68 @@ export function DeviceMappingConfig({ onConfigChange }) {
                       </>
                     )}
                   </div>
+                  </div>
+                  {/* Barre d'input pleine largeur */}
+                  <div className="function-test-bar">
+                    <div className="test-bar-container">
+                      {func.type === AXIS_TYPES.WHEEL ? (
+                        <div className="test-bar test-bar-wheel">
+                          <div
+                            className="test-bar-fill test-bar-fill-wheel"
+                            style={{
+                              width: `${Math.abs(realtimeValues[func.type] || 0) * 50}%`,
+                              left: (realtimeValues[func.type] || 0) < 0 ? '0' : 'auto',
+                              right: (realtimeValues[func.type] || 0) >= 0 ? '0' : 'auto'
+                            }}
+                          />
+                          <div
+                            className="test-bar-indicator"
+                            style={{
+                              left: `${((realtimeValues[func.type] || 0) + 1) * 50}%`
+                            }}
+                          />
+                        </div>
+                      ) : func.type === AXIS_TYPES.SHIFT_UP || func.type === AXIS_TYPES.SHIFT_DOWN ? (
+                        <div className="test-bar test-bar-button">
+                          <div
+                            className={`test-bar-fill test-bar-fill-button ${(realtimeValues[func.type] || 0) > 0.5 ? 'active' : ''}`}
+                            style={{
+                              width: `${(realtimeValues[func.type] || 0) > 0.5 ? 100 : 0}%`
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="test-bar test-bar-pedal">
+                          <div
+                            className="test-bar-fill test-bar-fill-pedal"
+                            style={{
+                              width: `${(realtimeValues[func.type] || 0) * 100}%`
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                    <span className="test-bar-value">
+                      {func.type === AXIS_TYPES.WHEEL 
+                        ? `${((realtimeValues[func.type] || 0) * 900).toFixed(0)}°`
+                        : func.type === AXIS_TYPES.SHIFT_UP || func.type === AXIS_TYPES.SHIFT_DOWN
+                        ? (realtimeValues[func.type] || 0) > 0.5 ? 'ON' : 'OFF'
+                        : `${((realtimeValues[func.type] || 0) * 100).toFixed(0)}%`
+                      }
+                    </span>
+                  </div>
+                  {isAssigning && (
+                    <div className="function-assigning-hint">
+                      <span>⏳ Bougez/appuyez sur le contrôle...</span>
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
 
           {/* Liste des devices connectés (pour info) */}
+          {!compact && (
           <div className="devices-info">
             <h4>Périphériques connectés</h4>
             <div className="devices-list">
@@ -581,6 +617,7 @@ export function DeviceMappingConfig({ onConfigChange }) {
               })}
             </div>
           </div>
+          )}
       </div>
     </div>
   );
