@@ -133,22 +133,71 @@
 
 .driver-table th,
 .driver-table td {
-  padding: 4px 6px;
+  padding: 3px 5px;
   text-align: left;
   border-bottom: 1px solid var(--border-color);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--text-primary);
 }
 
-/* Centrer la colonne manufacturer (3e colonne) */
-.driver-table td:nth-child(3),
-.driver-table th:nth-child(3) {
-  text-align: center;
-  width: 34px;
-  min-width: 34px;
-  max-width: 34px;
-  padding: 3px 4px !important;
+/* Largeurs colonnes : assez large pour que les noms de colonnes tiennent (2 lignes max) */
+.driver-table th:nth-child(1),
+.driver-table td:nth-child(1) { width: 2.5em; min-width: 2.5em; text-align: center; padding-left: 4px; padding-right: 4px; }
+.driver-table th:nth-child(2),
+.driver-table td:nth-child(2) { min-width: 90px; max-width: 150px; }
+.driver-table th:nth-child(3),
+.driver-table td:nth-child(3) { width: 34px; min-width: 34px; max-width: 34px; text-align: center; }
+.driver-table th:nth-child(4),
+.driver-table td:nth-child(4) { width: 80px; min-width: 80px; max-width: 80px; }
+.driver-table th:nth-child(5),
+.driver-table td:nth-child(5) { min-width: 4.5em; }
+.driver-table th:nth-child(6),
+.driver-table td:nth-child(6),
+.driver-table th:nth-child(7),
+.driver-table td:nth-child(7) { min-width: 4em; }
+.driver-table th:nth-child(8),
+.driver-table td:nth-child(8),
+.driver-table th:nth-child(9),
+.driver-table td:nth-child(9),
+.driver-table th:nth-child(10),
+.driver-table td:nth-child(10) { min-width: 6em; }
+.driver-table th:nth-child(11),
+.driver-table td:nth-child(11),
+.driver-table th:nth-child(12),
+.driver-table td:nth-child(12),
+.driver-table th:nth-child(13),
+.driver-table td:nth-child(13),
+.driver-table th:nth-child(14),
+.driver-table td:nth-child(14) { min-width: 5.5em; }
+.driver-table th:nth-child(15),
+.driver-table td:nth-child(15),
+.driver-table th:nth-child(16),
+.driver-table td:nth-child(16),
+.driver-table th:nth-child(17),
+.driver-table td:nth-child(17) { min-width: 5.5em; }
+
+/* Headers: maximum 2 lignes (libellé + icône tri) */
+.driver-table th .th-inner {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  word-break: break-word;
+  line-height: 1.2;
+  max-height: 2.4em;
 }
+.driver-table th {
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.2;
+  min-width: 5em;
+}
+.driver-table th:nth-child(1) { min-width: 2.5em; }
+.driver-table th:nth-child(2) { max-width: 150px; }
+.driver-table th:nth-child(3) { min-width: 34px; max-width: 34px; text-align: center; }
+.driver-table th:nth-child(4) { width: 80px; min-width: 80px; max-width: 80px; }
+.driver-table th:nth-child(5) { min-width: 4.5em; }
 
 /* Headers du tableau - gradient violet magnifique */
 .driver-table th {

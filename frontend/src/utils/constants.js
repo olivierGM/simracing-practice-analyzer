@@ -15,13 +15,15 @@ export const PERIOD_FILTERS = [
 // Colonnes du tableau principal (COPIE EXACTE de la prod - 14 colonnes)
 // Voir script-public.js lignes 942-956
 export const TABLE_COLUMNS = [
-  { key: 'position', label: 'Pos', sortable: false },
+  { key: 'position', label: '#', sortable: false },
   { key: 'name', label: 'Pilote', sortable: true, dataType: 'text' },
   { key: 'manufacturer', label: '', sortable: false, iconOnly: true }, // Colonne icône marque sans label
+  { key: 'teamName', label: 'Équipe', sortable: true, dataType: 'text' },
   { key: 'category', label: 'Classe', sortable: true, dataType: 'text' },
   { key: 'totalLaps', label: 'Tours', sortable: true, dataType: 'number' },
   { key: 'validLaps', label: 'Tours Valides', sortable: true, dataType: 'number' },
   { key: 'bestValidTime', label: 'Meilleur valide', sortable: true, dataType: 'time' },
+  { key: 'bestPotentialTime', label: 'Meilleur potentiel', sortable: true, dataType: 'time' },
   { key: 'averageValidTime', label: 'Moyenne valide', sortable: true, dataType: 'time' },
   { key: 'validConsistency', label: 'Const. valide', sortable: true, dataType: 'percentage' },
   { key: 'bestWetTime', label: 'Meilleur wet', sortable: true, dataType: 'time' },

@@ -33,7 +33,6 @@ export function DriverRow({ driver, position, onClick, hasWetTimes = false }) {
             className="manufacturer-logo"
             loading="lazy"
             onError={(e) => {
-              // Fallback: remplacer par une icône texte si le logo ne charge pas
               e.target.style.display = 'none';
               if (!e.target.nextSibling) {
                 const fallback = document.createElement('span');
@@ -46,6 +45,7 @@ export function DriverRow({ driver, position, onClick, hasWetTimes = false }) {
         </span>
       )
     },
+    { key: 'teamName', content: driver.teamName || '—', dataValue: driver.teamName || '' },
     { 
       key: 'category', 
       content: (
@@ -57,6 +57,7 @@ export function DriverRow({ driver, position, onClick, hasWetTimes = false }) {
     { key: 'totalLaps', content: driver.totalLaps || 0, dataValue: driver.totalLaps || 0 },
     { key: 'validLaps', content: driver.validLaps || 0, dataValue: driver.validLaps || 0 },
     { key: 'bestValidTime', content: formatTime(driver.bestValidTime || 0), dataValue: driver.bestValidTime || 0 },
+    { key: 'bestPotentialTime', content: formatTime(driver.bestPotentialTime || 0), dataValue: driver.bestPotentialTime || 0 },
     { key: 'averageValidTime', content: formatTime(driver.averageValidTime || 0), dataValue: driver.averageValidTime || 0 },
     { key: 'validConsistency', content: formatConsistency(driver.validConsistency), dataValue: driver.validConsistency || 0 },
     { key: 'bestWetTime', content: formatTime(driver.bestWetTime || 0), dataValue: driver.bestWetTime || 0 },

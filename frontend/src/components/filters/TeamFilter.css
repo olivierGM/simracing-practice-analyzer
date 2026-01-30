@@ -1,0 +1,5 @@
+/* Réutilise les styles de PeriodFilter (filter-group, filter-label, filter-select) */
+
+.filter-select-team {
+  min-width: 160px;
+}

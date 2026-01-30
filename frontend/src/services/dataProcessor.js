@@ -41,6 +41,7 @@ export function processSessionData(sessions) {
                     lastName: driver.lastName,
                     cupCategory: car.cupCategory,
                     carModel: car.carModel,
+                    teamName: (car.teamName && String(car.teamName).trim()) || '',
                     sessionDate: sessionDate // Stocker la date de session
                 };
             });
@@ -65,7 +66,9 @@ export function processSessionData(sessions) {
                             firstName: driverInfo.firstName,
                             lastName: driverInfo.lastName,
                             cupCategory: driverInfo.cupCategory, // Catégorie de la session la plus récente (car trié)
+                            categoriesSeen: new Set([driverInfo.cupCategory]), // Pour détecter PRO+AMATEUR
                             carModel: driverInfo.carModel,
+                            teamName: driverInfo.teamName || '',
                             bestValidTime: 0,
                             averageValidTime: 0,
                             bestOverallTime: 0,
@@ -90,6 +93,10 @@ export function processSessionData(sessions) {
                         // Mettre à jour le carModel si le pilote change de voiture
                         // (Pour les saisons, c'est une auto par saison, donc on utilise le carModel le plus récent)
                         result.byDriver[driverId].carModel = driverInfo.carModel;
+                        if (driverInfo.teamName) {
+                            result.byDriver[driverId].teamName = driverInfo.teamName;
+                        }
+                        result.byDriver[driverId].categoriesSeen.add(driverInfo.cupCategory);
                         
                         // Mettre à jour la catégorie si cette session est plus récente
                         if (driverInfo.sessionDate && 
@@ -146,6 +153,15 @@ export function processSessionData(sessions) {
             // Ajouter le fileName à la session pour la modal pilote
             session.fileName = sessionFileName;
         }
+    });
+    
+    // Si un pilote a des sessions en PRO (0) et en AMATEUR (2), afficher en AMATEUR (tous les laps fusionnés)
+    const PRO = 0, AMATEUR = 2;
+    Object.values(result.byDriver).forEach(driver => {
+        if (driver.categoriesSeen && driver.categoriesSeen.has(PRO) && driver.categoriesSeen.has(AMATEUR)) {
+            driver.cupCategory = AMATEUR;
+        }
+        delete driver.categoriesSeen;
     });
     
     // Calculer les moyennes

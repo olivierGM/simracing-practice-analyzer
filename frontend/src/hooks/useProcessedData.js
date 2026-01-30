@@ -6,7 +6,8 @@
 
 import { useMemo } from 'react';
 import { processSessionData } from '../services/dataProcessor';
-import { calculateConsistency } from '../services/calculations';
+import { calculateConsistency, calculatePilotSegmentStats } from '../services/calculations';
+import { getTeamNameFallback } from '../services/driverTeamFallback';
 
 export function useProcessedData(sessions = [], selectedTrack = '') {
   // Filtrer les sessions pour la piste sélectionnée (comme en prod)
@@ -46,9 +47,17 @@ export function useProcessedData(sessions = [], selectedTrack = '') {
       lastName: driver.lastName,
       category: driver.cupCategory,
       carModel: driver.carModel,
+      teamName: (driver.teamName && String(driver.teamName).trim()) || getTeamNameFallback(`${driver.firstName} ${driver.lastName}`) || '',
       
       // Statistiques valides
       bestValidTime: driver.bestValidTime,
+      bestPotentialTime: (() => {
+        const seg = calculatePilotSegmentStats({ ...driver, lapTimes: driver.lapTimes });
+        if (seg && seg.bestS1 != null && seg.bestS2 != null && seg.bestS3 != null) {
+          return seg.bestS1 + seg.bestS2 + seg.bestS3;
+        }
+        return driver.bestValidTime || 0;
+      })(),
       averageValidTime: driver.averageValidTime,
       validConsistency: calculateConsistency(driver.validLapTimes || [], driver.bestValidTime, driver.averageValidTime),
       validLaps: driver.validLaps,

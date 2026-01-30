@@ -19,12 +19,24 @@
   color: var(--text-primary);
 }
 
-/* Centrer l'icône de marque dans la cellule (3e colonne après position et name) */
+/* Colonne marque (3e) */
 .driver-row td:nth-child(3) {
   text-align: center;
   padding: 14px 6px;
   width: 34px;
   min-width: 34px;
+  max-width: 34px;
+}
+
+/* Colonne équipe (4e) : largeur LimitRacing (80px = ~70px contenu après padding) */
+.driver-row td:nth-child(4) {
+  width: 80px;
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
 }
 
 /* Styles spécifiques par colonne */
@@ -68,8 +80,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
 }
 
 .manufacturer-logo {

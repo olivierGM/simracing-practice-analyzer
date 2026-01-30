@@ -4,7 +4,7 @@
  * Page principale avec liste des pilotes
  */
 
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiltersBar } from '../components/filters/FiltersBar';
 import { DriversTable } from '../components/table/DriversTable';
@@ -97,14 +97,37 @@ export function HomePage({ drivers, sessions = [] }) {
     handleSort: originalHandleSort
   } = useSorting(processedDrivers);
 
+  const [teamFilter, setTeamFilter] = useState('');
+
+  const availableTeams = useMemo(() => {
+    const set = new Set();
+    sortedDrivers.forEach((d) => {
+      const t = (d.teamName && String(d.teamName).trim()) || '';
+      if (t) set.add(t);
+    });
+    return Array.from(set).sort();
+  }, [sortedDrivers]);
+
+  const hasDriversWithoutTeam = useMemo(() => {
+    return sortedDrivers.some((d) => !(d.teamName && String(d.teamName).trim()));
+  }, [sortedDrivers]);
+
+  const driversToShow = useMemo(() => {
+    if (!teamFilter) return sortedDrivers;
+    if (teamFilter === '__none__') {
+      return sortedDrivers.filter((d) => !(d.teamName && String(d.teamName).trim()));
+    }
+    return sortedDrivers.filter((d) => (d.teamName && String(d.teamName).trim()) === teamFilter);
+  }, [sortedDrivers, teamFilter]);
+
   // Vérifier s'il y a des wet times dans les données
   const hasWetTimes = useMemo(() => {
-    return sortedDrivers.some(driver => 
+    return driversToShow.some(driver => 
       (driver.bestWetTime && driver.bestWetTime > 0) ||
       (driver.averageWetTime && driver.averageWetTime > 0) ||
       (driver.wetConsistency && driver.wetConsistency > 0)
     );
-  }, [sortedDrivers]);
+  }, [driversToShow]);
   
   // Wrapper pour handleSort avec tracking
   const handleSort = (column) => {
@@ -143,6 +166,10 @@ export function HomePage({ drivers, sessions = [] }) {
         trackFilter={trackFilter}
         onTrackChange={setTrackFilter}
         availableTracks={availableTracks}
+        teamFilter={teamFilter}
+        onTeamChange={setTeamFilter}
+        availableTeams={availableTeams}
+        hasDriversWithoutTeam={hasDriversWithoutTeam}
         groupByClass={groupByClass}
         onGroupByClassChange={setGroupByClass}
       />
@@ -151,15 +178,15 @@ export function HomePage({ drivers, sessions = [] }) {
       <ACCServersBanner trackName={trackFilter} />
 
       {/* Cartes de statistiques globales (COPIE de la prod) */}
-      <GlobalStats drivers={sortedDrivers} />
+      <GlobalStats drivers={driversToShow} />
 
-      {sortedDrivers.length === 0 ? (
+      {driversToShow.length === 0 ? (
         <div className="no-data">
           <p>Aucun pilote trouvé avec les filtres sélectionnés.</p>
         </div>
       ) : (
         <DriversTable
-          drivers={sortedDrivers}
+          drivers={driversToShow}
           sortColumn={sortColumn}
           sortDirection={sortDirection}
           onSort={handleSort}

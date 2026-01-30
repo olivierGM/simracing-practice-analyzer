@@ -40,7 +40,7 @@ export function useSorting(items = []) {
       
       // Liste des colonnes de temps où 0/null = PIRE temps (comme prod)
       const timeColumns = [
-        'bestValidTime', 'potentialTime', 'averageValidTime', 'gapToLeader',
+        'bestValidTime', 'bestPotentialTime', 'potentialTime', 'averageValidTime', 'gapToLeader',
         'S1', 'S2', 'S3', 'totalTime', 'laptime'
       ];
       const isTimeColumn = timeColumns.includes(sortColumn);

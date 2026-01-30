@@ -35,8 +35,10 @@ export function DriversTableHeader({ sortColumn, sortDirection, onSort, hasWetTi
             className={column.sortable ? 'sortable' : ''}
             onClick={() => column.sortable && onSort(column.key)}
           >
-            {column.iconOnly ? <span className="icon-only-header">{column.label}</span> : column.label}
-            {column.sortable && <span className="sort-indicator">↕</span>}
+            <span className="th-inner">
+              {column.iconOnly ? <span className="icon-only-header">{column.label}</span> : column.label}
+              {column.sortable && <span className="sort-indicator">↕</span>}
+            </span>
           </th>
         ))}
       </tr>
