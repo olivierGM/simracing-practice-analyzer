@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { listDrillSongs, loadDrillSong } from '../../services/drillSongService';
+import { mockMotekExerciseSource } from '../../services/exerciseSource';
 import { DrillsTypeCards } from './DrillsTypeCards';
 import { DrillsSettingsPanel } from './DrillsSettingsPanel';
 import { DRILL_TYPES } from './DrillSelector';
@@ -41,12 +42,6 @@ function drillTypeToServiceParam(drillType) {
   return map[drillType] || 'percentage';
 }
 
-/** Drill Song mock pour Drill complet Motek (Story 1 — stub) */
-const MOTEK_MOCK_DRILL_SONG = {
-  type: 'random',
-  difficulty: 'medium',
-  duration: 60
-};
 
 function getCustomDrillDescription(difficultyLabel) {
   return `Répétition ciblée (${difficultyLabel}).`;
@@ -134,7 +129,7 @@ export function DrillsHomeView({
   const handleStart = () => {
     let drillSong;
     if (selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK || drillMode === 'motek') {
-      drillSong = MOTEK_MOCK_DRILL_SONG;
+      drillSong = mockMotekExerciseSource.load();
     } else if (drillMode === 'custom' && selectedSong) {
       drillSong = selectedSong;
     } else {
