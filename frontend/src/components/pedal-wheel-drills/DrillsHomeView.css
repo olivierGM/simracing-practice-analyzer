@@ -71,6 +71,69 @@
   font-size: 0.95rem;
 }
 
+.drills-home-motek-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--card-bg, rgba(255, 255, 255, 0.05));
+  border: 2px solid var(--border-color, rgba(255, 255, 255, 0.18));
+  border-radius: 10px;
+}
+
+.drills-home-motek-upload-label {
+  cursor: pointer;
+}
+
+.drills-home-motek-input {
+  display: none;
+}
+
+.drills-home-motek-upload-btn {
+  display: inline-block;
+  padding: 0.65rem 1rem;
+  background: rgba(255, 152, 0, 0.2);
+  border: 2px solid rgba(255, 152, 0, 0.5);
+  border-radius: 8px;
+  color: var(--text-primary, #fff);
+  font-size: 0.9rem;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.drills-home-motek-upload-btn:hover {
+  background: rgba(255, 152, 0, 0.3);
+  border-color: #ff9800;
+}
+
+.drills-home-motek-error {
+  margin: 0;
+  padding: 0.5rem;
+  background: rgba(244, 67, 54, 0.15);
+  border-radius: 6px;
+  color: #f44336;
+  font-size: 0.9rem;
+}
+
+.drills-home-motek-preview {
+  padding: 0.75rem;
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--text-primary, #fff);
+}
+
+.drills-home-motek-preview-map {
+  margin-top: 0.25rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+.drills-home-motek-preview-steps {
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
 .drills-home-list.drills-home-list-all {
   display: flex;
   flex-direction: column;

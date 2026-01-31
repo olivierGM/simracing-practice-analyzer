@@ -3,9 +3,9 @@
  * Homepage des drills : cartes type en haut, liste des drills en bas, panneau réglages à droite
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { listDrillSongs, loadDrillSong } from '../../services/drillSongService';
-import { mockMotekExerciseSource } from '../../services/exerciseSource';
+import { motekFileSource } from '../../services/motekFileSource';
 import { DrillsTypeCards } from './DrillsTypeCards';
 import { DrillsSettingsPanel } from './DrillsSettingsPanel';
 import { DRILL_TYPES } from './DrillSelector';
@@ -62,6 +62,9 @@ export function DrillsHomeView({
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [blindMode, setBlindMode] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [motekExercise, setMotekExercise] = useState(null);
+  const [motekError, setMotekError] = useState(null);
+  const motekInputRef = useRef(null);
 
   const serviceParam = drillTypeToServiceParam(selectedType);
   const inputTypeParam = (selectedType === DRILL_TYPES.ACCELERATOR && 'accelerator') ||
@@ -70,7 +73,7 @@ export function DrillsHomeView({
   useEffect(() => {
     let cancelled = false;
 
-    // Drill complet Motek : pas de liste JSON, source mock
+    // Drill complet Motek : pas de liste JSON, source fichier
     if (selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK) {
       setLoading(false);
       setAllDrillSongs([]);
@@ -78,6 +81,8 @@ export function DrillsHomeView({
       setSelectedRandomLevel('');
       setSelectedSongPath('');
       setSelectedSong(null);
+      setMotekExercise(null);
+      setMotekError(null);
       return;
     }
 
@@ -126,10 +131,24 @@ export function DrillsHomeView({
     }
   };
 
+  const handleMotekFileChange = async (e) => {
+    const file = e.target?.files?.[0];
+    if (!file) return;
+    setMotekError(null);
+    setMotekExercise(null);
+    try {
+      const def = await motekFileSource.load(file);
+      setMotekExercise(def);
+    } catch (err) {
+      setMotekError(err.message || 'Erreur lors du chargement du fichier');
+    }
+    e.target.value = '';
+  };
+
   const handleStart = () => {
     let drillSong;
     if (selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK || drillMode === 'motek') {
-      drillSong = mockMotekExerciseSource.load();
+      drillSong = motekExercise;
     } else if (drillMode === 'custom' && selectedSong) {
       drillSong = selectedSong;
     } else {
@@ -151,7 +170,7 @@ export function DrillsHomeView({
 
   const isMotekType = selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK;
   const canStart = isMotekType
-    ? drillMode === 'motek'
+    ? drillMode === 'motek' && !!motekExercise
     : (drillMode === 'random' && selectedRandomLevel) || (drillMode === 'custom' && selectedSong);
 
   return (
@@ -180,21 +199,19 @@ export function DrillsHomeView({
                 <p className="drills-home-loading">Chargement…</p>
               )}
               {!loading && isMotekType && (
-                <div
-                  role="button"
-                  tabIndex={0}
-                  className="drills-home-list-item drills-home-list-item-motek drills-home-list-item-selected"
-                  data-testid="drill-motek-demo"
-                  onClick={() => setDrillMode('motek')}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setDrillMode('motek');
-                    }
-                  }}
-                >
-                  <span className="drills-home-list-item-name">Mode démo (mock)</span>
-                  <span className="drills-home-list-item-desc">Exercice minimal pour valider l’intégration</span>
+                <div className="drills-home-motek-upload" data-testid="drill-motek-upload">
+                  <label className="drills-home-motek-upload-label">
+                    <input ref={motekInputRef} type="file" accept=".ld,.ldx" onChange={handleMotekFileChange} className="drills-home-motek-input" data-testid="drill-motek-file-input" />
+                    <span className="drills-home-motek-upload-btn">Choisir un fichier .ld ou .ldx</span>
+                  </label>
+                  {motekError && <p className="drills-home-motek-error" data-testid="drill-motek-error">{motekError}</p>}
+                  {motekExercise && (
+                    <div className="drills-home-motek-preview" data-testid="drill-motek-preview">
+                      <div><strong>{motekExercise.name || "Sans nom"}</strong></div>
+                      {motekExercise.mapName && <div className="drills-home-motek-preview-map">Map : {motekExercise.mapName}</div>}
+                      <div className="drills-home-motek-preview-steps">{motekExercise.targets?.length || 0} étape{(motekExercise.targets?.length || 0) !== 1 ? "s" : ""} détectée{(motekExercise.targets?.length || 0) !== 1 ? "s" : ""}</div>
+                    </div>
+                  )}
                 </div>
               )}
               {!loading && !isMotekType && (

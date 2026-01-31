@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<LDXFile Locale="English_Australia.1252" DefaultLocale="C" Version="1.6">
+  <Layers>
+    <Layer LayerName="">
+      <MarkerBlock>
+        <MarkerGroup Name="Beacons">
+          <Marker Time="2.0" Type="brake" Percent="80" Duration="1.0"/>
+          <Marker Time="4.0" Type="wheel" Angle="45" Duration="1.5"/>
+          <Marker Time="6.0" Type="accel" Percent="60" Duration="1.0"/>
+        </MarkerGroup>
+      </MarkerBlock>
+    </Layer>
+  </Layers>
+</LDXFile>

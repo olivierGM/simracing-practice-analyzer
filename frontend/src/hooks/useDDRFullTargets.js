@@ -237,8 +237,35 @@ export function useDDRFullTargets({
       return;
     }
 
+    // Mode drill song : cibles pré-chargées (ex: Motek)
+    if (drillSong && Array.isArray(drillSong.targets) && drillSong.targets.length > 0) {
+      const brake = [];
+      const wheel = [];
+      const accel = [];
+      const shift = [];
+
+      drillSong.targets.forEach((target, index) => {
+        const targetWithId = {
+          ...target,
+          id: `${target.type}-${index}`,
+          hit: false,
+          missed: false,
+          judgment: null
+        };
+
+        if (target.type === 'brake') brake.push(targetWithId);
+        else if (target.type === 'wheel') wheel.push(targetWithId);
+        else if (target.type === 'accel') accel.push(targetWithId);
+        else if (target.type === 'shift_up' || target.type === 'shift_down') shift.push(targetWithId);
+      });
+
+      setBrakeTargets(brake);
+      setWheelTargets(wheel);
+      setAccelTargets(accel);
+      setShiftTargets(shift);
+    }
     // Mode drill song : charger depuis un fichier JSON
-    if (drillSong && drillSong.file) {
+    else if (drillSong && drillSong.file) {
       const loadDrillSong = async () => {
         try {
           const response = await fetch(drillSong.file);
