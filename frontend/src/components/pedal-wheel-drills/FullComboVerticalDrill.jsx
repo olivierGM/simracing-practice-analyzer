@@ -126,7 +126,7 @@ export function FullComboVerticalDrill({
 
   // Mode jeu actif avec layout VERTICAL (colonnes)
   return (
-    <div className="full-combo-vertical-drill full-combo-vertical-drill-ddr">
+    <div className="full-combo-vertical-drill full-combo-vertical-drill-ddr" data-testid="drill-complet-active">
       {/* Header avec contrôles */}
       <div className="drill-header drill-header-compact">
         <button className="drill-back-button" onClick={handleStop}>

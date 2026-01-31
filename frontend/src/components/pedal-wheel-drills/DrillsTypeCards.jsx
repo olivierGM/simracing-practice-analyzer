@@ -11,7 +11,8 @@ const DRILL_OPTIONS = [
   { type: DRILL_TYPES.ACCELERATOR, label: 'Accélérateur', subtitle: 'Contrôle en pourcentage unique', available: true },
   { type: DRILL_TYPES.BRAKE, label: 'Frein', subtitle: 'Contrôle en pourcentage unique', available: true },
   { type: DRILL_TYPES.BRAKE_ACCEL, label: 'Accélérateur + Frein', subtitle: 'Pistes de frein et d\'accélération', available: true },
-  { type: DRILL_TYPES.COMBINED_VERTICAL, label: 'Drill Complet', subtitle: 'Frein, accélérateur, volant combinés', available: true, tag: 'En construction' }
+  { type: DRILL_TYPES.COMBINED_VERTICAL, label: 'Drill Complet', subtitle: 'Frein, accélérateur, volant combinés', available: true, tag: 'En construction' },
+  { type: DRILL_TYPES.COMBINED_VERTICAL_MOTEK, label: 'Drill Complet Motek', subtitle: 'Drill complet à partir d\'un fichier Motek (.ld/.ldx)', available: true, dataTestId: 'drill-card-motek' }
 ];
 
 /** Pédale + jauge 50 % — dégradés, style carte sombre/orange */
@@ -122,6 +123,7 @@ function CardIcon({ type, selected }) {
         </span>
       );
     case DRILL_TYPES.COMBINED_VERTICAL:
+    case DRILL_TYPES.COMBINED_VERTICAL_MOTEK:
       return (
         <span className={glowClass} style={{ color: 'rgba(255,255,255,0.9)' }}>
           <IconFullCombo />
@@ -143,6 +145,7 @@ export function DrillsTypeCards({ selectedType, onSelectType }) {
           onClick={() => option.available && onSelectType(option.type)}
           disabled={!option.available}
           title={option.subtitle}
+          data-testid={option.dataTestId}
         >
           {option.tag && (
             <span className="drills-type-card-tag">{option.tag}</span>

@@ -10,14 +10,16 @@ export const DRILL_TYPES = {
   ACCELERATOR: 'accelerator',
   BRAKE: 'brake',
   BRAKE_ACCEL: 'brakeaccel',
-  COMBINED_VERTICAL: 'combined_vertical'
+  COMBINED_VERTICAL: 'combined_vertical',
+  COMBINED_VERTICAL_MOTEK: 'combined_vertical_motek'
 };
 
 const DRILL_OPTIONS = [
   { type: DRILL_TYPES.ACCELERATOR, label: 'Accélérateur', description: 'Contrôle en pourcentage (accélérateur)', icon: '⚡', available: true },
   { type: DRILL_TYPES.BRAKE, label: 'Frein', description: 'Contrôle en pourcentage (frein)', icon: '🛑', available: true },
   { type: DRILL_TYPES.BRAKE_ACCEL, label: 'Frein + Accélérateur', description: 'Pistes frein et accélération', icon: '🚦', available: true },
-  { type: DRILL_TYPES.COMBINED_VERTICAL, label: 'Drill Complet', description: 'Frein, volant, accélérateur et shifter', icon: '🎯', available: true, tag: 'En construction' }
+  { type: DRILL_TYPES.COMBINED_VERTICAL, label: 'Drill Complet', description: 'Frein, volant, accélérateur et shifter', icon: '🎯', available: true, tag: 'En construction' },
+  { type: DRILL_TYPES.COMBINED_VERTICAL_MOTEK, label: 'Drill Complet Motek', description: 'Drill complet à partir d\'un fichier Motek (.ld/.ldx)', icon: '📊', available: true }
 ];
 
 export function DrillSelector({ onSelectDrill, selectedDrill }) {

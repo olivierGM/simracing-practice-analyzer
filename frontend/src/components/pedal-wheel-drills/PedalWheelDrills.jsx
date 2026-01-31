@@ -86,7 +86,7 @@ export function PedalWheelDrills() {
             initialBlindMode={initial.blindMode}
           />
         )}
-        {selectedDrill === DRILL_TYPES.COMBINED_VERTICAL && (
+        {(selectedDrill === DRILL_TYPES.COMBINED_VERTICAL || selectedDrill === DRILL_TYPES.COMBINED_VERTICAL_MOTEK) && (
           <FullComboVerticalDrill
             acceleratorValue={accelerator}
             brakeValue={brake}

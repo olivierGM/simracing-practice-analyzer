@@ -35,10 +35,18 @@ function drillTypeToServiceParam(drillType) {
     [DRILL_TYPES.ACCELERATOR]: 'percentage',
     [DRILL_TYPES.BRAKE]: 'percentage',
     [DRILL_TYPES.BRAKE_ACCEL]: 'brakeaccel',
-    [DRILL_TYPES.COMBINED_VERTICAL]: 'fullcombo'
+    [DRILL_TYPES.COMBINED_VERTICAL]: 'fullcombo',
+    [DRILL_TYPES.COMBINED_VERTICAL_MOTEK]: 'fullcombo'
   };
   return map[drillType] || 'percentage';
 }
+
+/** Drill Song mock pour Drill complet Motek (Story 1 — stub) */
+const MOTEK_MOCK_DRILL_SONG = {
+  type: 'random',
+  difficulty: 'medium',
+  duration: 60
+};
 
 function getCustomDrillDescription(difficultyLabel) {
   return `Répétition ciblée (${difficultyLabel}).`;
@@ -66,6 +74,18 @@ export function DrillsHomeView({
 
   useEffect(() => {
     let cancelled = false;
+
+    // Drill complet Motek : pas de liste JSON, source mock
+    if (selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK) {
+      setLoading(false);
+      setAllDrillSongs([]);
+      setDrillMode('motek');
+      setSelectedRandomLevel('');
+      setSelectedSongPath('');
+      setSelectedSong(null);
+      return;
+    }
+
     setLoading(true);
     (async () => {
       try {
@@ -89,7 +109,7 @@ export function DrillsHomeView({
       }
     })();
     return () => { cancelled = true; };
-  }, [serviceParam, inputTypeParam]);
+  }, [serviceParam, inputTypeParam, selectedType]);
 
   const handleRandomLevelChange = (e) => {
     const key = e.target.value;
@@ -112,13 +132,18 @@ export function DrillsHomeView({
   };
 
   const handleStart = () => {
-    const drillSong = drillMode === 'custom' && selectedSong
-      ? selectedSong
-      : {
-          type: 'random',
-          difficulty: selectedRandomLevel,
-          duration: 60
-        };
+    let drillSong;
+    if (selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK || drillMode === 'motek') {
+      drillSong = MOTEK_MOCK_DRILL_SONG;
+    } else if (drillMode === 'custom' && selectedSong) {
+      drillSong = selectedSong;
+    } else {
+      drillSong = {
+        type: 'random',
+        difficulty: selectedRandomLevel,
+        duration: 60
+      };
+    }
     const inputType = (selectedType === DRILL_TYPES.ACCELERATOR && 'accelerator') ||
       (selectedType === DRILL_TYPES.BRAKE && 'brake') || null;
     onStartDrill(selectedType, {
@@ -128,6 +153,11 @@ export function DrillsHomeView({
       inputType
     });
   };
+
+  const isMotekType = selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK;
+  const canStart = isMotekType
+    ? drillMode === 'motek'
+    : (drillMode === 'random' && selectedRandomLevel) || (drillMode === 'custom' && selectedSong);
 
   return (
     <div className="drills-home-layout">
@@ -150,11 +180,29 @@ export function DrillsHomeView({
                 ⚙️ Réglages
               </button>
             </div>
-            <div className="drills-home-list drills-home-list-all">
+            <div className="drills-home-list drills-home-list-all" data-testid="drills-list">
               {loading && (
                 <p className="drills-home-loading">Chargement…</p>
               )}
-              {!loading && (
+              {!loading && isMotekType && (
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="drills-home-list-item drills-home-list-item-motek drills-home-list-item-selected"
+                  data-testid="drill-motek-demo"
+                  onClick={() => setDrillMode('motek')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setDrillMode('motek');
+                    }
+                  }}
+                >
+                  <span className="drills-home-list-item-name">Mode démo (mock)</span>
+                  <span className="drills-home-list-item-desc">Exercice minimal pour valider l’intégration</span>
+                </div>
+              )}
+              {!loading && !isMotekType && (
                 <>
                   <div className="drills-home-random-row">
                     <div
@@ -226,7 +274,8 @@ export function DrillsHomeView({
               type="button"
               className="drills-home-start-button"
               onClick={handleStart}
-              disabled={loading || !((drillMode === 'random' && selectedRandomLevel) || (drillMode === 'custom' && selectedSong))}
+              disabled={loading || !canStart}
+              data-testid="drill-start-button"
             >
               Lancer le drill
             </button>
