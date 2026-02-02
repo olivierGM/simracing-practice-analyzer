@@ -11,6 +11,7 @@ import { DrillsHomeView } from './DrillsHomeView';
 import { PercentageDrill } from './PercentageDrill';
 import { BrakeAccelDrill } from './BrakeAccelDrill';
 import { FullComboVerticalDrill } from './FullComboVerticalDrill';
+import { MotekGraphicDrill } from './MotekGraphicDrill';
 import { DrillDebugPanel } from './DrillDebugPanel';
 import { useMappedGamepads } from '../../hooks/useMappedGamepads';
 import { loadMappingConfig } from '../../services/deviceMappingService';
@@ -75,6 +76,19 @@ export function PedalWheelDrills() {
         )}
         {selectedDrill === DRILL_TYPES.BRAKE_ACCEL && (
           <BrakeAccelDrill
+            acceleratorValue={accelerator}
+            brakeValue={brake}
+            wheelValue={wheel}
+            shiftUp={shiftUp}
+            shiftDown={shiftDown}
+            onBack={handleDrillBack}
+            initialDrillSong={initial.drillSong}
+            initialAudioEnabled={initial.audioEnabled}
+            initialBlindMode={initial.blindMode}
+          />
+        )}
+        {selectedDrill === DRILL_TYPES.COMBINED_VERTICAL_MOTEK_GRAPHIC && (
+          <MotekGraphicDrill
             acceleratorValue={accelerator}
             brakeValue={brake}
             wheelValue={wheel}

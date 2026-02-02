@@ -70,7 +70,21 @@ export function usePercentageDrill({ targetPercent, tolerance = 2, currentValue,
     return Math.max(0, 100 - (diff / maxDiff) * 100);
   }, [targetPercent, tolerance]);
 
-  // Mettre à jour les statistiques
+  // Timer : faire défiler le temps toutes les 100ms
+  useEffect(() => {
+    if (!isActive) return;
+    if (!startTimeRef.current) startTimeRef.current = Date.now();
+
+    const tick = () => {
+      if (!startTimeRef.current) return;
+      setTotalTime((Date.now() - startTimeRef.current) / 1000);
+    };
+    tick();
+    const interval = setInterval(tick, 100);
+    return () => clearInterval(interval);
+  }, [isActive]);
+
+  // Mettre à jour les statistiques (zone, précision, score)
   useEffect(() => {
     if (!isActive) {
       startTimeRef.current = null;
@@ -94,9 +108,6 @@ export function usePercentageDrill({ targetPercent, tolerance = 2, currentValue,
     
     setZoneStatus(currentStatus);
     setAccuracy(currentAccuracy);
-    
-    // Mettre à jour le temps total
-    setTotalTime((now - startTimeRef.current) / 1000);
     
     // Si dans la zone cible, augmenter le score et le temps dans la zone
     if (currentStatus === ZONE_STATUS.IN_TARGET) {

@@ -44,10 +44,14 @@ describe('motekFileSource.load', () => {
     expect(result.targets[0]).toMatchObject({ type: 'brake', time: 2 });
   });
 
-  it('rejette un .ldx sans Marker (étapes vides)', async () => {
+  it('accepte .ldx sans Marker → fallback random (fichiers sample type Barcelona)', async () => {
     const xml = `<?xml version="1.0"?><LDXFile><Layers><Layer><MarkerBlock><MarkerGroup></MarkerGroup></MarkerBlock></Layer></Layers></LDXFile>`;
-    const file = { name: 'empty.ldx', text: () => Promise.resolve(xml) };
-    await expect(motekFileSource.load(file)).rejects.toThrow(/Aucune étape détectée/);
+    const file = { name: 'Barcelona-bmw_m4_gt3-3-2024.06.12-18.40.53.ldx', text: () => Promise.resolve(xml) };
+    const result = await motekFileSource.load(file);
+    expect(result.type).toBe('random');
+    expect(result.mapName).toBe('Barcelona');
+    expect(result.name).toContain('Barcelona');
+    expect(result.duration).toBe(102);
   });
 
   it('rejette un fichier non .ld/.ldx', async () => {

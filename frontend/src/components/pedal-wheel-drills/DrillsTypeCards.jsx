@@ -12,7 +12,8 @@ const DRILL_OPTIONS = [
   { type: DRILL_TYPES.BRAKE, label: 'Frein', subtitle: 'Contrôle en pourcentage unique', available: true },
   { type: DRILL_TYPES.BRAKE_ACCEL, label: 'Accélérateur + Frein', subtitle: 'Pistes de frein et d\'accélération', available: true },
   { type: DRILL_TYPES.COMBINED_VERTICAL, label: 'Drill Complet', subtitle: 'Frein, accélérateur, volant combinés', available: true, tag: 'En construction' },
-  { type: DRILL_TYPES.COMBINED_VERTICAL_MOTEK, label: 'Drill Complet Motek', subtitle: 'Drill complet à partir d\'un fichier Motek (.ld/.ldx)', available: true, dataTestId: 'drill-card-motek' }
+  { type: DRILL_TYPES.COMBINED_VERTICAL_MOTEK, label: 'Drill Complet Motek', subtitle: 'Drill complet à partir d\'un fichier Motek (.ld/.ldx)', available: true, tag: 'En construction', dataTestId: 'drill-card-motek' },
+  { type: DRILL_TYPES.COMBINED_VERTICAL_MOTEK_GRAPHIC, label: 'Drill Complet Motek graphique', subtitle: 'Lignes au lieu de boîtes — plus facile à comprendre', available: true, tag: 'En construction', dataTestId: 'drill-card-motek-graphic' }
 ];
 
 /** Pédale + jauge 50 % — dégradés, style carte sombre/orange */
@@ -124,6 +125,7 @@ function CardIcon({ type, selected }) {
       );
     case DRILL_TYPES.COMBINED_VERTICAL:
     case DRILL_TYPES.COMBINED_VERTICAL_MOTEK:
+    case DRILL_TYPES.COMBINED_VERTICAL_MOTEK_GRAPHIC:
       return (
         <span className={glowClass} style={{ color: 'rgba(255,255,255,0.9)' }}>
           <IconFullCombo />
@@ -134,29 +136,59 @@ function CardIcon({ type, selected }) {
   }
 }
 
+const MAIN_OPTIONS = DRILL_OPTIONS.filter((o) => !o.tag);
+const CONSTRUCTION_OPTIONS = DRILL_OPTIONS.filter((o) => o.tag);
+
+function DrillCard({ option, selectedType, onSelectType, compact }) {
+  const selected = selectedType === option.type;
+  return (
+    <button
+      type="button"
+      className={`drills-type-card ${compact ? 'drills-type-card-compact' : ''} ${selected ? 'drills-type-card-selected' : ''} ${!option.available ? 'drills-type-card-disabled' : ''}`}
+      onClick={() => option.available && onSelectType(option.type)}
+      disabled={!option.available}
+      title={option.subtitle}
+      data-testid={option.dataTestId}
+    >
+      {option.tag && !compact && (
+        <span className="drills-type-card-tag">{option.tag}</span>
+      )}
+      <div className={compact ? 'drills-type-card-icon-wrap-compact' : 'drills-type-card-icon-wrap'}>
+        <CardIcon type={option.type} selected={selected} />
+      </div>
+      <div className="drills-type-card-label">{option.label}</div>
+      {!compact && <div className="drills-type-card-subtitle">{option.subtitle}</div>}
+    </button>
+  );
+}
+
 export function DrillsTypeCards({ selectedType, onSelectType }) {
   return (
-    <div className="drills-type-cards">
-      {DRILL_OPTIONS.map((option) => (
-        <button
-          key={option.type}
-          type="button"
-          className={`drills-type-card ${selectedType === option.type ? 'drills-type-card-selected' : ''} ${!option.available ? 'drills-type-card-disabled' : ''}`}
-          onClick={() => option.available && onSelectType(option.type)}
-          disabled={!option.available}
-          title={option.subtitle}
-          data-testid={option.dataTestId}
-        >
-          {option.tag && (
-            <span className="drills-type-card-tag">{option.tag}</span>
-          )}
-          <div className="drills-type-card-icon-wrap">
-            <CardIcon type={option.type} selected={selectedType === option.type} />
-          </div>
-          <div className="drills-type-card-label">{option.label}</div>
-          <div className="drills-type-card-subtitle">{option.subtitle}</div>
-        </button>
-      ))}
+    <div className="drills-type-cards-wrapper">
+      <div className="drills-type-cards">
+        {MAIN_OPTIONS.map((option) => (
+          <DrillCard
+            key={option.type}
+            option={option}
+            selectedType={selectedType}
+            onSelectType={onSelectType}
+            compact={false}
+          />
+        ))}
+        {/* Bloc compact "En construction" : icône à gauche, nom à droite, 3 boutons empilés */}
+        <div className="drills-type-cards-construction">
+          <span className="drills-type-card-tag drills-type-card-tag-block">En construction</span>
+          {CONSTRUCTION_OPTIONS.map((option) => (
+            <DrillCard
+              key={option.type}
+              option={option}
+              selectedType={selectedType}
+              onSelectType={onSelectType}
+              compact
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

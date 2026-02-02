@@ -1,10 +1,14 @@
 /* Thème des cartes : même style que le mockup (fond sombre, glow orange) */
+.drills-type-cards-wrapper {
+  margin-bottom: 1.5rem;
+}
+
 .drills-type-cards {
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
+  align-items: stretch;
   gap: 1rem;
-  margin-bottom: 1.5rem;
 }
 
 .drills-type-card {
@@ -104,28 +108,85 @@
   line-height: 1.3;
 }
 
+/* Bloc "En construction" : 3 boutons compacts empilés (icône à gauche, nom à droite) */
+.drills-type-cards-construction {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+  flex: 1 1 0;
+  max-width: 240px;
+}
+
+.drills-type-card-tag-block {
+  position: static;
+  align-self: flex-start;
+  margin-bottom: 0.25rem;
+}
+
+.drills-type-card-compact {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+}
+
+.drills-type-card-compact .drills-type-card-label {
+  flex: 1;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drills-type-card-icon-wrap-compact {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 8px;
+}
+
+.drills-type-card-compact .drills-type-card-svg {
+  width: 28px;
+  height: 28px;
+}
+
 @media (max-width: 900px) {
   .drills-type-cards {
     flex-wrap: wrap;
   }
 
-  .drills-type-card {
+  .drills-type-card:not(.drills-type-card-compact) {
     flex: 0 1 auto;
     min-width: 140px;
     max-width: 200px;
+  }
+
+  .drills-type-cards-construction {
+    flex: 1 1 100%;
+    max-width: none;
   }
 }
 
 @media (max-width: 768px) {
   .drills-type-cards {
     gap: 1rem;
-    margin-bottom: 1.5rem;
   }
 
-  .drills-type-card {
+  .drills-type-card:not(.drills-type-card-compact) {
     min-width: 150px;
     max-width: 200px;
     padding: 0.6rem 0.75rem 1rem;
+  }
+
+  .drills-type-card-compact {
+    padding: 0.35rem 0.5rem;
+  }
+
+  .drills-type-card-compact .drills-type-card-label {
+    font-size: 0.78rem;
   }
 
   .drills-type-card-icon-wrap {

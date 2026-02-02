@@ -11,7 +11,8 @@ export const DRILL_TYPES = {
   BRAKE: 'brake',
   BRAKE_ACCEL: 'brakeaccel',
   COMBINED_VERTICAL: 'combined_vertical',
-  COMBINED_VERTICAL_MOTEK: 'combined_vertical_motek'
+  COMBINED_VERTICAL_MOTEK: 'combined_vertical_motek',
+  COMBINED_VERTICAL_MOTEK_GRAPHIC: 'combined_vertical_motek_graphic'
 };
 
 const DRILL_OPTIONS = [

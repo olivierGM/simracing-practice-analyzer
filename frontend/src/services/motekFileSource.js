@@ -1,51 +1,89 @@
 /**
  * Connecteur Motek (.ld / .ldx) vers ExerciseDefinition
  *
- * .ldx = XML (metadata, beacons, markers)
- * .ld = binaire (télémétrie) — non supporté pour l'instant
+ * Utilise fast-xml-parser pour un parsing robuste du .ldx (XML).
+ * Supporte :
+ * - Markers avec Type, Time, Percent, Angle, Duration (notre format étendu)
+ * - Beacons MoTec (Marker avec Time en microsecondes)
+ * - Details (Total Laps, Fastest Time) si présents
+ *
+ * .ld = binaire (télémétrie) — non supporté (requiert ldparser/motec-parser côté serveur)
  */
+
+import { XMLParser } from 'fast-xml-parser';
+
+const xmlParser = new XMLParser({
+  ignoreAttributes: false,
+  attributeNamePrefix: ''
+});
 
 /**
  * Parse le contenu XML d'un fichier .ldx
  * Exporté pour les tests unitaires
  * @param {string} text
  * @param {string} fileName
- * @returns {{ name: string, mapName: string, targets: Array }}
+ * @returns {{ name: string, mapName: string, targets: Array, metadata?: object }}
  */
 export function parseLdxXml(text, fileName) {
   const mapName = extractMapNameFromFileName(fileName);
   const name = fileName.replace(/\.ldx$/i, '');
 
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(text, 'text/xml');
-  const parseError = doc.querySelector('parsererror');
-  if (parseError) {
+  let parsed;
+  try {
+    parsed = xmlParser.parse(text);
+  } catch (e) {
     throw new Error('Format XML invalide');
   }
 
   const targets = [];
-  const markerGroups = doc.querySelectorAll('MarkerGroup');
-  markerGroups.forEach((group) => {
-    const markers = group.querySelectorAll('Marker');
-    markers.forEach((marker) => {
-      const time = parseFloat(marker.getAttribute('Time') || marker.getAttribute('time') || 0);
-      const typeAttr = marker.getAttribute('Type') || marker.getAttribute('type') || 'brake';
-      const percent = parseFloat(marker.getAttribute('Percent') || marker.getAttribute('percent') || 50);
-      const angle = parseFloat(marker.getAttribute('Angle') || marker.getAttribute('angle') || 0);
-      const duration = parseFloat(marker.getAttribute('Duration') || marker.getAttribute('duration') || 1);
+  const metadata = {};
 
-      const type = String(typeAttr).toLowerCase();
-      if (type === 'brake' || type === 'accel') {
-        targets.push({ type, time, percent, duration });
-      } else if (type === 'wheel') {
-        targets.push({ type: 'wheel', time, angle, duration });
-      } else if (type === 'shift_up' || type === 'shift_down') {
-        targets.push({ type, time, duration: 0 });
+  const ldx = parsed?.LDXFile;
+  if (!ldx) throw new Error('Format LDX invalide (pas de LDXFile)');
+
+  const layers = [].concat(ldx.Layers?.Layer ?? []);
+  for (const layer of layers) {
+    const markerBlock = layer.MarkerBlock;
+    if (!markerBlock) continue;
+
+    const groups = [].concat(markerBlock.MarkerGroup ?? []);
+    for (const group of groups) {
+      const markers = [].concat(group.Marker ?? []);
+      for (const m of markers) {
+        const att = typeof m === 'object' && m !== null ? m : {};
+        const timeRaw = att.Time ?? att.time ?? 0;
+        const timeSec = timeRaw > 1e5 ? timeRaw / 1e6 : parseFloat(timeRaw);
+        const typeAttr = (att.Type ?? att.type ?? 'brake').toString().toLowerCase();
+        const percent = parseFloat(att.Percent ?? att.percent ?? 50);
+        const angle = parseFloat(att.Angle ?? att.angle ?? 0);
+        const duration = parseFloat(att.Duration ?? att.duration ?? 1);
+
+        if (typeAttr === 'brake' || typeAttr === 'accel') {
+          targets.push({ type: typeAttr, time: timeSec, percent, duration });
+        } else if (typeAttr === 'wheel') {
+          targets.push({ type: 'wheel', time: timeSec, angle, duration });
+        } else if (typeAttr === 'shift_up' || typeAttr === 'shift_down') {
+          targets.push({ type: typeAttr, time: timeSec, duration: 0 });
+        }
       }
-    });
-  });
+    }
+  }
 
-  return { name, mapName, targets };
+  const allLayers = [].concat(ldx.Layers?.Layer ?? []);
+  let details = [];
+  for (const layer of allLayers) {
+    details = details.concat(layer.Details?.String ?? []);
+  }
+  for (const d of details) {
+    const att = typeof d === 'object' && d !== null ? d : {};
+    const id = att.Id ?? att.id;
+    const val = att.Value ?? att.value;
+    if (id === 'Total Laps') metadata.totalLaps = parseInt(val, 10);
+    if (id === 'Fastest Time') metadata.fastestTime = String(val ?? '');
+    if (id === 'Fastest Lap') metadata.fastestLap = parseInt(val, 10);
+  }
+
+  return { name, mapName, targets, metadata };
 }
 
 function extractMapNameFromFileName(fileName) {
@@ -103,17 +141,38 @@ export const motekFileSource = {
     const text = await getText();
     const result = parseLdxXml(text, file.name);
 
+    const parseFastestTimeToSeconds = (str) => {
+      if (!str || typeof str !== 'string') return null;
+      const parts = str.trim().split(':');
+      if (parts.length === 2) {
+        const [min, secStr] = parts;
+        const [sec, ms = '0'] = (secStr || '0').replace(',', '.').split('.');
+        return (parseInt(min, 10) * 60) + parseInt(sec, 10) + (parseInt(ms, 10) / Math.pow(10, ms.length));
+      }
+      if (parts.length === 3) {
+        return (parseInt(parts[0], 10) * 3600) + (parseInt(parts[1], 10) * 60) + parseFloat(parts[2] || 0);
+      }
+      return null;
+    };
+
     if (result.targets.length === 0) {
-      throw new Error(
-        `Aucune étape détectée dans le fichier. Le fichier .ldx doit contenir des marqueurs (Marker) dans les MarkerGroup.`
-      );
+      const fromMeta = result.metadata?.fastestTime ? parseFastestTimeToSeconds(result.metadata.fastestTime) : null;
+      const lapDuration = fromMeta ?? (result.mapName === 'Barcelona' ? 102 : 90);
+      return {
+        type: 'random',
+        difficulty: 'medium',
+        duration: lapDuration,
+        name: result.name,
+        mapName: result.mapName
+      };
     }
 
+    const computedDuration = Math.max(...result.targets.map((t) => t.time + (t.duration || 1)));
     return {
       targets: result.targets,
       name: result.name,
       mapName: result.mapName,
-      duration: Math.max(...result.targets.map((t) => t.time + (t.duration || 1)))
+      duration: computedDuration
     };
   }
 };

@@ -1,0 +1,101 @@
+.motek-graphic-gameplay {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.motek-graphic-rhythm-feedback {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.25rem 0;
+  min-height: 1.5rem;
+}
+
+.motek-graphic-rhythm-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.motek-graphic-rhythm-text.ok {
+  color: #4caf50;
+}
+
+.motek-graphic-rhythm-text.off {
+  color: #ff9800;
+}
+
+.motek-graphic-time {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.motek-graphic-charts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.motek-graphic-chart-shift {
+  min-height: 40px;
+  flex: 0.6;
+}
+
+.motek-graphic-shift-marker.hit {
+  stroke: #4caf50;
+  opacity: 0.8;
+}
+
+.motek-graphic-shift-marker.missed {
+  stroke: rgba(244, 67, 54, 0.6);
+  opacity: 0.6;
+}
+
+.motek-graphic-chart {
+  flex: 1;
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.motek-graphic-chart-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.15rem 0.25rem;
+  flex-shrink: 0;
+}
+
+.motek-graphic-svg {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.motek-graphic-target {
+  vector-effect: non-scaling-stroke;
+}
+
+.motek-graphic-now {
+  vector-effect: non-scaling-stroke;
+}
+
+.motek-graphic-input {
+  vector-effect: non-scaling-stroke;
+}
+
+.motek-graphic-legend {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0.25rem 0 0;
+  flex-shrink: 0;
+}

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<LDXFile Locale="English_Australia.1252" DefaultLocale="C" Version="1.6">
+  <Layers>
+    <Layer LayerName="">
+      <MarkerBlock>
+        <MarkerGroup Name="Beacons">
+          <!-- Barcelona M4 GT3 - Lap ~1:42 (102s) - Fri3d0lf - Timings serrés (trail braking réaliste) -->
+          <!-- Départ : gaz au tapis -->
+          <Marker Time="0" Type="accel" Percent="100" Duration="2"/>
+          <!-- T1 - Trail braking : frein + volant quasi simultanés -->
+          <Marker Time="2" Type="brake" Percent="88" Duration="0.6"/>
+          <Marker Time="2.2" Type="wheel" Angle="-85" Duration="0.8"/>
+          <Marker Time="2.8" Type="accel" Percent="45" Duration="0.8"/>
+          <Marker Time="3.8" Type="shift_up" Duration="0"/>
+          <!-- T2 -->
+          <Marker Time="9" Type="brake" Percent="78" Duration="0.5"/>
+          <Marker Time="9.2" Type="wheel" Angle="55" Duration="0.7"/>
+          <Marker Time="10" Type="accel" Percent="55" Duration="0.6"/>
+          <!-- T3 -->
+          <Marker Time="14.5" Type="brake" Percent="92" Duration="0.7"/>
+          <Marker Time="14.8" Type="wheel" Angle="-115" Duration="0.9"/>
+          <Marker Time="15.8" Type="accel" Percent="38" Duration="0.8"/>
+          <Marker Time="17" Type="shift_up" Duration="0"/>
+          <!-- T4 -->
+          <Marker Time="22" Type="brake" Percent="72" Duration="0.5"/>
+          <Marker Time="22.2" Type="wheel" Angle="75" Duration="0.7"/>
+          <Marker Time="23" Type="accel" Percent="52" Duration="0.6"/>
+          <!-- T5 -->
+          <Marker Time="27.5" Type="brake" Percent="90" Duration="0.6"/>
+          <Marker Time="27.8" Type="wheel" Angle="-95" Duration="0.8"/>
+          <Marker Time="28.6" Type="accel" Percent="48" Duration="0.7"/>
+          <Marker Time="29.5" Type="shift_up" Duration="0"/>
+          <!-- T6 -->
+          <Marker Time="34" Type="brake" Percent="74" Duration="0.5"/>
+          <Marker Time="34.2" Type="wheel" Angle="68" Duration="0.7"/>
+          <Marker Time="35" Type="accel" Percent="55" Duration="0.6"/>
+          <!-- T7 -->
+          <Marker Time="40" Type="brake" Percent="84" Duration="0.6"/>
+          <Marker Time="40.3" Type="wheel" Angle="-80" Duration="0.8"/>
+          <Marker Time="41.2" Type="accel" Percent="50" Duration="0.7"/>
+          <!-- T8 -->
+          <Marker Time="46" Type="brake" Percent="80" Duration="0.5"/>
+          <Marker Time="46.2" Type="wheel" Angle="90" Duration="0.7"/>
+          <Marker Time="47" Type="accel" Percent="58" Duration="0.8"/>
+          <Marker Time="48" Type="shift_up" Duration="0"/>
+          <!-- Ligne droite finale -->
+          <Marker Time="52" Type="accel" Percent="100" Duration="50"/>
+        </MarkerGroup>
+      </MarkerBlock>
+    </Layer>
+  </Layers>
+</LDXFile>

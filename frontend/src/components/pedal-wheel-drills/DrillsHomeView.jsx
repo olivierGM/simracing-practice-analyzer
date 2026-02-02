@@ -37,7 +37,8 @@ function drillTypeToServiceParam(drillType) {
     [DRILL_TYPES.BRAKE]: 'percentage',
     [DRILL_TYPES.BRAKE_ACCEL]: 'brakeaccel',
     [DRILL_TYPES.COMBINED_VERTICAL]: 'fullcombo',
-    [DRILL_TYPES.COMBINED_VERTICAL_MOTEK]: 'fullcombo'
+    [DRILL_TYPES.COMBINED_VERTICAL_MOTEK]: 'fullcombo',
+    [DRILL_TYPES.COMBINED_VERTICAL_MOTEK_GRAPHIC]: 'fullcombo'
   };
   return map[drillType] || 'percentage';
 }
@@ -73,8 +74,8 @@ export function DrillsHomeView({
   useEffect(() => {
     let cancelled = false;
 
-    // Drill complet Motek : pas de liste JSON, source fichier
-    if (selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK) {
+    // Drill complet Motek (et graphique) : pas de liste JSON, source fichier
+    if (selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK || selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK_GRAPHIC) {
       setLoading(false);
       setAllDrillSongs([]);
       setDrillMode('motek');
@@ -145,9 +146,25 @@ export function DrillsHomeView({
     e.target.value = '';
   };
 
+  const handleLoadBarcelonaSample = async () => {
+    setMotekError(null);
+    setMotekExercise(null);
+    try {
+      const res = await fetch('/samples/motek/Barcelona-bmw_m4_gt3.ldx');
+      if (!res.ok) throw new Error('Fichier sample non trouvé');
+      const text = await res.text();
+      const blob = new Blob([text], { type: 'text/xml' });
+      const file = new File([blob], 'Barcelona-bmw_m4_gt3.ldx', { type: 'text/xml' });
+      const def = await motekFileSource.load(file);
+      setMotekExercise(def);
+    } catch (err) {
+      setMotekError(err.message || 'Erreur lors du chargement du sample');
+    }
+  };
+
   const handleStart = () => {
     let drillSong;
-    if (selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK || drillMode === 'motek') {
+    if (selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK || selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK_GRAPHIC || drillMode === 'motek') {
       drillSong = motekExercise;
     } else if (drillMode === 'custom' && selectedSong) {
       drillSong = selectedSong;
@@ -168,7 +185,7 @@ export function DrillsHomeView({
     });
   };
 
-  const isMotekType = selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK;
+  const isMotekType = selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK || selectedType === DRILL_TYPES.COMBINED_VERTICAL_MOTEK_GRAPHIC;
   const canStart = isMotekType
     ? drillMode === 'motek' && !!motekExercise
     : (drillMode === 'random' && selectedRandomLevel) || (drillMode === 'custom' && selectedSong);
@@ -200,6 +217,16 @@ export function DrillsHomeView({
               )}
               {!loading && isMotekType && (
                 <div className="drills-home-motek-upload" data-testid="drill-motek-upload">
+                  <div className="drills-home-motek-sample-row">
+                    <button
+                      type="button"
+                      className="drills-home-motek-sample-btn"
+                      onClick={handleLoadBarcelonaSample}
+                      data-testid="drill-motek-sample-barcelona"
+                    >
+                      🏁 Test Barcelona M4 Fri3d0lf
+                    </button>
+                  </div>
                   <label className="drills-home-motek-upload-label">
                     <input ref={motekInputRef} type="file" accept=".ld,.ldx" onChange={handleMotekFileChange} className="drills-home-motek-input" data-testid="drill-motek-file-input" />
                     <span className="drills-home-motek-upload-btn">Choisir un fichier .ld ou .ldx</span>
@@ -209,7 +236,11 @@ export function DrillsHomeView({
                     <div className="drills-home-motek-preview" data-testid="drill-motek-preview">
                       <div><strong>{motekExercise.name || "Sans nom"}</strong></div>
                       {motekExercise.mapName && <div className="drills-home-motek-preview-map">Map : {motekExercise.mapName}</div>}
-                      <div className="drills-home-motek-preview-steps">{motekExercise.targets?.length || 0} étape{(motekExercise.targets?.length || 0) !== 1 ? "s" : ""} détectée{(motekExercise.targets?.length || 0) !== 1 ? "s" : ""}</div>
+                      <div className="drills-home-motek-preview-steps">
+                        {motekExercise.type === "random"
+                          ? `Mode aléatoire (${motekExercise.duration || 90}s) — fichier sans marqueurs`
+                          : `${motekExercise.targets?.length || 0} étape${(motekExercise.targets?.length || 0) !== 1 ? "s" : ""} détectée${(motekExercise.targets?.length || 0) !== 1 ? "s" : ""} · ${motekExercise.duration || 0}s`}
+                      </div>
                     </div>
                   )}
                 </div>

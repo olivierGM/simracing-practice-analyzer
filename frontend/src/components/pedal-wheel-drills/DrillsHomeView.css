@@ -71,6 +71,28 @@
   font-size: 0.95rem;
 }
 
+.drills-home-motek-sample-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.drills-home-motek-sample-btn {
+  padding: 0.5rem 1rem;
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  border-radius: 8px;
+  color: #4caf50;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.drills-home-motek-sample-btn:hover {
+  background: rgba(76, 175, 80, 0.3);
+  border-color: #4caf50;
+}
+
 .drills-home-motek-upload {
   display: flex;
   flex-direction: column;
