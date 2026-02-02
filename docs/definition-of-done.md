@@ -1,5 +1,7 @@
 # 📋 Definition of Done - Sim Racing Analyzer
 
+**Référence :** La règle appliquée automatiquement par l’IA à chaque modification est dans `.cursor/rules/unified-development-workflow.mdc`. Workflow détaillé : `docs/WORKFLOW-DETAILLE.md`. Cette DoD sert de checklist complète (humaine ou sur rappel explicite).
+
 ## ✅ Checklist de Validation pour chaque Fonctionnalité
 
 ### 🔧 **Code & Technique**
