@@ -30,8 +30,10 @@ export function Header({ metadata, trackName, isDrillsPage }) {
             onClick={() => navigate('/')}
             style={{ cursor: 'pointer' }}
             title="Retour à l'accueil"
+            className="header-title-with-logo"
           >
-            🏁 Analyseur de Temps EGT{isDrillsPage ? ' - Training Drills' : ''}
+            <img src="/android-chrome-512x512.png" alt="" className="header-logo" aria-hidden />
+            Analyseur de Temps EGT{isDrillsPage ? ' - Training Drills' : ''}
           </h1>
           {!isDrillsPage && <p>Analysez les performances par classe et pilote</p>}
         </div>

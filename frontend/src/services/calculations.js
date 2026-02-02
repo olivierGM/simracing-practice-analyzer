@@ -120,10 +120,10 @@ export function calculatePilotSegmentStats(driver) {
   let lapsWithSplits = 0;
   let lapsWithoutSplits = 0;
   
-  // IMPORTANT: Pour le temps potentiel, on prend les meilleurs segments de TOUS les tours
-  // (valides ET invalides), car un tour invalide peut avoir un meilleur segment qu'un tour valide
+  // Pour le temps potentiel, on ne prend que les meilleurs segments des tours VALIDES
+  // (exclure les segments des tours invalides, ex. passage dans une chicane)
   driver.lapTimes.forEach(lap => {
-    if (lap.splits && lap.splits.length >= 3) {
+    if (lap.isValid && lap.splits && lap.splits.length >= 3) {
       lapsWithSplits++;
       const s1 = lap.splits[0];
       const s2 = lap.splits[1];

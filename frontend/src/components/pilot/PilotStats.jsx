@@ -10,7 +10,7 @@ import { getCarFullName } from '../../services/carManufacturerService';
 import './PilotStats.css';
 
 export function PilotStats({ driver, allDrivers = [] }) {
-  // Calculer le temps potentiel (somme des meilleurs segments de TOUS les tours)
+  // Calculer le temps potentiel (somme des meilleurs segments des tours valides uniquement)
   let potentialTime = driver.bestValidTime || 0;
   const pilotSegStats = calculatePilotSegmentStats(driver);
   if (pilotSegStats && 

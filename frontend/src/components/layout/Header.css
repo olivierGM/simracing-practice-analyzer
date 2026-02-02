@@ -24,6 +24,18 @@ header, .app-header {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   color: #ffffff; /* Blanc sur gradient violet */
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-title-with-logo .header-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
+  border-radius: 4px;
+  margin: 4px;
 }
 
 .header-titles h1:hover {
@@ -79,6 +91,12 @@ header, .app-header {
   .header-content {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .header-title-with-logo .header-logo {
+    width: 28px;
+    height: 28px;
+    padding: 2px;
   }
   
   .header-titles h1 {
