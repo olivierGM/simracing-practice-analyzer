@@ -1,7 +1,8 @@
 /**
  * Service Analytics
  * 
- * Wrapper pour Firebase Analytics avec tracking des événements de l'application
+ * Wrapper pour Firebase Analytics avec tracking des événements de l'application.
+ * En local (localhost, 127.0.0.1) : aucun envoi vers Google Analytics.
  */
 
 import { getAnalytics, logEvent } from 'firebase/analytics';
@@ -9,13 +10,22 @@ import { app } from './firebase';
 
 let analytics = null;
 
-// Initialiser Analytics une fois que l'app est prête
+const LOCAL_HOSTNAMES = ['localhost', '127.0.0.1', ''];
+
+/** True seulement en prod déployée (build Vite) et pas sur une machine locale. */
+function isAnalyticsEnabled() {
+  if (typeof window === 'undefined') return false;
+  const hostname = window.location.hostname || '';
+  return import.meta.env.PROD && !LOCAL_HOSTNAMES.includes(hostname);
+}
+
+// Initialiser Analytics une fois que l'app est prête (uniquement en prod)
 function initAnalytics() {
   if (typeof window === 'undefined') return null; // SSR check
-  
+  if (!isAnalyticsEnabled()) return null;
+
   if (!analytics) {
     try {
-      // Utiliser l'app Firebase existante
       analytics = getAnalytics(app);
       console.log('✅ Firebase Analytics initialisé');
     } catch (error) {
@@ -32,7 +42,8 @@ function initAnalytics() {
  */
 export function trackEvent(eventName, params = {}) {
   if (typeof window === 'undefined') return; // SSR check
-  
+  if (!isAnalyticsEnabled()) return; // Ne rien envoyer en local
+
   const analyticsInstance = initAnalytics();
   if (analyticsInstance) {
     try {
@@ -119,7 +130,7 @@ export function trackACCServer(action, serverName = null) {
   });
 }
 
-// Initialiser au chargement du module
-if (typeof window !== 'undefined') {
+// Initialiser au chargement du module (uniquement en prod, pas en local)
+if (typeof window !== 'undefined' && isAnalyticsEnabled()) {
   initAnalytics();
 }
