@@ -3,7 +3,7 @@
  * 
  * Menu de sélection des types de drills disponibles
  */
-
+/* eslint-disable react-refresh/only-export-components */
 import './DrillSelector.css';
 
 export const DRILL_TYPES = {

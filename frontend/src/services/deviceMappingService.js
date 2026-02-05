@@ -398,8 +398,7 @@ export function applyAxisMapping(deviceIdOrIndex, axisIndex, rawValue, config) {
   
   // Normaliser selon le type
   if (mapping.type === AXIS_TYPES.WHEEL) {
-    // Volant : garder [-1, 1]
-    value = value;
+    // Volant : garder [-1, 1] (value déjà correct)
   } else {
     // Pédales : normaliser vers [0, 1]
     value = (value + 1) / 2;
@@ -634,7 +633,7 @@ export function getMappedValue(axisType, gamepads, config) {
             
             // Normaliser selon le type
             if (mapping.type === AXIS_TYPES.WHEEL) {
-              value = value;  // Garder [-1, 1]
+              // Garder [-1, 1]
             } else {
               value = (value + 1) / 2;  // Normaliser vers [0, 1]
             }

@@ -7,12 +7,12 @@
 import { TABLE_COLUMNS } from '../../utils/constants';
 import './DriversTableHeader.css';
 
-export function DriversTableHeader({ sortColumn, sortDirection, onSort, hasWetTimes = false }) {
+export function DriversTableHeader({ sortColumn: _sortColumn, sortDirection: _sortDirection, onSort, hasWetTimes = false }) {
   /**
    * Retourne l'icône de tri pour une colonne (COPIE EXACTE de la prod)
    * Prod affiche toujours ↕ et change la direction au click
    */
-  const getSortIcon = (column) => {
+  const _getSortIcon = (column) => {
     if (!column.sortable) return '';
     return ' ↕';
   };

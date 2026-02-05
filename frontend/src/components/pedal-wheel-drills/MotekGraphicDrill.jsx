@@ -26,10 +26,10 @@ export function MotekGraphicDrill({
   initialAudioEnabled = false,
   initialBlindMode = false
 }) {
-  const [tolerance, setTolerance] = useState(2);
-  const [drillSong, setDrillSong] = useState(initialDrillSong);
-  const [audioEnabled, setAudioEnabled] = useState(initialAudioEnabled);
-  const [blindMode, setBlindMode] = useState(initialBlindMode);
+  const [tolerance] = useState(2);
+  const [drillSong] = useState(initialDrillSong);
+  const [audioEnabled, _setAudioEnabled] = useState(initialAudioEnabled);
+  const [_blindMode, _setBlindMode] = useState(initialBlindMode);
   const [isActive, setIsActive] = useState(!!initialDrillSong);
   const [isPaused, setIsPaused] = useState(false);
   const [showResults, setShowResults] = useState(false);
@@ -37,14 +37,14 @@ export function MotekGraphicDrill({
     PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0
   });
 
-  const { score, timeInZone, totalTime, zoneStatus, accuracy, reset } = usePercentageDrill({
+  const { score, totalTime, zoneStatus, accuracy, reset } = usePercentageDrill({
     targetPercent: 60,
     tolerance,
     currentValue: acceleratorValue + brakeValue,
     isActive: isActive && !isPaused
   });
 
-  const handleStart = useCallback(() => {
+  const _handleStart = useCallback(() => {
     setShowResults(false);
     reset();
     setIsActive(true);

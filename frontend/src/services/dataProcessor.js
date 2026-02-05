@@ -210,10 +210,10 @@ export function processSessionData(sessions) {
 function calculateGlobalSegmentStats(result) {
     const segmentStats = {};
     
-    // Parcourir tous les pilotes
+    // Parcourir tous les pilotes — uniquement les tours VALIDES (exclure passage chicane, etc.)
     Object.values(result.byDriver).forEach(driver => {
         driver.lapTimes.forEach(lap => {
-            if (lap.splits && lap.splits.length > 0) {
+            if (lap.isValid && lap.splits && lap.splits.length > 0) {
                 lap.splits.forEach((split, index) => {
                     if (!segmentStats[index]) {
                         segmentStats[index] = {

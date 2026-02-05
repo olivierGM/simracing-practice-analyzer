@@ -41,10 +41,10 @@ export function DDRDualGameplayArea({
     accel: [],
     brake: []
   });
-  const [judgmentCounts, setJudgmentCounts] = useState({ 
+  const [_judgmentCounts, setJudgmentCounts] = useState({ 
     PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 
   });
-  const [renderedTargets, setRenderedTargets] = useState({
+  const [_renderedTargets, setRenderedTargets] = useState({
     accel: [],
     brake: []
   });
@@ -55,7 +55,7 @@ export function DDRDualGameplayArea({
     accelTargets,
     brakeTargets,
     currentTime,
-    isComplete,
+    isComplete: _isComplete,
     markTargetHit,
     markTargetMiss
   } = useDDRDualTargets({

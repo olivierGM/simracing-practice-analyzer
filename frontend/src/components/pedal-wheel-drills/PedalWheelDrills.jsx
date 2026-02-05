@@ -24,8 +24,8 @@ export function PedalWheelDrills() {
   const [initialDrillState, setInitialDrillState] = useState(null); // { drillSong, audioEnabled, blindMode }
 
   const {
-    isSupported,
-    gamepads,
+    isSupported: _isSupported,
+    gamepads: _gamepads,
     wheel,
     accelerator,
     brake,
@@ -53,7 +53,7 @@ export function PedalWheelDrills() {
     );
   const assignedKeys = getAssignedKeys();
   const hasKeyboardAssignments = Object.keys(assignedKeys).length > 0;
-  const hasAssignedDevices = hasGamepadAssignments || hasKeyboardAssignments;
+  const _hasAssignedDevices = hasGamepadAssignments || hasKeyboardAssignments;
 
   if (selectedDrill) {
     const initial = initialDrillState || {};

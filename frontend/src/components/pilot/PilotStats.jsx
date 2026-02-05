@@ -4,8 +4,8 @@
  * Affiche les statistiques principales du pilote (COPIE du modal prod)
  */
 
-import { formatTime, formatDelta } from '../../utils/formatters';
-import { getCategoryName, calculatePilotSegmentStats } from '../../services/calculations';
+import { formatTime } from '../../utils/formatters';
+import { calculatePilotSegmentStats } from '../../services/calculations';
 import { getCarFullName } from '../../services/carManufacturerService';
 import './PilotStats.css';
 

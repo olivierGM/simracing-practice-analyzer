@@ -31,12 +31,12 @@ export function FullComboVerticalDrill({
   initialAudioEnabled = false,
   initialBlindMode = false
 }) {
-  const [tolerance, setTolerance] = useState(2);
-  const [difficulty, setDifficulty] = useState('MEDIUM'); 
-  const [drillSong, setDrillSong] = useState(initialDrillSong);
-  const [audioEnabled, setAudioEnabled] = useState(initialAudioEnabled);
-  const [musicEnabled, setMusicEnabled] = useState(false);
-  const [blindMode, setBlindMode] = useState(initialBlindMode);
+  const [tolerance] = useState(2);
+  const [, _setDifficulty] = useState('MEDIUM');
+  const [drillSong] = useState(initialDrillSong);
+  const [audioEnabled, _setAudioEnabled] = useState(initialAudioEnabled);
+  const [musicEnabled, _setMusicEnabled] = useState(false);
+  const [blindMode, _setBlindMode] = useState(initialBlindMode);
   const [isActive, setIsActive] = useState(!!initialDrillSong);
   const [isPaused, setIsPaused] = useState(false);
   const [showResults, setShowResults] = useState(false);
@@ -47,7 +47,6 @@ export function FullComboVerticalDrill({
   // Hook de drill pour les stats
   const {
     score,
-    timeInZone,
     totalTime,
     zoneStatus,
     accuracy,
@@ -59,8 +58,7 @@ export function FullComboVerticalDrill({
     isActive: isActive && !isPaused
   });
 
-  const handleStart = useCallback(() => {
-    setShowConfig(false);
+  const _handleStart = useCallback(() => {
     setShowResults(false);
     reset();
     setIsActive(true);

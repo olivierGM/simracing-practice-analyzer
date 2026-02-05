@@ -4,7 +4,7 @@
  * Point d'entrée de l'application React avec routing
  */
 
-import { useState, lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/layout/Header';
 import { LoadingSpinner } from './components/common/LoadingSpinner';
@@ -90,8 +90,7 @@ function AppContent() {
 }
 
 function App() {
-  const { data, metadata, sessions, loading, error } = useFirebaseData();
-  const drivers = data?.drivers || [];
+  const { loading, error } = useFirebaseData();
 
   if (loading) {
     return (

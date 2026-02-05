@@ -26,9 +26,9 @@ const DURATION_OPTIONS = [
 export function DDRConfig({ 
   inputType, 
   onInputTypeChange,
-  tolerance,
-  onToleranceChange,
-  drillSong,
+  tolerance: _tolerance,
+  onToleranceChange: _onToleranceChange,
+  drillSong: _drillSong,
   onDrillSongChange,
   onDifficultyChange,
   audioEnabled,
@@ -134,5 +134,6 @@ export function DDRConfig({
   );
 }
 
+/* eslint-disable-next-line react-refresh/only-export-components */
 export { DIFFICULTY_MODES };
 

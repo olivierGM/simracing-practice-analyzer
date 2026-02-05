@@ -77,7 +77,7 @@ export function DriverRow({ driver, position, onClick, hasWetTimes = false }) {
 
   return (
     <tr onClick={onClick}>
-      {visibleCells.map((cell, index) => (
+      {visibleCells.map((cell, _index) => (
         <td 
           key={cell.key} 
           data-value={cell.dataValue !== undefined ? cell.dataValue : undefined}

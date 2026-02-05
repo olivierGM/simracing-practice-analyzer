@@ -33,7 +33,7 @@ export function HomePage({ drivers, sessions = [] }) {
     groupByClass,
     setGroupByClass,
     availableTracks,
-    filteredDrivers,
+    filteredDrivers: _filteredDrivers,
     filteredSessionsBySeason // Sessions déjà filtrées par saison
   } = useFilters(drivers, sessions);
   

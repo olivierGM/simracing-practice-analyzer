@@ -150,7 +150,7 @@ class EnhancedDrillAudioService {
   /**
    * Démarrer la musique de fond (vraies musiques MP3)
    */
-  startMusic(tempo = 'medium') {
+  startMusic(_tempo = 'medium') {
     if (!this.enabled || !this.musicEnabled) return;
     
     this.stopMusic();

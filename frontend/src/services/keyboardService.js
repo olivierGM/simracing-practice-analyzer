@@ -77,7 +77,7 @@ function updateProgressiveValues() {
   // Mettre à jour chaque touche
   for (const [keyCode, keyInfo] of Object.entries(keyValues)) {
     const isPressed = pressedKeys.has(keyCode);
-    const { type, value } = keyInfo;
+    const { type, value: _value } = keyInfo;
 
     if (type === 'wheel') {
       // Volant : retour progressif au centre si pas pressé
@@ -238,7 +238,7 @@ export function getKeyboardValue(functionType) {
   
   // En mode progressif, utiliser directement les valeurs animées
   if (progressiveMode) {
-    for (const [keyCode, keyInfo] of Object.entries(keyValues)) {
+    for (const [_keyCode, keyInfo] of Object.entries(keyValues)) {
       if (keyInfo.type === functionType) {
         if (functionType === 'wheel') {
           // Pour le volant, additionner les valeurs

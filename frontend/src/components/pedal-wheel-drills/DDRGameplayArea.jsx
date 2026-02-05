@@ -39,7 +39,7 @@ export function DDRGameplayArea({
 }) {
   const containerRef = useRef(null);
   const [judgmentResults, setJudgmentResults] = useState([]);
-  const [judgmentCounts, setJudgmentCounts] = useState({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
+  const [_judgmentCounts, setJudgmentCounts] = useState({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
   const [renderedTargets, setRenderedTargets] = useState([]);
   const announcedTargetsRef = useRef(new Set()); // Pour éviter d'annoncer plusieurs fois
   const holdStartByTargetRef = useRef({}); // Pour Story 6 : maintien obligatoire dans le seuil
@@ -48,7 +48,7 @@ export function DDRGameplayArea({
   const {
     targets,
     currentTime,
-    isComplete,
+    isComplete: _isComplete,
     markTargetHit,
     markTargetMiss
   } = useDDRTargets({

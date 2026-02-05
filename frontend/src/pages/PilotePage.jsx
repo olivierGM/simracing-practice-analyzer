@@ -15,7 +15,7 @@ import { getCategoryName, getCategoryClass } from '../services/calculations';
 import { addSeasonToSessions, filterSessionsBySeason } from '../services/seasonService';
 import './PilotePage.css';
 
-export function PilotePage({ drivers, sessions = [] }) {
+export function PilotePage({ drivers: _drivers, sessions = [] }) {
   const { circuitId, pilotId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();

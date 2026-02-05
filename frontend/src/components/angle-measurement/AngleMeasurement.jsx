@@ -18,12 +18,12 @@ const MEASUREMENT_TYPES = {
 };
 
 export function AngleMeasurement() {
-  const [image, setImage] = useState(null);
+  const [, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [measurements, setMeasurements] = useState([]);
   const [currentMode, setCurrentMode] = useState(MEASUREMENT_TYPES.SEGMENT_ANGLE);
   const [currentPoints, setCurrentPoints] = useState([]);
-  const [isDrawing, setIsDrawing] = useState(false);
+  const [, _setIsDrawing] = useState(false);
   const [textSize, setTextSize] = useState(30); // Taille du texte en pixels (defaut: 30)
   const [isDragging, setIsDragging] = useState(false);
   const [dragPoint, setDragPoint] = useState(null); // Point temporaire pendant le drag
@@ -74,8 +74,8 @@ export function AngleMeasurement() {
       ctx.drawImage(img, 0, 0);
       
       // Dessiner toutes les mesures existantes
-      measurements.forEach((measurement, index) => {
-        drawMeasurement(ctx, measurement, index);
+      measurements.forEach((measurement, _index) => {
+        drawMeasurement(ctx, measurement, _index);
       });
       
       // Dessiner la mesure en cours
@@ -87,7 +87,7 @@ export function AngleMeasurement() {
   };
 
   // Dessiner une mesure
-  const drawMeasurement = (ctx, measurement, index) => {
+  const drawMeasurement = (ctx, measurement, _index) => {
     const { type, points, angle } = measurement;
     
     ctx.strokeStyle = '#00ff00';
@@ -103,7 +103,7 @@ export function AngleMeasurement() {
       ctx.stroke();
       
       // Dessiner les points
-      points.forEach((point, i) => {
+      points.forEach((point, _i) => {
         ctx.beginPath();
         ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
         ctx.fill();

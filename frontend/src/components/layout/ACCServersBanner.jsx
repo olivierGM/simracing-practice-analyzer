@@ -36,15 +36,15 @@ export function ACCServersBanner({ trackName }) {
     if (!isMobile || !serversContainerRef.current || !serversListRef.current) return;
 
     const container = serversContainerRef.current;
-    const serversList = serversListRef.current;
+    const _serversList = serversListRef.current;
     let resumeTimeout = null;
-    let touchStartTime = 0;
-    let isTouching = false;
+    let _touchStartTime = 0;
+    let _isTouching = false;
 
     // Détecter le début d'un touch
     const handleTouchStart = () => {
-      isTouching = true;
-      touchStartTime = Date.now();
+      _isTouching = true;
+      _touchStartTime = Date.now();
       setIsDragging(true);
       setAnimationPaused(true);
       
@@ -55,7 +55,7 @@ export function ACCServersBanner({ trackName }) {
     };
 
     const handleTouchEnd = () => {
-      isTouching = false;
+      _isTouching = false;
       
       // Reprendre l'animation après 2 secondes d'inactivité
       resumeTimeout = setTimeout(() => {

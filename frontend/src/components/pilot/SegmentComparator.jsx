@@ -20,7 +20,7 @@ export function SegmentComparator({ driver, allDrivers }) {
     return calculateGlobalSegmentStats(allDrivers);
   }, [allDrivers]);
   const segmentInfoTooltip =
-    "Compare les meilleurs segments du pilote aux références globales et de catégorie. Les écarts positifs indiquent le retard à combler.";
+    "Compare les meilleurs segments du pilote (tours valides uniquement) aux références globales et de catégorie. Les tours invalides (ex. passage chicane) sont exclus. Les écarts positifs indiquent le retard à combler.";
 
   if (!pilotStats || !globalStats) {
     return (
@@ -114,33 +114,33 @@ export function SegmentComparator({ driver, allDrivers }) {
       </div>
 
       <div className="segment-grid">
-        {/* Carte 1: Meilleur Pilote vs Meilleur Global */}
+        {/* Carte 1: Meilleur valide Pilote vs Meilleur valide Global */}
         <div className="segment-card">
-          <h4>📊 Meilleur Pilote vs Meilleur Global</h4>
+          <h4>📊 Meilleur valide vs Meilleur valide global</h4>
           {renderSegmentRow('S1', pilotStats.bestS1, globalStats.global.bestS1)}
           {renderSegmentRow('S2', pilotStats.bestS2, globalStats.global.bestS2)}
           {renderSegmentRow('S3', pilotStats.bestS3, globalStats.global.bestS3)}
         </div>
 
-        {/* Carte 2: Meilleur Pilote vs Meilleur Classe */}
+        {/* Carte 2: Meilleur valide Pilote vs Meilleur valide Classe */}
         <div className="segment-card">
-          <h4>🎯 Meilleur Pilote vs Meilleur Classe</h4>
+          <h4>🎯 Meilleur valide vs Meilleur valide classe</h4>
           {renderSegmentRow('S1', pilotStats.bestS1, categoryStats.bestS1 || 0)}
           {renderSegmentRow('S2', pilotStats.bestS2, categoryStats.bestS2 || 0)}
           {renderSegmentRow('S3', pilotStats.bestS3, categoryStats.bestS3 || 0)}
         </div>
 
-        {/* Carte 3: Moyenne Pilote vs Moyenne Global */}
+        {/* Carte 3: Moyenne valide Pilote vs Moyenne valide Global */}
         <div className="segment-card">
-          <h4>📈 Moyenne Pilote vs Moyenne Global</h4>
+          <h4>📈 Moyenne valide vs Moyenne valide global</h4>
           {renderSegmentRow('S1', pilotStats.avgS1, globalStats.global.avgS1)}
           {renderSegmentRow('S2', pilotStats.avgS2, globalStats.global.avgS2)}
           {renderSegmentRow('S3', pilotStats.avgS3, globalStats.global.avgS3)}
         </div>
 
-        {/* Carte 4: Moyenne Pilote vs Moyenne Classe */}
+        {/* Carte 4: Moyenne valide Pilote vs Moyenne valide Classe */}
         <div className="segment-card">
-          <h4>📉 Moyenne Pilote vs Moyenne Classe</h4>
+          <h4>📉 Moyenne valide vs Moyenne valide classe</h4>
           {renderSegmentRow('S1', pilotStats.avgS1, categoryStats.avgS1 || 0)}
           {renderSegmentRow('S2', pilotStats.avgS2, categoryStats.avgS2 || 0)}
           {renderSegmentRow('S3', pilotStats.avgS3, categoryStats.avgS3 || 0)}

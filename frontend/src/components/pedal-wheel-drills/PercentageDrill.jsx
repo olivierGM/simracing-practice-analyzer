@@ -28,13 +28,13 @@ export function PercentageDrill({
   initialBlindMode = false,
   initialInputType = 'brake'
 }) {
-  const [inputType, setInputType] = useState(initialInputType);
-  const [tolerance, setTolerance] = useState(2);
-  const [difficulty, setDifficulty] = useState('MEDIUM');
-  const [drillSong, setDrillSong] = useState(initialDrillSong);
-  const [audioEnabled, setAudioEnabled] = useState(initialAudioEnabled);
-  const [musicEnabled, setMusicEnabled] = useState(false);
-  const [blindMode, setBlindMode] = useState(initialBlindMode);
+  const [inputType] = useState(initialInputType);
+  const [tolerance] = useState(2);
+  const [, _setDifficulty] = useState('MEDIUM');
+  const [drillSong] = useState(initialDrillSong);
+  const [audioEnabled, _setAudioEnabled] = useState(initialAudioEnabled);
+  const [musicEnabled, _setMusicEnabled] = useState(false);
+  const [blindMode, _setBlindMode] = useState(initialBlindMode);
   const [isActive, setIsActive] = useState(!!initialDrillSong);
   const [isPaused, setIsPaused] = useState(false);
   const [showResults, setShowResults] = useState(false);
@@ -50,7 +50,6 @@ export function PercentageDrill({
   // Hook de drill pour les stats
   const {
     score,
-    timeInZone,
     totalTime,
     zoneStatus,
     accuracy,
@@ -69,7 +68,7 @@ export function PercentageDrill({
   const handleStop = () => {
     // Jouer le son de fin
     if (audioEnabled) {
-      const comboInfo = enhancedDrillAudioService.getComboInfo();
+      const _comboInfo = enhancedDrillAudioService.getComboInfo();
       const success = accuracy > 70; // Considérer comme succès si >70% de précision
       enhancedDrillAudioService.playCompletionSound(success);
     }

@@ -13,7 +13,7 @@ export function DrillsSettingsPanel({
   onAudioEnabledChange,
   blindMode,
   onBlindModeChange,
-  mappingConfig,
+  mappingConfig: _mappingConfig,
   onMappingConfigChange
 }) {
   if (!isOpen) return null;

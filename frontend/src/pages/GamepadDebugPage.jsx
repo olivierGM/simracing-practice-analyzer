@@ -96,13 +96,13 @@ export function GamepadDebugPage() {
                 // Lire les axes pour "réveiller" le device
                 if (gp.axes && gp.axes.length !== undefined) {
                   try {
-                    gp.axes.forEach((val, idx) => {
+                    gp.axes.forEach((val, _idx) => {
                       // Juste lire la valeur pour activer le device
                       if (val !== undefined) {
                         // Device actif
                       }
                     });
-                  } catch (e) {
+                  } catch {
                     // Ignorer les erreurs de lecture d'axes
                   }
                 }

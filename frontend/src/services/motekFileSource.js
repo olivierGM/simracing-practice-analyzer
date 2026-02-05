@@ -31,7 +31,7 @@ export function parseLdxXml(text, fileName) {
   let parsed;
   try {
     parsed = xmlParser.parse(text);
-  } catch (e) {
+  } catch {
     throw new Error('Format XML invalide');
   }
 

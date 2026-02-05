@@ -26,7 +26,7 @@ export function DDRFullGameplayAreaVertical({
   duration,
   difficulty,
   audioEnabled,
-  musicEnabled,
+  musicEnabled: _musicEnabled,
   blindMode,
   onJudgmentUpdate,
   onComplete
@@ -61,7 +61,7 @@ export function DDRFullGameplayAreaVertical({
     accelTargets,
     shiftTargets,
     currentTime,
-    isComplete,
+    isComplete: _isComplete,
     markTargetHit,
     markTargetMiss
   } = useDDRFullTargets({

@@ -78,8 +78,8 @@ export function calculateGap(driverTime, leaderTime) {
 }
 
 /**
- * Trouve les meilleurs temps de segments globaux parmi tous les pilotes
- * 
+ * Trouve les meilleurs temps de segments globaux parmi tous les pilotes (tours valides uniquement).
+ *
  * @param {Array} allDrivers - Tous les pilotes
  * @returns {Array} Meilleurs temps par segment
  */
@@ -88,11 +88,10 @@ export function findGlobalBestSegments(allDrivers) {
   
   const segmentBests = [];
   
-  // Parcourir tous les pilotes et leurs tours
   allDrivers.forEach(driver => {
     if (driver.lapTimes) {
       driver.lapTimes.forEach(lap => {
-        if (lap.splits && lap.splits.length > 0) {
+        if (lap.isValid && lap.splits && lap.splits.length > 0) {
           lap.splits.forEach((split, index) => {
             if (!segmentBests[index] || split < segmentBests[index]) {
               segmentBests[index] = split;

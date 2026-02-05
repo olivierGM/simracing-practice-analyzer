@@ -59,7 +59,7 @@ export function MotekGraphicGameplay({
   onJudgmentUpdate,
   onComplete
 }) {
-  const [judgmentCounts, setJudgmentCounts] = useState({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
+  const [_judgmentCounts, setJudgmentCounts] = useState({ PERFECT: 0, GREAT: 0, GOOD: 0, OK: 0, MISS: 0 });
   const [rhythmFeedback, setRhythmFeedback] = useState(null);
   const rhythmFeedbackTimeout = useRef(null);
 
@@ -69,7 +69,7 @@ export function MotekGraphicGameplay({
     accelTargets,
     shiftTargets,
     currentTime,
-    isComplete,
+    isComplete: _isComplete,
     markTargetHit,
     markTargetMiss
   } = useDDRFullTargets({

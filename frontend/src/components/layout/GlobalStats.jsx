@@ -66,7 +66,7 @@ export function GlobalStats({ drivers }) {
 
     // Filtrer pour ne garder que les marques avec 2+ pilotes, puis trier par nombre décroissant
     return Object.entries(counts)
-      .filter(([_, count]) => count >= 2) // Seulement les marques avec 2+ pilotes
+      .filter(([_name, count]) => count >= 2) // Seulement les marques avec 2+ pilotes
       .map(([name, count]) => ({
         name,
         count,

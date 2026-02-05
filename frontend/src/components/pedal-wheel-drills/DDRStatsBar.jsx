@@ -20,13 +20,13 @@ export function DDRStatsBar({ totalTime, zoneStatus, accuracy, score, vertical =
     
     return () => clearInterval(interval);
   }, []);
-  const getZoneEmoji = () => {
+  const _getZoneEmoji = () => {
     if (zoneStatus === 'in_target') return '🟢';
     if (zoneStatus === 'close') return '🟡';
     return '🔴';
   };
 
-  const getZoneText = () => {
+  const _getZoneText = () => {
     if (zoneStatus === 'in_target') return 'In Zone';
     if (zoneStatus === 'close') return 'Close';
     return 'Out';

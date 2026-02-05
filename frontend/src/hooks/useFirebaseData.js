@@ -37,7 +37,7 @@ export function useFirebaseData() {
         } else {
           // Charger les sessions depuis Firestore
           console.log('🔄 Chargement des sessions depuis Firestore...');
-          const [sessions, metaData] = await Promise.all([
+          const [sessions, _metaData] = await Promise.all([
             fetchSessions(),
             fetchMetadata()
           ]);
@@ -152,7 +152,7 @@ export function useFirebaseData() {
         setMetadata(mockMetadata);
       } else {
         // Charger les sessions depuis Firestore
-        const [sessions, metaData] = await Promise.all([
+        const [sessions, _metaData] = await Promise.all([
           fetchSessions(),
           fetchMetadata()
         ]);

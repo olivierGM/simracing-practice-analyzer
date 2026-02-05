@@ -5,7 +5,7 @@
  * Interface intuitive : cliquer sur une fonction puis bouger/appuyer pour assigner
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   loadMappingConfig,
   saveMappingConfig,
@@ -32,7 +32,7 @@ export function DeviceMappingConfig({ onConfigChange, compact = false }) {
   const [config, setConfig] = useState(loadMappingConfig());
   const [gamepads, setGamepads] = useState([]);
   const [assigningFunction, setAssigningFunction] = useState(null);
-  const [debugInfo, setDebugInfo] = useState(null);
+  const [_debugInfo, setDebugInfo] = useState(null);
   const [realtimeValues, setRealtimeValues] = useState({});
   const [showInfo, setShowInfo] = useState(false); // Panneau info / debug
   const assignmentTimeoutRef = useRef(null);
@@ -156,7 +156,7 @@ export function DeviceMappingConfig({ onConfigChange, compact = false }) {
         // Chercher l'axe qui a le plus changé
         let maxChange = 0;
         let changedAxisIndex = -1;
-        let changedAxisValue = 0;
+        let _changedAxisValue = 0;
         const allChanges = [];
 
         currentAxes.forEach((currentValue, axisIndex) => {
@@ -196,7 +196,7 @@ export function DeviceMappingConfig({ onConfigChange, compact = false }) {
             if (change > maxChange || isMovingToExtreme) {
               maxChange = Math.max(change, 0.2); // Forcer un changement minimum si on détecte un extrême
               changedAxisIndex = axisIndex;
-              changedAxisValue = currentValue;
+              _changedAxisValue = currentValue;
             }
           }
         });
@@ -319,7 +319,7 @@ export function DeviceMappingConfig({ onConfigChange, compact = false }) {
     
     // Trouver le mapping actuel et inverser l'inversion
     const newConfig = { ...config };
-    for (const [deviceId, deviceMapping] of Object.entries(newConfig.axisMappings)) {
+    for (const [_deviceId, deviceMapping] of Object.entries(newConfig.axisMappings)) {
       const axes = deviceMapping.axes || deviceMapping;  // Compatibilité v1/v2
       
       for (const [axisIndex, mapping] of Object.entries(axes)) {
