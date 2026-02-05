@@ -8,6 +8,10 @@ Résumé des livraisons sur `main`. À chaque release : date, thème, 2–3 lign
 
 - (À remplir à la prochaine livraison)
 
+## 2026-01-30 (soir)
+
+- **Lint + prod** : Correction lint (unused vars, no-undef) ; analytics désactivée en local ; abréviations équipes DSP/RCM ; comparateur segments sur tours valides uniquement.
+
 ## 2026-02-02
 
 - **Logo app + potentiel** : Logo dans le header (android-chrome), favicon onglet ; meilleur temps potentiel calculé sur segments des tours valides uniquement.
