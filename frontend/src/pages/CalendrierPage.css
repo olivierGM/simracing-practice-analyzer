@@ -1,0 +1,127 @@
+.calendrier-page {
+  padding: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.calendrier-title {
+  margin: 0 0 24px 0;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.calendrier-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+
+.calendrier-section h2 {
+  margin: 0 0 16px 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.schedule-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.schedule-list li {
+  padding: 6px 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.schedule-list strong {
+  color: var(--text-primary);
+  margin-right: 8px;
+}
+
+.events-list-ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.event-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.event-card:last-child {
+  border-bottom: none;
+}
+
+.event-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.event-round {
+  font-weight: 700;
+  color: var(--primary-color);
+  min-width: 28px;
+}
+
+.event-date {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.event-circuit {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.event-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.event-badge {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--primary-color);
+  color: var(--bg-primary);
+}
+
+.event-link-classement {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--primary-color);
+  background: transparent;
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.event-link-classement:hover {
+  background: var(--primary-color);
+  color: var(--bg-primary);
+}
+
+@media (max-width: 640px) {
+  .calendrier-page {
+    padding: 16px;
+  }
+
+  .event-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

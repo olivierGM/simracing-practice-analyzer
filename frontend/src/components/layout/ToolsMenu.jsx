@@ -41,6 +41,11 @@ export function ToolsMenu({ navigate }) {
     setIsOpen(false);
   };
 
+  const handleCalendrierClick = () => {
+    navigate('/calendrier');
+    setIsOpen(false);
+  };
+
   return (
     <div className="tools-menu-container" ref={menuRef}>
       <button
@@ -65,6 +70,12 @@ export function ToolsMenu({ navigate }) {
             onClick={handlePedalWheelDrillsClick}
           >
             🎮 Drills Pédales & Volant
+          </button>
+          <button
+            className="tools-menu-item"
+            onClick={handleCalendrierClick}
+          >
+            📅 Calendrier
           </button>
         </div>
       )}

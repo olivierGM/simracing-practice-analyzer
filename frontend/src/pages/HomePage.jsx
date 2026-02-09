@@ -5,7 +5,7 @@
  */
 
 import { useMemo, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FiltersBar } from '../components/filters/FiltersBar';
 import { DriversTable } from '../components/table/DriversTable';
 import { GlobalStats } from '../components/layout/GlobalStats';
@@ -21,6 +21,7 @@ import { DURATIONS } from '../utils/constants';
 export function HomePage() {
   const { drivers = [], sessions = [] } = useFirebaseDataContext();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { setTrackFilter: setContextTrackFilter } = useTrackContext();
 
   // Hooks pour filtres et tri
@@ -38,7 +39,13 @@ export function HomePage() {
     filteredDrivers: _filteredDrivers,
     filteredSessionsBySeason // Sessions déjà filtrées par saison
   } = useFilters(drivers, sessions);
-  
+
+  // Préremplir la piste depuis l'URL (ex. /classement?track=Spa depuis le calendrier)
+  useEffect(() => {
+    const trackParam = searchParams.get('track');
+    if (trackParam) setTrackFilter(trackParam);
+  }, [searchParams, setTrackFilter]);
+
   // Mettre à jour le contexte quand trackFilter change
   useEffect(() => {
     setContextTrackFilter(trackFilter);

@@ -15,6 +15,7 @@ import { LoginPage } from './pages/LoginPage';
 import { AccountPage } from './pages/AccountPage';
 import { LandingPage } from './pages/LandingPage';
 import { AngleMeasurementPage } from './pages/AngleMeasurementPage';
+import { CalendrierPage } from './pages/CalendrierPage';
 import { GamepadDebugPage } from './pages/GamepadDebugPage';
 import NotFound from './pages/NotFound';
 import { AnalyticsTracker } from './components/layout/AnalyticsTracker';
@@ -77,6 +78,7 @@ function AppContent() {
               <Route path="/circuit/:circuitId/pilote/:pilotId" element={<PilotePage />} />
               <Route path="/account" element={<AccountPage />} />
               <Route path="/angle-measurement" element={<AngleMeasurementPage />} />
+              <Route path="/calendrier" element={<CalendrierPage />} />
               <Route
                 path="/pedal-wheel-drills"
                 element={
