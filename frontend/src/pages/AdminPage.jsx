@@ -13,40 +13,16 @@ import './AdminPage.css';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
-const ADMIN_PASSWORD = 'admin123'; // TODO: Remplacer par variable d'environnement
-
 export function AdminPage() {
-  const [authenticated, setAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState('Chargement...');
-  const navigate = useNavigate();
+  const [status, setStatus] = useState('');
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
-  // Authentification
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      setAuthenticated(true);
-      setStatus('');
-      trackAdminAction('login', { success: true });
-    } else {
-      setStatus('❌ Mot de passe incorrect');
-      trackAdminAction('login', { success: false });
-    }
-    setPassword('');
-  };
-
-  const handleLogout = () => {
-    trackAdminAction('logout');
-    setAuthenticated(false);
-    setPassword('');
-    setLogs([]);
-    setStatus('');
-    navigate('/');
-  };
+  // Note: La vérification du rôle admin est gérée par AdminRoute
+  // Si on arrive ici, c'est que l'utilisateur est admin
 
   // Charger les logs de scraping
   const loadScrapingLogs = async () => {
@@ -125,12 +101,10 @@ export function AdminPage() {
     return { totalSessions, successRate };
   };
 
-  // Charger les logs à l'authentification
+  // Charger les logs au montage (l'utilisateur est déjà vérifié admin par AdminRoute)
   useEffect(() => {
-    if (authenticated) {
-      loadScrapingLogs();
-    }
-  }, [authenticated]);
+    loadScrapingLogs();
+  }, []);
 
   // Rendre le graphique de performance
   useEffect(() => {
@@ -288,35 +262,9 @@ export function AdminPage() {
     console.log('📈 Graphique de performance rendu avec succès');
   };
 
-  // Affichage login
-  if (!authenticated) {
-    return (
-      <div className="container">
-        <div className="admin-auth-section">
-          <div className="admin-auth-form">
-            <h2>🔐 Connexion Admin</h2>
-            <p>Accès réservé aux administrateurs pour le dashboard EGT Auto Scraper</p>
-            <form onSubmit={handleLogin}>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Mot de passe admin"
-                className="admin-password-input"
-              />
-              <button type="submit" className="admin-login-btn">
-                Se connecter
-              </button>
-            </form>
-            {status && <p className="upload-status">{status}</p>}
-            <button onClick={() => navigate('/')} className="back-to-app-btn">
-              ← Retour à l'application
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Note: La vérification du rôle est gérée par AdminRoute
+  // Si on arrive ici, c'est que l'utilisateur est admin
+  // Affichage direct du dashboard
 
   const stats = calculateStats();
   const lastRun = logs[0];
@@ -335,8 +283,8 @@ export function AdminPage() {
             <button onClick={() => loadScrapingLogs()} className="btn btn-secondary" disabled={loading}>
               🔄 Actualiser Logs
             </button>
-            <button onClick={handleLogout} className="admin-logout-btn">
-              Déconnexion
+            <button onClick={() => navigate('/classement')} className="admin-logout-btn">
+              ← Retour à l'app
             </button>
           </div>
         </div>

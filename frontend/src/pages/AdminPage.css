@@ -76,6 +76,11 @@
   margin: 0;
 }
 
+.dashboard-actions .admin-logout-btn {
+  width: auto;
+  min-width: auto;
+}
+
 .admin-logout-btn:hover {
   background: #dc3545;
 }
@@ -223,7 +228,7 @@
 .dashboard-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 24px 32px;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -231,18 +236,25 @@
 
 .dashboard-header h3 {
   margin: 0;
-  font-size: 24px;
+  font-size: 18px;
 }
 
 .dashboard-header p {
-  margin: 4px 0 0 0;
+  margin: 2px 0 0 0;
   opacity: 0.9;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .dashboard-actions {
   display: flex;
-  gap: 12px;
+  gap: 8px;
+  align-items: center;
+}
+
+.dashboard-actions .btn-secondary {
+  min-width: 160px;
+  padding: 8px 20px;
+  white-space: nowrap;
 }
 
 .dashboard-content {
@@ -439,7 +451,7 @@
   .dashboard-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    gap: 8px;
   }
 
   .dashboard-actions {

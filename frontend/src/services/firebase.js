@@ -8,8 +8,8 @@
  */
 
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, getDoc, collection, getDocs } from 'firebase/firestore';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, serverTimestamp } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 // Configuration Firebase - VRAIE config de prod
@@ -89,13 +89,12 @@ export async function fetchMetadata() {
 }
 
 /**
- * Login admin avec email/password
- * 
- * @param {string} email - Email de l'admin
- * @param {string} password - Mot de passe
- * @returns {Promise<UserCredential>} Credentials de l'utilisateur
+ * Connexion avec email/password (admin ou utilisateur)
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<UserCredential>}
  */
-export async function loginAdmin(email, password) {
+export async function login(email, password) {
   try {
     return await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
@@ -104,12 +103,54 @@ export async function loginAdmin(email, password) {
   }
 }
 
+/** @deprecated Use login() */
+export async function loginAdmin(email, password) {
+  return login(email, password);
+}
+
 /**
- * Logout admin
- * 
+ * Inscription d'un nouvel utilisateur
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<UserCredential>}
+ */
+export async function signUp(email, password) {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    await createUserProfile(userCredential.user.uid, { email });
+    return userCredential;
+  } catch (error) {
+    console.error('Error signing up:', error);
+    throw error;
+  }
+}
+
+/**
+ * Connexion avec un compte Google (popup)
+ * Crée le profil Firestore si première connexion.
+ * @returns {Promise<UserCredential>}
+ */
+export async function loginWithGoogle() {
+  try {
+    const provider = new GoogleAuthProvider();
+    const userCredential = await signInWithPopup(auth, provider);
+    const { uid, email, displayName } = userCredential.user;
+    const existing = await getUserProfile(uid);
+    if (!existing) {
+      await createUserProfile(uid, { email: email || '', displayName: displayName || '' });
+    }
+    return userCredential;
+  } catch (error) {
+    console.error('Error signing in with Google:', error);
+    throw error;
+  }
+}
+
+/**
+ * Logout
  * @returns {Promise<void>}
  */
-export async function logoutAdmin() {
+export async function logout() {
   try {
     return await signOut(auth);
   } catch (error) {
@@ -118,14 +159,83 @@ export async function logoutAdmin() {
   }
 }
 
+/** @deprecated Use logout() */
+export async function logoutAdmin() {
+  return logout();
+}
+
 /**
  * Observer l'état d'authentification
- * 
  * @param {Function} callback - Fonction appelée quand l'état change
  * @returns {Function} Fonction de unsubscribe
  */
 export function onAuthChanged(callback) {
   return onAuthStateChanged(auth, callback);
+}
+
+// --- Firestore: profil utilisateur (users/{uid}) ---
+
+/**
+ * Crée le document profil pour un nouvel utilisateur
+ * @param {string} uid
+ * @param {Object} data - { email, displayName? }
+ */
+export async function createUserProfile(uid, data = {}) {
+  const ref = doc(db, 'users', uid);
+  // Déterminer le rôle : admin si email = cow.killa@gmail.com, sinon 'user'
+  const role = data.email === 'cow.killa@gmail.com' ? 'admin' : 'user';
+  await setDoc(ref, {
+    email: data.email || '',
+    displayName: data.displayName || '',
+    role, // 'admin' ou 'user'
+    linkedPilotId: data.linkedPilotId || null,
+    theme: data.theme || null,
+    deviceMapping: data.deviceMapping || null,
+    favorites: data.favorites || { pilotIds: [], trackIds: [] },
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
+  });
+}
+
+/**
+ * Récupère le profil utilisateur depuis Firestore
+ * @param {string} uid
+ * @returns {Promise<Object|null>}
+ */
+export async function getUserProfile(uid) {
+  if (!uid) return null;
+  try {
+    const ref = doc(db, 'users', uid);
+    const snap = await getDoc(ref);
+    return snap.exists() ? snap.data() : null;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    return null;
+  }
+}
+
+/**
+ * Met à jour le profil / préférences utilisateur (champs partiels)
+ * @param {string} uid
+ * @param {Object} data - champs à mettre à jour (linkedPilotId, theme, deviceMapping, favorites, displayName, role)
+ */
+export async function updateUserProfile(uid, data) {
+  if (!uid) return;
+  const ref = doc(db, 'users', uid);
+  await updateDoc(ref, {
+    ...data,
+    updatedAt: serverTimestamp()
+  });
+}
+
+/**
+ * Met à jour le rôle d'un utilisateur (utilitaire pour migration)
+ * @param {string} uid
+ * @param {string} role - 'admin' ou 'user'
+ */
+export async function updateUserRole(uid, role) {
+  if (!uid || !['admin', 'user'].includes(role)) return;
+  await updateUserProfile(uid, { role });
 }
 
 

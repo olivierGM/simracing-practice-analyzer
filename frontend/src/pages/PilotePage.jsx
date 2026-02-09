@@ -11,11 +11,13 @@ import { SegmentComparator } from '../components/pilot/SegmentComparator';
 import { ProgressionChart } from '../components/pilot/ProgressionChart';
 import { LapsTable } from '../components/pilot/LapsTable';
 import { useProcessedData } from '../hooks/useProcessedData';
+import { useFirebaseDataContext } from '../contexts/FirebaseDataContext';
 import { getCategoryName, getCategoryClass } from '../services/calculations';
 import { addSeasonToSessions, filterSessionsBySeason } from '../services/seasonService';
 import './PilotePage.css';
 
-export function PilotePage({ drivers: _drivers, sessions = [] }) {
+export function PilotePage() {
+  const { sessions = [] } = useFirebaseDataContext();
   const { circuitId, pilotId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -95,7 +97,7 @@ export function PilotePage({ drivers: _drivers, sessions = [] }) {
         <div className="error-container">
           <h2>Pilote non trouvé</h2>
           <p>Le pilote avec l'ID "{pilotId}" n'existe pas sur le circuit "{circuitName}".</p>
-          <button onClick={() => navigate('/')} className="back-button">
+          <button onClick={() => navigate('/classement')} className="back-button">
             ← Retour à la liste
           </button>
         </div>
@@ -120,7 +122,7 @@ export function PilotePage({ drivers: _drivers, sessions = [] }) {
           <h2>Circuit incorrect</h2>
           <p>Le pilote {pilot.name} n'a pas de données pour le circuit "{circuitName}".</p>
           <p>Ce pilote a roulé sur : {pilot.track}</p>
-          <button onClick={() => navigate('/')} className="back-button">
+          <button onClick={() => navigate('/classement')} className="back-button">
             ← Retour à la liste
           </button>
         </div>
@@ -139,7 +141,7 @@ export function PilotePage({ drivers: _drivers, sessions = [] }) {
             <span className="pilot-position">#{categoryStats.categoryPosition}/{categoryStats.categoryDrivers}</span>
           </div>
         </div>
-        <button onClick={() => navigate('/')} className="back-button">
+        <button onClick={() => navigate('/classement')} className="back-button">
           ← Retour
         </button>
       </div>

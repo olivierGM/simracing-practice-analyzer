@@ -8,6 +8,17 @@ Résumé des livraisons sur `main`. À chaque release : date, thème, 2–3 lign
 
 - (À remplir à la prochaine livraison)
 
+## 2026-02-05 (suite)
+
+- **Rôles admin** : Cog admin visible uniquement pour rôle `admin` (Firestore). Route `/admin` protégée par AdminRoute. Suppression du mot de passe admin ; accès par compte + rôle. Rétrocompatibilité pour cow.killa@gmail.com (persistance du rôle si manquant).
+- **Déploiement** : Lint + build OK ; déployé sur Firebase Hosting.
+
+## 2026-02-05
+
+- **Sim League EGT** : Nom affiché « Sim League EGT » partout (landing, header, titre). Thème sombre par défaut (`:root` + useTheme). Suppression du bypass « voir classement sans connexion » : accès protégé uniquement par session.
+- **Landing hero** : Nouvelle image hero GT3 en épingle (locale, `landing-hero-gt3-hairpin-1.png`) ; plus d’image Unsplash.
+- **Déploiement** : Lint + build OK ; déployé sur Firebase Hosting (https://simracing-practice-analyzer.web.app).
+
 ## 2026-01-30 (soir)
 
 - **Lint + prod** : Correction lint (unused vars, no-undef) ; analytics désactivée en local ; abréviations équipes DSP/RCM ; comparateur segments sur tours valides uniquement.

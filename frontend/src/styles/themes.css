@@ -5,8 +5,7 @@
  * Gradient violet magnifique + toutes les couleurs de prod
  */
 
-/* Thème Light (par défaut - comme en prod) */
-:root,
+/* Thème Light */
 html[data-theme="light"] {
   /* Gradient violet magnifique de prod 🎨 */
   --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -51,7 +50,8 @@ html[data-theme="light"] {
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-/* Thème Dark */
+/* Thème Dark (par défaut) — :root = premier rendu avant JS */
+:root,
 html[data-theme="dark"] {
   /* Gradient sombre de prod 🌙 */
   --bg-primary: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);

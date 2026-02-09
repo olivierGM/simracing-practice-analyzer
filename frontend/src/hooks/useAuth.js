@@ -1,72 +1,78 @@
 /**
- * Hook pour gérer l'authentification admin
- * 
- * Gère :
- * - État de connexion
- * - Login/Logout
- * - Observer Firebase Auth
+ * Hook pour gérer l'authentification (utilisateurs et admin)
+ *
+ * Gère : état de connexion, Login / SignUp / Logout, observer Firebase Auth.
+ * Utilisé par AuthProvider ; les composants utilisent useAuth() depuis AuthContext.
  */
 
 import { useState, useEffect } from 'react';
-import { onAuthChanged, loginAdmin, logoutAdmin } from '../services/firebase';
+import { onAuthChanged, login as fbLogin, signUp as fbSignUp, loginWithGoogle as fbLoginWithGoogle, logout as fbLogout } from '../services/firebase';
 
-export function useAuth() {
+/**
+ * Hook interne contenant la logique d'auth (utilisé par AuthProvider).
+ */
+export function useAuthState() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // S'abonner aux changements d'état d'authentification
     const unsubscribe = onAuthChanged((authUser) => {
       setUser(authUser);
       setLoading(false);
     });
-
-    // Cleanup
     return () => unsubscribe();
   }, []);
 
-  /**
-   * Login avec email/password
-   */
   const login = async (email, password) => {
     try {
-      setLoading(true);
       setError(null);
-      
-      await loginAdmin(email, password);
-      // L'état user sera mis à jour par onAuthChanged
-      
+      await fbLogin(email, password);
       return true;
     } catch (err) {
       console.error('Login error:', err);
-      setError(err.message || 'Login failed');
+      setError(err.message || 'Connexion impossible');
       return false;
-    } finally {
-      setLoading(false);
     }
   };
 
-  /**
-   * Logout
-   */
+  const signUp = async (email, password) => {
+    try {
+      setError(null);
+      await fbSignUp(email, password);
+      return true;
+    } catch (err) {
+      console.error('SignUp error:', err);
+      setError(err.message || 'Inscription impossible');
+      return false;
+    }
+  };
+
+  const loginWithGoogle = async () => {
+    try {
+      setError(null);
+      await fbLoginWithGoogle();
+      return true;
+    } catch (err) {
+      console.error('Google sign-in error:', err);
+      setError(err.message || 'Connexion Google impossible');
+      return false;
+    }
+  };
+
   const logout = async () => {
     try {
-      setLoading(true);
       setError(null);
-      
-      await logoutAdmin();
-      // L'état user sera mis à jour par onAuthChanged
-      
+      await fbLogout();
       return true;
     } catch (err) {
       console.error('Logout error:', err);
-      setError(err.message || 'Logout failed');
+      setError(err.message || 'Déconnexion impossible');
       return false;
-    } finally {
-      setLoading(false);
     }
   };
+
+  const clearError = () => setError(null);
 
   return {
     user,
@@ -74,7 +80,10 @@ export function useAuth() {
     error,
     isAuthenticated: !!user,
     login,
-    logout
+    signUp,
+    loginWithGoogle,
+    logout,
+    clearError
   };
 }
 

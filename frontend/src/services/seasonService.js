@@ -26,18 +26,26 @@ export function detectSeason(dateStr) {
 
   let sessionDate;
 
+  // Si c'est déjà un objet Date (ex: session.Date depuis Firestore)
+  if (dateStr instanceof Date) {
+    sessionDate = dateStr;
+  }
+  // Si c'est un Timestamp Firestore (objet avec toDate())
+  else if (dateStr && typeof dateStr.toDate === 'function') {
+    sessionDate = dateStr.toDate();
+  }
   // Si le format est fileName (YYMMDD_HHMMSS)
-  if (dateStr.match(/^\d{6}_\d{6}/)) {
+  else if (typeof dateStr === 'string' && dateStr.match(/^\d{6}_\d{6}/)) {
     const year = '20' + dateStr.substring(0, 2);
     const month = dateStr.substring(2, 4);
     const day = dateStr.substring(4, 6);
     sessionDate = new Date(`${year}-${month}-${day}`);
   } 
-  // Si le format est Date standard
-  else if (dateStr.match(/^\d{4}-\d{2}-\d{2}/)) {
+  // Si le format est Date standard (string)
+  else if (typeof dateStr === 'string' && dateStr.match(/^\d{4}-\d{2}-\d{2}/)) {
     sessionDate = new Date(dateStr);
   }
-  // Sinon, essayer de parser directement
+  // Sinon, essayer de parser directement (string ou timestamp)
   else {
     sessionDate = new Date(dateStr);
   }

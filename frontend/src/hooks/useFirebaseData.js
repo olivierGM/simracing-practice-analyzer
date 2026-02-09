@@ -13,8 +13,8 @@ import { processSessionData } from '../services/dataProcessor';
 import { calculateConsistency } from '../services/calculations';
 import { mockDriversData, mockMetadata } from '../data/mockData';
 
-// Mode développement : utiliser mock data
-const USE_MOCK_DATA = false; // 🔥 Test Firebase Firestore (collection sessions)
+// Mode développement : utiliser mock data (désactivé = charger depuis Firebase)
+const USE_MOCK_DATA = false;
 
 export function useFirebaseData() {
   const [data, setData] = useState(null);
@@ -29,17 +29,67 @@ export function useFirebaseData() {
         setLoading(true);
         setError(null);
         
-        if (USE_MOCK_DATA) {
+        // Utiliser mock data uniquement si USE_MOCK_DATA est true (pas de bypass)
+        const useMockData = USE_MOCK_DATA;
+        
+        if (useMockData) {
           // Simuler un délai réseau
           await new Promise(resolve => setTimeout(resolve, 500));
+          
+          // Créer des sessions mock avec laps pour que processSessionData produise des pilotes
+          const trackName = 'Circuit Gilles-Villeneuve';
+          const mockSessions = mockDriversData.drivers.map((driver, index) => {
+            const carId = `car_${driver.id}`;
+            const laptime = (driver.bestTime || 95432) + index * 500; // temps en ms
+            return {
+              Date: new Date(Date.now() - index * 86400000),
+              trackName: driver.track || trackName,
+              laps: [{
+                carId,
+                laptime,
+                isValidForBest: true,
+                splits: []
+              }],
+              sessionResult: {
+                leaderBoardLines: [{
+                  car: {
+                    carId,
+                    cupCategory: driver.carClass || 'GT3',
+                    carModel: driver.carModel || 'Unknown',
+                    drivers: [{
+                      firstName: driver.name.split(' ')[0] || 'Unknown',
+                      lastName: driver.name.split(' ').slice(1).join(' ') || 'Unknown'
+                    }],
+                    teamName: ''
+                  }
+                }]
+              }
+            };
+          });
+          
           setData(mockDriversData);
           setMetadata(mockMetadata);
-        } else {
+          setSessions(mockSessions);
+          setLoading(false);
+          return; // Sortir de la fonction pour éviter de continuer avec Firebase
+        }
+        
+        // Code Firebase (seulement si pas de mock)
+        {
           // Charger les sessions depuis Firestore
           console.log('🔄 Chargement des sessions depuis Firestore...');
-          const [sessions, _metaData] = await Promise.all([
-            fetchSessions(),
-            fetchMetadata()
+          
+          // Timeout de 10 secondes pour éviter un blocage indéfini
+          const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Timeout: Le chargement des données a pris trop de temps')), 10000)
+          );
+          
+          const [sessions, _metaData] = await Promise.race([
+            Promise.all([
+              fetchSessions(),
+              fetchMetadata()
+            ]),
+            timeoutPromise
           ]);
           
           console.log(`📊 ${sessions.length} sessions chargées depuis Firestore`);
@@ -128,7 +178,8 @@ export function useFirebaseData() {
           setSessions(sessions); // Stocker les sessions pour trouver la plus récente
         }
       } catch (err) {
-        console.error('Error loading Firebase data:', err);
+        console.error('❌ Error loading Firebase data:', err);
+        console.error('❌ Error stack:', err.stack);
         setError(err.message || 'Failed to load data');
       } finally {
         setLoading(false);

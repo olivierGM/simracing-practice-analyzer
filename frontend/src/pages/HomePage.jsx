@@ -14,10 +14,12 @@ import { useFilters } from '../hooks/useFilters';
 import { useProcessedData } from '../hooks/useProcessedData';
 import { useSorting } from '../hooks/useSorting';
 import { useTrackContext } from '../contexts/TrackContext';
+import { useFirebaseDataContext } from '../contexts/FirebaseDataContext';
 import { trackFilterChange, trackSort, trackPilotClick } from '../services/analytics';
 import { DURATIONS } from '../utils/constants';
 
-export function HomePage({ drivers, sessions = [] }) {
+export function HomePage() {
+  const { drivers = [], sessions = [] } = useFirebaseDataContext();
   const navigate = useNavigate();
   const { setTrackFilter: setContextTrackFilter } = useTrackContext();
 
