@@ -4,7 +4,6 @@
  */
 
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './CalendrierPage.css';
 
 // Données statiques – calendrier Saison 2026
@@ -35,13 +34,7 @@ function formatDate(dateStr) {
 }
 
 export function CalendrierPage() {
-  const navigate = useNavigate();
-
   const sortedEvents = useMemo(() => [...EVENTS].sort((a, b) => a.date.localeCompare(b.date)), []);
-
-  const handleViewClassement = (trackName) => {
-    navigate(`/classement?track=${encodeURIComponent(trackName)}`);
-  };
 
   return (
     <div className="calendrier-page">
@@ -70,15 +63,6 @@ export function CalendrierPage() {
                 <span className="event-desc">{event.description}</span>
                 {event.doublePoints && <span className="event-badge">Double points</span>}
               </div>
-              {event.trackName && (
-                <button
-                  type="button"
-                  className="event-link-classement"
-                  onClick={() => handleViewClassement(event.trackName)}
-                >
-                  Voir le classement
-                </button>
-              )}
             </li>
           ))}
         </ul>
