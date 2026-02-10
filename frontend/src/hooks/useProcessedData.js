@@ -10,11 +10,18 @@ import { calculateConsistency, calculatePilotSegmentStats } from '../services/ca
 import { getTeamNameFallback } from '../services/driverTeamFallback';
 
 export function useProcessedData(sessions = [], selectedTrack = '') {
+  // Normaliser le nom de piste pour comparaison (insensible à la casse et underscore/espaces)
+  // ex: "Watkins Glen", "watkins_glen", "watkins glen" (depuis URL slug) doivent matcher
+  const normalizeTrackForMatch = (name) =>
+    (name || '').toLowerCase().trim().replace(/_/g, ' ');
+
   // Filtrer les sessions pour la piste sélectionnée (comme en prod)
   const filteredSessions = useMemo(() => {
     if (!selectedTrack || !sessions || sessions.length === 0) return [];
-    
-    return sessions.filter(session => session.trackName === selectedTrack);
+    const selectedNorm = normalizeTrackForMatch(selectedTrack);
+    return sessions.filter(
+      (session) => normalizeTrackForMatch(session.trackName) === selectedNorm
+    );
   }, [sessions, selectedTrack]);
   
   // Trouver la date de la session la plus récente
@@ -79,7 +86,8 @@ export function useProcessedData(sessions = [], selectedTrack = '') {
       validLapTimes: driver.validLapTimes,
       wetLapTimes: driver.wetLapTimes,
       allLapTimes: driver.allLapTimes,
-      track: selectedTrack,
+      // Garder le nom de piste tel qu'en base pour l'affichage et le slug
+      track: filteredSessions[0]?.trackName ?? selectedTrack,
       
       // Calculer la date de la dernière session (pour filtre période)
       // Utiliser la date de session la plus récente de la piste

@@ -1,16 +1,17 @@
 /**
  * Composant TrackFilter
- * 
- * Filtre par piste avec liste dynamique
+ *
+ * Filtre par circuit avec liste dynamique (valeurs brutes en arrière-plan, noms formatés à l'affichage).
  */
 
+import { formatCircuitDisplayName } from '../../utils/formatters';
 import './TrackFilter.css';
 
 export function TrackFilter({ value, onChange, tracks = [] }) {
   return (
     <div className="filter-group">
       <label htmlFor="sessionSelect" className="filter-label">
-        🏁 Piste :
+        🏁 Circuit :
       </label>
       <select
         id="sessionSelect"
@@ -18,9 +19,9 @@ export function TrackFilter({ value, onChange, tracks = [] }) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >
-        {tracks.map(track => (
+        {tracks.map((track) => (
           <option key={track} value={track}>
-            {track}
+            {formatCircuitDisplayName(track)}
           </option>
         ))}
       </select>

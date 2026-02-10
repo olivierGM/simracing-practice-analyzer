@@ -3,7 +3,7 @@
  * 
  * Gère :
  * - Filtre par période (day/week/all)
- * - Filtre par piste
+ * - Filtre par circuit
  * - Groupement par classe
  * 
  * Retourne les pilotes filtrés avec memoization
@@ -45,7 +45,7 @@ export function useFilters(drivers = [], sessions = []) {
     return filterSessionsBySeason(sessionsWithSeasons, parseInt(seasonFilter));
   }, [sessionsWithSeasons, seasonFilter]);
 
-  // Extraction des pistes uniques disponibles (DEPUIS LES SESSIONS FILTRÉES par saison!)
+  // Extraction des circuits uniques disponibles (DEPUIS LES SESSIONS FILTRÉES par saison!)
   const availableTracks = useMemo(() => {
     const tracks = new Set();
     
@@ -58,7 +58,7 @@ export function useFilters(drivers = [], sessions = []) {
     return Array.from(tracks).sort();
   }, [filteredSessionsBySeason]);
   
-  // Trouver la piste avec la session la plus récente (depuis les sessions filtrées par saison)
+  // Trouver le circuit avec la session la plus récente (depuis les sessions filtrées par saison)
   const mostRecentTrack = useMemo(() => {
     if (!filteredSessionsBySeason || filteredSessionsBySeason.length === 0) return null;
     
@@ -78,24 +78,24 @@ export function useFilters(drivers = [], sessions = []) {
     return mostRecentTrack;
   }, [filteredSessionsBySeason]);
   
-  // Initialiser trackFilter avec la piste la plus récente
+  // Initialiser trackFilter avec le circuit le plus récent
   // IMPORTANT: Cet effet ne doit PAS se déclencher à chaque changement de saison
   // sinon ça cause un re-render qui réinitialise la saison
   useEffect(() => {
     if (availableTracks.length > 0 && !trackFilter) {
-      // Sélectionner automatiquement seulement si aucun track n'est sélectionné
+      // Sélectionner automatiquement seulement si aucun circuit n'est sélectionné
       const defaultTrack = mostRecentTrack && availableTracks.includes(mostRecentTrack)
         ? mostRecentTrack
         : availableTracks[0];
       
-      console.log(`🏁 Piste sélectionnée automatiquement: ${defaultTrack}`);
+      console.log(`🏁 Circuit sélectionné automatiquement: ${defaultTrack}`);
       setTrackFilter(defaultTrack);
     }
   }, [availableTracks, mostRecentTrack, trackFilter]); // Ajouter trackFilter pour éviter de réinitialiser
 
-  // PROBLÈME: Les pilotes sont déjà regroupés toutes pistes confondues
-  // Il faut retraiter les sessions pour la piste sélectionnée uniquement
-  // TODO: Implémenter le retraitement par piste
+  // PROBLÈME: Les pilotes sont déjà regroupés tous circuits confondus
+  // Il faut retraiter les sessions pour le circuit sélectionné uniquement
+  // TODO: Implémenter le retraitement par circuit
   
   // Application des filtres avec memoization
   const filteredDrivers = useMemo(() => {
@@ -119,7 +119,7 @@ export function useFilters(drivers = [], sessions = []) {
     }
     // 'all' = pas de filtre sur la période
 
-    // Filtre par piste (toujours filtrer, pas d'option "all")
+    // Filtre par circuit (toujours filtrer, pas d'option "all")
     if (trackFilter) {
       result = result.filter(d => d.track === trackFilter);
     }

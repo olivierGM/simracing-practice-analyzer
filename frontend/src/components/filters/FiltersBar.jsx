@@ -1,9 +1,9 @@
 /**
  * Composant FiltersBar
- * 
+ *
  * Barre de filtres principale contenant :
  * - Filtre par période (day/week/all)
- * - Filtre par piste
+ * - Filtre par circuit
  * - Toggle groupement par classe
  */
 

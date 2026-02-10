@@ -40,7 +40,7 @@ export function HomePage() {
     filteredSessionsBySeason // Sessions déjà filtrées par saison
   } = useFilters(drivers, sessions);
 
-  // Préremplir la piste depuis l'URL (ex. /classement?track=Spa depuis le calendrier)
+  // Préremplir le circuit depuis l'URL (ex. /classement?track=Spa depuis le calendrier)
   useEffect(() => {
     const trackParam = searchParams.get('track');
     if (trackParam) setTrackFilter(trackParam);
@@ -49,7 +49,7 @@ export function HomePage() {
   // Mettre à jour le contexte quand trackFilter change
   useEffect(() => {
     setContextTrackFilter(trackFilter);
-    // Track le changement de filtre piste
+    // Track le changement de filtre circuit
     if (trackFilter) {
       trackFilterChange('track', trackFilter);
     }
@@ -70,7 +70,7 @@ export function HomePage() {
   const filteredSessions = useMemo(() => {
     let result = [...filteredSessionsBySeason]; // Utiliser les sessions déjà filtrées par saison
     
-    // Filtrer par piste
+    // Filtrer par circuit
     if (trackFilter) {
       result = result.filter(session => session.trackName === trackFilter);
     }

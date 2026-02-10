@@ -132,3 +132,19 @@ export function truncate(text, maxLength) {
   return text.substring(0, maxLength - 3) + '...';
 }
 
+/**
+ * Formate un nom de circuit pour l'affichage (liste déroulante, etc.)
+ * "watkins_glen" → "Watkins Glen", "barcelona" → "Barcelona"
+ *
+ * @param {string} rawName - Nom brut (ex: watkins_glen, barcelona)
+ * @returns {string} Nom formaté avec majuscules
+ */
+export function formatCircuitDisplayName(rawName) {
+  if (!rawName) return '';
+  return rawName
+    .replace(/_/g, ' ')
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+

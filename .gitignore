@@ -42,6 +42,9 @@ node_modules/
 .env.test.local
 .env.production.local
 
+# Identifiants de test (ne pas committer)
+dev-credentials.local
+
 # Build outputs
 dist/
 build/
