@@ -20,6 +20,10 @@ export function FiltersBar({
   availableSeasons,
   periodFilter,
   onPeriodChange,
+  customDateStart,
+  customDateEnd,
+  onCustomDateStartChange,
+  onCustomDateEndChange,
   trackFilter,
   onTrackChange,
   availableTracks,
@@ -38,7 +42,14 @@ export function FiltersBar({
           onChange={onSeasonChange}
           availableSeasons={availableSeasons}
         />
-        <PeriodFilter value={periodFilter} onChange={onPeriodChange} />
+        <PeriodFilter
+          value={periodFilter}
+          onChange={onPeriodChange}
+          customDateStart={customDateStart}
+          customDateEnd={customDateEnd}
+          onCustomDateStartChange={onCustomDateStartChange}
+          onCustomDateEndChange={onCustomDateEndChange}
+        />
         <TrackFilter 
           value={trackFilter} 
           onChange={onTrackChange}

@@ -15,6 +15,8 @@ import { extractAvailableSeasons, addSeasonToSessions, filterSessionsBySeason } 
 
 export function useFilters(drivers = [], sessions = []) {
   const [periodFilter, setPeriodFilter] = useState('all');
+  const [customDateStart, setCustomDateStart] = useState('');
+  const [customDateEnd, setCustomDateEnd] = useState('');
   const [trackFilter, setTrackFilter] = useState('');
   const [groupByClass, setGroupByClass] = useState(false);
   const [seasonFilter, setSeasonFilter] = useState(''); // Nouvelle state pour la saison
@@ -116,8 +118,15 @@ export function useFilters(drivers = [], sessions = []) {
         const lastSession = d.lastSession ? new Date(d.lastSession).getTime() : 0;
         return lastSession > oneWeekAgo;
       });
+    } else if (periodFilter === 'custom' && customDateStart && customDateEnd) {
+      const startMs = new Date(customDateStart).getTime();
+      const endMs = new Date(customDateEnd).getTime();
+      result = result.filter(d => {
+        const lastSession = d.lastSession ? new Date(d.lastSession).getTime() : 0;
+        return lastSession >= startMs && lastSession <= endMs;
+      });
     }
-    // 'all' = pas de filtre sur la période
+    // 'all' ou custom sans dates = pas de filtre sur la période
 
     // Filtre par circuit (toujours filtrer, pas d'option "all")
     if (trackFilter) {
@@ -125,13 +134,15 @@ export function useFilters(drivers = [], sessions = []) {
     }
 
     return result;
-  }, [drivers, periodFilter, trackFilter]);
+  }, [drivers, periodFilter, trackFilter, customDateStart, customDateEnd]);
 
   /**
    * Réinitialise tous les filtres
    */
   const resetFilters = () => {
     setPeriodFilter('all');
+    setCustomDateStart('');
+    setCustomDateEnd('');
     setTrackFilter('all');
     setGroupByClass(false);
   };
@@ -139,12 +150,16 @@ export function useFilters(drivers = [], sessions = []) {
   return {
     // États
     periodFilter,
+    customDateStart,
+    customDateEnd,
     trackFilter,
     groupByClass,
     seasonFilter,
     
     // Setters
     setPeriodFilter,
+    setCustomDateStart,
+    setCustomDateEnd,
     setTrackFilter,
     setGroupByClass,
     setSeasonFilter,

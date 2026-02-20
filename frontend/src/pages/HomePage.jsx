@@ -31,6 +31,10 @@ export function HomePage() {
     availableSeasons,
     periodFilter,
     setPeriodFilter,
+    customDateStart,
+    customDateEnd,
+    setCustomDateStart,
+    setCustomDateEnd,
     trackFilter,
     setTrackFilter,
     groupByClass,
@@ -75,26 +79,34 @@ export function HomePage() {
       result = result.filter(session => session.trackName === trackFilter);
     }
     
-    // Filtrer par date (COPIE EXACTE de la prod)
+    // Filtrer par date (COPIE EXACTE de la prod + plage personnalisée)
     if (periodFilter !== 'all') {
-      const now = new Date();
-      const cutoffDate = new Date();
-      
-      if (periodFilter === 'week') {
-        cutoffDate.setTime(now.getTime() - DURATIONS.ONE_WEEK);
-      } else if (periodFilter === 'day') {
-        cutoffDate.setTime(now.getTime() - DURATIONS.ONE_DAY);
+      if (periodFilter === 'custom' && customDateStart && customDateEnd) {
+        const startMs = new Date(customDateStart).getTime();
+        const endMs = new Date(customDateEnd).getTime();
+        result = result.filter(session => {
+          if (!session.Date) return false;
+          const sessionDate = new Date(session.Date).getTime();
+          return sessionDate >= startMs && sessionDate <= endMs;
+        });
+      } else if (periodFilter === 'week' || periodFilter === 'day') {
+        const now = new Date();
+        const cutoffDate = new Date();
+        if (periodFilter === 'week') {
+          cutoffDate.setTime(now.getTime() - DURATIONS.ONE_WEEK);
+        } else {
+          cutoffDate.setTime(now.getTime() - DURATIONS.ONE_DAY);
+        }
+        result = result.filter(session => {
+          if (!session.Date) return false;
+          const sessionDate = new Date(session.Date);
+          return sessionDate >= cutoffDate;
+        });
       }
-      
-      result = result.filter(session => {
-        if (!session.Date) return false;
-        const sessionDate = new Date(session.Date);
-        return sessionDate >= cutoffDate;
-      });
     }
-    
+
     return result;
-  }, [filteredSessionsBySeason, trackFilter, periodFilter]);
+  }, [filteredSessionsBySeason, trackFilter, periodFilter, customDateStart, customDateEnd]);
   
   // Retraiter les sessions FILTRÉES (COMME LA PROD ligne 1185-1186)
   const processedDrivers = useProcessedData(filteredSessions, trackFilter);
@@ -172,6 +184,10 @@ export function HomePage() {
         availableSeasons={availableSeasons}
         periodFilter={periodFilter}
         onPeriodChange={setPeriodFilter}
+        customDateStart={customDateStart}
+        customDateEnd={customDateEnd}
+        onCustomDateStartChange={setCustomDateStart}
+        onCustomDateEndChange={setCustomDateEnd}
         trackFilter={trackFilter}
         onTrackChange={setTrackFilter}
         availableTracks={availableTracks}

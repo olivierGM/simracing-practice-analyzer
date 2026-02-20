@@ -9,7 +9,8 @@ export const THEMES = ['auto', 'dark', 'light'];
 export const PERIOD_FILTERS = [
   { value: 'all', label: 'À tout moment' },
   { value: 'week', label: 'Dernière semaine' },
-  { value: 'day', label: 'Dernière journée' }
+  { value: 'day', label: 'Dernière journée' },
+  { value: 'custom', label: 'Personnalisé' }
 ];
 
 // Colonnes du tableau principal (COPIE EXACTE de la prod - 14 colonnes)

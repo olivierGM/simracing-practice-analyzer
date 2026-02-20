@@ -4,6 +4,66 @@
   gap: 12px;
 }
 
+.period-filter-wrap {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.period-custom-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+  animation: period-custom-in 0.2s ease-out;
+}
+
+@keyframes period-custom-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.period-custom-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary, #888);
+  white-space: nowrap;
+}
+
+.period-datetime {
+  min-width: 155px;
+  max-width: 180px;
+  font-family: inherit;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--app-bg);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.period-datetime:hover {
+  border-color: var(--primary-color);
+}
+
+.period-datetime:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.period-datetime::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
 .filter-label {
   font-size: 14px;
   font-weight: 600;
@@ -31,6 +91,20 @@
     align-items: flex-start;
     gap: 8px;
     width: 100%;
+  }
+
+  .filter-group.period-filter-wrap .period-custom-range {
+    margin-left: 0;
+    margin-top: 6px;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .period-datetime {
+    min-width: 0;
+    flex: 1 1 140px;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   
   .filter-select {
