@@ -17,6 +17,7 @@ import { useTrackContext } from '../contexts/TrackContext';
 import { useFirebaseDataContext } from '../contexts/FirebaseDataContext';
 import { trackFilterChange, trackSort, trackPilotClick } from '../services/analytics';
 import { DURATIONS } from '../utils/constants';
+import { filterSessionsBySessionType } from '../utils/sessionFilters';
 
 export function HomePage() {
   const { drivers = [], sessions = [] } = useFirebaseDataContext();
@@ -37,6 +38,9 @@ export function HomePage() {
     setCustomDateEnd,
     trackFilter,
     setTrackFilter,
+    sessionTypeFilter,
+    setSessionTypeFilter,
+    availableSessionTypes,
     groupByClass,
     setGroupByClass,
     availableTracks,
@@ -69,15 +73,17 @@ export function HomePage() {
     trackFilterChange('group_by_class', groupByClass ? 'enabled' : 'disabled');
   }, [groupByClass]);
   
-  // COPIE DE LA PROD ligne 1164-1182: Filtrer les sessions par période AVANT retraitement
-  // Note: filteredSessionsBySeason contient déjà les sessions filtrées par saison
+  // Filtrer les sessions par saison, circuit, période et type de session AVANT retraitement
   const filteredSessions = useMemo(() => {
-    let result = [...filteredSessionsBySeason]; // Utiliser les sessions déjà filtrées par saison
+    let result = [...filteredSessionsBySeason];
     
     // Filtrer par circuit
     if (trackFilter) {
       result = result.filter(session => session.trackName === trackFilter);
     }
+    
+    // Filtrer par type de session (FP / Q / R)
+    result = filterSessionsBySessionType(result, sessionTypeFilter);
     
     // Filtrer par date (COPIE EXACTE de la prod + plage personnalisée)
     if (periodFilter !== 'all') {
@@ -106,7 +112,7 @@ export function HomePage() {
     }
 
     return result;
-  }, [filteredSessionsBySeason, trackFilter, periodFilter, customDateStart, customDateEnd]);
+  }, [filteredSessionsBySeason, trackFilter, sessionTypeFilter, periodFilter, customDateStart, customDateEnd]);
   
   // Retraiter les sessions FILTRÉES (COMME LA PROD ligne 1185-1186)
   const processedDrivers = useProcessedData(filteredSessions, trackFilter);
@@ -191,6 +197,9 @@ export function HomePage() {
         trackFilter={trackFilter}
         onTrackChange={setTrackFilter}
         availableTracks={availableTracks}
+        sessionTypeFilter={sessionTypeFilter}
+        onSessionTypeChange={setSessionTypeFilter}
+        availableSessionTypes={availableSessionTypes}
         teamFilter={teamFilter}
         onTeamChange={setTeamFilter}
         availableTeams={availableTeams}

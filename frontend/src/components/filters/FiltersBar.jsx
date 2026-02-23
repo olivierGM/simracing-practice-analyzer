@@ -10,6 +10,7 @@
 import { SeasonFilter } from './SeasonFilter';
 import { PeriodFilter } from './PeriodFilter';
 import { TrackFilter } from './TrackFilter';
+import { SessionTypeFilter } from './SessionTypeFilter';
 import { TeamFilter } from './TeamFilter';
 import { GroupByClassToggle } from './GroupByClassToggle';
 import './FiltersBar.css';
@@ -27,6 +28,9 @@ export function FiltersBar({
   trackFilter,
   onTrackChange,
   availableTracks,
+  sessionTypeFilter,
+  onSessionTypeChange,
+  availableSessionTypes = [],
   teamFilter,
   onTeamChange,
   availableTeams,
@@ -55,12 +59,19 @@ export function FiltersBar({
           onChange={onTrackChange}
           tracks={availableTracks}
         />
-        <TeamFilter
-          value={teamFilter}
-          onChange={onTeamChange}
-          teams={availableTeams}
-          hasDriversWithoutTeam={hasDriversWithoutTeam}
+        <SessionTypeFilter
+          value={sessionTypeFilter}
+          onChange={onSessionTypeChange}
+          availableSessionTypes={availableSessionTypes}
         />
+        {false && (
+          <TeamFilter
+            value={teamFilter}
+            onChange={onTeamChange}
+            teams={availableTeams}
+            hasDriversWithoutTeam={hasDriversWithoutTeam}
+          />
+        )}
         <GroupByClassToggle 
           checked={groupByClass}
           onChange={onGroupByClassChange}

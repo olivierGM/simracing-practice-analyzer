@@ -18,6 +18,7 @@ export function useFilters(drivers = [], sessions = []) {
   const [customDateStart, setCustomDateStart] = useState('');
   const [customDateEnd, setCustomDateEnd] = useState('');
   const [trackFilter, setTrackFilter] = useState('');
+  const [sessionTypeFilter, setSessionTypeFilter] = useState('');
   const [groupByClass, setGroupByClass] = useState(false);
   const [seasonFilter, setSeasonFilter] = useState(''); // Nouvelle state pour la saison
 
@@ -58,6 +59,16 @@ export function useFilters(drivers = [], sessions = []) {
     });
     
     return Array.from(tracks).sort();
+  }, [filteredSessionsBySeason]);
+
+  // Types de session présents dans les données (sessionType: FP, Q, R)
+  const availableSessionTypes = useMemo(() => {
+    const types = new Set();
+    filteredSessionsBySeason.forEach(session => {
+      const t = session.sessionType;
+      if (t && typeof t === 'string') types.add(t.trim().toUpperCase());
+    });
+    return Array.from(types).sort();
   }, [filteredSessionsBySeason]);
   
   // Trouver le circuit avec la session la plus récente (depuis les sessions filtrées par saison)
@@ -144,6 +155,7 @@ export function useFilters(drivers = [], sessions = []) {
     setCustomDateStart('');
     setCustomDateEnd('');
     setTrackFilter('all');
+    setSessionTypeFilter('');
     setGroupByClass(false);
   };
 
@@ -153,6 +165,7 @@ export function useFilters(drivers = [], sessions = []) {
     customDateStart,
     customDateEnd,
     trackFilter,
+    sessionTypeFilter,
     groupByClass,
     seasonFilter,
     
@@ -161,12 +174,14 @@ export function useFilters(drivers = [], sessions = []) {
     setCustomDateStart,
     setCustomDateEnd,
     setTrackFilter,
+    setSessionTypeFilter,
     setGroupByClass,
     setSeasonFilter,
     
     // Données calculées
     availableTracks,
     availableSeasons,
+    availableSessionTypes,
     filteredDrivers,
     filteredSessionsBySeason, // Sessions filtrées par saison
     
