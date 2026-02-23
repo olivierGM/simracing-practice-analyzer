@@ -12,6 +12,14 @@ export const PERIOD_FILTERS = [
   { value: 'day', label: 'Dernière journée' }
 ];
 
+// Filtres par type de session (ACC/MoTec: FP = pratique, Q = qualif, R = course)
+export const SESSION_TYPE_FILTERS = [
+  { value: '', label: 'Toutes' },
+  { value: 'FP', label: 'Pratique' },
+  { value: 'Q', label: 'Qualif' },
+  { value: 'R', label: 'Course' }
+];
+
 // Colonnes du tableau principal (COPIE EXACTE de la prod - 14 colonnes)
 // Voir script-public.js lignes 942-956
 export const TABLE_COLUMNS = [

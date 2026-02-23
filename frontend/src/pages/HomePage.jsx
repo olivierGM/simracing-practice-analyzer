@@ -17,6 +17,7 @@ import { useTrackContext } from '../contexts/TrackContext';
 import { useFirebaseDataContext } from '../contexts/FirebaseDataContext';
 import { trackFilterChange, trackSort, trackPilotClick } from '../services/analytics';
 import { DURATIONS } from '../utils/constants';
+import { filterSessionsBySessionType } from '../utils/sessionFilters';
 
 export function HomePage() {
   const { drivers = [], sessions = [] } = useFirebaseDataContext();
@@ -33,6 +34,9 @@ export function HomePage() {
     setPeriodFilter,
     trackFilter,
     setTrackFilter,
+    sessionTypeFilter,
+    setSessionTypeFilter,
+    availableSessionTypes,
     groupByClass,
     setGroupByClass,
     availableTracks,
@@ -40,7 +44,7 @@ export function HomePage() {
     filteredSessionsBySeason // Sessions déjà filtrées par saison
   } = useFilters(drivers, sessions);
 
-  // Préremplir la piste depuis l'URL (ex. /classement?track=Spa depuis le calendrier)
+  // Préremplir le circuit depuis l'URL (ex. /classement?track=Spa depuis le calendrier)
   useEffect(() => {
     const trackParam = searchParams.get('track');
     if (trackParam) setTrackFilter(trackParam);
@@ -49,7 +53,7 @@ export function HomePage() {
   // Mettre à jour le contexte quand trackFilter change
   useEffect(() => {
     setContextTrackFilter(trackFilter);
-    // Track le changement de filtre piste
+    // Track le changement de filtre circuit
     if (trackFilter) {
       trackFilterChange('track', trackFilter);
     }
@@ -65,17 +69,19 @@ export function HomePage() {
     trackFilterChange('group_by_class', groupByClass ? 'enabled' : 'disabled');
   }, [groupByClass]);
   
-  // COPIE DE LA PROD ligne 1164-1182: Filtrer les sessions par période AVANT retraitement
-  // Note: filteredSessionsBySeason contient déjà les sessions filtrées par saison
+  // Filtrer les sessions par saison, circuit, période et type de session AVANT retraitement
   const filteredSessions = useMemo(() => {
-    let result = [...filteredSessionsBySeason]; // Utiliser les sessions déjà filtrées par saison
+    let result = [...filteredSessionsBySeason];
     
-    // Filtrer par piste
+    // Filtrer par circuit
     if (trackFilter) {
       result = result.filter(session => session.trackName === trackFilter);
     }
     
-    // Filtrer par date (COPIE EXACTE de la prod)
+    // Filtrer par type de session (FP / Q / R)
+    result = filterSessionsBySessionType(result, sessionTypeFilter);
+    
+    // Filtrer par date
     if (periodFilter !== 'all') {
       const now = new Date();
       const cutoffDate = new Date();
@@ -94,7 +100,7 @@ export function HomePage() {
     }
     
     return result;
-  }, [filteredSessionsBySeason, trackFilter, periodFilter]);
+  }, [filteredSessionsBySeason, trackFilter, sessionTypeFilter, periodFilter]);
   
   // Retraiter les sessions FILTRÉES (COMME LA PROD ligne 1185-1186)
   const processedDrivers = useProcessedData(filteredSessions, trackFilter);
@@ -175,6 +181,9 @@ export function HomePage() {
         trackFilter={trackFilter}
         onTrackChange={setTrackFilter}
         availableTracks={availableTracks}
+        sessionTypeFilter={sessionTypeFilter}
+        onSessionTypeChange={setSessionTypeFilter}
+        availableSessionTypes={availableSessionTypes}
         teamFilter={teamFilter}
         onTeamChange={setTeamFilter}
         availableTeams={availableTeams}

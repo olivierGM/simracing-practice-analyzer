@@ -68,9 +68,9 @@ module.exports = defineConfig({
 
   /* Démarrer le serveur Vite avant les tests pour que les tests passent sans lancer le dev à la main */
   webServer: {
-    command: 'cd frontend && npm run dev',
+    command: 'cd frontend && npm run dev -- --port 5173',
     url: 'http://localhost:5173',
     reuseExistingServer: true,
-    timeout: 120000,
+    timeout: 180000,
   },
 });
