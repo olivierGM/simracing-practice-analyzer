@@ -154,6 +154,17 @@ header, .app-header {
   background: var(--bg-secondary);
 }
 
+.header-account-theme {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.header-account-theme-icon {
+  font-size: 1rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .header-content {

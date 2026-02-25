@@ -12,12 +12,16 @@ import { EGTPracticeServer } from './EGTPracticeServer';
 import { ToolsMenu } from './ToolsMenu';
 import { useAuth } from '../../contexts/AuthContext';
 import { useUserRole } from '../../hooks/useUserRole';
+import { useTheme } from '../../hooks/useTheme';
 import './Header.css';
+
+const THEME_ICONS = { auto: '🖥️', dark: '🌙', light: '☀️' };
 
 export function Header({ metadata, trackName, isDrillsPage }) {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
   const { isAdmin } = useUserRole();
+  const { currentTheme, cycleTheme } = useTheme();
   const [accountOpen, setAccountOpen] = useState(false);
   const accountRef = useRef(null);
 
@@ -63,7 +67,7 @@ export function Header({ metadata, trackName, isDrillsPage }) {
           <EGTPracticeServer trackName={trackName} />
           <LastUpdateIndicator metadata={metadata} />
           <ToolsMenu navigate={navigate} />
-          <ThemeToggle />
+          {!isAuthenticated && <ThemeToggle />}
           {isAuthenticated ? (
             <div className="header-account" ref={accountRef}>
               <button
@@ -80,6 +84,24 @@ export function Header({ metadata, trackName, isDrillsPage }) {
                   <button type="button" onClick={() => { setAccountOpen(false); navigate('/account'); }}>
                     Mon compte
                   </button>
+                  <button
+                    type="button"
+                    className="header-account-theme"
+                    onClick={() => cycleTheme()}
+                    title={`Thème : ${currentTheme} • Cliquer pour changer`}
+                  >
+                    <span>Thème</span>
+                    <span className="header-account-theme-icon" aria-hidden>{THEME_ICONS[currentTheme] ?? '🖥️'}</span>
+                  </button>
+                  {isAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => { setAccountOpen(false); handleAdminClick(); }}
+                      aria-label="Administration"
+                    >
+                      Admin
+                    </button>
+                  )}
                   <button type="button" onClick={handleLogout}>
                     Déconnexion
                   </button>
@@ -93,16 +115,6 @@ export function Header({ metadata, trackName, isDrillsPage }) {
               onClick={() => navigate('/login')}
             >
               Connexion
-            </button>
-          )}
-          {isAdmin && (
-            <button
-              id="loginBtn"
-              className="login-btn"
-              onClick={handleAdminClick}
-              aria-label="Administration"
-            >
-              ⚙️
             </button>
           )}
         </div>
