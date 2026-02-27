@@ -19,7 +19,7 @@ export function MinimalHeader() {
             className="header-title-with-logo"
           >
             <img src="/android-chrome-512x512.png" alt="" className="header-logo" aria-hidden />
-            Sim League EGT
+            <span className="header-title-text">Sim League EGT</span>
           </h1>
         </div>
         <div className="header-actions">

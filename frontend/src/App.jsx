@@ -16,6 +16,7 @@ import { AccountPage } from './pages/AccountPage';
 import { LandingPage } from './pages/LandingPage';
 import { AngleMeasurementPage } from './pages/AngleMeasurementPage';
 import { CalendrierPage } from './pages/CalendrierPage';
+import { ResultatsPlaceholderPage } from './pages/ResultatsPlaceholderPage';
 import { GamepadDebugPage } from './pages/GamepadDebugPage';
 import NotFound from './pages/NotFound';
 import { AnalyticsTracker } from './components/layout/AnalyticsTracker';
@@ -23,8 +24,7 @@ import { LandingLayout } from './components/layout/LandingLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AdminRoute } from './components/auth/AdminRoute';
 import { FirebaseDataGate } from './components/data/FirebaseDataGate';
-import { useFirebaseDataContext } from './contexts/FirebaseDataContext';
-import { TrackProvider, useTrackContext } from './contexts/TrackContext';
+import { TrackProvider } from './contexts/TrackContext';
 import { AuthProvider } from './contexts/AuthContext';
 import './App.css';
 
@@ -34,15 +34,11 @@ const PedalWheelDrillsPage = lazy(() => import('./pages/PedalWheelDrillsPage'));
 function AppLayout() {
   const location = useLocation();
   const isDrillsPage = location.pathname === '/pedal-wheel-drills';
-  const { trackFilter } = useTrackContext();
-  // AppLayout est rendu comme enfant de FirebaseDataGate's Outlet, donc le contexte est disponible
-  const { metadata } = useFirebaseDataContext();
-
   return (
     <>
       <AnalyticsTracker />
       <div className={`app${isDrillsPage ? ' app--drills' : ''}`}>
-        <Header metadata={metadata} trackName={trackFilter} isDrillsPage={isDrillsPage} />
+        <Header isDrillsPage={isDrillsPage} />
         <main className={`main-content${isDrillsPage ? ' main-content--drills' : ''}`}>
           <Outlet />
         </main>
@@ -79,6 +75,7 @@ function AppContent() {
               <Route path="/account" element={<AccountPage />} />
               <Route path="/angle-measurement" element={<AngleMeasurementPage />} />
               <Route path="/calendrier" element={<CalendrierPage />} />
+              <Route path="/resultats" element={<ResultatsPlaceholderPage />} />
               <Route
                 path="/pedal-wheel-drills"
                 element={

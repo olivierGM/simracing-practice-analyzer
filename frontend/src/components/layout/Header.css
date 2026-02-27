@@ -14,15 +14,33 @@ header, .app-header {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-left: 20px;
-  margin-right: 20px;
+  max-width: 1422px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-.header-titles h1 {
+/* Une seule rangée : gauche = titre, centre = nav, droite = actions */
+.header-content--single-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-left {
+  flex-shrink: 0;
+}
+
+.header-left .header-title-with-logo {
+  margin: 0;
+}
+
+.header-left h1 {
   font-size: 1.5rem;
-  margin-bottom: 2px;
+  margin: 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  color: #ffffff; /* Blanc sur gradient violet */
+  color: #ffffff;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -38,22 +56,53 @@ header, .app-header {
   margin: 4px;
 }
 
-.header-titles h1:hover {
+.header-left h1:hover {
   opacity: 0.8;
   transform: translateY(-1px);
 }
 
-.header-titles p {
+/* Nav au centre */
+.header-nav--center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.header-nav-item {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
   font-size: 0.9rem;
-  opacity: 0.9;
-  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.header-nav-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.header-nav-item--active {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
 /* Bouton Admin discret en haut à droite */
@@ -107,6 +156,9 @@ header, .app-header {
 }
 
 .header-account-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.25);
   color: #fff;
@@ -118,6 +170,27 @@ header, .app-header {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.header-account-avatar {
+  display: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.header-account-avatar svg {
+  width: 18px;
+  height: 18px;
+}
+
+.header-account-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .header-account-trigger:hover {
@@ -165,25 +238,81 @@ header, .app-header {
   font-size: 1rem;
 }
 
-/* Responsive */
+.header-account-tools-toggle {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.header-account-tools-sub {
+  background: transparent;
+  border-top: 1px solid var(--border-color);
+  padding: 4px 0;
+}
+
+.header-account-tools-sub-item {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  padding-left: 24px !important;
+  font-size: 0.85rem !important;
+  background: transparent !important;
+}
+
+.header-account-tools-sub-item:hover {
+  background: var(--bg-secondary) !important;
+}
+
+/* Responsive : une ligne logo | nav | compte */
 @media (max-width: 768px) {
-  .header-content {
-    flex-direction: column;
-    align-items: flex-start;
+  .header-content--single-row {
+    flex-wrap: nowrap;
   }
 
-  .header-title-with-logo .header-logo {
+  .header-nav--center {
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .header-left .header-title-with-logo .header-logo {
     width: 28px;
     height: 28px;
     padding: 2px;
   }
-  
-  .header-titles h1 {
+
+  .header-left h1 {
     font-size: 1.2rem;
   }
-  
+
+  /* Masquer le titre texte "Sim League EGT" en mobile pour gagner de la place */
+  .header-title-text {
+    display: none;
+  }
+
   .header-actions {
-    width: 100%;
-    justify-content: space-between;
+    margin-left: 0;
+    flex-shrink: 0;
+  }
+
+  /* Compte : icône utilisateur ronde uniquement en mobile */
+  .header-account-trigger {
+    padding: 6px;
+    max-width: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    justify-content: center;
+  }
+
+  .header-account-avatar {
+    display: flex;
+  }
+
+  .header-account-label {
+    display: none;
   }
 }

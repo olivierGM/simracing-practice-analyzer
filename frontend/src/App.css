@@ -29,7 +29,7 @@ body:has(.app--drills) {
   display: flex;
   flex-direction: column;
   padding: 0;
-  max-width: 1400px;
+  max-width: 1422px;
   margin: 0 auto;
   width: 100%;
 }
@@ -72,7 +72,7 @@ body:has(.app--drills) {
 
 /* Container blanc sur gradient - exactement comme en prod */
 .container {
-  max-width: 1400px;
+  max-width: 1422px;
   margin: 0 auto;
   padding: 20px;
   background: var(--bg-secondary);
@@ -81,6 +81,16 @@ body:has(.app--drills) {
   transition: background 0.3s ease, box-shadow 0.3s ease;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* Ligne "Dernière session" + module 0/64 (EGT) sur la page des temps */
+.home-page-times-header {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 /* Message d'erreur */

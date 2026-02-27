@@ -5,15 +5,31 @@
  * - Filtre par période (day/week/all)
  * - Filtre par circuit
  * - Toggle groupement par classe
+ * En mobile : section collapsible, fermée par défaut.
  */
 
+import { useState, useEffect } from 'react';
 import { SeasonFilter } from './SeasonFilter';
 import { PeriodFilter } from './PeriodFilter';
 import { TrackFilter } from './TrackFilter';
 import { SessionTypeFilter } from './SessionTypeFilter';
-import { TeamFilter } from './TeamFilter';
 import { GroupByClassToggle } from './GroupByClassToggle';
 import './FiltersBar.css';
+
+const MOBILE_BREAKPOINT = 768;
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+    const handler = () => setIsMobile(mq.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+  return isMobile;
+}
 
 export function FiltersBar({
   seasonFilter,
@@ -31,16 +47,33 @@ export function FiltersBar({
   sessionTypeFilter,
   onSessionTypeChange,
   availableSessionTypes = [],
-  teamFilter,
-  onTeamChange,
-  availableTeams,
-  hasDriversWithoutTeam = false,
+  teamFilter: _teamFilter,
+  onTeamChange: _onTeamChange,
+  availableTeams: _availableTeams,
+  hasDriversWithoutTeam: _hasDriversWithoutTeam = false,
   groupByClass,
   onGroupByClassChange
 }) {
+  const isMobile = useIsMobile();
+  const [collapsed, setCollapsed] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches
+  );
+
   return (
-    <div className="filters-bar">
-      <div className="filters-container">
+    <div className={`filters-bar ${isMobile && collapsed ? 'filters-bar--collapsed' : ''}`}>
+      {isMobile && (
+        <button
+          type="button"
+          className="filters-bar-toggle"
+          onClick={() => setCollapsed((c) => !c)}
+          aria-expanded={!collapsed}
+          aria-controls="filters-container"
+        >
+          <span>Filtres</span>
+          <span className="filters-bar-toggle-icon" aria-hidden>{collapsed ? '▾' : '▴'}</span>
+        </button>
+      )}
+      <div id="filters-container" className="filters-container" role="region" aria-label="Filtres">
         <SeasonFilter 
           value={seasonFilter} 
           onChange={onSeasonChange}
@@ -64,14 +97,6 @@ export function FiltersBar({
           onChange={onSessionTypeChange}
           availableSessionTypes={availableSessionTypes}
         />
-        {false && (
-          <TeamFilter
-            value={teamFilter}
-            onChange={onTeamChange}
-            teams={availableTeams}
-            hasDriversWithoutTeam={hasDriversWithoutTeam}
-          />
-        )}
         <GroupByClassToggle 
           checked={groupByClass}
           onChange={onGroupByClassChange}

@@ -10,6 +10,8 @@ import { FiltersBar } from '../components/filters/FiltersBar';
 import { DriversTable } from '../components/table/DriversTable';
 import { GlobalStats } from '../components/layout/GlobalStats';
 import { ACCServersBanner } from '../components/layout/ACCServersBanner';
+import { LastUpdateIndicator } from '../components/layout/LastUpdateIndicator';
+import { EGTPracticeServer } from '../components/layout/EGTPracticeServer';
 import { useFilters } from '../hooks/useFilters';
 import { useProcessedData } from '../hooks/useProcessedData';
 import { useSorting } from '../hooks/useSorting';
@@ -20,7 +22,7 @@ import { DURATIONS } from '../utils/constants';
 import { filterSessionsBySessionType } from '../utils/sessionFilters';
 
 export function HomePage() {
-  const { drivers = [], sessions = [] } = useFirebaseDataContext();
+  const { drivers = [], sessions = [], metadata } = useFirebaseDataContext();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { setTrackFilter: setContextTrackFilter } = useTrackContext();
@@ -184,6 +186,10 @@ export function HomePage() {
 
   return (
     <div className="container">
+      <div className="home-page-times-header">
+        <LastUpdateIndicator metadata={metadata} />
+        <EGTPracticeServer trackName={trackFilter} />
+      </div>
       <FiltersBar
         seasonFilter={seasonFilter}
         onSeasonChange={setSeasonFilter}
