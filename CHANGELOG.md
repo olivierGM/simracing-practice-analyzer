@@ -8,6 +8,12 @@ Résumé des livraisons sur `main`. À chaque release : date, thème, 2–3 lign
 
 - (À remplir à la prochaine livraison)
 
+## 2026-02-09
+
+- **Header & page temps** : Max-width 1422px (header + container). Dernière session et module 0/64 déplacés sur la page des temps. Nav « Classement » masquée. Mobile : titre texte masqué, compte en icône ronde, filtres repliables (fermés par défaut).
+- **Filtres** : Encadré avec coins arrondis, « Grouper par classe » sur la même ligne. Période « Personnalisé » : encadré visuel regroupant le select et les deux champs date.
+- **Validation** : Lint + build OK ; déployé sur Firebase Hosting.
+
 ## 2026-02-05 (suite)
 
 - **Rôles admin** : Cog admin visible uniquement pour rôle `admin` (Firestore). Route `/admin` protégée par AdminRoute. Suppression du mot de passe admin ; accès par compte + rôle. Rétrocompatibilité pour cow.killa@gmail.com (persistance du rôle si manquant).
