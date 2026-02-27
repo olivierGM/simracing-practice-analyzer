@@ -8,6 +8,11 @@ Résumé des livraisons sur `main`. À chaque release : date, thème, 2–3 lign
 
 - (À remplir à la prochaine livraison)
 
+## 2026-02-09 (suite)
+
+- **Header desktop** : Dernière session + module 0/64 de nouveau dans la barre titre en desktop ; Outils en bouton à gauche du compte. En mobile : titre « Sim League EGT » masqué jusqu’à 900px pour éviter l’overlap avec la nav.
+- **Déploiement** : Lint + build OK ; déployé sur Firebase Hosting.
+
 ## 2026-02-09
 
 - **Header & page temps** : Max-width 1422px (header + container). Dernière session et module 0/64 déplacés sur la page des temps. Nav « Classement » masquée. Mobile : titre texte masqué, compte en icône ronde, filtres repliables (fermés par défaut).

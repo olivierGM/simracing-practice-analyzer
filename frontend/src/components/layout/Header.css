@@ -105,6 +105,68 @@ header, .app-header {
   flex-shrink: 0;
 }
 
+/* Dernière session + 0/64 dans le header (desktop uniquement) */
+.header-session-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Outils en bouton standalone à gauche du compte (desktop uniquement) */
+.header-tools-standalone {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.header-tools-trigger {
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.header-tools-trigger:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.header-tools-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  min-width: 200px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.header-tools-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.header-tools-dropdown-item:hover {
+  background: var(--bg-secondary);
+}
+
 /* Bouton Admin discret en haut à droite */
 .admin-access-btn,
 .login-btn {
@@ -238,8 +300,9 @@ header, .app-header {
   font-size: 1rem;
 }
 
+/* En desktop : Outils est dans le bouton standalone ; en mobile : dans le menu compte */
 .header-account-tools-toggle {
-  display: flex !important;
+  display: none;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
@@ -262,6 +325,13 @@ header, .app-header {
 
 .header-account-tools-sub-item:hover {
   background: var(--bg-secondary) !important;
+}
+
+/* Masquer le titre "Sim League EGT" en dessous de 900px pour éviter overlap avec la nav */
+@media (max-width: 900px) {
+  .header-title-text {
+    display: none;
+  }
 }
 
 /* Responsive : une ligne logo | nav | compte */
@@ -288,14 +358,23 @@ header, .app-header {
     font-size: 1.2rem;
   }
 
-  /* Masquer le titre texte "Sim League EGT" en mobile pour gagner de la place */
-  .header-title-text {
-    display: none;
-  }
-
   .header-actions {
     margin-left: 0;
     flex-shrink: 0;
+  }
+
+  /* En mobile : Dernière session + 0/64 sont sur la page temps, pas dans le header */
+  .header-session-info {
+    display: none;
+  }
+
+  /* En mobile : pas de bouton Outils standalone, on garde Outils dans le menu compte */
+  .header-tools-standalone {
+    display: none;
+  }
+
+  .header-account-tools-toggle {
+    display: flex !important;
   }
 
   /* Compte : icône utilisateur ronde uniquement en mobile */

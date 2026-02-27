@@ -83,14 +83,20 @@ body:has(.app--drills) {
   box-sizing: border-box;
 }
 
-/* Ligne "Dernière session" + module 0/64 (EGT) sur la page des temps */
+/* Ligne "Dernière session" + module 0/64 : visible en mobile uniquement (en desktop ils sont dans le header) */
 .home-page-times-header {
+  display: none;
   margin-bottom: 12px;
-  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .home-page-times-header {
+    display: flex;
+  }
 }
 
 /* Message d'erreur */

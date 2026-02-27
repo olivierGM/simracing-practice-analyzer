@@ -7,6 +7,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ThemeToggle } from '../theme/ThemeToggle';
+import { LastUpdateIndicator } from './LastUpdateIndicator';
+import { EGTPracticeServer } from './EGTPracticeServer';
 import { useAuth } from '../../contexts/AuthContext';
 import { useUserRole } from '../../hooks/useUserRole';
 import { useTheme } from '../../hooks/useTheme';
@@ -27,7 +29,7 @@ const ACCOUNT_TOOLS = [
   { label: 'Calendrier', path: '/calendrier', icon: '📅' },
 ];
 
-export function Header({ isDrillsPage }) {
+export function Header({ metadata, trackName, isDrillsPage }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuth();
@@ -35,7 +37,9 @@ export function Header({ isDrillsPage }) {
   const { currentTheme, cycleTheme } = useTheme();
   const [accountOpen, setAccountOpen] = useState(false);
   const [toolsExpanded, setToolsExpanded] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const accountRef = useRef(null);
+  const toolsRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -43,12 +47,15 @@ export function Header({ isDrillsPage }) {
         setAccountOpen(false);
         setToolsExpanded(false);
       }
+      if (toolsRef.current && !toolsRef.current.contains(e.target)) {
+        setToolsOpen(false);
+      }
     };
-    if (accountOpen) {
+    if (accountOpen || toolsOpen) {
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
-  }, [accountOpen]);
+  }, [accountOpen, toolsOpen]);
 
   const handleAdminClick = () => navigate('/admin');
 
@@ -95,9 +102,44 @@ export function Header({ isDrillsPage }) {
         )}
 
         <div className="header-actions">
+          {/* Dernière session + 0/64 : visibles en desktop uniquement */}
+          {!isDrillsPage && (
+            <div className="header-session-info">
+              <LastUpdateIndicator metadata={metadata} />
+              <EGTPracticeServer trackName={trackName} />
+            </div>
+          )}
           {!isAuthenticated && <ThemeToggle />}
           {isAuthenticated ? (
-            <div className="header-account" ref={accountRef}>
+            <>
+              {/* Outils en bouton standalone à gauche du compte (desktop uniquement) */}
+              <div className="header-tools-standalone" ref={toolsRef}>
+                <button
+                  type="button"
+                  className="header-tools-trigger"
+                  onClick={() => setToolsOpen((o) => !o)}
+                  aria-expanded={toolsOpen}
+                  aria-haspopup="true"
+                >
+                  🔧 Outils
+                </button>
+                {toolsOpen && (
+                  <div className="header-tools-dropdown">
+                    {ACCOUNT_TOOLS.map(({ label, path, icon }) => (
+                      <button
+                        key={path}
+                        type="button"
+                        className="header-tools-dropdown-item"
+                        onClick={() => { setToolsOpen(false); navigate(path); }}
+                      >
+                        <span aria-hidden>{icon}</span>
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div className="header-account" ref={accountRef}>
               <button
                 type="button"
                 className="header-account-trigger"
@@ -125,6 +167,7 @@ export function Header({ isDrillsPage }) {
                     <span>Thème</span>
                     <span className="header-account-theme-icon" aria-hidden>{THEME_ICONS[currentTheme] ?? '🖥️'}</span>
                   </button>
+                  {/* Outils dans le menu compte : visible en mobile uniquement */}
                   <button
                     type="button"
                     className="header-account-tools-toggle"
@@ -163,7 +206,8 @@ export function Header({ isDrillsPage }) {
                   </button>
                 </div>
               )}
-            </div>
+              </div>
+            </>
           ) : (
             <button
               type="button"

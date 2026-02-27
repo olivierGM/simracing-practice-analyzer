@@ -24,8 +24,9 @@ import { LandingLayout } from './components/layout/LandingLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AdminRoute } from './components/auth/AdminRoute';
 import { FirebaseDataGate } from './components/data/FirebaseDataGate';
-import { TrackProvider } from './contexts/TrackContext';
+import { TrackProvider, useTrackContext } from './contexts/TrackContext';
 import { AuthProvider } from './contexts/AuthContext';
+import { useFirebaseDataContext } from './contexts/FirebaseDataContext';
 import './App.css';
 
 const PedalWheelDrillsPage = lazy(() => import('./pages/PedalWheelDrillsPage'));
@@ -34,11 +35,13 @@ const PedalWheelDrillsPage = lazy(() => import('./pages/PedalWheelDrillsPage'));
 function AppLayout() {
   const location = useLocation();
   const isDrillsPage = location.pathname === '/pedal-wheel-drills';
+  const { metadata } = useFirebaseDataContext();
+  const { trackFilter } = useTrackContext();
   return (
     <>
       <AnalyticsTracker />
       <div className={`app${isDrillsPage ? ' app--drills' : ''}`}>
-        <Header isDrillsPage={isDrillsPage} />
+        <Header metadata={metadata} trackName={trackFilter} isDrillsPage={isDrillsPage} />
         <main className={`main-content${isDrillsPage ? ' main-content--drills' : ''}`}>
           <Outlet />
         </main>
