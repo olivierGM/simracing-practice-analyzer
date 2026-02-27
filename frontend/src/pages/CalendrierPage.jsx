@@ -4,6 +4,8 @@
  */
 
 import { useMemo } from 'react';
+import { ProchaineCourse } from '../components/calendrier/ProchaineCourse';
+import { downloadIcs } from '../components/calendrier/exportCalendarIcs';
 import './CalendrierPage.css';
 
 // Données statiques – calendrier Saison 2026
@@ -36,9 +38,17 @@ function formatDate(dateStr) {
 export function CalendrierPage() {
   const sortedEvents = useMemo(() => [...EVENTS].sort((a, b) => a.date.localeCompare(b.date)), []);
 
+  const handleExportCalendar = () => {
+    downloadIcs(EVENTS, RACE_DAY_SCHEDULE);
+  };
+
   return (
     <div className="calendrier-page">
       <h1 className="calendrier-title">Calendrier des évènements</h1>
+
+      <section className="calendrier-section prochaine-course-section">
+        <ProchaineCourse events={EVENTS} raceDaySchedule={RACE_DAY_SCHEDULE} />
+      </section>
 
       <section className="calendrier-section race-day-schedule">
         <h2>Déroulé du jour de course</h2>
@@ -52,7 +62,17 @@ export function CalendrierPage() {
       </section>
 
       <section className="calendrier-section events-list">
-        <h2>Calendrier des courses</h2>
+        <div className="events-list-header">
+          <h2>Calendrier des courses</h2>
+          <button
+            type="button"
+            className="btn-export-calendar"
+            onClick={handleExportCalendar}
+            title="Télécharger un fichier .ics pour l’ajouter à Google Calendar, Outlook ou Apple Calendar"
+          >
+            Ajouter à mon agenda
+          </button>
+        </div>
         <ul className="events-list-ul">
           {sortedEvents.map((event) => (
             <li key={event.round} className="event-card">

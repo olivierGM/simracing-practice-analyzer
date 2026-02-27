@@ -25,6 +25,48 @@
   color: var(--text-primary);
 }
 
+/* Section sans encadré : seul le bloc ProchaineCourse a un style (encadré pâle) */
+.prochaine-course-section {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0 0 24px 0;
+}
+
+.events-list-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.events-list-header h2 {
+  margin: 0;
+}
+
+.btn-export-calendar {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--bg-primary, #fff);
+  background: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-export-calendar:hover {
+  background: var(--primary-hover, var(--primary-color));
+  filter: brightness(1.05);
+}
+
+.btn-export-calendar:active {
+  transform: scale(0.98);
+}
+
 .schedule-list {
   list-style: none;
   margin: 0;

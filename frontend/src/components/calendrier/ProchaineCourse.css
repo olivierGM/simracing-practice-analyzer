@@ -1,0 +1,69 @@
+.prochaine-course {
+  padding: 12px 16px;
+  background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+  border: 1px solid var(--primary-color);
+  border-radius: 10px;
+}
+
+.prochaine-course-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+.prochaine-course-event {
+  margin: 0 0 6px 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.prochaine-course-event strong {
+  color: var(--text-primary);
+}
+
+.prochaine-course-badge {
+  margin-left: 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--primary-color);
+  color: var(--bg-primary, #fff);
+}
+
+.prochaine-course-meta {
+  margin: 0 0 4px 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.prochaine-course-countdown {
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-right: 8px;
+}
+
+.prochaine-course-date {
+  text-transform: capitalize;
+}
+
+.prochaine-course-schedule {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted, var(--text-secondary));
+}
+
+.prochaine-course--none {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.prochaine-course--none .prochaine-course-text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
